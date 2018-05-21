@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="search_height">46dp</dimen>
+
+    <dimen name="search_key_line_8">8dp</dimen>
+    <dimen name="search_key_line_16">16dp</dimen>
+    <dimen name="search_divider">1dp</dimen>
+
+    <dimen name="search_item_height">56dp</dimen>
+    <dimen name="search_icon">56dp</dimen>
+    <dimen name="search_progress">24dp</dimen>
+    <dimen name="search_text_small">14sp</dimen>
+    <dimen name="search_text_medium">16sp</dimen>
+    <dimen name="search_reveal">24dp</dimen>
+
+    <dimen name="search_filter_margin_top">4dp</dimen>
+    <dimen name="search_filter_margin_start">12dp</dimen>
+
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="tedbottompicker_grid_layout_margin">5dp</dimen>
+
+    <dimen name="tedbottompicker_selected_image_height">80dp</dimen>
+
+    <dimen name="layout_padding_8dp">8dp</dimen>
+    <dimen name="layout_padding_16dp">16dp</dimen>
+    <dimen name="layout_margin_16dp">16dp</dimen>
+    <dimen name="text_size_16sp">16sp</dimen>
+    <dimen name="icon_size_20dp">20dp</dimen>
+    <dimen name="text_size_12sp">12sp</dimen>
+    <dimen name="layout_margin_8dp">8dp</dimen>
+
+
+    <dimen name="dist_xlarge">32dp</dimen>
+    <dimen name="dist_large">24dp</dimen>
+    <dimen name="dist_medium">8dp</dimen>
+    <dimen name="dist_xmedium">15dp</dimen>
+    <dimen name="dist_small">4dp</dimen>
+
+    <dimen name="detail_icon_size">16dp</dimen>
+
+    //==========================================Login
+    <dimen name="button_size_large">50dp</dimen>
+    <dimen name="logo_top">75dp</dimen>
+
+    //==========================================Home
+    <dimen name="action_bar">80dp</dimen>
+    <dimen name="image_width">100dp</dimen>
+    <dimen name="image_final_width">32dp</dimen>
+    <dimen name="spacing_normal">40dp</dimen>
+    <dimen name="expanded_toolbar_height">200dp</dimen>
+    <dimen name="textsize_large">20sp</dimen>
+    <dimen name="textsize_medium">18sp</dimen>
+    <dimen name="textsize_xlarge">30sp</dimen>
+    <dimen name="spacing_small">12dp</dimen>
+    <dimen name="spacing_xsmall">8dp</dimen>
+    <dimen name="spacing_xxsmall">4dp</dimen>
+    <dimen name="border_width">2dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+
+    <!-- Per the design guidelines, navigation drawers should be between 240dp and 320dp:
+         https://developer.android.com/design/patterns/navigation-drawer.html -->
+    <dimen name="navigation_drawer_width">240dp</dimen>
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="toolbar_elevation">4dp</dimen>
+
+    <!-- Default Navigation Drawer. -->
+    <dimen name="nav_drawer_width">284dp</dimen>
+    <dimen name="floating_height">650dp</dimen>
+    <dimen name="floating_width">500dp</dimen>
+
+
+
+    <dimen name="small_margin">8dp</dimen>
+
+    <dimen name="recycler_item_padding">1dp</dimen>
+    <dimen name="recycler_view_padding">6dp</dimen>
+
+
+
+    <!-- product Grid Item -->
+    <dimen name="product_card_width">180dp</dimen>
+    <dimen name="product_image_height">135dp</dimen>
+    <dimen name="product_info_height">175dp</dimen>
+    <dimen name="product_info_padding">10dp</dimen>
+    <dimen name="product_rating_icon_size">16dp</dimen>
+
+    <!-- product List Item -->
+    <dimen name="product_list_card_height">200dp</dimen>
+    <dimen name="product_list_card_width">400dp</dimen>
+    <dimen name="product_list_poster_width">120dp</dimen>
+
+    <!-- product Compact Item -->
+    <dimen name="product_compact_image_size">25dp</dimen>
+    <dimen name="product_compact_rating_icon_size">14dp</dimen>
+    <dimen name="product_compact_text_margin">12dp</dimen>
+
+
+    <dimen name="tiny_margin">4dp</dimen>
+    <!-- General Text Sizes -->
+    <dimen name="text_price">24sp</dimen>
+    <dimen name="text_xxlarge">24sp</dimen>
+    <dimen name="text_productname">20sp</dimen>
+    <dimen name="text_xlarge">18sp</dimen>
+    <dimen name="text_large">16sp</dimen>
+    <dimen name="text_medium">15sp</dimen>
+    <dimen name="text_small">12sp</dimen>
+    <dimen name="text_draweruser">15sp</dimen>
+    <dimen name="text_draweremail">13sp</dimen>
+
+    <!-- Error Message -->
+    <dimen name="error_icon_width">120dp</dimen>
+    <dimen name="error_icon_height">120dp</dimen>
+    <dimen name="error_message_marginTop">15dp</dimen>
+    <dimen name="error_try_again_padding">8dp</dimen>
+
+    <!-- Loading Circle -->
+    <dimen name="progress_circle_width">80dp</dimen>
+    <dimen name="progress_circle_height">80dp</dimen>
+    <dimen name="progress_circle_stroke">4dp</dimen>
+    <dimen name="progress_circle_small_width">40dp</dimen>
+    <dimen name="progress_circle_small_height">40dp</dimen>
+    <dimen name="progress_circle_small_stroke">3dp</dimen>
+
+
+    <!-- Detail Activity -->
+    <dimen name="detail_backdrop_height">270dp</dimen>
+    <dimen name="detail_see_all_height">40dp</dimen>
+    <dimen name="detail_arrow_size">12dp</dimen>
+
+
+
+    <dimen name="size_avatar_toolbar">40dp</dimen>
+    <dimen name="spacing_double">16dp</dimen>
+
+
+    <dimen name="ms__padding_left">24dp</dimen>
+    <dimen name="ms__padding_top">10dp</dimen>
+    <dimen name="ms__item_height">48dp</dimen>
+    <dimen name="ms__popup_padding_left">24dp</dimen>
+    <dimen name="ms__popup_padding_top">12dp</dimen>
+</resources>

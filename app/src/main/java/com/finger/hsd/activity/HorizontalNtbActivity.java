@@ -1,7 +1,6 @@
 package com.finger.hsd.activity;
 
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -10,11 +9,13 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.finger.hsd.R;
 import com.finger.hsd.fragment.BlankFragment;
+import com.finger.hsd.fragment.BlankFragment2;
+import com.finger.hsd.fragment.BlankFragment3;
 import com.finger.hsd.library.NavigationTabBar;
 
 import java.util.ArrayList;
 
-public class HorizontalNtbActivity extends AppCompatActivity implements BlankFragment.OnFragmentInteractionListener {
+public class HorizontalNtbActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -28,12 +29,21 @@ public class HorizontalNtbActivity extends AppCompatActivity implements BlankFra
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                return new BlankFragment();
+                switch (position) {
+                    case 0: // Fragment # 0 - This will show FirstFragment
+                        return new BlankFragment();
+                    case 1: // Fragment # 0 - This will show FirstFragment different title
+                        return new BlankFragment2();
+                    case 2: // Fragment # 1 - This will show SecondFragment
+                        return new BlankFragment3();
+                    default:
+                        return null;
+                }
             }
 
             @Override
             public int getCount() {
-                return 5;
+                return 3;
             }
         });
 
@@ -67,24 +77,6 @@ public class HorizontalNtbActivity extends AppCompatActivity implements BlankFra
                         .selectedIcon(getResources().getDrawable(R.drawable.ic_seventh))
                         .title("Diploma")
                         .badgeTitle("state")
-                        .build()
-        );
-        models.add(
-                new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_fourth),
-                        Color.parseColor(colors[3]))
-//                        .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
-                        .title("Flag")
-                        .badgeTitle("icon")
-                        .build()
-        );
-        models.add(
-                new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_fifth),
-                        Color.parseColor(colors[4]))
-                        .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
-                        .title("Medal")
-                        .badgeTitle("777")
                         .build()
         );
 
@@ -123,13 +115,5 @@ public class HorizontalNtbActivity extends AppCompatActivity implements BlankFra
         }, 500);
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
 
-    }
-
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
-    }
 }

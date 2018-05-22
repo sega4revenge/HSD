@@ -2,14 +2,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/input_register_bg"
     android:layout_height="match_parent"
-    tools:context=".fragment.BlankFragment">
+    tools:context=".fragment.BlankFragment2">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text= "Hello 1" />
+        android:text="Hello 2" />
 
 </FrameLayout>

@@ -5,4 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="color_background_button">#009a9a</color>
     <color name="input_register_bg">#979cb4</color>
+    <color name="blur">#80000000</color>
+    <color name="white">#ffffff</color>
+    <color name="text_shadow">#BDBDBD</color>
 </resources>

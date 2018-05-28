@@ -2,8 +2,11 @@ package com.finger.hsd.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
 
-class User() : Parcelable {
+class User() : Parcelable, RealmObject() {
+    @PrimaryKey
     var _id: String? = null
     var iduser: String? = null
     var hashed_password: String? = null

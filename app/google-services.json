@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "923104700189",
+    "firebase_url": "https://hsd-project-78a79.firebaseio.com",
+    "project_id": "hsd-project-78a79",
+    "storage_bucket": "hsd-project-78a79.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:923104700189:android:bb35e830f11c5c74",
+        "android_client_info": {
+          "package_name": "com.finger.hsd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "923104700189-biqjdrcd596verpkm6f2h0e0o9pppd47.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.finger.hsd",
+            "certificate_hash": "e070fb8100531350824335e9c9c2e51335ccf73e"
+          }
+        },
+        {
+          "client_id": "923104700189-2ealsq6n64tsnehqeb224u8n0ekl1f6o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSI1KpiwnvQHcivAKfMDVFvxrvpr11pGE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "923104700189-2ealsq6n64tsnehqeb224u8n0ekl1f6o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

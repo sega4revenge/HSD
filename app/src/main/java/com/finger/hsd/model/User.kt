@@ -5,7 +5,7 @@ import android.os.Parcelable
 
 class User() : Parcelable {
     var _id: String? = null
-    var phone: String? = null
+    var iduser: String? = null
     var hashed_password: String? = null
     var tokenfirebase: String? = null
     var setting : Setting?=Setting()
@@ -15,7 +15,7 @@ class User() : Parcelable {
 
     constructor(parcel: Parcel) : this() {
         _id = parcel.readString()
-        phone = parcel.readString()
+        iduser = parcel.readString()
         hashed_password = parcel.readString()
         tokenfirebase = parcel.readString()
         created_at = parcel.readString()
@@ -23,7 +23,7 @@ class User() : Parcelable {
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(_id)
-        parcel.writeString(phone)
+        parcel.writeString(iduser)
         parcel.writeString(hashed_password)
         parcel.writeString(tokenfirebase)
         parcel.writeString(created_at)

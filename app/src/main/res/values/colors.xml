@@ -8,4 +8,5 @@
     <color name="blur">#80000000</color>
     <color name="white">#ffffff</color>
     <color name="text_shadow">#BDBDBD</color>
+    <color name="white">#FFFFFF</color>
 </resources>

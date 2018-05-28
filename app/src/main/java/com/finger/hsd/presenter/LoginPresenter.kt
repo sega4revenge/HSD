@@ -16,11 +16,10 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class LoginPresenter(view: LoginView) {
-
+var a : String?=null
     internal var mLoginView: LoginView = view
     var login = "LOGIN"
     var register = "REGISTER"
-
     private val jsonObject = JSONObject()
     private val disposables = CompositeDisposable()
     private fun getObservable_login(typesearch: String): Observable<Response> {
@@ -57,7 +56,7 @@ class LoginPresenter(view: LoginView) {
                     Log.d(login, "onError errorBody : " + e.errorBody)
                     Log.d(login, e.errorDetail + " : " + e.message)
                     mLoginView.isLoginSuccessful(false)
-                    mLoginView.setErrorMessage(e.errorCode.toString(), 0)
+                    mLoginView.setErrorMessage(e.errorCode.toString())
 
                 } else {
                     Log.d(login, "onError errorMessage : " + e.message)
@@ -72,13 +71,13 @@ class LoginPresenter(view: LoginView) {
         }
     }
 
-    fun login(phone_number: String,password : String,tokenfirebase : String) {
+    fun login(user :User) {
 
 
         try {
-            jsonObject.put("phone", phone_number)
-            jsonObject.put("password", password)
-            jsonObject.put("tokenfirebase", tokenfirebase)
+            jsonObject.put("iduser", user.iduser)
+            jsonObject.put("password", user.hashed_password)
+            jsonObject.put("tokenfirebase", user.tokenfirebase)
         } catch (e: JSONException) {
             e.printStackTrace()
         }
@@ -106,7 +105,7 @@ class LoginPresenter(view: LoginView) {
                 .getObjectObservable(Response::class.java)
     }
 
-    private fun getDisposableObserver_register(type: Int): DisposableObserver<Response> {
+    private fun getDisposableObserver_register(): DisposableObserver<Response> {
 
         return object : DisposableObserver<Response>() {
 
@@ -115,9 +114,9 @@ class LoginPresenter(view: LoginView) {
                 if (response.status == 200) {
                     Log.d(register, "onResponse isMainThread : " + (Looper.myLooper() == Looper.getMainLooper()).toString())
                     mLoginView.getUserDetail(response.user!!)
-                    mLoginView.isRegisterSuccessful(true, type)
+                    mLoginView.isRegisterSuccessful(true)
                 } else {
-                    mLoginView.setErrorMessage("201", type)
+                    mLoginView.setErrorMessage("201")
                 }
 
             }
@@ -128,14 +127,14 @@ class LoginPresenter(view: LoginView) {
                     Log.d(register, "onError errorBody : " + e.errorBody)
                     Log.d(register, e.errorDetail + " : " + e.message)
                     if (e.errorCode == 409) {
-                        mLoginView.setErrorMessage(e.errorCode.toString(), 0)
+                        mLoginView.setErrorMessage(e.errorCode.toString())
                     } else {
-                        mLoginView.setErrorMessage(e.errorCode.toString(), 0)
+                        mLoginView.setErrorMessage(e.errorCode.toString())
                     }
                     mLoginView.isLoginSuccessful(false)
                 } else {
                     Log.d(register, "onError errorMessage : " + e.message)
-                    mLoginView.setErrorMessage(e.message!!, 1)
+                    mLoginView.setErrorMessage(e.message!!)
                 }
             }
 
@@ -145,30 +144,21 @@ class LoginPresenter(view: LoginView) {
         }
     }
 
-    fun register(user: User, type: Int) {
+    fun register(user: User) {
 
         try {
-            if (type == Constants.FACEBOOK) {
-                jsonObject.put("id", user.facebook!!)
-                jsonObject.put("type", type)
-                jsonObject.put("tokenfirebase", user.tokenfirebase)
-            } else if (type == Constants.GOOGLE) {
-                jsonObject.put("id", user.google!!)
-                jsonObject.put("type", type)
-                jsonObject.put("tokenfirebase", user.tokenfirebase)
-            } else {
-                jsonObject.put("email", user.phone)
-                jsonObject.put("type", type)
+
+                jsonObject.put("iduser", user.iduser)
                 jsonObject.put("password", user.hashed_password)
                 jsonObject.put("tokenfirebase", user.tokenfirebase)
-            }
+
         } catch (e: JSONException) {
             e.printStackTrace()
         }
         disposables.add(getObservable_register("users")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(getDisposableObserver_register(type)))
+                .subscribeWith(getDisposableObserver_register()))
 
     }
 
@@ -180,9 +170,8 @@ class LoginPresenter(view: LoginView) {
     interface LoginView {
 
         fun isLoginSuccessful(isLoginSuccessful: Boolean)
-        fun isRegisterSuccessful(isRegisterSuccessful: Boolean, type: Int)
-        fun setErrorMessage(errorMessage: String, type: Int)
+        fun isRegisterSuccessful(isRegisterSuccessful: Boolean)
+        fun setErrorMessage(errorMessage: String)
         fun getUserDetail(user: User)
-        fun setCode(code: String)
     }
 }

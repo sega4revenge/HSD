@@ -93,7 +93,7 @@ class LoginActivity : AppCompatActivity(), LoginPresenter.LoginView, GoogleApiCl
                         val tokenfirebase = FirebaseInstanceId.getInstance().token
                         val id = response.jsonObject.getString("id")
                         user.facebook = id
-                        user.hashed_password = ""
+                        user.password = ""
                         user.tokenfirebase = (tokenfirebase)
                         mLoginPresenter!!.register(user)
 
@@ -145,7 +145,7 @@ class LoginActivity : AppCompatActivity(), LoginPresenter.LoginView, GoogleApiCl
         }
         if (err == 0) {
             user.iduser = phone_number.text.toString()
-            user.hashed_password = password.text.toString()
+            user.password = password.text.toString()
             user.tokenfirebase = FirebaseInstanceId.getInstance().token
             mLoginPresenter!!.login(user)
         } else {
@@ -230,7 +230,7 @@ class LoginActivity : AppCompatActivity(), LoginPresenter.LoginView, GoogleApiCl
             Log.e(TAG, "display name: " + acct!!.displayName)
             val tokenfirebase = FirebaseInstanceId.getInstance().token
             user.iduser = acct.id
-            user.hashed_password = ""
+            user.password = ""
             user.tokenfirebase = tokenfirebase
             mLoginPresenter!!.register(user)
             Log.e(TAG, "Name: " + user.iduser + ", email: ")

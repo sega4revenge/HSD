@@ -1,6 +1,6 @@
 package com.finger.hsd.model
 
-class Response {
+open class Response {
     val status : Int?=null
     val user: User? = null
     val message: String? = null

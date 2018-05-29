@@ -94,7 +94,7 @@ class RegisterActivity : AppCompatActivity(), LoginPresenter.LoginView {
 
             user.iduser = phone_number.text.toString()
 
-            user.hashed_password = ""
+            user.password = ""
             user.tokenfirebase = FirebaseInstanceId.getInstance().token
 
             mRegisterPresenter!!.register(user)

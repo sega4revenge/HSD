@@ -76,7 +76,7 @@ var a : String?=null
 
         try {
             jsonObject.put("iduser", user.iduser)
-            jsonObject.put("password", user.hashed_password)
+            jsonObject.put("password", user.password)
             jsonObject.put("tokenfirebase", user.tokenfirebase)
         } catch (e: JSONException) {
             e.printStackTrace()
@@ -149,7 +149,7 @@ var a : String?=null
         try {
 
                 jsonObject.put("iduser", user.iduser)
-                jsonObject.put("password", user.hashed_password)
+                jsonObject.put("password", user.password)
                 jsonObject.put("tokenfirebase", user.tokenfirebase)
 
         } catch (e: JSONException) {

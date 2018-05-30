@@ -2,6 +2,8 @@ package com.finger.hsd.util
 
 internal object Constants {
 
+
+
     val BASE_URL = "http://45.77.36.109:8070/api/v1/"
     val IMAGE_URL = Constants.BASE_URL + "?image="
     val FACEBOOK =1

@@ -137,7 +137,7 @@ object AppManager {
     fun saveAccountUser(context: Context, user: User) {
         val accountManager = context.getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
         var account = Account(user.iduser, AppManager.ACCOUNT_TYPE)
-        if (accountManager.addAccountExplicitly(account, user.hashed_password, null)) {
+        if (accountManager.addAccountExplicitly(account, user.password, null)) {
             println("tao thanh cong")
         } else {
             account = AppManager.getAppAccount(context)!!

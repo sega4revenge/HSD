@@ -266,39 +266,7 @@ class Scanner_Barcode_Activity : AppCompatActivity(), View.OnClickListener ,ZXin
         mDialog = datedialog.create()
         mDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         mDialog?.show()
-//        var mDialog: Dialog? = null
-//        val dialog = MaterialDialog.Builder(this)
-//                .title("Add Number Barcode")
-//                .customView(R.layout.dialog_put_barcode_layout, true)
-//                .cancelable(false)
-//        mDialog = dialog.build()
-//        mDialog.show()
-//
-//        val v = mDialog?.getCustomView()
-//        val txadd = v?.findViewById(R.id.txadd) as TextView
-//        val txcancel = v?.findViewById(R.id.txcancel) as TextView
-//        val edit_putnumber = v?.findViewById(R.id.edit_putnumber) as EditText
-//        val text_input_layout  = v?.findViewById(R.id.text_input_layout) as TextInputLayout
-//
-//        txadd.setOnClickListener(object: View.OnClickListener{
-//            override fun onClick(v: View?) {
-//                if(edit_putnumber.text.toString() == "") {
-//                    text_input_layout.error = "Không để trống"
-//                }else{
-//                    if(edit_putnumber.text.toString().length<6){
-//                        Toast.makeText(applicationContext,"Barcode not true",Toast.LENGTH_LONG).show()
-//                    }else{
-//                        checkBarcode(edit_putnumber.text.toString())
-//                    }
-//                }
-//            }
-//        })
-//
-//        txcancel.setOnClickListener(object: View.OnClickListener{
-//            override fun onClick(v: View?) {
-//                mDialog.dismiss()
-//            }
-//        })
+
     }
 
 

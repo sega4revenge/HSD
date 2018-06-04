@@ -91,8 +91,11 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
             Product_v mObject = mProducts.get((position-mCountT[position]));
             if (holder instanceof HeaderViewHolder) {
-                    if(position!=0&& ((HeaderViewHolder) holder).space.getVisibility() != View.VISIBLE){
+                    if(mCountT[position] != 0 && ((HeaderViewHolder) holder).space.getVisibility() != View.VISIBLE){
                         ((HeaderViewHolder) holder).space.setVisibility(View.VISIBLE);
+                    }
+                    if(mCountT[position] == 0 && position ==0 &&((HeaderViewHolder) holder).space.getVisibility() != View.GONE){
+                        ((HeaderViewHolder) holder).space.setVisibility(View.GONE);
                     }
                     if(miliexToday>mObject.getExpiretime()){
                         ((HeaderViewHolder) holder).mTypeProduct.setText("Expired");

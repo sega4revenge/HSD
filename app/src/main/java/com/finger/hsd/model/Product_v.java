@@ -8,7 +8,11 @@ import android.widget.TimePicker;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Product_v {
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
+public class Product_v extends RealmObject {
+    @PrimaryKey
     private String namechanged;
     private String barcode;
     private long expiretime;
@@ -24,7 +28,7 @@ public class Product_v {
         this._id = _id;
     }
 
-    Product_v(){}
+    public Product_v(){}
     public Product_v(String namechanged,String barcode,long expiretime,String description,String imagechanged){
         this.namechanged = namechanged;
         this.barcode = barcode;

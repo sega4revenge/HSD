@@ -259,13 +259,12 @@ public class Custom_Camera_Activity extends Activity {
 
     private  File getOutputMediaFile() {
         File mediaStorageDir = this.getExternalFilesDir(null);
-     //   if (!mediaStorageDir.exists()) {
+        //   if (!mediaStorageDir.exists()) {
         //    if (!mediaStorageDir.mkdirs()) {
         //        Log.d("Custom_Camera_Activity", "failed to create directory");
         //        return null;
-       //     }
-      //  }
-        // Create a media file name
+        //     }
+        //  }
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
                 .format(new Date());
         File mediaFile;

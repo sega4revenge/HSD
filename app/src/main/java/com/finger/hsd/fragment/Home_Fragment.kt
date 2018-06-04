@@ -101,6 +101,7 @@ class Home_Fragment : Fragment(){
                 }
             }
         }
+        Log.d("zzzzzzzzzzz",st+"//"+mCount)
         listProduct?.sortWith(Comparator(fun(a: Product_v, b: Product_v): Int {
             if (a.expiretime<b.expiretime)
                 return -1

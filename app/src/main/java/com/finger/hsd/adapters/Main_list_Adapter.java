@@ -43,6 +43,7 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private int mCount = 0;
     private  int[] mCountT;
     private String st = "";
+    private boolean mCheckEX  = false;
     private  ArrayList<Integer> possitionChange = new ArrayList<>();
     private List<Integer> header =new ArrayList<>();
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -135,31 +136,37 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     ((ItemViewHolder) holder).txt_detail.setText(mObject.getDescription());
                     ((ItemViewHolder) holder).txt_exdate.setText(getDate(mObject.getExpiretime(), "dd/MM/yyyy"));
                     ((ItemViewHolder) holder).txt_nameproduct.setText(mObject.getNamechanged());
-                    //&& miliexToday<mProducts.get(position+1-mCountT[position]).getExpiretime()
-                    if((position) != (mProducts.size()+mCount-1) && !getDate(mObject.getExpiretime(), "dd/MM/yyyy").equals(getDate(mProducts.get(position+1-mCountT[position]).getExpiretime(), "dd/MM/yyyy")) ){
-                        ((ItemViewHolder) holder).divide.setVisibility(View.GONE);
+
+                    if((position) != (mProducts.size()+mCount-1) && (getDate(mObject.getExpiretime(), "dd/MM/yyyy") != (getDate(mProducts.get(position+1-mCountT[position]).getExpiretime(), "dd/MM/yyyy"))) && miliexToday<mProducts.get(position+1-mCountT[position]).getExpiretime()){
                         header.add(position+1);
+                        ((ItemViewHolder) holder).divide.setVisibility(View.GONE);
                     }
                     if(miliexToday>mObject.getExpiretime()){
-                        ((ItemViewHolder) holder).txt_warring.setText("Cảnh báo");
-                        ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_itemview);
+                        if(((ItemViewHolder) holder).txt_warring.getText()!="Cảnh báo"){
+                            ((ItemViewHolder) holder).txt_warring.setText("Cảnh báo");
+                            ((ItemViewHolder) holder).txt_warring.setTextColor(mContext.getResources().getColor(R.color.white));
+                            ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_itemview);
+                        }
                     }else{
                         long dis = (mObject.getExpiretime()/86400000 - miliexToday/86400000);
                         if(dis<30){
-                            ((ItemViewHolder) holder).txt_warring.setText("Hãy sủ dụng ngay");
-                            ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_item_at);
+                            if(((ItemViewHolder) holder).txt_warring.getText()!="Hãy sủ dụng ngay"){
+                                ((ItemViewHolder) holder).txt_warring.setText("Hãy sủ dụng ngay");
+                                ((ItemViewHolder) holder).txt_warring.setTextColor(mContext.getResources().getColor(R.color.white));
+                                ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_item_at);
+                            }
                         }else{
-                            ((ItemViewHolder) holder).txt_warring.setText("An toàn");
-                            ((ItemViewHolder) holder).txt_warring.setTextColor(mContext.getResources().getColor(R.color.colorAccent));
-                            ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_att);
+                            if(((ItemViewHolder) holder).txt_warring.getText()!="An toàn"){
+                                ((ItemViewHolder) holder).txt_warring.setText("An toàn");
+                                ((ItemViewHolder) holder).txt_warring.setTextColor(mContext.getResources().getColor(R.color.colorAccent));
+                                ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_att);
+                            }
+
                         }
 
                     }
 
             }
-
-
-
     }
     public String getDate(long milliSeconds, String dateFormat)
     {

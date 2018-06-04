@@ -6,6 +6,7 @@ import android.content.Context
 import android.support.v4.app.Fragment
 
 import com.finger.hsd.model.Product
+import com.finger.hsd.model.Product_v
 
 import java.util.ArrayList
 
@@ -24,12 +25,23 @@ class RealmController(application: Context) {
         realm.refresh()
     }
 
-    //clear all objects from Champion.class
+    fun addProduct(product: Product_v){
+        realm.beginTransaction()
+        realm.copyToRealmOrUpdate(product)
+        realm.commitTransaction()
+    }
 
+    //clear all objects from Champion.class
+    fun updateorCreateListProduct(product: ArrayList<Product_v>){
+        for (i in 0 until product.size){
+            realm.beginTransaction()
+            realm.copyToRealmOrUpdate(product[i])
+            realm.commitTransaction()
+        }
+    }
 
     //find all objects in the Champion.class
     fun getlistProduct(): ArrayList<Product> {
-
         return realm.copyFromRealm(realm.where(Product::class.java).findAll()) as ArrayList<Product>
     }
 

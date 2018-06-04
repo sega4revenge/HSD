@@ -90,7 +90,7 @@ class MyApplication : Application() {
     companion object {
         var instance: MyApplication? = null
             private set
-
+        fun okhttpclient() : OkHttpClient = instance!!.getUnsafeOkHttpClient()
         fun getGoogleApiHelper(): GoogleApiHelper? = instance!!.getGoogleApiHelperInstance()
     }
 }

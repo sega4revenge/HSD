@@ -5,11 +5,11 @@ import io.realm.annotations.PrimaryKey
 
 open class General : RealmObject() {
     @PrimaryKey
-    val _id : String?=null
+    var _id : String?=null
 
-    val created_at : String?=null
-    val title : String?=null
-    val watched : Boolean?=null
-    val description : String?=null
+    var created_at : String?=null
+    var title : String?=null
+    var watched : Boolean?=null
+    var description : String?=null
 
 }

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   >
+
+    <FrameLayout
+        android:id="@+id/camera_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+         />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/blur"
+        >
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_back"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/arrow_back"
+            android:layout_centerVertical="true"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Product Photo"
+            android:layout_marginLeft="20dp"
+            android:textSize="20dp"
+            android:textColor="@color/white"
+            android:layout_toRightOf="@id/arrow_back"
+            android:layout_centerVertical="true"
+            />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/blur">
+
+        <LinearLayout
+            android:id="@+id/button_capture"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/circel_shape_button_camera"
+            android:orientation="horizontal"
+            android:padding="5dp">
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/circle_shape_button_camera2"
+                ></View>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Barcode scan"
+            android:layout_marginRight="10dp"
+            android:textSize="15dp"
+            android:textColor="@color/text_shadow"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:id="@+id/addproduct"
+           />
+    </RelativeLayout>
+</RelativeLayout>

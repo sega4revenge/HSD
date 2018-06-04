@@ -5,13 +5,13 @@ import io.realm.annotations.PrimaryKey
 
 open class Notification : RealmObject() {
     @PrimaryKey
-    val _id : String?=null
-    val iduser : User? = null
-    val idinvite : Invite? = null
-    val idproduct    : Product? = null
-    val idgeneral : General?=null
-    val type : Int?=null
-    val created_at : String?=null
-    val content : String?=null
-    val watched : Boolean?=null
+    var _id : String?=null
+    var iduser : User? = null
+    var idinvite : Invite? = null
+    var idproduct    : Product? = null
+    var idgeneral : General?=null
+    var type : Int?=null
+    var created_at : String?=null
+    var content : String?=null
+    var watched : Boolean?=null
 }

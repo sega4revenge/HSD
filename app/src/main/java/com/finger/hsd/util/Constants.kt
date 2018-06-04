@@ -4,8 +4,8 @@ internal object Constants {
 
 
 
-    val BASE_URL = "http://45.77.36.109:8070/api/v1/"
-    val IMAGE_URL = Constants.BASE_URL + "?image="
+    val BASE_URL = "https://hsdvn.ga:7070/"
+    val IMAGE_URL = Constants.BASE_URL + "getimage/?image="
     val FACEBOOK =1
     val GOOGLE = 2
     val LOCAL = 0

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/text_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:errorEnabled="true"
+        >
+        <EditText
+            android:id="@+id/edit_putnumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:hint="put here..."
+            android:inputType="number"
+            />
+    </android.support.design.widget.TextInputLayout>
+    <TextView
+        android:id="@+id/txadd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ADD"
+        android:textSize="18dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/text_input_layout"
+        android:layout_marginRight="10dp"/>
+    <TextView
+        android:id="@+id/txcancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CANCEL"
+        android:textSize="18dp"
+        android:layout_toLeftOf="@id/txadd"
+        android:layout_marginRight="20dp"
+        android:layout_below="@id/text_input_layout"/>
+</RelativeLayout>

@@ -1,0 +1,85 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <!--<TextureView-->
+        <!--android:id="@+id/camera_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
+    <SurfaceView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/camera_view"
+        />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/detect_shape_scanner"
+        android:layout_centerInParent="true"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/blur"
+        >
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_back"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/arrow_back"
+            android:layout_centerVertical="true"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Scanner Barcode"
+            android:layout_marginLeft="10dp"
+            android:textSize="20dp"
+            android:textColor="@color/white"
+            android:layout_toRightOf="@id/arrow_back"
+            android:layout_centerVertical="true"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Manual"
+            android:layout_marginRight="10px"
+            android:textSize="18dp"
+            android:textColor="@color/text_shadow"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:id="@+id/addmanual"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/blur"
+        android:padding="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="don't find barcode ?"
+            android:layout_marginLeft="5dp"
+            android:textSize="15dp"
+            android:textColor="@color/text_shadow"
+            android:layout_centerVertical="true"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add your product"
+            android:layout_marginRight="5dp"
+            android:textSize="15dp"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:id="@+id/addproduct"
+           />
+    </RelativeLayout>
+</RelativeLayout>

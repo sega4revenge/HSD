@@ -1,16 +1,20 @@
 package com.finger.hsd.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.finger.hsd.R;
 import com.finger.hsd.fragment.BlankFragment;
 import com.finger.hsd.fragment.BlankFragment2;
 import com.finger.hsd.fragment.BlankFragment3;
+import com.finger.hsd.fragment.Home_Fragment;
 import com.finger.hsd.library.NavigationTabBar;
 
 import java.util.ArrayList;
@@ -25,13 +29,22 @@ public class HorizontalNtbActivity extends AppCompatActivity{
     }
 
     private void initUI() {
+        FloatingActionButton fb = findViewById(R.id.fab);
+        fb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(HorizontalNtbActivity.this,Scanner_Barcode_Activity.class);
+                startActivity(i);
+            }
+        });
         final ViewPager viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);
+        viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0: // Fragment # 0 - This will show FirstFragment
-                        return new BlankFragment();
+                        return new Home_Fragment();
                     case 1: // Fragment # 0 - This will show FirstFragment different title
                         return new BlankFragment2();
                     case 2: // Fragment # 1 - This will show SecondFragment
@@ -81,7 +94,7 @@ public class HorizontalNtbActivity extends AppCompatActivity{
         );
 
         navigationTabBar.setModels(models);
-        navigationTabBar.setViewPager(viewPager, 2);
+        navigationTabBar.setViewPager(viewPager, 0);
         navigationTabBar.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {

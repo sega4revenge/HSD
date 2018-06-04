@@ -7,10 +7,10 @@ import io.realm.annotations.PrimaryKey
 open class Group : RealmObject() {
     @PrimaryKey
     var _id : String?=null
-    val name : String?=null
-    val owner : User? = null
-    val listuser : RealmList<User>?=null
-    val listproduct : RealmList<Product>?=null
-    val listinvited : RealmList<Invite>?=null
-    val created_at : String?=null
+    var name : String?=null
+    var owner : User? = null
+    var listuser : RealmList<User>?=null
+    var listproduct : RealmList<Product>?=null
+    var listinvited : RealmList<Invite>?=null
+    var created_at : String?=null
 }

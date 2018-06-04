@@ -7,6 +7,13 @@
     <color name="input_register_bg">#979cb4</color>
     <color name="blur">#80000000</color>
     <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
     <color name="text_shadow">#BDBDBD</color>
-    <color name="white">#FFFFFF</color>
+    <color name="colordefault">#EEEEEE</color>
+
+
+
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="viewfinder_laser">#ffcc0000</color>
+    <color name="viewfinder_border">#ffafed44</color>
 </resources>

@@ -58,7 +58,7 @@ class LoginActivity : AppCompatActivity(), LoginPresenter.LoginView, GoogleApiCl
         val accountsFromFirstApp = mAccountManager!!.getAccountsByType(AppManager.ACCOUNT_TYPE)
         if (accountsFromFirstApp.isNotEmpty()) {
 
-            //            // User is already logged in. Take him to main activity
+           // User is already logged in. Take him to main activity
             val intent = Intent(this, HorizontalNtbActivity::class.java)
             startActivity(intent)
             finish()

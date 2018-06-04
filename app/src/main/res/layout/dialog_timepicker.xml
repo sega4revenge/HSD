@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_margin="30dp"
+    android:background="@drawable/border_dialog"
+    >
+    <DatePicker
+        android:id="@+id/datepicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:datePickerMode="spinner"
+        android:calendarViewShown="false"
+        > </DatePicker>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+        <TextView
+            android:id="@+id/txt_out"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="Thoát"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="17dp"
+            android:textColor="@color/white"
+            android:background="@drawable/radius_bottom_dialog"/>
+        <TextView
+            android:id="@+id/txt_ok"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:text="Chọn"
+            android:gravity="center"
+            android:textSize="17dp"
+            android:textColor="@color/white"
+            android:layout_weight="1"
+            android:background="@drawable/radius_bottom_dialog_right"/>
+    </LinearLayout>
+</LinearLayout>

@@ -14,9 +14,16 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses-feature android:name="android.hardware.camera" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
+        android:hardwareAccelerated="false"
         android:name=".MyApplication"
         android:allowBackup="true"
+        android:largeHeap="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -34,6 +41,13 @@
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />
 
+        <activity android:name=".activity.Scanner_HSD_Activity" />
+        <activity
+            android:name=".activity.Custom_Camera_Activity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.Scanner_Barcode_Activity" />
+        <activity android:name=".activity.Add_Product" />
+        <activity android:name=".activity.show_PhotoProduct"></activity>
         <activity android:name=".activity.Scanner_HSD_Activity"></activity>
         <activity android:name=".activity.HorizontalNtbActivity" />
         <activity android:name=".activity.RegisterActivity" />

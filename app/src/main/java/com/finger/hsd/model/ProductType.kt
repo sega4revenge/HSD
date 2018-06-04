@@ -7,10 +7,10 @@ import io.realm.annotations.PrimaryKey
 open class ProductType : RealmObject() {
     @PrimaryKey
     var _id : String?=null
-    val barcode : String?=null
-    val name : String?=null
-    val image : String?=null
-    val description : String?=null
-    val check_barcode : Boolean?=null
-    val created_at : String?=null
+    var barcode : String?=null
+    var name : String?=null
+    var image : String?=null
+    var description : String?=null
+    var check_barcode : Boolean?=null
+    var created_at : String?=null
 }

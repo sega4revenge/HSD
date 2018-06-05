@@ -22,11 +22,14 @@ import android.widget.*
 import com.afollestad.materialdialogs.MaterialDialog
 
 import com.finger.hsd.MyApplication
+import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Product
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.Result_Product
 import com.finger.hsd.util.*
 import com.squareup.picasso.Picasso
+import io.realm.Realm
+import io.realm.RealmConfiguration
 import kotlinx.android.synthetic.main.dialog_timepicker.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -57,6 +60,7 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener {
     private val RESULT_SCANNER = 1001
     private var miliexDate:Long? = 0L
     private var miliexToday:Long? = 0L
+    private var myRealm:RealmController? = null
     private var mRetrofitService: RetrofitService? = null
     private var mDialog:Dialog? =null
     private final val CODE_RESULT_IMAGE_SELECT = 1001
@@ -140,26 +144,6 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener {
             }
             edit_ex?.id ->{
                 showHourPicker()
-//                val callback = DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
-//                    val stringToday = sdf.format(Date())
-//                    val exToday = sdf.parse(stringToday)
-//                    val exDate = sdf.parse(day.toString() + "/" + (month + 1) + "/" + year)
-//                    miliexDate =  exDate.time
-//                    val miliexToday =  exToday.time
-//                    edit_ex?.setText(day.toString() + "/" + (month + 1) + "/" + year)
-//                    updateEX(miliexToday, miliexDate!!)
-//                }
-//                //Lấy ra chuỗi của textView Date
-//                val strArrtmp = currentDateandTime?.split("/")
-//                val ngay = Integer.parseInt(strArrtmp!![0])
-//                val thang = Integer.parseInt(strArrtmp[1]) - 1
-//                val nam = Integer.parseInt(strArrtmp[2])
-//                //Hiển thị ra Dialog
-//                val pic = DatePickerDialog(
-//                        this@Add_Product,
-//                        callback, nam, thang, ngay)
-//                pic.setTitle("Chọn ngày hết hạn")
-//                pic.show()
             }
             img_product?.id ->{
 
@@ -239,10 +223,16 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener {
                             override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
                                 if(response?.isSuccessful!!){
                                     if(response?.code()==200){
-                                        Toast.makeText(this@Add_Product,"Update Success!",Toast.LENGTH_SHORT).show()
-                                        var i = Intent(this@Add_Product,HorizontalNtbActivity::class.java)
-                                        i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                        startActivity(i)
+                                        myRealm = RealmController(this@Add_Product)
+                                        var mProduct = response.body().product
+                                        mProduct.imagechanged = path
+                                        myRealm?.addProduct(mProduct)
+                                        if(myRealm?.checkaddsuccess(mProduct._id)!!>0){
+                                            Toast.makeText(this@Add_Product,"Update Success!",Toast.LENGTH_SHORT).show()
+                                            var i = Intent(this@Add_Product,HorizontalNtbActivity::class.java)
+                                            i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                            startActivity(i)
+                                        }
                                     }
                                 }else{
                                     mDialogProgress?.dismiss()
@@ -273,7 +263,6 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener {
         datepicker.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
                 DatePicker.OnDateChangedListener { datePicker, year, month, day->
                     mDate = day.toString()+"/"+(month+1)+"/"+year
-                    //Toast.makeText(this@Add_Product,year.toString()+"//"+month+"//"+day,Toast.LENGTH_LONG).show()
                 })
         txtout.setOnClickListener(object: View.OnClickListener{
             override fun onClick(v: View?) {

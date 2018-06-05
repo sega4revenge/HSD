@@ -19,8 +19,11 @@ import com.finger.hsd.MyApplication;
 import com.finger.hsd.R;
 import com.finger.hsd.model.Product;
 import com.finger.hsd.model.Product_v;
+import com.finger.hsd.model.Result_Product;
+import com.finger.hsd.util.ApiUtils;
 import com.finger.hsd.util.Constants;
 import com.finger.hsd.util.OkHttp3Downloader;
+import com.finger.hsd.util.RetrofitService;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
@@ -33,6 +36,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Response;
+
 public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context mContext;
     private List<Product_v> mProducts = new ArrayList<>();
@@ -43,20 +49,21 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private int mCount = 0;
     private  int[] mCountT;
     private String st = "";
+    private OnproductClickListener onproductClickListener;
     private boolean mCheckEX  = false;
     private  ArrayList<Integer> possitionChange = new ArrayList<>();
     private List<Integer> header =new ArrayList<>();
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     BitmapFactory.Options options;
     private Picasso picasso;
-
+    private RetrofitService mRetrofitService;
     public Main_list_Adapter(){}
 
-    public Main_list_Adapter(Context mContext, List<Product_v> mProducts, int mCount) throws ParseException {
+    public Main_list_Adapter(Context mContext, List<Product_v> mProducts, int mCount,OnproductClickListener onproductClickListener) throws ParseException {
         this.mContext = mContext;
         this.mProducts = mProducts;
         this.mCount = mCount;
-
+        this.onproductClickListener = onproductClickListener;
 
         header.add(0);
         String stringToday = sdf.format(new Date());
@@ -119,19 +126,26 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             String _idDelete = "";
                             for (int i=position+1;i<mProducts.size()+mCount;i++){
                                 if(_idDelete==""){
-                                    _idDelete = mProducts.get(i-mCountT[i]).getDescription();
+                                    _idDelete = mProducts.get(i-mCountT[i]).get_id()+",";
                                 }else{
-                                    _idDelete =_idDelete +" , "+mProducts.get(i-mCountT[i]).getDescription();
+                                    _idDelete =_idDelete+mProducts.get(i-mCountT[i]).get_id()+",";
                                 }
                                 if((i+2) < mCountT.length && mCountT[i]!=mCountT[i+2]){
                                  break;
                                 }
                             }
+                            if(_idDelete!= ""){
+                                onproductClickListener.onproductClickedDelete(_idDelete);
+                            }
                         }
                     });
-            } else if (holder instanceof ItemViewHolder) {
-                     picasso.load(Constants.INSTANCE.getIMAGE_URL()+mObject.getImagechanged()).error(R.drawable.ic_calendar)
-                             .placeholder(R.drawable.ic_add_photo).resize(80,80).into(((ItemViewHolder) holder).photo_product);
+            } else if (holder instanceof ItemViewHolder) { //Constants.INSTANCE.getIMAGE_URL()+
+                  //  Picasso.with(mContext).load(mObject.getImagechanged()).error(R.drawable.ic_calendar)
+                  //      .placeholder(R.drawable.ic_add_photo).resize(80,80).into(((ItemViewHolder) holder).photo_product);
+                 //    picasso.load(mObject.getImagechanged()).error(R.drawable.ic_calendar)
+                  //           .placeholder(R.drawable.ic_add_photo).resize(80,80).into(((ItemViewHolder) holder).photo_product);
+                    Log.d("////////////////",mObject.getImagechanged()+"/////");
+                    ((ItemViewHolder) holder).photo_product.setImageBitmap(BitmapFactory.decodeFile(mObject.getImagechanged()));
                     ((ItemViewHolder) holder).txt_barcode.setText(mObject.getBarcode());
                     ((ItemViewHolder) holder).txt_detail.setText(mObject.getDescription());
                     ((ItemViewHolder) holder).txt_exdate.setText(getDate(mObject.getExpiretime(), "dd/MM/yyyy"));
@@ -168,6 +182,7 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             }
     }
+
     public String getDate(long milliSeconds, String dateFormat)
     {
         // Create a DateFormatter object for displaying date in specified format.
@@ -257,5 +272,7 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
     }
-
+    public interface OnproductClickListener {
+        void onproductClickedDelete(String listDelete);
+    }
 }

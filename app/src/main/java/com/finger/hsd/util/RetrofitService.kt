@@ -29,6 +29,11 @@ interface RetrofitService {
     fun getAllProductInGroup(
             @Field("iduser") iduser: String): Call<Result_Product>
 
+    @FormUrlEncoded // Dòng này để mã hóa dữ liệu trước khi post ========================
+    @POST("/delete-products") // đây tên của url trên server (url mặc định http://45.77.36.109:8070/api/v1/) =========================
+    fun deleteGroup(
+            @Field("stringProduct") stringProduct: String): Call<Result_Product>
+
     @Multipart
     @POST("/product/add-product")
     fun addProduct(@Part("nameproduct") nameproduct: RequestBody,

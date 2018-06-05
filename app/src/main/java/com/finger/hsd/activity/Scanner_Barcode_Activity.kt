@@ -180,7 +180,7 @@ class Scanner_Barcode_Activity : AppCompatActivity(), View.OnClickListener ,ZXin
             override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
                 if(response?.isSuccessful!!){
                     if(response?.code()==200){
-                        val mProduct = response.body().product[0]
+                        val mProduct = response.body().productType_v
                         val i = Intent(this@Scanner_Barcode_Activity,Add_Product::class.java)
                         i.putExtra("type",2)
                         i.putExtra("barcode",mProduct.barcode.toString())

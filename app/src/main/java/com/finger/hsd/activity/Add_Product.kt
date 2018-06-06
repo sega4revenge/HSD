@@ -43,7 +43,9 @@ import java.util.*
 import java.util.zip.Inflater
 
 
-class Add_Product : AppCompatActivity() ,View.OnClickListener {
+class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.updateData {
+
+
     private var img_product: ImageView? = null
     private var arrow_back: ImageView? = null
     private var select_img: LinearLayout? = null
@@ -180,10 +182,7 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener {
                             override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
                                 if(response?.isSuccessful!!){
                                     if(response?.code()==200){
-                                        Toast.makeText(this@Add_Product,"Update Success!",Toast.LENGTH_SHORT)
-                                        var i = Intent(this@Add_Product,HorizontalNtbActivity::class.java)
-                                        i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                        startActivity(i)
+                                        myRealm?.addProductWithNonImage(response?.body().product,this@Add_Product)
                                     }
                                 }else{
                                     mDialogProgress?.dismiss()
@@ -223,15 +222,11 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener {
                             override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
                                 if(response?.isSuccessful!!){
                                     if(response?.code()==200){
-                                        myRealm = RealmController(this@Add_Product)
                                         var mProduct = response.body().product
                                         mProduct.imagechanged = path
                                         myRealm?.addProduct(mProduct)
                                         if(myRealm?.checkaddsuccess(mProduct._id)!!>0){
-                                            Toast.makeText(this@Add_Product,"Update Success!",Toast.LENGTH_SHORT).show()
-                                            var i = Intent(this@Add_Product,HorizontalNtbActivity::class.java)
-                                            i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                            startActivity(i)
+                                             onupdateProduct(1)
                                         }
                                     }
                                 }else{
@@ -250,6 +245,20 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener {
             }
         }
     }
+    override fun onupdate() {
+
+    }
+    override fun onupdateProduct(type: Int) {
+        if(type!=0){
+            Toast.makeText(this@Add_Product,"Update Success!",Toast.LENGTH_SHORT).show()
+        }else{
+            Toast.makeText(this@Add_Product,"Error Update Image",Toast.LENGTH_SHORT).show()
+        }
+        var i = Intent(this@Add_Product,HorizontalNtbActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(i)
+    }
+
     fun showHourPicker() {
         var mDate = ""
         var datedialog = AlertDialog.Builder(this@Add_Product)
@@ -348,7 +357,7 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener {
         img_product?.setOnClickListener(this)
         arrow_back?.setOnClickListener(this)
         bt_post?.setOnClickListener(this)
-
+        myRealm = RealmController(this@Add_Product)
         currentDateandTime = sdf.format(Date())
     }
 

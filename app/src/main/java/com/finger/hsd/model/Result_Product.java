@@ -7,22 +7,30 @@ import java.util.Map;
 public class Result_Product {
 
     private Integer status;
-    private List<ProductType> ProductType = null;
+    private List<ProductType> ListProductType = null;
     private String message;
     private Product_v Product;
-    private ProductType_v productType_v;
+    private ProductType_v ProductType;
     public ArrayList<Product_v> getListProduct() {
         return ListProduct;
     }
     private ArrayList<Product_v> ListProduct = null;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public ProductType_v getProductType_v() {
-        return productType_v;
+    public List<com.finger.hsd.model.ProductType> getListProductType() {
+        return ListProductType;
     }
 
-    public void setProductType_v(ProductType_v productType_v) {
-        this.productType_v = productType_v;
+    public void setListProductType(List<com.finger.hsd.model.ProductType> listProductType) {
+        ListProductType = listProductType;
+    }
+
+    public ProductType_v getProductType() {
+        return ProductType;
+    }
+
+    public void setProductType(ProductType_v productType) {
+        ProductType = productType;
     }
 
     public Integer getStatus() {
@@ -33,13 +41,7 @@ public class Result_Product {
         this.status = status;
     }
 
-    public List<com.finger.hsd.model.ProductType> getProductType() {
-        return ProductType;
-    }
 
-    public void setProductType(List<com.finger.hsd.model.ProductType> productType) {
-        ProductType = productType;
-    }
 
     public String getMessage() {
         return message;

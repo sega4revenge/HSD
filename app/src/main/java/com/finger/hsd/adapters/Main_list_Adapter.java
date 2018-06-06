@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.finger.hsd.MyApplication;
 import com.finger.hsd.R;
 import com.finger.hsd.model.Product;
@@ -59,24 +60,24 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private RetrofitService mRetrofitService;
     public Main_list_Adapter(){}
 
-    public Main_list_Adapter(Context mContext, List<Product_v> mProducts, int mCount,OnproductClickListener onproductClickListener) throws ParseException {
+    public Main_list_Adapter(Context mContext, List<Product_v> mProducts, ArrayList<Integer> listheader,OnproductClickListener onproductClickListener) throws ParseException {
         this.mContext = mContext;
         this.mProducts = mProducts;
-        this.mCount = mCount;
+        this.header = listheader;
         this.onproductClickListener = onproductClickListener;
 
-        header.add(0);
         String stringToday = sdf.format(new Date());
         Date exToday = sdf.parse(stringToday);
         miliexToday =  exToday.getTime();
-        mCountT = new int[mProducts.size()+mCount];
+        mCountT = new int[mProducts.size()+header.size()];
 
-        for (int i=0;i<mProducts.size()+mCount;i++){
+        for (int i=0;i<mProducts.size()+header.size();i++){
             mCountT[i] = 0;
         }
         picasso =  new Picasso.Builder(mContext).indicatorsEnabled(true)
                 .downloader(new OkHttp3Downloader(MyApplication.Companion.okhttpclient()))
                 .build();
+
     }
 
 
@@ -97,88 +98,121 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-            Product_v mObject = mProducts.get((position-mCountT[position]));
+            Product_v mObject = mProducts.get((position));
             if (holder instanceof HeaderViewHolder) {
-                    if(mCountT[position] != 0 && ((HeaderViewHolder) holder).space.getVisibility() != View.VISIBLE){
-                        ((HeaderViewHolder) holder).space.setVisibility(View.VISIBLE);
-                    }
-                    if(mCountT[position] == 0 && position ==0 &&((HeaderViewHolder) holder).space.getVisibility() != View.GONE){
-                        ((HeaderViewHolder) holder).space.setVisibility(View.GONE);
-                    }
-                    if(miliexToday>mObject.getExpiretime()){
+                Product_v mObjectHeader = mProducts.get((position+1));
+                    if(miliexToday>mObjectHeader.getExpiretime()){
                         ((HeaderViewHolder) holder).mTypeProduct.setText("Expired");
+                        ((HeaderViewHolder) holder).mTypeProduct.setTextColor(mContext.getResources().getColor(R.color.viewfinder_laser));
                     }else{
-                        long dis = (mObject.getExpiretime()/86400000 - miliexToday/86400000);
-                        ((HeaderViewHolder) holder).mTypeProduct.setText(dis+" days left");
+
+                        long dis = (mProducts.get(position+1).getExpiretime()/86400000 - miliexToday/86400000);
+                        if(dis<10 && dis>0){
+                            ((HeaderViewHolder) holder).mTypeProduct.setText("Warring Eat Now!!");
+                            ((HeaderViewHolder) holder).mTypeProduct.setTextColor(mContext.getResources().getColor(R.color.viewfinder_border));
+                        }else if(dis>10){
+                            ((HeaderViewHolder) holder).mTypeProduct.setText("Protected!!");
+                            ((HeaderViewHolder) holder).mTypeProduct.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+                        }
+
+                    }
+                    if(mCountT[position] != 0&&((HeaderViewHolder) holder).space.getVisibility() != View.VISIBLE){
+                        ((HeaderViewHolder) holder).space.setVisibility(View.VISIBLE);
                     }
                     if(!possitionChange.contains(position))
                     {
-                        for (int i=position+1;i<mProducts.size()+mCount;i++){
+                        for (int i=position+1;i<mProducts.size()+header.size();i++){
                             mCountT[i] = mCountT[i]+1;
                             if(i==mProducts.size()-1+mCount){
                                 possitionChange.add(position);
                             }
                         }
                     }
+
+//                    if(mCountT[position] != 0 && ((HeaderViewHolder) holder).space.getVisibility() != View.VISIBLE){
+//                        ((HeaderViewHolder) holder).space.setVisibility(View.VISIBLE);
+//                    }
+//                    if(mCountT[position] == 0 && position ==0 &&((HeaderViewHolder) holder).space.getVisibility() != View.GONE){
+//                        ((HeaderViewHolder) holder).space.setVisibility(View.GONE);
+//                    }
+//                    if(miliexToday>mObject.getExpiretime()){
+//                        ((HeaderViewHolder) holder).mTypeProduct.setText("Expired");
+//                    }else{
+//                        long dis = (mObject.getExpiretime()/86400000 - miliexToday/86400000);
+//                        ((HeaderViewHolder) holder).mTypeProduct.setText(dis+" days left");
+//                    }
+//                    if(!possitionChange.contains(position))
+//                    {
+//                        for (int i=position+1;i<mProducts.size()+mCount;i++){
+//                            mCountT[i] = mCountT[i]+1;
+//                            if(i==mProducts.size()-1+mCount){
+//                                possitionChange.add(position);
+//                            }
+//                        }
+//                    }
                     ((HeaderViewHolder) holder).mClear.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             String _idDelete = "";
-                            for (int i=position+1;i<mProducts.size()+mCount;i++){
+                            for (int i=position+1;i<mProducts.size()+header.size();i++){
+                                Log.d("//////////",mProducts.get(i).get_id()+"//");
                                 if(_idDelete==""){
-                                    _idDelete = mProducts.get(i-mCountT[i]).get_id()+",";
+                                    _idDelete = mProducts.get(i).get_id()+",";
                                 }else{
-                                    _idDelete =_idDelete+mProducts.get(i-mCountT[i]).get_id()+",";
+                                    _idDelete =_idDelete+mProducts.get(i).get_id()+",";
                                 }
                                 if((i+2) < mCountT.length && mCountT[i]!=mCountT[i+2]){
                                  break;
                                 }
                             }
                             if(_idDelete!= ""){
-                                onproductClickListener.onproductClickedDelete(_idDelete);
+                                Log.d("//////////",_idDelete+"//");
+                              //  onproductClickListener.onproductClickedDelete(_idDelete);
                             }
                         }
                     });
             } else if (holder instanceof ItemViewHolder) { //Constants.INSTANCE.getIMAGE_URL()+
-                  //  Picasso.with(mContext).load(mObject.getImagechanged()).error(R.drawable.ic_calendar)
-                  //      .placeholder(R.drawable.ic_add_photo).resize(80,80).into(((ItemViewHolder) holder).photo_product);
-                 //    picasso.load(mObject.getImagechanged()).error(R.drawable.ic_calendar)
-                  //           .placeholder(R.drawable.ic_add_photo).resize(80,80).into(((ItemViewHolder) holder).photo_product);
-                    Log.d("////////////////",mObject.getImagechanged()+"/////");
-                    ((ItemViewHolder) holder).photo_product.setImageBitmap(BitmapFactory.decodeFile(mObject.getImagechanged()));
+                Log.d("///////////",position+"////"+(position-mCountT[position])+"//mCountT/"+mCountT[position]);
+                    Glide.with(mContext).load(mObject.getImagechanged()).into(((ItemViewHolder) holder).photo_product);
+                //     Bitmap bm = decodeSampledBitmapFromResource(mObject.getImagechanged(),60,60);
+                 //   ((ItemViewHolder) holder).photo_product.setImageBitmap(bm);
                     ((ItemViewHolder) holder).txt_barcode.setText(mObject.getBarcode());
                     ((ItemViewHolder) holder).txt_detail.setText(mObject.getDescription());
                     ((ItemViewHolder) holder).txt_exdate.setText(getDate(mObject.getExpiretime(), "dd/MM/yyyy"));
                     ((ItemViewHolder) holder).txt_nameproduct.setText(mObject.getNamechanged());
-
-                    if((position) != (mProducts.size()+mCount-1) && (getDate(mObject.getExpiretime(), "dd/MM/yyyy") != (getDate(mProducts.get(position+1-mCountT[position]).getExpiretime(), "dd/MM/yyyy"))) && miliexToday<mProducts.get(position+1-mCountT[position]).getExpiretime()){
-                        header.add(position+1);
-                        ((ItemViewHolder) holder).divide.setVisibility(View.GONE);
-                    }
-                    if(miliexToday>mObject.getExpiretime()){
-                        if(((ItemViewHolder) holder).txt_warring.getText()!="Cảnh báo"){
-                            ((ItemViewHolder) holder).txt_warring.setText("Cảnh báo");
-                            ((ItemViewHolder) holder).txt_warring.setTextColor(mContext.getResources().getColor(R.color.white));
-                            ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_itemview);
-                        }
-                    }else{
-                        long dis = (mObject.getExpiretime()/86400000 - miliexToday/86400000);
-                        if(dis<30){
-                            if(((ItemViewHolder) holder).txt_warring.getText()!="Hãy sủ dụng ngay"){
-                                ((ItemViewHolder) holder).txt_warring.setText("Hãy sủ dụng ngay");
-                                ((ItemViewHolder) holder).txt_warring.setTextColor(mContext.getResources().getColor(R.color.white));
-                                ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_item_at);
-                            }
-                        }else{
-                            if(((ItemViewHolder) holder).txt_warring.getText()!="An toàn"){
-                                ((ItemViewHolder) holder).txt_warring.setText("An toàn");
-                                ((ItemViewHolder) holder).txt_warring.setTextColor(mContext.getResources().getColor(R.color.colorAccent));
-                                ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_att);
-                            }
-
-                        }
-
-                    }
+                 //   if(bm!=null)
+                 //   {
+                  //      bm.recycle();
+                  //      bm = null;
+                  //  }
+//                    if((position) != (mProducts.size()+mCount-1) && (getDate(mObject.getExpiretime(), "dd/MM/yyyy") != (getDate(mProducts.get(position+1-mCountT[position]).getExpiretime(), "dd/MM/yyyy"))) && miliexToday<mProducts.get(position+1-mCountT[position]).getExpiretime()){
+//                        header.add(position+1);
+//                        ((ItemViewHolder) holder).divide.setVisibility(View.GONE);
+//                    }
+//                    if(miliexToday>mObject.getExpiretime()){
+//                        if(((ItemViewHolder) holder).txt_warring.getText()!="Cảnh báo"){
+//                            ((ItemViewHolder) holder).txt_warring.setText("Cảnh báo");
+//                            ((ItemViewHolder) holder).txt_warring.setTextColor(mContext.getResources().getColor(R.color.white));
+//                            ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_itemview);
+//                        }
+//                    }else{
+//                        long dis = (mObject.getExpiretime()/86400000 - miliexToday/86400000);
+//                        if(dis<30){
+//                            if(((ItemViewHolder) holder).txt_warring.getText()!="Hãy sủ dụng ngay"){
+//                                ((ItemViewHolder) holder).txt_warring.setText("Hãy sủ dụng ngay");
+//                                ((ItemViewHolder) holder).txt_warring.setTextColor(mContext.getResources().getColor(R.color.white));
+//                                ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_item_at);
+//                            }
+//                        }else{
+//                            if(((ItemViewHolder) holder).txt_warring.getText()!="An toàn"){
+//                                ((ItemViewHolder) holder).txt_warring.setText("An toàn");
+//                                ((ItemViewHolder) holder).txt_warring.setTextColor(mContext.getResources().getColor(R.color.colorAccent));
+//                                ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_att);
+//                            }
+//
+//                        }
+//
+//                    }
 
             }
     }
@@ -193,32 +227,12 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         calendar.setTimeInMillis(milliSeconds);
         return formatter.format(calendar.getTime());
     }
-    public int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
 
-        if (height > reqHeight || width > reqWidth) {
-
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) >= reqHeight
-                    && (halfWidth / inSampleSize) >= reqWidth) {
-                inSampleSize *= 2;
-            }
-        }
-
-        return inSampleSize;
-    }
     @Override
     public int getItemViewType(int position) {
-        if (isPositionHeader(position))
-            return TYPE_HEADER;
+        Product_v mObject = mProducts.get((position));
+        if (mObject.getExpiretime()==0&&mObject.getBarcode().isEmpty()&&mObject.getNamechanged().isEmpty())
+           return TYPE_HEADER;
         return TYPE_ITEM;
     }
 
@@ -233,9 +247,44 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return check;
     }
 
+    public  int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and
+            // keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight
+                    && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+        return inSampleSize;
+    }
+
+    public  Bitmap decodeSampledBitmapFromResource(String strPath,int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(strPath, options);
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options,reqWidth, reqHeight);
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(strPath, options);
+    }
+
+
     @Override
     public int getItemCount() {
-        return (mProducts.size()+mCount);
+        return (mProducts.size());
     }
 
 

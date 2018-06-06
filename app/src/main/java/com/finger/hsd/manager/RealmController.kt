@@ -52,12 +52,37 @@ class RealmController(application: Context) {
         realm.copyToRealm(product)
         realm.commitTransaction()
     }
+    fun addProductWithNonImage(product: Product_v,mupdateData: updateData){
+        this.mupdateData = mupdateData
+        val mediaStorageDir = getApplicationContext().getExternalFilesDir(null)
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss")
+                .format(Date())
+        var path2 = File.separator+ "IMG_" + timeStamp +"_"+ product?.barcode + ".jpg"
 
+        AndroidNetworking.initialize(getApplicationContext(),MyApplication.okhttpclient())
+        AndroidNetworking.download(Constants.IMAGE_URL+product.imagechanged,mediaStorageDir.path,path2).build().startDownload(object: com.androidnetworking.interfaces.DownloadListener{
+            override fun onDownloadComplete() {
+                Log.d("REALMCONTROLLER","UPDATE SUCCESS")
+                product.imagechanged = mediaStorageDir.path+path2
+                realm.beginTransaction()
+                realm.copyToRealmOrUpdate(product)
+                realm.commitTransaction()
+                Log.d("REALMCONTROLLER2",product._id)
+                mupdateData.onupdateProduct(1)
+            }
+            override fun onError(anError: ANError?) {
+                mupdateData.onupdateProduct(0)
+                Log.d("REALMCONTROLLER",anError?.errorDetail+"//ERROR"+anError?.errorBody+"//"+product.imagechanged)
+            }
+        })
+
+    }
     //clear all objects from Champion.class
     fun updateorCreateListProduct(product: ArrayList<Product_v>,mupdateData2:updateData){
         this.mupdateData = mupdateData2
         var mCout = 0
         for (i in 0 until product.size){
+            Log.d("REALMCONTROLLER3",product[i]?._id)
             if(checkaddsuccess(product[i]?._id!!)!!>0)
             {
                 var mProduct_v = getProduct(product[i]._id)
@@ -65,10 +90,11 @@ class RealmController(application: Context) {
                 realm.beginTransaction()
                 realm.copyToRealmOrUpdate(product[i])
                 realm.commitTransaction()
-                mCout++
+
                 if(mCout==(product.size-1)){
                     mupdateData!!.onupdate()
                 }
+                mCout++
             }else{
                 val mediaStorageDir = getApplicationContext().getExternalFilesDir(null)
                 val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss")
@@ -83,12 +109,16 @@ class RealmController(application: Context) {
                         realm.beginTransaction()
                         realm.copyToRealmOrUpdate(product[i])
                         realm.commitTransaction()
-                        mCout++
+
                         if(mCout==(product.size)-1){
                             mupdateData!!.onupdate()
                         }
+                        mCout++
                     }
                     override fun onError(anError: ANError?) {
+                        if(mCout==(product.size)-1){
+                            mupdateData!!.onupdate()
+                        }
                         mCout++
                         Log.d("REALMCONTROLLER",anError?.errorDetail+"//ERROR"+anError?.errorBody+"//"+product[i].imagechanged)
                     }
@@ -100,6 +130,7 @@ class RealmController(application: Context) {
 
     interface updateData {
         fun onupdate()
+        fun onupdateProduct(type:Int)
     }
 
     //find all objects in the Champion.class

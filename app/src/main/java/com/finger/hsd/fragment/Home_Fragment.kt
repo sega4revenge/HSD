@@ -40,6 +40,9 @@ import kotlin.collections.ArrayList
 
 
 class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmController.updateData{
+    override fun onupdateProduct(type: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private var mCount  = 0
     private var checkRefresh  = false
@@ -48,9 +51,13 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
     private var mAdapter: Main_list_Adapter? = null
     private var mRetrofitService: RetrofitService? = null
     private var listProduct:ArrayList<Product_v>? = ArrayList<Product_v>()
+    private var listheader:ArrayList<Int>? = ArrayList<Int>()
     private var mLayoutManager:LinearLayoutManager? =null
     private var myRealm: RealmController? = null
     private var mRefresh:SwipeRefreshLayout? = null
+    private var mPositionEX = -1
+    private var mPositionWaring = -1
+    private var mPositionProtect = -1
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         initView()
@@ -113,7 +120,6 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
         })
     }
     private fun getData(){
-
         mRetrofitService = ApiUtils.getAPI()
         mRetrofitService?.getAllProductInGroup("5b0bb59da2c5e873632215a2")?.enqueue(object: Callback<Result_Product>{
             override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
@@ -125,14 +131,6 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
                 if(response?.isSuccessful!!){
                     if(response?.code()==200){
                         Log.d("//////////",response?.body().listProduct.size.toString()+"//")
-//                        for (i in 0 until response?.body().listProduct.size){
-//                            if(myRealm?.checkaddsuccess(response?.body().listProduct.get(i)._id)!!>0){
-//                                response?.body().listProduct.get(i).imagechanged = myRealm?.getProduct(response?.body().listProduct.get(i)._id)!!.imagechanged
-//                            }else{
-//                                AndroidNetworking.download()
-//                                response?.body().listProduct.get(i).imagechanged = path
-//                            }
-//                        }
                         myRealm?.updateorCreateListProduct(response?.body().listProduct,this@Home_Fragment)
 
                     }
@@ -143,61 +141,32 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
 
         })
     }
-    @Throws(IOException::class)
-    fun saveImageToExternal(bm: Bitmap) : String {
-        //Create Path to save Image
-        val imageFile = getOutputMediaFile() //Creates app specific folder
-        imageFile.mkdirs()
-        val out = FileOutputStream(imageFile)
-        try {
-            bm.compress(Bitmap.CompressFormat.PNG, 100, out) // Compress Image
-            out.flush()
-            out.close()
-
-            MediaScannerConnection.scanFile(FacebookSdk.getApplicationContext(), arrayOf(imageFile.getAbsolutePath()), null) { path, uri ->
-                Log.i("ExternalStorage", "Scanned $path:")
-                Log.i("ExternalStorage", "-> uri=$uri")
-            }
-        } catch (e: Exception) {
-            throw IOException()
-        }
-        return imageFile.absolutePath
-    }
-    private fun getOutputMediaFile(): File {
-        val mediaStorageDir = activity!!.getExternalFilesDir(null)
-        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss")
-                .format(Date())
-        val mediaFile: File
-        mediaFile = File(mediaStorageDir!!.getPath() + File.separator
-                + "IMG_" + timeStamp + ".jpg")
-        return mediaFile
-    }
-
     fun loadData(){
         listProduct = myRealm?.getlistProduct()
         if(listProduct != null && listProduct?.size!! > 0) {
-            var st = ""
+
+//            var st = ""
             val sdf = SimpleDateFormat("dd/MM/yyyy")
             val stringToday = sdf.format(Date())
             val exToday = sdf.parse(stringToday)
             var miliexToday: Long = exToday.getTime()
-            var check_hethan = false
-
-            for (i in listProduct!!) {
-                if (st.indexOf(getDate(i.expiretime, "dd/MM/yyyy")) > 0) {
-                } else {
-                    if (miliexToday < i.expiretime) {
-                        st = st + " " + getDate(i.expiretime, "dd/MM/yyyy")
-                        mCount++
-                    } else {
-                        if (!check_hethan) {
-                            st = st + " " + getDate(i.expiretime, "dd/MM/yyyy")
-                            check_hethan = true
-                            mCount++
-                        }
-                    }
-                }
-            }
+//            var check_hethan = false
+//
+//            for (i in listProduct!!) {
+//                if (st.indexOf(getDate(i.expiretime, "dd/MM/yyyy")) > 0) {
+//                } else {
+//                    if (miliexToday < i.expiretime) {
+//                        st = st + " " + getDate(i.expiretime, "dd/MM/yyyy")
+//                        mCount++
+//                    } else {
+//                        if (!check_hethan) {
+//                            st = st + " " + getDate(i.expiretime, "dd/MM/yyyy")
+//                            check_hethan = true
+//                            mCount++
+//                        }
+//                    }
+//                }
+//            }
             listProduct?.sortWith(Comparator(fun(a: Product_v, b: Product_v): Int {
                 if (a.expiretime < b.expiretime)
                     return -1
@@ -205,7 +174,31 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
                     return 1
                 return 0
             }))
-            mAdapter = Main_list_Adapter(activity, listProduct, mCount, this)
+             var listData = ArrayList<Product_v>()
+             for (i in 0 until  listProduct!!.size) {
+                 var dis = listProduct!!.get(i).getExpiretime() / 86400000 - miliexToday / 86400000
+                 Log.d("///////////", dis.toString()+"//"+getDate(listProduct!!.get(i).expiretime,"dd/MM/yyyy"))
+                 if(mPositionEX==-1 && dis<=0){
+                     mPositionEX = i
+                     listData.add(Product_v("","",0,"",""))
+                     listheader?.add(i)
+                 }
+                 if(mPositionWaring==-1 && dis<10 && dis>0){
+                     mPositionWaring = i
+                     listheader?.add(i)
+                     listData.add(Product_v("","",0,"",""))
+                 }
+                 if(mPositionProtect==-1 && dis>10){
+                     mPositionProtect = i
+                     listheader?.add(i)
+                     listData.add(Product_v("","",0,"",""))
+                 }
+                 listData.add(listProduct!!.get(i))
+             }
+            for (i in 0 until  listheader!!.size) {
+                Log.d("///////////", listheader!![i].toString())
+            }
+            mAdapter = Main_list_Adapter(activity, listData, listheader, this)
             mRec?.adapter = mAdapter
         }
     }

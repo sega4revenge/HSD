@@ -1,30 +1,18 @@
 package com.finger.hsd.activity
 
 import android.Manifest
-import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.graphics.SurfaceTexture
 import android.graphics.drawable.ColorDrawable
-import android.hardware.Camera
-import android.media.MediaActionSound
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.support.design.widget.TextInputEditText
-import android.support.design.widget.TextInputLayout
 import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
-import android.util.DisplayMetrics
 import android.util.Log
-import android.util.SparseArray
 import android.view.*
-import android.widget.DatePicker
 import android.widget.TextView
 
 import com.finger.hsd.R
@@ -49,7 +37,7 @@ import retrofit2.Response
 import java.util.*
 
 
-class Scanner_Barcode_Activity : AppCompatActivity(), View.OnClickListener ,ZXingScannerView.ResultHandler {
+class Scanner_Barcode_Activity : BaseScannerActivity(), View.OnClickListener ,ZXingScannerView.ResultHandler {
     private var cameraView: SurfaceView? = null
     private var barcodeDetector: BarcodeDetector? = null
     private var cameraSource: CameraSource? = null
@@ -65,8 +53,9 @@ class Scanner_Barcode_Activity : AppCompatActivity(), View.OnClickListener ,ZXin
     var contentFrame:ViewGroup? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.scanner_barcode_layout2)
+        setContentView(R.layout.scanner_barcode_layout)
 
+        setupToolbar()
 
         contentFrame =findViewById<ViewGroup>(R.id.content_frame)
         try {
@@ -82,11 +71,11 @@ class Scanner_Barcode_Activity : AppCompatActivity(), View.OnClickListener ,ZXin
 
 
 
-        txManual = findViewById<TextView>(R.id.addmanual)
-        txAddProduct = findViewById<TextView>(R.id.addproduct)
+    //    txManual = findViewById<TextView>(R.id.addmanual)
+    //    txAddProduct = findViewById<TextView>(R.id.addproduct)
 
-        txManual?.setOnClickListener(this)
-        txAddProduct?.setOnClickListener(this)
+    //    txManual?.setOnClickListener(this)
+    //    txAddProduct?.setOnClickListener(this)
 
 //        barcodeDetector = BarcodeDetector.Builder(this)
 //                .setBarcodeFormats(Barcode.EAN_13)
@@ -151,14 +140,14 @@ class Scanner_Barcode_Activity : AppCompatActivity(), View.OnClickListener ,ZXin
     override fun handleResult(p0: Result?) {
         Toast.makeText(this, "Contents = " + p0?.getText() +
                 ", Format = " + p0?.getBarcodeFormat().toString(), Toast.LENGTH_SHORT).show()
-        if(!p0?.text.isNullOrEmpty()&& arrBarcode.indexOf(p0?.getText()!!)<0){
+     //   if(!p0?.text.isNullOrEmpty()&& arrBarcode.indexOf(p0?.getText()!!)<0){
             checkBarcode(p0?.getText()!!)
-            arrBarcode = arrBarcode +" "+p0?.getText()!!;
-        }
+            arrBarcode = arrBarcode +" "+p0?.getText()!!
+     //   }
         val handler = Handler()
         handler.postDelayed(Runnable {
             mScannerView?.resumeCameraPreview(this@Scanner_Barcode_Activity)
-        }, 5000)
+        }, 2000)
     }
     public override fun onResume() {
         super.onResume()
@@ -180,7 +169,7 @@ class Scanner_Barcode_Activity : AppCompatActivity(), View.OnClickListener ,ZXin
             override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
                 if(response?.isSuccessful!!){
                     if(response?.code()==200){
-                        val mProduct = response.body().productType_v
+                        val mProduct = response.body().productType
                         val i = Intent(this@Scanner_Barcode_Activity,Add_Product::class.java)
                         i.putExtra("type",2)
                         i.putExtra("barcode",mProduct.barcode.toString())

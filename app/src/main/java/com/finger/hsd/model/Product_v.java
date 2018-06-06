@@ -12,12 +12,13 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 public class Product_v extends RealmObject {
-    @PrimaryKey
+
     private String namechanged;
     private String barcode;
     private long expiretime;
     private String description;
     private String imagechanged;
+    @PrimaryKey
     private String _id;
 
     public String get_id() {

@@ -1,7 +1,12 @@
 package com.finger.hsd.fragment
 
+import android.app.AlertDialog
+import android.app.Dialog
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.media.MediaScannerConnection
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -13,9 +18,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.afollestad.materialdialogs.MaterialDialog
 import com.androidnetworking.AndroidNetworking
 import com.facebook.FacebookSdk
 import com.finger.hsd.R
+import com.finger.hsd.activity.Scanner_Barcode_Activity
 import com.finger.hsd.adapters.Main_list_Adapter
 import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Product
@@ -24,6 +31,7 @@ import com.finger.hsd.model.Result_Product
 import com.finger.hsd.util.ApiUtils
 import com.finger.hsd.util.Constants
 import com.finger.hsd.util.RetrofitService
+import kotlinx.android.synthetic.main.not_found_product.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -58,6 +66,8 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
     private var mPositionEX = -1
     private var mPositionWaring = -1
     private var mPositionProtect = -1
+    private var mDialogProgress:Dialog? = null
+    private var mDialogProgressDelete:Dialog? = null
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         initView()
@@ -93,46 +103,104 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
             mCount =0
         }
     }
+    private fun showDialog(title: String) {
+        val m = MaterialDialog.Builder(activity!!)
+                .content(title)
+                .cancelable(false)
+                .progress(true, 0)
+        mDialogProgress = m.show()
+    }
+    fun showDialogDelete(listDelete: String?, arrID : List<Product_v>){
+        val dialogdelete = MaterialDialog.Builder(activity!!)
+                .title("Bạn muốn xóa toàn bộ sản phẩm này?")
+                .content("Nhấn OK để xóa toàn bộ sản phẩm này")
+                .cancelable(false)
+                .positiveText("OK")
+                .negativeText("Cancel")
+                .onPositive { dialog, which ->
+                    showDialog("Đang xóa sản phẩm...")
+                    mRetrofitService = ApiUtils.getAPI()
+                    mRetrofitService?.deleteGroup(listDelete!!)?.enqueue(object: Callback<Result_Product>{
+                        override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
+                            Toast.makeText(activity,"Error! \n message:"+t?.message, Toast.LENGTH_SHORT).show()
+                        }
+
+                        override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
+                            if(response?.isSuccessful!!){
+                                if(response?.code()==200){
+                                    myRealm?.deletelistproduct(arrID,this@Home_Fragment)
+                                }
+                            }else{
+                                Toast.makeText(activity,"Error! \n message:"+response?.message(), Toast.LENGTH_SHORT).show()
+                            }
+                            mDialogProgressDelete?.dismiss()
+                        }
+
+                    })
+                }
+
+        mDialogProgressDelete = dialogdelete.build()
+        mDialogProgressDelete?.show()
+    }
+    fun showDialogNotFound(){
+        var mDialog: Dialog? = null
+        var dialog = AlertDialog.Builder(activity)
+        val mView:View = View.inflate(activity,R.layout.not_found_product,null)
+        dialog.setView(mView)
+        var create = mView.lin_create
+        create.setOnClickListener(object: View.OnClickListener{
+            override fun onClick(v: View?) {
+                val i = Intent(activity,Scanner_Barcode_Activity::class.java)
+                startActivity(i)
+                mDialog?.dismiss()
+            }
+        })
+        mDialog = dialog.create()
+        mDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        mDialog.show()
+    }
     override fun onupdate() {
         Log.d("REALMCONTROLLER","update")
+        listheader?.clear()
+        mPositionEX = -1
+        mPositionProtect = -1
+        mPositionWaring = -1
         loadData()
     }
 
-    override fun onproductClickedDelete(listDelete: String?) {
-        mRetrofitService = ApiUtils.getAPI()
-        mRetrofitService?.deleteGroup(listDelete!!)?.enqueue(object: Callback<Result_Product>{
-            override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
-                Toast.makeText(activity,"Error! \n message:"+t?.message, Toast.LENGTH_SHORT).show()
-            }
+    override fun onupdateDelete() {
+        mDialogProgress?.dismiss()
+        listProduct?.clear()
+        mCount =0
+        getData()
+    }
 
-            override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
-                if(response?.isSuccessful!!){
-                    if(response?.code()==200){
-                        listProduct?.clear()
-                        mCount =0
-                        getData()
-                    }
-                }else{
-                    Toast.makeText(activity,"Error! \n message:"+response?.message(), Toast.LENGTH_SHORT).show()
-                }
-            }
+    override fun onproductClickedDelete(listDelete: String?, arrID : List<Product_v>) {
+        showDialogDelete(listDelete,arrID)
 
-        })
     }
     private fun getData(){
         mRetrofitService = ApiUtils.getAPI()
-        mRetrofitService?.getAllProductInGroup("5b0bb59da2c5e873632215a2")?.enqueue(object: Callback<Result_Product>{
+        mRetrofitService?.getAllProductInGroup("5b14b582c040310f42d8e0ee")?.enqueue(object: Callback<Result_Product>{
             override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
-                loadData()
+                if(myRealm?.getlistProduct()!!.size==0){
+                    showDialogNotFound()
+                }else{
+                    loadData()
+                }
                 Toast.makeText(activity,"Error! \n message:"+t?.message, Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
                 if(response?.isSuccessful!!){
                     if(response?.code()==200){
-                        Log.d("//////////",response?.body().listProduct.size.toString()+"//")
-                        myRealm?.updateorCreateListProduct(response?.body().listProduct,this@Home_Fragment)
-
+                        if(response?.body().listProduct.size>0){
+                            Log.d("REALMCONTROLLER",response?.body().listProduct.size.toString()+"//listProduct")
+                            showDialog("Đang đồng bộ dữ liệu...")
+                            myRealm?.updateorCreateListProduct(response?.body().listProduct,this@Home_Fragment)
+                        }else if(myRealm?.getlistProduct()!!.size==0){
+                            showDialogNotFound()
+                        }
                     }
                 }else{
                     Toast.makeText(activity,"Error! \n message:"+response?.message(), Toast.LENGTH_SHORT).show()
@@ -145,7 +213,6 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
         listProduct = myRealm?.getlistProduct()
         if(listProduct != null && listProduct?.size!! > 0) {
 
-//            var st = ""
             val sdf = SimpleDateFormat("dd/MM/yyyy")
             val stringToday = sdf.format(Date())
             val exToday = sdf.parse(stringToday)
@@ -177,29 +244,27 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
              var listData = ArrayList<Product_v>()
              for (i in 0 until  listProduct!!.size) {
                  var dis = listProduct!!.get(i).getExpiretime() / 86400000 - miliexToday / 86400000
-                 Log.d("///////////", dis.toString()+"//"+getDate(listProduct!!.get(i).expiretime,"dd/MM/yyyy"))
                  if(mPositionEX==-1 && dis<=0){
                      mPositionEX = i
-                     listData.add(Product_v("","",0,"",""))
+                     listData.add(Product_v("1","","",0,"",""))
                      listheader?.add(i)
                  }
                  if(mPositionWaring==-1 && dis<10 && dis>0){
                      mPositionWaring = i
                      listheader?.add(i)
-                     listData.add(Product_v("","",0,"",""))
+                     listData.add(Product_v("1","","",0,"",""))
                  }
                  if(mPositionProtect==-1 && dis>10){
                      mPositionProtect = i
                      listheader?.add(i)
-                     listData.add(Product_v("","",0,"",""))
+                     listData.add(Product_v("1","","",0,"",""))
                  }
                  listData.add(listProduct!!.get(i))
              }
-            for (i in 0 until  listheader!!.size) {
-                Log.d("///////////", listheader!![i].toString())
-            }
+
             mAdapter = Main_list_Adapter(activity, listData, listheader, this)
             mRec?.adapter = mAdapter
+            mDialogProgress?.dismiss()
         }
     }
     fun getDate(milliSeconds: Long, dateFormat: String): String {

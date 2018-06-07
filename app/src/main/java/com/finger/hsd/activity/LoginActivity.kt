@@ -54,16 +54,17 @@ class LoginActivity : AppCompatActivity(), LoginPresenter.LoginView, GoogleApiCl
         setContentView(R.layout.activity_login)
 
         mAccountManager = AccountManager.get(this)
-
-        val accountsFromFirstApp = mAccountManager!!.getAccountsByType(AppManager.ACCOUNT_TYPE)
-        if (accountsFromFirstApp.isNotEmpty()) {
-
-           // User is already logged in. Take him to main activity
-            val intent = Intent(this, HorizontalNtbActivity::class.java)
-            startActivity(intent)
-            finish()
-            overridePendingTransition(0, 0)
-        }
+          val intent = Intent(this, HorizontalNtbActivity::class.java)
+          startActivity(intent)
+//        val accountsFromFirstApp = mAccountManager!!.getAccountsByType(AppManager.ACCOUNT_TYPE)
+//        if (accountsFromFirstApp.isNotEmpty()) {
+//
+//           // User is already logged in. Take him to main activity
+//            val intent = Intent(this, HorizontalNtbActivity::class.java)
+//            startActivity(intent)
+//            finish()
+//            overridePendingTransition(0, 0)
+//        }
 
         AppEventsLogger.activateApp(this)
         mLoginPresenter = LoginPresenter(this)

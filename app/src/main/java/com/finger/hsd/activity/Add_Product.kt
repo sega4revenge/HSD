@@ -44,8 +44,6 @@ import java.util.zip.Inflater
 
 
 class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.updateData {
-
-
     private var img_product: ImageView? = null
     private var arrow_back: ImageView? = null
     private var select_img: LinearLayout? = null
@@ -86,6 +84,10 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
             barcode?.setText(barcodeIn)
         }
 
+    }
+
+    override fun onupdateDelete() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun getData() {
@@ -172,7 +174,7 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
                 }else{
                     mRetrofitService = ApiUtils.getAPI()
                     if(type==2){//==========Truong Hop k update image
-                        mRetrofitService?.addProduct_nonImage(edit_nameproduct?.text.toString(),barcodeIn.toString(),miliexDate.toString(),"5b0bb59da2c5e873632215a2",edit_chitiet?.text.toString())?.enqueue(object: Callback<Result_Product>{
+                        mRetrofitService?.addProduct_nonImage(edit_nameproduct?.text.toString(),barcodeIn.toString(),miliexDate.toString(),"5b14b582c040310f42d8e0ee",edit_chitiet?.text.toString())?.enqueue(object: Callback<Result_Product>{
                             override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
                                 Toast.makeText(this@Add_Product,"Error! \n message:"+t?.message,Toast.LENGTH_SHORT)
                                 mDialogProgress?.dismiss()
@@ -210,7 +212,7 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
                                 RequestBody.create(MediaType.parse("multipart/form-data"),barcodeIn)
 
                         val iduser =
-                                RequestBody.create(MediaType.parse("multipart/form-data"),"5b0bb59da2c5e873632215a2")
+                                RequestBody.create(MediaType.parse("multipart/form-data"),"5b14b582c040310f42d8e0ee")
 
                         mRetrofitService?.addProduct(nameproduct,barcodenum,hsd_ex,detail,iduser,photoproduct)?.enqueue(object: Callback<Result_Product>{
                             override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {

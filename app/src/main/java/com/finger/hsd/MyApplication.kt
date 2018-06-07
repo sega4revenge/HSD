@@ -11,6 +11,9 @@ import java.net.Socket
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.*
+import android.support.multidex.MultiDex
+
+
 
 class MyApplication : Application() {
     private var mSocket: Socket? = null
@@ -56,6 +59,8 @@ class MyApplication : Application() {
         }
 
     }
+
+
     override fun onCreate() {
         super.onCreate()
         instance = this
@@ -82,7 +87,7 @@ class MyApplication : Application() {
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
-
+        MultiDex.install(this)
     }
 
     fun getGoogleApiHelperInstance(): GoogleApiHelper? = this.googleApiHelper

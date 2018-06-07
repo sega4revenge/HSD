@@ -31,6 +31,7 @@ import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.error.ANError
 import com.finger.hsd.MyApplication
 import com.finger.hsd.util.Constants
+import kotlin.collections.ArrayList
 
 
 class RealmController(application: Context) {
@@ -130,12 +131,30 @@ class RealmController(application: Context) {
 
     interface updateData {
         fun onupdate()
+        fun onupdateDelete()
         fun onupdateProduct(type:Int)
+    }
+
+    //delete list product
+    fun deletelistproduct(arr: List<Product_v>,mupdateData2:updateData){
+
+        for(i in 0 until arr.size){
+            try{
+                Log.d("RealmController","error delete :"+arr.get(i))
+                arr.get(i).isDelete = true
+                realm.beginTransaction()
+                realm.copyToRealmOrUpdate(arr)
+                realm.commitTransaction()
+            }catch (err: Exception){
+                Log.d("RealmController","error delete :"+err.message)
+            }
+        }
+        mupdateData2.onupdateDelete()
     }
 
     //find all objects in the Champion.class
     fun getlistProduct(): ArrayList<Product_v> {
-        return realm.copyFromRealm(realm.where(Product_v::class.java).findAll()) as ArrayList<Product_v>
+        return realm.copyFromRealm(realm.where(Product_v::class.java).equalTo("delete",false).findAll()) as ArrayList<Product_v>
     }
 
     //query a single item with the given id

@@ -18,6 +18,8 @@ public class Product_v extends RealmObject {
     private long expiretime;
     private String description;
     private String imagechanged;
+    private boolean delete;
+
     @PrimaryKey
     private String _id;
 
@@ -37,6 +39,22 @@ public class Product_v extends RealmObject {
         this.description = description;
         this.imagechanged = imagechanged;
     }
+    public Product_v(String _id,String namechanged,String barcode,long expiretime,String description,String imagechanged){
+        this.namechanged = namechanged;
+        this.barcode = barcode;
+        this.expiretime = expiretime;
+        this.description = description;
+        this.imagechanged = imagechanged;
+        this._id = _id;
+    }
+    public boolean isDelete() {
+        return delete;
+    }
+
+    public void setDelete(boolean delete) {
+        this.delete = delete;
+    }
+
     @Override
     public String toString() {
         return "nameproduct: " + namechanged + ", barcode: "+barcode + ", hsd_ex: "+expiretime + ", detailproduct: "+description;

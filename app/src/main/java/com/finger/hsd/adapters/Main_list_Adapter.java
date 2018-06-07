@@ -15,7 +15,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.request.RequestOptions;
 import com.finger.hsd.MyApplication;
 import com.finger.hsd.R;
 import com.finger.hsd.model.Product;
@@ -59,7 +62,7 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private Picasso picasso;
     private RetrofitService mRetrofitService;
     public Main_list_Adapter(){}
-
+    public RequestOptions optionsGlide;
     public Main_list_Adapter(Context mContext, List<Product_v> mProducts, ArrayList<Integer> listheader,OnproductClickListener onproductClickListener) throws ParseException {
         this.mContext = mContext;
         this.mProducts = mProducts;
@@ -69,15 +72,19 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         String stringToday = sdf.format(new Date());
         Date exToday = sdf.parse(stringToday);
         miliexToday =  exToday.getTime();
-        mCountT = new int[mProducts.size()+header.size()];
+        mCountT = new int[mProducts.size()];
 
-        for (int i=0;i<mProducts.size()+header.size();i++){
+        for (int i=0;i<mProducts.size();i++){
             mCountT[i] = 0;
         }
-        picasso =  new Picasso.Builder(mContext).indicatorsEnabled(true)
-                .downloader(new OkHttp3Downloader(MyApplication.Companion.okhttpclient()))
-                .build();
-
+//        picasso =  new Picasso.Builder(mContext).indicatorsEnabled(true)
+//                .downloader(new OkHttp3Downloader(MyApplication.Companion.okhttpclient()))
+//                .build();
+        optionsGlide = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.ic_add_photo)
+                .error(R.drawable.ic_back)
+                .priority(Priority.LOW);
     }
 
 
@@ -121,13 +128,15 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                     if(!possitionChange.contains(position))
                     {
-                        for (int i=position+1;i<mProducts.size()+header.size();i++){
+                        for (int i=position+1;i<mProducts.size();i++){
                             mCountT[i] = mCountT[i]+1;
                             if(i==mProducts.size()-1+mCount){
                                 possitionChange.add(position);
                             }
                         }
                     }
+
+
 
 //                    if(mCountT[position] != 0 && ((HeaderViewHolder) holder).space.getVisibility() != View.VISIBLE){
 //                        ((HeaderViewHolder) holder).space.setVisibility(View.VISIBLE);
@@ -150,69 +159,57 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 //                            }
 //                        }
 //                    }
+
+
                     ((HeaderViewHolder) holder).mClear.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             String _idDelete = "";
-                            for (int i=position+1;i<mProducts.size()+header.size();i++){
-                                Log.d("//////////",mProducts.get(i).get_id()+"//");
+                            List<Product_v> arrID = new ArrayList<Product_v>();
+                            for (int i=position+1;i<mProducts.size();i++){
+                                arrID.add(mProducts.get(i));
                                 if(_idDelete==""){
                                     _idDelete = mProducts.get(i).get_id()+",";
                                 }else{
                                     _idDelete =_idDelete+mProducts.get(i).get_id()+",";
                                 }
-                                if((i+2) < mCountT.length && mCountT[i]!=mCountT[i+2]){
-                                 break;
+                                try{
+                                    if(mProducts.get(i+1).get_id()=="1"){
+                                        break;
+                                    }
+                                }catch (Exception err){
+                                    Log.d("Adapter:",err.getMessage());
+                                    break;
                                 }
                             }
                             if(_idDelete!= ""){
-                                Log.d("//////////",_idDelete+"//");
-                              //  onproductClickListener.onproductClickedDelete(_idDelete);
+                                onproductClickListener.onproductClickedDelete(_idDelete,arrID);
                             }
                         }
                     });
             } else if (holder instanceof ItemViewHolder) { //Constants.INSTANCE.getIMAGE_URL()+
-                Log.d("///////////",position+"////"+(position-mCountT[position])+"//mCountT/"+mCountT[position]);
-                    Glide.with(mContext).load(mObject.getImagechanged()).into(((ItemViewHolder) holder).photo_product);
-                //     Bitmap bm = decodeSampledBitmapFromResource(mObject.getImagechanged(),60,60);
-                 //   ((ItemViewHolder) holder).photo_product.setImageBitmap(bm);
+                    Glide.with(mContext).load(mObject.getImagechanged()).apply(optionsGlide).into(((ItemViewHolder) holder).photo_product);
                     ((ItemViewHolder) holder).txt_barcode.setText(mObject.getBarcode());
                     ((ItemViewHolder) holder).txt_detail.setText(mObject.getDescription());
                     ((ItemViewHolder) holder).txt_exdate.setText(getDate(mObject.getExpiretime(), "dd/MM/yyyy"));
                     ((ItemViewHolder) holder).txt_nameproduct.setText(mObject.getNamechanged());
-                 //   if(bm!=null)
-                 //   {
-                  //      bm.recycle();
-                  //      bm = null;
-                  //  }
-//                    if((position) != (mProducts.size()+mCount-1) && (getDate(mObject.getExpiretime(), "dd/MM/yyyy") != (getDate(mProducts.get(position+1-mCountT[position]).getExpiretime(), "dd/MM/yyyy"))) && miliexToday<mProducts.get(position+1-mCountT[position]).getExpiretime()){
-//                        header.add(position+1);
-//                        ((ItemViewHolder) holder).divide.setVisibility(View.GONE);
-//                    }
-//                    if(miliexToday>mObject.getExpiretime()){
-//                        if(((ItemViewHolder) holder).txt_warring.getText()!="Cảnh báo"){
-//                            ((ItemViewHolder) holder).txt_warring.setText("Cảnh báo");
-//                            ((ItemViewHolder) holder).txt_warring.setTextColor(mContext.getResources().getColor(R.color.white));
-//                            ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_itemview);
-//                        }
-//                    }else{
-//                        long dis = (mObject.getExpiretime()/86400000 - miliexToday/86400000);
-//                        if(dis<30){
-//                            if(((ItemViewHolder) holder).txt_warring.getText()!="Hãy sủ dụng ngay"){
-//                                ((ItemViewHolder) holder).txt_warring.setText("Hãy sủ dụng ngay");
-//                                ((ItemViewHolder) holder).txt_warring.setTextColor(mContext.getResources().getColor(R.color.white));
-//                                ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_item_at);
-//                            }
-//                        }else{
-//                            if(((ItemViewHolder) holder).txt_warring.getText()!="An toàn"){
-//                                ((ItemViewHolder) holder).txt_warring.setText("An toàn");
-//                                ((ItemViewHolder) holder).txt_warring.setTextColor(mContext.getResources().getColor(R.color.colorAccent));
-//                                ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_att);
-//                            }
+
 //
-//                        }
-//
-//                    }
+                    if(miliexToday>mObject.getExpiretime()){
+                        if( ((ItemViewHolder) holder).txt_warring.getText()!="Hết hạn"){
+                            ((ItemViewHolder) holder).txt_warring.setText("Hết hạn");
+                            ((ItemViewHolder) holder).txt_warring.setTextColor(mContext.getResources().getColor(R.color.white));
+                            ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_itemview);
+                        }
+                    }else{
+                        long dis = (mObject.getExpiretime()/86400000 - miliexToday/86400000);
+                            if(((ItemViewHolder) holder).txt_warring.getText()!= dis+" day left"){
+                                ((ItemViewHolder) holder).txt_warring.setText(dis+" day left");
+                                ((ItemViewHolder) holder).txt_warring.setTextColor(mContext.getResources().getColor(R.color.white));
+                                ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_item_at);
+                            }
+
+                    }
 
             }
     }
@@ -322,6 +319,6 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     }
     public interface OnproductClickListener {
-        void onproductClickedDelete(String listDelete);
+        void onproductClickedDelete(String listDelete,List<Product_v> arr);
     }
 }

@@ -11,8 +11,8 @@ import android.support.annotation.Nullable
 import android.util.Log
 import android.widget.Toast
 import com.facebook.login.LoginManager
-import com.finger.hsd.MyApplication
 import com.finger.hsd.activity.LoginActivity
+import com.finger.hsd.common.MyApplication
 import com.finger.hsd.model.User
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions

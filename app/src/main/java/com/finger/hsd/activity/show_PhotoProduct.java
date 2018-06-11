@@ -1,19 +1,16 @@
 package com.finger.hsd.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MotionEvent;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.finger.hsd.MyApplication;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.request.RequestOptions;
 import com.finger.hsd.R;
-import com.finger.hsd.util.OkHttp3Downloader;
-import com.squareup.picasso.Picasso;
 
 
 public class show_PhotoProduct extends AppCompatActivity  {
@@ -31,9 +28,17 @@ public class show_PhotoProduct extends AppCompatActivity  {
         int type = i.getIntExtra("type",1);
         String path = i.getStringExtra("path");
         if(type!=0){
-           new Picasso.Builder(show_PhotoProduct.this)
-                    .downloader(new OkHttp3Downloader(MyApplication.Companion.okhttpclient()))
-                    .build().load(path).into(img);
+            RequestOptions options = new RequestOptions()
+                    .centerCrop()
+                    .dontAnimate()
+                    .placeholder(R.mipmap.ic_launcher)
+                    .priority(Priority.HIGH);
+            Glide.with(this)
+                        .load(path)
+                    .thumbnail(0.1f)
+                    .apply(options)
+                    .into(img);
+
         }else{
             img.setImageBitmap(BitmapFactory.decodeFile(path));
             img_back.setOnClickListener(new View.OnClickListener() {

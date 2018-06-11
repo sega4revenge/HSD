@@ -6,18 +6,20 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import com.facebook.*
 import com.facebook.appevents.AppEventsLogger
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
-import com.finger.hsd.MyApplication
+import com.finger.hsd.BaseActivity
 import com.finger.hsd.R
+import com.finger.hsd.common.MyApplication
 import com.finger.hsd.manager.AppManager
 import com.finger.hsd.model.User
 import com.finger.hsd.presenter.LoginPresenter
+import com.finger.hsd.services.DataListener
+import com.finger.hsd.services.DataSync
 import com.finger.hsd.util.Constants
 import com.finger.hsd.util.Validation.validatePhone
 import com.finger.hsd.util.Validation.validatePhone2
@@ -30,7 +32,8 @@ import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_login.*
 import org.json.JSONException
 
-class LoginActivity : AppCompatActivity(), LoginPresenter.LoginView, GoogleApiClient.OnConnectionFailedListener {
+class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.OnConnectionFailedListener {
+
 
 
     var mAccountManager: AccountManager? = null
@@ -160,6 +163,7 @@ class LoginActivity : AppCompatActivity(), LoginPresenter.LoginView, GoogleApiCl
 
     }
 
+
     override fun isLoginSuccessful(isLoginSuccessful: Boolean) {
         if (isLoginSuccessful) {
             startActivity(Intent(this@LoginActivity, HorizontalNtbActivity::class.java))
@@ -186,10 +190,28 @@ class LoginActivity : AppCompatActivity(), LoginPresenter.LoginView, GoogleApiCl
 
 
     }
+    override fun isProgressData(percent: Int) {
+        showProgress("Sync data.. "+percent+ "%")
+    }
 
     override fun getUserDetail(user: User) {
-        AppManager.saveAccountUser(this,user)
-        this.user = user
+        val dataSync = DataSync(this, object : DataListener {
+            override fun onLoadStarted() {
+
+            }
+
+            override fun onLoading(percent: Int) {
+
+            }
+
+            override fun onLoadComplete(user: User) {
+                AppManager.saveAccountUser(this@LoginActivity,user)
+                this@LoginActivity.user = user
+            }
+
+        })
+        dataSync.execute(user)
+
     }
 
 

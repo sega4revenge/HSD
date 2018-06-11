@@ -2,12 +2,6 @@ package com.finger.hsd.model;
 
 
 
-import android.app.TimePickerDialog;
-import android.widget.TimePicker;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -19,7 +13,8 @@ public class Product_v extends RealmObject {
     private String description;
     private String imagechanged;
     private boolean delete;
-
+    private ProductType  productTypeId;
+    public int daybefore;
     @PrimaryKey
     private String _id;
 
@@ -47,6 +42,15 @@ public class Product_v extends RealmObject {
         this.imagechanged = imagechanged;
         this._id = _id;
     }
+
+    public ProductType getProductTypeId() {
+        return productTypeId;
+    }
+
+    public void setProductTypeId(ProductType productTypeId) {
+        this.productTypeId = productTypeId;
+    }
+
     public boolean isDelete() {
         return delete;
     }

@@ -40,4 +40,16 @@
         <attr name="ntb_preview_colors" format="reference"/>
     </declare-styleable>
 
+    <!--for image-->
+    <declare-styleable name="TedBottomPickerImageView">
+        <attr name="foreground" format="reference"/>
+        <attr name="fit_mode" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="TedBottomPickerSquareView">
+        <attr name="matchHeightToWidth" format="boolean"/>
+        <attr name="matchWidthToHeight" format="boolean"/>
+    </declare-styleable>
+
+
 </resources>

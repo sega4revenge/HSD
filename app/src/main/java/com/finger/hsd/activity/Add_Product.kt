@@ -1,35 +1,25 @@
 package com.finger.hsd.activity
 
-import android.app.*
-import android.content.ContentResolver
-import android.content.Context
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.View
-
-import com.finger.hsd.R
-import android.widget.TimePicker
-import java.io.File
 import android.widget.*
 import com.afollestad.materialdialogs.MaterialDialog
-
-import com.finger.hsd.MyApplication
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
+import com.bumptech.glide.request.RequestOptions
+import com.finger.hsd.R
 import com.finger.hsd.manager.RealmController
-import com.finger.hsd.model.Product
-import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.Result_Product
-import com.finger.hsd.util.*
-import com.squareup.picasso.Picasso
-import io.realm.Realm
-import io.realm.RealmConfiguration
+import com.finger.hsd.util.ApiUtils
+import com.finger.hsd.util.CompressImage
+import com.finger.hsd.util.RetrofitService
 import kotlinx.android.synthetic.main.dialog_timepicker.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -37,10 +27,9 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.zip.Inflater
 
 
 class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.updateData {
@@ -108,10 +97,20 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
             if(type==2)
             {
                 path = mData.getStringExtra("image")
+                val options = RequestOptions()
+                        .centerCrop()
+                        .dontAnimate()
+                        .placeholder(R.mipmap.ic_launcher)
+                        .priority(Priority.HIGH)
+                Glide.with(this@Add_Product)
+                        .load(path)
+                        .thumbnail(0.1f)
+                        .apply(options)
+                        .into(img_product!!)
 
-                Picasso.Builder(this)
-                        .downloader(OkHttp3Downloader(MyApplication.okhttpclient()))
-                        .build().load(path).resize(60,60).error(R.drawable.ic_add_photo).placeholder(R.drawable.ic_calendar).into(img_product!!)
+//                Picasso.Builder(this)
+//                        .downloader(OkHttp3Downloader(MyApplication.okhttpclient()))
+//                        .build().load(path).resize(60,60).error(R.drawable.ic_add_photo).placeholder(R.drawable.ic_calendar).into(img_product!!)
             }
             barcodeIn = mData.getStringExtra("barcode")
             edit_nameproduct?.setText(mData.getStringExtra("name"))

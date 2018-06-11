@@ -10,11 +10,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.facebook.FacebookSdk;
 import com.finger.hsd.R;
-import com.finger.hsd.fragment.BlankFragment;
-import com.finger.hsd.fragment.BlankFragment2;
 import com.finger.hsd.fragment.BlankFragment3;
 import com.finger.hsd.fragment.Home_Fragment;
+import com.finger.hsd.fragment.NotificationFragment;
 import com.finger.hsd.library.NavigationTabBar;
 
 import java.util.ArrayList;
@@ -23,6 +23,7 @@ public class HorizontalNtbActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        FacebookSdk.sdkInitialize(getApplicationContext());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temp);
         initUI();
@@ -46,7 +47,7 @@ public class HorizontalNtbActivity extends AppCompatActivity{
                     case 0: // Fragment # 0 - This will show FirstFragment
                         return new Home_Fragment();
                     case 1: // Fragment # 0 - This will show FirstFragment different title
-                        return new BlankFragment2();
+                        return new NotificationFragment();
                     case 2: // Fragment # 1 - This will show SecondFragment
                         return new BlankFragment3();
                     default:

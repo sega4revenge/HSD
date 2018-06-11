@@ -3,7 +3,6 @@ package com.finger.hsd.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,27 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.request.RequestOptions;
-import com.finger.hsd.MyApplication;
 import com.finger.hsd.R;
-import com.finger.hsd.model.Product;
 import com.finger.hsd.model.Product_v;
-import com.finger.hsd.model.Result_Product;
-import com.finger.hsd.util.ApiUtils;
-import com.finger.hsd.util.Constants;
-import com.finger.hsd.util.OkHttp3Downloader;
-import com.finger.hsd.util.RetrofitService;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,9 +24,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context mContext;
@@ -52,16 +34,14 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private long miliexToday = 0;
     private int mCount = 0;
     private  int[] mCountT;
-    private String st = "";
+
     private OnproductClickListener onproductClickListener;
-    private boolean mCheckEX  = false;
+
     private  ArrayList<Integer> possitionChange = new ArrayList<>();
     private List<Integer> header =new ArrayList<>();
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-    BitmapFactory.Options options;
-    private Picasso picasso;
-    private RetrofitService mRetrofitService;
-    public Main_list_Adapter(){}
+
+
     public RequestOptions optionsGlide;
     public Main_list_Adapter(Context mContext, List<Product_v> mProducts, ArrayList<Integer> listheader,OnproductClickListener onproductClickListener) throws ParseException {
         this.mContext = mContext;

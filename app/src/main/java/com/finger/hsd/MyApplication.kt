@@ -3,15 +3,18 @@ package com.finger.hsd
 import android.app.Application
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.support.multidex.MultiDex
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.ConnectionQuality
 import com.finger.hsd.manager.GoogleApiHelper
+import io.realm.Realm
+import io.realm.RealmConfiguration
 import okhttp3.OkHttpClient
 import java.net.Socket
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.*
-import android.support.multidex.MultiDex
+
 
 
 
@@ -64,6 +67,10 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        MultiDex.install(this)
+        Realm.init(this)
+        val config = RealmConfiguration.Builder().name("myAlarm.realm").build()
+        Realm.setDefaultConfiguration(config)
 
         val okHttpClient = OkHttpClient().newBuilder()
                 .connectTimeout(5, TimeUnit.SECONDS)

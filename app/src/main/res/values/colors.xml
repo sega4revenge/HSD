@@ -16,4 +16,8 @@
     <color name="viewfinder_mask">#60000000</color>
     <color name="viewfinder_laser">#ffcc0000</color>
     <color name="viewfinder_border">#ffafed44</color>
+
+    <color name="gray">#d7d7d7</color>
+    <color name="black_gray">#464646</color>
+    <color name="light_grey">#EBEBF1</color>
 </resources>

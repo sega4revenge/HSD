@@ -79,7 +79,7 @@ class RealmController(application: Context) {
 
     }
     //clear all objects from Champion.class
-    fun updateorCreateListProduct(product: ArrayList<Product_v>,mupdateData2:updateData){
+    fun updateorCreateListProduct(context: Context,product: ArrayList<Product_v>,mupdateData2:updateData){
         this.mupdateData = mupdateData2
         var mCout = 0
         for (i in 0 until product.size){
@@ -97,12 +97,12 @@ class RealmController(application: Context) {
                 }
                 mCout++
             }else{
-                val mediaStorageDir = getApplicationContext().getExternalFilesDir(null)
+                val mediaStorageDir = context.getExternalFilesDir(null)
                 val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss")
                         .format(Date())
                 var path2 = File.separator+ "IMG_" + timeStamp +"_"+ product[i]?.barcode + ".jpg"
 
-                AndroidNetworking.initialize(getApplicationContext(),MyApplication.okhttpclient())
+                AndroidNetworking.initialize(context,MyApplication.okhttpclient())
                 AndroidNetworking.download(Constants.IMAGE_URL+product[i].imagechanged,mediaStorageDir.path,path2).build().startDownload(object: com.androidnetworking.interfaces.DownloadListener{
                     override fun onDownloadComplete() {
                         Log.d("REALMCONTROLLER","UPDATE SUCCESS")

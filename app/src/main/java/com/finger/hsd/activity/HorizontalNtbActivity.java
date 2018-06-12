@@ -11,9 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.finger.hsd.R;
-import com.finger.hsd.fragment.BlankFragment;
 import com.finger.hsd.fragment.BlankFragment2;
-import com.finger.hsd.fragment.BlankFragment3;
+import com.finger.hsd.fragment.FragmentProfile;
 import com.finger.hsd.fragment.Home_Fragment;
 import com.finger.hsd.library.NavigationTabBar;
 
@@ -48,7 +47,7 @@ public class HorizontalNtbActivity extends AppCompatActivity{
                     case 1: // Fragment # 0 - This will show FirstFragment different title
                         return new BlankFragment2();
                     case 2: // Fragment # 1 - This will show SecondFragment
-                        return new BlankFragment3();
+                        return new FragmentProfile();
                     default:
                         return null;
                 }
@@ -88,8 +87,8 @@ public class HorizontalNtbActivity extends AppCompatActivity{
                         getResources().getDrawable(R.drawable.ic_third),
                         Color.parseColor(colors[2]))
                         .selectedIcon(getResources().getDrawable(R.drawable.ic_seventh))
-                        .title("Diploma")
-                        .badgeTitle("state")
+                        .title("Profile")
+                        .badgeTitle("Profile")
                         .build()
         );
 

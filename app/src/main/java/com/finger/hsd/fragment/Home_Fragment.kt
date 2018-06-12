@@ -47,7 +47,7 @@ import kotlin.collections.ArrayList
 
 
 
-class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmController.updateData{
+class Home_Fragment : Fragment(), Main_list_Adapter.OnproductClickListener, RealmController.updateData{
     override fun onupdateProduct(type: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -197,7 +197,7 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
                         if(response?.body().listProduct.size>0){
                             Log.d("REALMCONTROLLER",response?.body().listProduct.size.toString()+"//listProduct")
                             showDialog("Đang đồng bộ dữ liệu...")
-                            myRealm?.updateorCreateListProduct(response?.body().listProduct,this@Home_Fragment)
+                            myRealm?.updateorCreateListProduct(activity!!,response.body().listProduct,this@Home_Fragment)
                         }else if(myRealm?.getlistProduct()!!.size==0){
                             showDialogNotFound()
                         }

@@ -25,7 +25,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.finger.hsd.R;
 import com.finger.hsd.model.ResultAPI;
 import com.finger.hsd.model.User;
-import com.finger.hsd.model.sendAddProduct;
+
 import com.finger.hsd.util.ApiUtils;
 import com.finger.hsd.util.CompressImage;
 import com.finger.hsd.util.RetrofitService;

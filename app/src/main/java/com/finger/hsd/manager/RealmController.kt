@@ -18,8 +18,24 @@ import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
 import java.io.File
+import java.io.FileOutputStream
+import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
+import android.media.MediaScannerConnection
+import android.os.Environment.DIRECTORY_PICTURES
+import android.os.Environment.getExternalStoragePublicDirectory
+import android.util.Log
+import java.io.IOException
+import android.graphics.BitmapFactory
+import android.webkit.DownloadListener
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.error.ANError
+import com.finger.hsd.common.MyApplication
+
+import com.finger.hsd.util.Constants
+import io.realm.RealmResults
+import kotlin.collections.ArrayList
 
 
 class RealmController(application: Context) {
@@ -46,7 +62,7 @@ class RealmController(application: Context) {
             realm.commitTransaction()
         }
     }
-    fun getNotification() : RealmResults<Notification>{
+    fun getNotification() : RealmResults<Notification> {
         var created_at : String? = "created_at"
         var results = realm.where(com.finger.hsd.model.Notification::class.java).findAll()
      //   results = results.sort(created_at, true)
@@ -111,7 +127,7 @@ class RealmController(application: Context) {
 
     }
     //clear all objects from Champion.class
-    fun updateorCreateListProduct(activity: Activity,product: ArrayList<Product_v>,mupdateData2:updateData){
+    fun updateorCreateListProduct(product: ArrayList<Product_v>,mupdateData2:updateData){
         this.mupdateData = mupdateData2
         var mCout = 0
         for (i in 0 until product.size){
@@ -129,14 +145,13 @@ class RealmController(application: Context) {
                 }
                 mCout++
             }else{
-                val mediaStorageDir = activity.getExternalFilesDir(null)
+                val mediaStorageDir = getApplicationContext().getExternalFilesDir(null)
                 val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss")
                         .format(Date())
                 var path2 = File.separator+ "IMG_" + timeStamp +"_"+ product[i]?.barcode + ".jpg"
 
-                AndroidNetworking.initialize(activity, MyApplication.okhttpclient())
-                AndroidNetworking.download(Constants.IMAGE_URL+product[i].imagechanged,
-                        mediaStorageDir.path,path2).build().startDownload(object: com.androidnetworking.interfaces.DownloadListener{
+                AndroidNetworking.initialize(getApplicationContext(),MyApplication.okhttpclient())
+                AndroidNetworking.download(Constants.IMAGE_URL+product[i].imagechanged,mediaStorageDir.path,path2).build().startDownload(object: com.androidnetworking.interfaces.DownloadListener{
                     override fun onDownloadComplete() {
                         Log.d("REALMCONTROLLER","UPDATE SUCCESS")
                         product[i].imagechanged = mediaStorageDir.path+path2
@@ -197,7 +212,6 @@ class RealmController(application: Context) {
     fun getlistProduct(): ArrayList<Product_v> {
         return realm.copyFromRealm(realm.where(Product_v::class.java).equalTo("delete",false).findAll()) as ArrayList<Product_v>
     }
-
 
     //query a single item with the given id
     fun getProduct(id: String): Product_v? {

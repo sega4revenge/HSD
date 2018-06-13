@@ -1,35 +1,39 @@
 {
   "project_info": {
-    "project_number": "923104700189",
-    "firebase_url": "https://hsd-project-78a79.firebaseio.com",
-    "project_id": "hsd-project-78a79",
-    "storage_bucket": "hsd-project-78a79.appspot.com"
+    "project_number": "1093128374309",
+    "firebase_url": "https://hansudung-e1d9a.firebaseio.com",
+    "project_id": "hansudung-e1d9a",
+    "storage_bucket": "hansudung-e1d9a.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:923104700189:android:bb35e830f11c5c74",
+        "mobilesdk_app_id": "1:1093128374309:android:bb35e830f11c5c74",
         "android_client_info": {
           "package_name": "com.finger.hsd"
         }
       },
       "oauth_client": [
         {
-          "client_id": "923104700189-biqjdrcd596verpkm6f2h0e0o9pppd47.apps.googleusercontent.com",
+          "client_id": "1093128374309-io6rpos4mopvjmuohdsckpot34vi9224.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.finger.hsd",
-            "certificate_hash": "e070fb8100531350824335e9c9c2e51335ccf73e"
+            "certificate_hash": "01e70f61ea6461cca43ee8d1f0b528e987aa2dd4"
           }
         },
         {
-          "client_id": "923104700189-2ealsq6n64tsnehqeb224u8n0ekl1f6o.apps.googleusercontent.com",
+          "client_id": "1093128374309-1ht8o2dc8t4031s85dskonuhmnf0985j.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "1093128374309-1ht8o2dc8t4031s85dskonuhmnf0985j.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCSI1KpiwnvQHcivAKfMDVFvxrvpr11pGE"
+          "current_key": "AIzaSyAu2RQkLVkkFfbMQm1Okb0jVormAidZLKg"
         }
       ],
       "services": {
@@ -40,7 +44,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "923104700189-2ealsq6n64tsnehqeb224u8n0ekl1f6o.apps.googleusercontent.com",
+              "client_id": "1093128374309-1ht8o2dc8t4031s85dskonuhmnf0985j.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

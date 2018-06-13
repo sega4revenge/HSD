@@ -3,8 +3,11 @@ package com.finger.hsd.fragment
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.media.MediaScannerConnection
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
@@ -38,7 +41,7 @@ import kotlin.collections.ArrayList
 
 
 
-class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmController.updateData{
+class Home_Fragment : Fragment(), Main_list_Adapter.OnproductClickListener, RealmController.updateData{
     override fun onupdateProduct(type: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -57,7 +60,7 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
     private var mPositionEX = -1
     private var mPositionWaring = -1
     private var mPositionProtect = -1
-    private var mDialogProgress: Dialog? = null
+    private var mDialogProgress:Dialog? = null
     private var mDialogProgressDelete:Dialog? = null
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -141,7 +144,7 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
         var create = mView.lin_create
         create.setOnClickListener(object: View.OnClickListener{
             override fun onClick(v: View?) {
-                val i = Intent(activity, Scanner_Barcode_Activity::class.java)
+                val i = Intent(activity,Scanner_Barcode_Activity::class.java)
                 startActivity(i)
                 mDialog?.dismiss()
             }
@@ -170,9 +173,6 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
         showDialogDelete(listDelete,arrID)
 
     }
-
-
-
     private fun getData(){
         mRetrofitService = ApiUtils.getAPI()
         mRetrofitService?.getAllProductInGroup("5b14b582c040310f42d8e0ee")?.enqueue(object: Callback<Result_Product>{
@@ -191,7 +191,7 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
                         if(response?.body().listProduct.size>0){
                             Log.d("REALMCONTROLLER",response?.body().listProduct.size.toString()+"//listProduct")
                             showDialog("Đang đồng bộ dữ liệu...")
-                            myRealm?.updateorCreateListProduct(activity!!, response?.body().listProduct,this@Home_Fragment)
+                            myRealm?.updateorCreateListProduct(response?.body().listProduct,this@Home_Fragment)
                         }else if(myRealm?.getlistProduct()!!.size==0){
                             showDialogNotFound()
                         }

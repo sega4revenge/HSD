@@ -13,8 +13,9 @@ import android.view.View;
 import com.facebook.FacebookSdk;
 import com.finger.hsd.R;
 import com.finger.hsd.fragment.BlankFragment3;
+import com.finger.hsd.fragment.BlankFragment2;
+import com.finger.hsd.fragment.FragmentProfile;
 import com.finger.hsd.fragment.Home_Fragment;
-import com.finger.hsd.fragment.NotificationFragment;
 import com.finger.hsd.library.NavigationTabBar;
 
 import java.util.ArrayList;
@@ -89,8 +90,8 @@ public class HorizontalNtbActivity extends AppCompatActivity{
                         getResources().getDrawable(R.drawable.ic_third),
                         Color.parseColor(colors[2]))
                         .selectedIcon(getResources().getDrawable(R.drawable.ic_seventh))
-                        .title("Diploma")
-                        .badgeTitle("state")
+                        .title("Profile")
+                        .badgeTitle("Profile")
                         .build()
         );
 

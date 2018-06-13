@@ -11,17 +11,22 @@
     <uses-permission
         android:name="android.permission.MANAGE_ACCOUNTS"
         android:maxSdkVersion="22" />
+
     <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 
-    <uses-feature android:name="android.hardware.camera" />
-
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:name=".common.MyApplication"
+        android:hardwareAccelerated="false"
+        android:name=".MyApplication"
         android:allowBackup="true"
+        android:largeHeap="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -62,6 +67,12 @@
 
 
         <service android:name=".services.NotificationService"/>
+        <receiver android:name=".activity.AlarmReceiver" />
+        <service
+            android:name=".Services.NotificationPlayingService"
+            android:enabled="true"
+            android:permission="exported"
+            tools:ignore="InnerclassSeparator" />
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
@@ -74,7 +85,11 @@
         <activity android:name=".activity.Scanner_Barcode_Activity" />
         <activity android:name=".activity.Add_Product" />
         <activity android:name=".activity.show_PhotoProduct"></activity>
-
+        <activity android:name=".activity.Scanner_HSD_Activity"
+            tools:ignore="DuplicateActivity"></activity>
+        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.RegisterActivity" />
+        <activity android:name=".activity.AlarmSetting" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />

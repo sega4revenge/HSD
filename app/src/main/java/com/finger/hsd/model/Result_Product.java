@@ -7,7 +7,7 @@ import java.util.Map;
 public class Result_Product {
 
     private Integer status;
-    private List<ProductType> ListProductType = null;
+    private List<ProductType_v> ListProductType = null;
     private String message;
     private Product_v Product;
     private ProductType_v ProductType;
@@ -17,11 +17,11 @@ public class Result_Product {
     private ArrayList<Product_v> ListProduct = null;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public List<com.finger.hsd.model.ProductType> getListProductType() {
+    public List<com.finger.hsd.model.ProductType_v> getListProductType() {
         return ListProductType;
     }
 
-    public void setListProductType(List<com.finger.hsd.model.ProductType> listProductType) {
+    public void setListProductType(List<com.finger.hsd.model.ProductType_v> listProductType) {
         ListProductType = listProductType;
     }
 

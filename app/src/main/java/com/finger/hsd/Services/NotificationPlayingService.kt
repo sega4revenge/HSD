@@ -1,4 +1,4 @@
-package com.finger.hsd.Services
+package com.finger.hsd.services
 
 import android.annotation.SuppressLint
 import android.app.Notification

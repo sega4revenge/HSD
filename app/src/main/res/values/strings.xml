@@ -14,6 +14,65 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!--progress dialog-->
+    <string name="loading">Loading</string>
+
+    <!--=======NOTIFICATION=-========-->
+    <string name="expiredtime_notifi">Expiredtime: </string>
+    <string name="days_left">days left</string>
+    <string name="status_count_product_1">You have </string>
+    <string name="status_count_product_2"> product(s) about to expire. Please check you inventory</string>
+    <!-- Detail Product -->
+    <string name="detail_product_text_expiry_date">Remaining term of use </string>
+    <string name="detail_product_text_day"> day(s)</string>
+    <string name="no_name"> No Name</string>
+    <string name="note">Note...</string>
+    <string name="shelf_life">Shelf life is </string> <!-- thời hạn sử dụng còn lại là 5 ngày -->
+
+    <string name="descrip_delete">Would you like to delete product?</string>
+
+    <string name="title_delete"> Delete Product</string>
+    <string name="title_choose_days_before">Choose days before</string>
+    <string name="descrip_choose_days">Receive one notification before expiry date</string>
+
+    <string name="days">day(s)</string>
+    <string name="one_day"> One day</string>
+    <string name="three_day"> Three day</string>
+    <string name="one_week"> One week</string>
+    <string name="one_month">One month</string>
+    <string name="custome_day">Custom days</string>
+    <string name="day_advance_notice">  advance notice</string>
+    <string name="recieve_one_notification">Receive one notification before expiry date</string>
+    <string name="change_avatar">Change image...</string>
+    <string name="uploading">Uploading</string>
+    <string name="remain_time_minute">Remain time minute</string>
+    <string name="remain_time_second">Remain time second</string>
+    <string name="upload_sucessfully">Upload sucessfully!</string>
+    <string name="no_image">No Image</string>
+    <string name="not_create_image">Not create image</string>
+    <string name="not_gallery"> Not gallery</string>
+    <string name="no_camera">No camera</string>
+    <string name="select_max_count">Already %1$d images selected</string>
+    <string name="select_min_count">You have to choice %1$d images</string>
+    <string name="done">Done</string>
+    <string name="choose_image">Choose image</string>
+    <string name="edit">Edit</string>
+    <string name="delete_sucess"> Delete sucess!</string>
+    <string name="cancel">Cancel</string>
+    <!--***************************** -->
+
+    <!--********TIME AGO-->
+    <string name="just_now">just now</string>
+    <string name="a_min_ago">min ago</string>
+    <string name="mins_ago">mins ago</string>
+    <string name="a_hour_ago">a hour ago</string>
+    <string name="hour_ago">hour ago</string>
+    <string name="yesterday">yesterday</string>
+    <string name="days_ago">day ago</string>
+    <string name="week_ago">week ago</string>
+    <string name="weeks_ago">weeks ago</string>
+    <!--close time ago-->
+    <!--profile-->
     <string name="_0_50">0/50</string>
     <string name="change_password">Change password</string>
     <string name="version">Version</string>
@@ -41,7 +100,7 @@
     <string name="_1_am">1 AM</string>
     <string name="product">Product</string>
     <string name="ok">Ok</string>
-    <string name="cancel">Cancel</string>
+
     <string name="sound_notification">Sound Notification</string>
     <string name="title_share">Complete action using</string>
 
@@ -57,4 +116,374 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="share">Share</string>
     <string name="faqs">FAQs</string>
+
+    <string-array name="choose_days_before">
+        <item>1 day before</item>
+        <item>2 days before</item>
+        <item>3 days before</item>
+        <item>4 days before</item>
+        <item>5 days before</item>
+        <item>6 days before</item>
+        <item>7 days before</item>
+        <item>8 days before</item>
+        <item>9 days before</item>
+        <item>10 days before</item>
+        <item>11 days before</item>
+        <item>12 days before</item>
+        <item>13 days before</item>
+        <item>14 days before</item>
+        <item>15 days before</item>
+        <item>16 days before</item>
+        <item>17 days before</item>
+        <item>18 days before</item>
+        <item>19 days before</item>
+        <item>20 days before</item>
+        <item>21 days before</item>
+        <item>22 days before</item>
+        <item>23 days before</item>
+        <item>24 days before</item>
+        <item>25 days before</item>
+        <item>26 days before</item>
+        <item>27 days before</item>
+        <item>28 days before</item>
+        <item>29 days before</item>
+        <item>30 days before</item>
+        <item>31 days before</item>
+        <item>32 days before</item>
+        <item>33 days before</item>
+        <item>34 days before</item>
+        <item>35 days before</item>
+        <item>36 days before</item>
+        <item>37 days before</item>
+        <item>38 days before</item>
+        <item>39 days before</item>
+        <item>40 days before</item>
+        <item>41 days before</item>
+        <item>42 days before</item>
+        <item>43 days before</item>
+        <item>44 days before</item>
+        <item>45 days before</item>
+        <item>46 days before</item>
+        <item>47 days before</item>
+        <item>48 days before</item>
+        <item>49 days before</item>
+        <item>50 days before</item>
+        <item>51 days before</item>
+        <item>52 days before</item>
+        <item>53 days before</item>
+        <item>54 days before</item>
+        <item>55 days before</item>
+        <item>56 days before</item>
+        <item>57 days before</item>
+        <item>58 days before</item>
+        <item>59 days before</item>
+        <item>60 days before</item>
+        <item>61 days before</item>
+        <item>62 days before</item>
+        <item>63 days before</item>
+        <item>64 days before</item>
+        <item>65 days before</item>
+        <item>66 days before</item>
+        <item>67 days before</item>
+        <item>68 days before</item>
+        <item>69 days before</item>
+        <item>70 days before</item>
+        <item>71 days before</item>
+        <item>72 days before</item>
+        <item>73 days before</item>
+        <item>74 days before</item>
+        <item>75 days before</item>
+        <item>76 days before</item>
+        <item>77 days before</item>
+        <item>78 days before</item>
+        <item>79 days before</item>
+        <item>80 days before</item>
+        <item>81 days before</item>
+        <item>82 days before</item>
+        <item>83 days before</item>
+        <item>84 days before</item>
+        <item>85 days before</item>
+        <item>86 days before</item>
+        <item>87 days before</item>
+        <item>88 days before</item>
+        <item>89 days before</item>
+        <item>90 days before</item>
+        <item>91 days before</item>
+        <item>92 days before</item>
+        <item>93 days before</item>
+        <item>94 days before</item>
+        <item>95 days before</item>
+        <item>96 days before</item>
+        <item>97 days before</item>
+        <item>98 days before</item>
+        <item>99 days before</item>
+        <item>100 days before</item>
+        <item>101 days before</item>
+        <item>102 days before</item>
+        <item>103 days before</item>
+        <item>104 days before</item>
+        <item>105 days before</item>
+        <item>106 days before</item>
+        <item>107 days before</item>
+        <item>108 days before</item>
+        <item>109 days before</item>
+        <item>110 days before</item>
+        <item>111 days before</item>
+        <item>112 days before</item>
+        <item>113 days before</item>
+        <item>114 days before</item>
+        <item>115 days before</item>
+        <item>116 days before</item>
+        <item>117 days before</item>
+        <item>118 days before</item>
+        <item>119 days before</item>
+        <item>120 days before</item>
+        <item>121 days before</item>
+        <item>122 days before</item>
+        <item>123 days before</item>
+        <item>124 days before</item>
+        <item>125 days before</item>
+        <item>126 days before</item>
+        <item>127 days before</item>
+        <item>128 days before</item>
+        <item>129 days before</item>
+        <item>130 days before</item>
+        <item>131 days before</item>
+        <item>132 days before</item>
+        <item>133 days before</item>
+        <item>134 days before</item>
+        <item>135 days before</item>
+        <item>136 days before</item>
+        <item>137 days before</item>
+        <item>138 days before</item>
+        <item>139 days before</item>
+        <item>140 days before</item>
+        <item>141 days before</item>
+        <item>142 days before</item>
+        <item>143 days before</item>
+        <item>144 days before</item>
+        <item>145 days before</item>
+        <item>146 days before</item>
+        <item>147 days before</item>
+        <item>148 days before</item>
+        <item>149 days before</item>
+        <item>150 days before</item>
+        <item>151 days before</item>
+        <item>152 days before</item>
+        <item>153 days before</item>
+        <item>154 days before</item>
+        <item>155 days before</item>
+        <item>156 days before</item>
+        <item>157 days before</item>
+        <item>158 days before</item>
+        <item>159 days before</item>
+        <item>160 days before</item>
+        <item>161 days before</item>
+        <item>162 days before</item>
+        <item>163 days before</item>
+        <item>164 days before</item>
+        <item>165 days before</item>
+        <item>166 days before</item>
+        <item>167 days before</item>
+        <item>168 days before</item>
+        <item>169 days before</item>
+        <item>170 days before</item>
+        <item>171 days before</item>
+        <item>172 days before</item>
+        <item>173 days before</item>
+        <item>174 days before</item>
+        <item>175 days before</item>
+        <item>176 days before</item>
+        <item>177 days before</item>
+        <item>178 days before</item>
+        <item>179 days before</item>
+        <item>180 days before</item>
+        <item>181 days before</item>
+        <item>182 days before</item>
+        <item>183 days before</item>
+        <item>184 days before</item>
+        <item>185 days before</item>
+        <item>186 days before</item>
+        <item>187 days before</item>
+        <item>188 days before</item>
+        <item>189 days before</item>
+        <item>190 days before</item>
+        <item>191 days before</item>
+        <item>192 days before</item>
+        <item>193 days before</item>
+        <item>194 days before</item>
+        <item>195 days before</item>
+        <item>196 days before</item>
+        <item>197 days before</item>
+        <item>198 days before</item>
+        <item>199 days before</item>
+        <item>200 days before</item>
+        <item>201 days before</item>
+        <item>202 days before</item>
+        <item>203 days before</item>
+        <item>204 days before</item>
+        <item>205 days before</item>
+        <item>206 days before</item>
+        <item>207 days before</item>
+        <item>208 days before</item>
+        <item>209 days before</item>
+        <item>210 days before</item>
+        <item>211 days before</item>
+        <item>212 days before</item>
+        <item>213 days before</item>
+        <item>214 days before</item>
+        <item>215 days before</item>
+        <item>216 days before</item>
+        <item>217 days before</item>
+        <item>218 days before</item>
+        <item>219 days before</item>
+        <item>220 days before</item>
+        <item>221 days before</item>
+        <item>222 days before</item>
+        <item>223 days before</item>
+        <item>224 days before</item>
+        <item>225 days before</item>
+        <item>226 days before</item>
+        <item>227 days before</item>
+        <item>228 days before</item>
+        <item>229 days before</item>
+        <item>230 days before</item>
+        <item>231 days before</item>
+        <item>232 days before</item>
+        <item>233 days before</item>
+        <item>234 days before</item>
+        <item>235 days before</item>
+        <item>236 days before</item>
+        <item>237 days before</item>
+        <item>238 days before</item>
+        <item>239 days before</item>
+        <item>240 days before</item>
+        <item>241 days before</item>
+        <item>242 days before</item>
+        <item>243 days before</item>
+        <item>244 days before</item>
+        <item>245 days before</item>
+        <item>246 days before</item>
+        <item>247 days before</item>
+        <item>248 days before</item>
+        <item>249 days before</item>
+        <item>250 days before</item>
+        <item>251 days before</item>
+        <item>252 days before</item>
+        <item>253 days before</item>
+        <item>254 days before</item>
+        <item>255 days before</item>
+        <item>256 days before</item>
+        <item>257 days before</item>
+        <item>258 days before</item>
+        <item>259 days before</item>
+        <item>260 days before</item>
+        <item>261 days before</item>
+        <item>262 days before</item>
+        <item>263 days before</item>
+        <item>264 days before</item>
+        <item>265 days before</item>
+        <item>266 days before</item>
+        <item>267 days before</item>
+        <item>268 days before</item>
+        <item>269 days before</item>
+        <item>270 days before</item>
+        <item>271 days before</item>
+        <item>272 days before</item>
+        <item>273 days before</item>
+        <item>274 days before</item>
+        <item>275 days before</item>
+        <item>276 days before</item>
+        <item>277 days before</item>
+        <item>278 days before</item>
+        <item>279 days before</item>
+        <item>280 days before</item>
+        <item>281 days before</item>
+        <item>282 days before</item>
+        <item>283 days before</item>
+        <item>284 days before</item>
+        <item>285 days before</item>
+        <item>286 days before</item>
+        <item>287 days before</item>
+        <item>288 days before</item>
+        <item>289 days before</item>
+        <item>290 days before</item>
+        <item>291 days before</item>
+        <item>292 days before</item>
+        <item>293 days before</item>
+        <item>294 days before</item>
+        <item>295 days before</item>
+        <item>296 days before</item>
+        <item>297 days before</item>
+        <item>298 days before</item>
+        <item>299 days before</item>
+        <item>300 days before</item>
+        <item>301 days before</item>
+        <item>302 days before</item>
+        <item>303 days before</item>
+        <item>304 days before</item>
+        <item>305 days before</item>
+        <item>306 days before</item>
+        <item>307 days before</item>
+        <item>308 days before</item>
+        <item>309 days before</item>
+        <item>310 days before</item>
+        <item>311 days before</item>
+        <item>312 days before</item>
+        <item>313 days before</item>
+        <item>314 days before</item>
+        <item>315 days before</item>
+        <item>316 days before</item>
+        <item>317 days before</item>
+        <item>318 days before</item>
+        <item>319 days before</item>
+        <item>320 days before</item>
+        <item>321 days before</item>
+        <item>322 days before</item>
+        <item>323 days before</item>
+        <item>324 days before</item>
+        <item>325 days before</item>
+        <item>326 days before</item>
+        <item>327 days before</item>
+        <item>328 days before</item>
+        <item>329 days before</item>
+        <item>330 days before</item>
+        <item>331 days before</item>
+        <item>332 days before</item>
+        <item>333 days before</item>
+        <item>334 days before</item>
+        <item>335 days before</item>
+        <item>336 days before</item>
+        <item>337 days before</item>
+        <item>338 days before</item>
+        <item>339 days before</item>
+        <item>340 days before</item>
+        <item>341 days before</item>
+        <item>342 days before</item>
+        <item>343 days before</item>
+        <item>344 days before</item>
+        <item>345 days before</item>
+        <item>346 days before</item>
+        <item>347 days before</item>
+        <item>348 days before</item>
+        <item>349 days before</item>
+        <item>350 days before</item>
+        <item>351 days before</item>
+        <item>352 days before</item>
+        <item>353 days before</item>
+        <item>354 days before</item>
+        <item>355 days before</item>
+        <item>356 days before</item>
+        <item>357 days before</item>
+        <item>358 days before</item>
+        <item>359 days before</item>
+        <item>360 days before</item>
+        <item>361 days before</item>
+        <item>362 days before</item>
+        <item>363 days before</item>
+        <item>364 days before</item>
+        <item>365 days before</item>
+    </string-array>
+
+
 </resources>

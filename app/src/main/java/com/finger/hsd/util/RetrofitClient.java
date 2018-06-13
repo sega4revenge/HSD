@@ -1,8 +1,6 @@
 package com.finger.hsd.util;
 
-import android.util.Log;
-
-import com.finger.hsd.MyApplication;
+import com.finger.hsd.common.MyApplication;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

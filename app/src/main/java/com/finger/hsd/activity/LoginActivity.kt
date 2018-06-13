@@ -4,21 +4,29 @@ import android.accounts.Account
 import android.accounts.AccountManager
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
+import com.bumptech.glide.Priority
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.SimpleTarget
 import com.facebook.*
 import com.facebook.appevents.AppEventsLogger
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
-import com.finger.hsd.MyApplication
+import com.finger.hsd.BaseActivity
 import com.finger.hsd.R
-import com.finger.hsd.manager.AppManager
+import com.finger.hsd.common.GlideApp
+import com.finger.hsd.common.MyApplication
+import com.finger.hsd.manager.RealmController
+import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.User
 import com.finger.hsd.presenter.LoginPresenter
 import com.finger.hsd.util.Constants
+import com.finger.hsd.util.Mylog
 import com.finger.hsd.util.Validation.validatePhone
 import com.finger.hsd.util.Validation.validatePhone2
 import com.google.android.gms.auth.api.Auth
@@ -29,8 +37,11 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_login.*
 import org.json.JSONException
+import java.io.File
+import java.io.FileOutputStream
 
-class LoginActivity : AppCompatActivity(), LoginPresenter.LoginView, GoogleApiClient.OnConnectionFailedListener {
+class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.OnConnectionFailedListener {
+
 
 
     var mAccountManager: AccountManager? = null
@@ -38,14 +49,21 @@ class LoginActivity : AppCompatActivity(), LoginPresenter.LoginView, GoogleApiCl
     var user = User()
     var TAG = "Login Activity"
 
+    var realm: RealmController? = null
+
 
     private var callbackManager: CallbackManager? = null
-
+    val options  = RequestOptions()
+            .centerCrop()
+            .placeholder(R.drawable.ic_add_photo)
+            .error(R.drawable.ic_back)
+            .priority(Priority.LOW)
 
     var v: View? = null
     private val RC_SIGN_IN = 7
     var mLoginPresenter: LoginPresenter? = null
     var type: Int = 0
+    var rootFolder: File? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FacebookSdk.sdkInitialize(applicationContext)
@@ -53,9 +71,14 @@ class LoginActivity : AppCompatActivity(), LoginPresenter.LoginView, GoogleApiCl
         callbackManager = CallbackManager.Factory.create()
         setContentView(R.layout.activity_login)
 
-        mAccountManager = AccountManager.get(this)
-          val intent = Intent(this, HorizontalNtbActivity::class.java)
-          startActivity(intent)
+        realm = RealmController(this)
+        rootFolder = File(filesDir.toString() + "/files")
+        if (!rootFolder!!.exists()) {
+            rootFolder!!.mkdirs()
+        }
+//        mAccountManager = AccountManager.get(this)
+//          val intent = Intent(this, HorizontalNtbActivity::class.java)
+//          startActivity(intent)
 //        val accountsFromFirstApp = mAccountManager!!.getAccountsByType(AppManager.ACCOUNT_TYPE)
 //        if (accountsFromFirstApp.isNotEmpty()) {
 //
@@ -99,7 +122,7 @@ class LoginActivity : AppCompatActivity(), LoginPresenter.LoginView, GoogleApiCl
                         mLoginPresenter!!.register(user)
 
 
-                    } catch (e: JSONException) {
+                    } catch (e:  JSONException) {
                         e.printStackTrace()
                     }
                 }
@@ -133,7 +156,6 @@ class LoginActivity : AppCompatActivity(), LoginPresenter.LoginView, GoogleApiCl
 
         setError()
 
-
         var err = 0
         if (!validatePhone(phone_number!!.text.toString())) {
             err++
@@ -145,7 +167,7 @@ class LoginActivity : AppCompatActivity(), LoginPresenter.LoginView, GoogleApiCl
             }
         }
         if (err == 0) {
-            user.iduser = phone_number.text.toString()
+            user.phone = phone_number.text.toString()
             user.password = password.text.toString()
             user.tokenfirebase = FirebaseInstanceId.getInstance().token
             mLoginPresenter!!.login(user)
@@ -159,6 +181,7 @@ class LoginActivity : AppCompatActivity(), LoginPresenter.LoginView, GoogleApiCl
         phone_number.error = null
 
     }
+
 
     override fun isLoginSuccessful(isLoginSuccessful: Boolean) {
         if (isLoginSuccessful) {
@@ -186,17 +209,206 @@ class LoginActivity : AppCompatActivity(), LoginPresenter.LoginView, GoogleApiCl
 
 
     }
-
+    override fun isProgressData(percent: Int) {
+//        showProgress("Sync data.. "+percent+ "%")
+        showToast("Sync data.. "+percent+ "%")
+    }
+    var listProduct : ArrayList<Product_v>? = null
+    var temp = 0
     override fun getUserDetail(user: User) {
-        AppManager.saveAccountUser(this,user)
-        this.user = user
+
+        Mylog.d("aaaaaaaaaa "+" chay ngay di ngay di ngay di ngay di ngay di ngay di"+user)
+        realm!!.addUser(user)
+
+        Mylog.d("aaaaaaa user "+realm!!.getUser()!!._id)
+        Mylog.d("aaaaaaaa group: "+realm!!.getGroup()!!.name)
+
+        Mylog.d("aaaaaaa user "+realm!!.getProduct("5b0b7093304e8e55e9a28617")!!.namechanged)
+        Mylog.d("aaaaa notification: "+realm!!.getOneNotification("5b1e4554db071a05681d3ce9")!!.create_at)
+
+         listProduct  = realm!!.getlistProduct()
+//        val dataSync = DataSync(this, object : DataListener {
+//            override fun onLoadStarted() {
+////                showProgress()
+//                showToast("chay ngay di")
+//            }
+//
+//            override fun onLoading(percent: Int) {
+////                showProgress("Sync data... "+percent +"%")
+//                showToast("Sync data... "+percent +"%")
+//            }
+//
+//            override fun onLoadComplete(user: String) {
+////                AppManager.saveAccountUser(this@LoginActivity,user)
+////                this@LoginActivity.user = user
+////                hideProgress()
+//               Mylog.d("aaaaaaaa jaja "+ realm!!.countNotification())
+//
+//                startActivity(Intent(this@LoginActivity, HorizontalNtbActivity::class.java))
+//
+//                showToast("done")
+//            }
+//
+//        })
+       // dataSync.execute(listProduct)
+
+
+        temp =0
+        if (listProduct != null && !listProduct!!.isEmpty()) {
+            Mylog.d("aaaaaaaaa temp at least:  "+temp)
+            onDownload(listProduct!!.get(temp))
+//            for (i in 0..listProduct!!.size - 1) {
+//               // publishProgress(percent)
+//            }
+
+        }else{
+            startActivity(Intent(this@LoginActivity, HorizontalNtbActivity::class.java))
+        }
+
+
+
+//        startActivity(Intent(this@LoginActivity, HorizontalNtbActivity::class.java))
+//        val backgroundRealm = Realm.getDefaultInstance()
+////        realm!!.addUser(user)
+//        object : Runnable {
+//            override fun run() {
+//                backgroundRealm.executeTransactionAsync(Realm.Transaction { realm ->
+//                    // val mData = realm.createObject(Data::class.java)
+//                    backgroundRealm.copyToRealm(user)
+//                }, Realm.Transaction.OnSuccess {
+//                    Mylog.d("aaaaaaaa sucess " + "chay ngay di chay ngay di")
+//                    dataSync.execute()
+//                })
+//            }
+//        }
+
+    }
+    var percent = 0
+    var current = 0
+
+
+    fun onDownload( product: Product_v){
+
+
+        GlideApp.with(this)
+                .asBitmap()
+                .load(Constants.IMAGE_URL + product.imagechanged)
+                .apply(options)
+                .into(object : SimpleTarget<Bitmap>() {
+                    override fun onResourceReady(resource: Bitmap, transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {
+
+                        try {
+                            val namePassive = product._id + "passive" + ".jpg"
+
+                            var myDir = File(rootFolder, namePassive)
+
+                            Mylog.d("aaaaaaaaaa my dir: "+ myDir)
+
+                            if (myDir.exists())
+                                myDir.delete()
+
+                            val out3 = FileOutputStream(myDir)
+
+                            resource?.compress(Bitmap.CompressFormat.JPEG, 90, out3)
+
+                            product.imagechanged = Uri.fromFile(myDir).toString()
+                            realm!!.updateProduct(product)
+
+                            temp++
+                            out3.flush()
+                            out3.close()
+
+                            if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
+                                percent = (temp.toFloat() / listProduct!!.size.toFloat() * 100f).toInt()
+
+                                showToast("Sync... "+percent)
+
+                                onDownload(listProduct!!.get(temp))
+                            }else{
+                                percent = (temp.toFloat() / listProduct!!.size.toFloat() * 100f).toInt()
+                                showToast("Sync... "+percent+"% complete")
+                                startActivity(Intent(this@LoginActivity, HorizontalNtbActivity::class.java))
+                            }
+
+
+                        } catch (e: Exception) {
+
+                            println(e)
+                            temp++
+                            Mylog.d("aaaaaaaaaa "+temp)
+                            if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
+                                percent = (temp.toFloat() / listProduct!!.size.toFloat() * 100f).toInt()
+
+                                showToast(percent)
+                                Mylog.d("aaaaaaaaaa chay tiep: "+temp)
+                                onDownload(listProduct!!.get(temp))
+                            }
+                        }
+
+
+                    }
+                })
+
+//        current ++
+//        val mediaStorageDir = this@LoginActivity.getExternalFilesDir(null)
+//        val timeStamp = System.currentTimeMillis()
+//        var path2 = File.separator + "IMG_" + timeStamp + "_" + product.productTypeId.barcode + ".jpg"
+//
+//        Mylog.d("aaaaaaaaa product: "+product.imagechanged)
+//
+//        AndroidNetworking.initialize(this@LoginActivity, MyApplication.okhttpclient())
+//        AndroidNetworking.download(Constants.IMAGE_URL + product.imagechanged, mediaStorageDir.path, path2)
+//                .build()
+//                .setDownloadProgressListener(object: DownloadProgressListener{
+//                    override fun onProgress(bytesDownloaded: Long, totalBytes: Long) {
+//                        percent = (bytesDownloaded.toFloat() / totalBytes.toFloat() * 100f).toInt()
+//                        showToast("Sync... "+percent+"%")
+//                        Mylog.d("current=" + bytesDownloaded + ", total=" + totalBytes + ", percent=" + percent);
+//
+//                    }
+//
+//                })
+//                .startDownload(object : com.androidnetworking.interfaces.DownloadListener {
+//                    override fun onDownloadComplete() {
+//                        Log.d("REALMCONTROLLER", "UPDATE SUCCESS")
+//                        product.imagechanged = mediaStorageDir.path + path2
+//                        realm!!.updateProduct(product)
+////                                realm.beginTransaction()
+////                                backgroundRealm.copyToRealmOrUpdate(product)
+////                                backgroundRealm.commitTransaction()
+//                        Log.d("REALMCONTROLLER2", product.imagechanged)
+//
+//                        percent = (current / (listProduct!!.size) * 100f).toInt()
+//                        showToast("Sync... "+percent+"%")
+//                        temp ++
+//                        if(temp  < listProduct!!.size){
+//                            onDownload(listProduct!!.get(temp))
+//                        }else {
+//                            showToast("Sync... "+percent+"% complete")
+//                            startActivity(Intent(this@LoginActivity, HorizontalNtbActivity::class.java))
+//                        }
+//                    }
+//
+//                    override fun onError(anError: ANError?) {
+//                        temp ++
+//                        if(temp  < listProduct!!.size){
+//                                  onDownload(listProduct!!.get(temp))
+//                        }else {
+//                            showToast("Sync... "+percent+"% complete")
+//                            startActivity(Intent(this@LoginActivity, HorizontalNtbActivity::class.java))
+//                        }
+//                        Log.d("REALMCONTROLLER", anError?.errorDetail + "//ERROR" +
+//                                anError?.errorBody + "//" + product.imagechanged)
+//                    }
+//                })
+
     }
 
 
     private fun gotoregister() {
         val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
         startActivity(intent)
-        overridePendingTransition(0, 0)
+
 
     }
 
@@ -230,11 +442,11 @@ class LoginActivity : AppCompatActivity(), LoginPresenter.LoginView, GoogleApiCl
             val acct: GoogleSignInAccount? = result.signInAccount
             Log.e(TAG, "display name: " + acct!!.displayName)
             val tokenfirebase = FirebaseInstanceId.getInstance().token
-            user.iduser = acct.id
+            user.google = acct.id
             user.password = ""
             user.tokenfirebase = tokenfirebase
             mLoginPresenter!!.register(user)
-            Log.e(TAG, "Name: " + user.iduser + ", email: ")
+            Log.e(TAG, "Name: " + user.google + ", email: ")
         } else {
             // Signed out, show unauthenticated UI.
 

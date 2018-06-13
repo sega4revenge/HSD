@@ -1793,7 +1793,6 @@ public class NavigationTabBar extends View implements ViewPager.OnPageChangeList
 
             if (mBadgeAnimator.isRunning()) mBadgeAnimator.end();
             if (mIsBadgeShowed) return;
-
             mBadgeAnimator.setFloatValues(MIN_FRACTION, MAX_FRACTION);
             mBadgeAnimator.setInterpolator(DECELERATE_INTERPOLATOR);
             mBadgeAnimator.setDuration(DEFAULT_BADGE_ANIMATION_DURATION);

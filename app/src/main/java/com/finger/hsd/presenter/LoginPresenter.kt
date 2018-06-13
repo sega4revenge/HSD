@@ -14,6 +14,8 @@ import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONException
 import org.json.JSONObject
+import java.util.*
+
 
 class LoginPresenter(view: LoginView) {
 var a : String?=null
@@ -22,35 +24,71 @@ var a : String?=null
     var register = "REGISTER"
     private val jsonObject = JSONObject()
     private val disposables = CompositeDisposable()
+    var task: TimerTask? = null
+    var timer : Timer? = null
     private fun getObservable_login(typesearch: String): Observable<Response> {
-        return Rx2AndroidNetworking.post(Constants.BASE_URL + typesearch)
+        var  startTime = System.nanoTime();
+        val total = 100
+        var current = 0
+        var percent: Int = 0
+
+//        task = object : TimerTask() {
+//            internal var mHandler = Handler()
+//
+//            override fun run() {
+//                mHandler.post(Runnable {
+//                    mLoginView.isProgressData(percent)
+//
+//                })
+//            }
+//        }
+
+//        timer = Timer()
+//        timer!!.scheduleAtFixedRate(task, 0, 500)
+
+
+        return Rx2AndroidNetworking.post(Constants.URL_LOGIN)
                 .setTag(login)
                 .addJSONObjectBody(jsonObject)
                 .build()
 
                 .setAnalyticsListener { timeTakenInMillis, bytesSent, bytesReceived, isFromCache ->
+
                     Log.d(login, " timeTakenInMillis : $timeTakenInMillis")
                     Log.d(login, " bytesSent : $bytesSent")
                     Log.d(login, " bytesReceived : $bytesReceived")
                     Log.d(login, " isFromCache : $isFromCache")
                 }
-
+//                }.setDownloadProgressListener(object : DownloadProgressListener{
+//                    override fun onProgress(bytesDownloaded: Long, totalBytes: Long) {
+//
+//                        percent = (bytesDownloaded* 100f /totalBytes).toInt()
+//
+//                    }
+//
+//                })
                 .getObjectObservable(Response::class.java)
+
     }
 
     private fun getDisposableObserver_login(): DisposableObserver<Response> {
 
         return object : DisposableObserver<Response>() {
+            override fun onNext(response: Response?) {
 
-            override fun onNext(response: Response) {
-                Log.d(login, "onResponse isMainThread : " + (Looper.myLooper() == Looper.getMainLooper()).toString())
+                if (response!!.status == 200) {
+                    Log.d(register, "onResponse isMainThread : " + (Looper.myLooper() == Looper.getMainLooper()).toString())
 
-                mLoginView.getUserDetail(response.user!!)
+                    mLoginView.getUserDetail(response.user!!)
+                  //  mLoginView.isRegisterSuccessful(true)
+                } else {
+                    mLoginView.setErrorMessage("201")
+                }
+
             }
 
             override fun onError(e: Throwable) {
                 if (e is ANError) {
-
 
                     Log.d(login, "onError errorCode : " + e.errorCode)
                     Log.d(login, "onError errorBody : " + e.errorBody)
@@ -65,7 +103,7 @@ var a : String?=null
             }
 
             override fun onComplete() {
-                mLoginView.isLoginSuccessful(true)
+              //  mLoginView.isLoginSuccessful(true)
 
             }
         }
@@ -73,15 +111,14 @@ var a : String?=null
 
     fun login(user :User) {
 
-
         try {
-            jsonObject.put("iduser", user.iduser)
+            jsonObject.put("phone", user.phone)
             jsonObject.put("password", user.password)
             jsonObject.put("tokenfirebase", user.tokenfirebase)
         } catch (e: JSONException) {
             e.printStackTrace()
         }
-        disposables.add(getObservable_login("authenticate")
+        disposables.add(getObservable_login("login-android")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(getDisposableObserver_login()))
@@ -113,6 +150,7 @@ var a : String?=null
                 println(response.status)
                 if (response.status == 200) {
                     Log.d(register, "onResponse isMainThread : " + (Looper.myLooper() == Looper.getMainLooper()).toString())
+
                     mLoginView.getUserDetail(response.user!!)
                     mLoginView.isRegisterSuccessful(true)
                 } else {
@@ -148,7 +186,7 @@ var a : String?=null
 
         try {
 
-                jsonObject.put("iduser", user.iduser)
+                jsonObject.put("phone", user.phone)
                 jsonObject.put("password", user.password)
                 jsonObject.put("tokenfirebase", user.tokenfirebase)
 
@@ -167,11 +205,13 @@ var a : String?=null
         disposables.clear()
     }
 
-    interface LoginView {
 
+    interface LoginView {
+        fun isProgressData(percent : Int)
         fun isLoginSuccessful(isLoginSuccessful: Boolean)
         fun isRegisterSuccessful(isRegisterSuccessful: Boolean)
         fun setErrorMessage(errorMessage: String)
         fun getUserDetail(user: User)
+
     }
 }

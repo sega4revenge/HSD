@@ -3,43 +3,34 @@ package com.finger.hsd.fragment
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.media.MediaScannerConnection
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
-import com.androidnetworking.AndroidNetworking
-import com.facebook.FacebookSdk
 import com.finger.hsd.R
 import com.finger.hsd.activity.Scanner_Barcode_Activity
 import com.finger.hsd.adapters.Main_list_Adapter
 import com.finger.hsd.manager.RealmController
-import com.finger.hsd.model.Product
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.Result_Product
 import com.finger.hsd.util.ApiUtils
-import com.finger.hsd.util.Constants
+import com.finger.hsd.util.AppIntent
+import com.finger.hsd.util.Mylog
 import com.finger.hsd.util.RetrofitService
 import kotlinx.android.synthetic.main.not_found_product.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.net.URL
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -47,7 +38,7 @@ import kotlin.collections.ArrayList
 
 
 
-class Home_Fragment : Fragment(), Main_list_Adapter.OnproductClickListener, RealmController.updateData{
+class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmController.updateData{
     override fun onupdateProduct(type: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -66,7 +57,7 @@ class Home_Fragment : Fragment(), Main_list_Adapter.OnproductClickListener, Real
     private var mPositionEX = -1
     private var mPositionWaring = -1
     private var mPositionProtect = -1
-    private var mDialogProgress:Dialog? = null
+    private var mDialogProgress: Dialog? = null
     private var mDialogProgressDelete:Dialog? = null
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -94,6 +85,7 @@ class Home_Fragment : Fragment(), Main_list_Adapter.OnproductClickListener, Real
 //                getData()
 //            }
 //        }
+        Mylog.d("aaaaaaaa jaja "+ myRealm!!.countNotification())
 
     }
 
@@ -179,36 +171,117 @@ class Home_Fragment : Fragment(), Main_list_Adapter.OnproductClickListener, Real
         showDialogDelete(listDelete,arrID)
 
     }
-    private fun getData(){
-        mRetrofitService = ApiUtils.getAPI()
-        mRetrofitService?.getAllProductInGroup("5b14b582c040310f42d8e0ee")?.enqueue(object: Callback<Result_Product>{
-            override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
-                if(myRealm?.getlistProduct()!!.size==0){
-                    showDialogNotFound()
-                }else{
-                    loadData()
-                }
-                Toast.makeText(activity,"Error! \n message:"+t?.message, Toast.LENGTH_SHORT).show()
-            }
 
-            override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
-                if(response?.isSuccessful!!){
-                    if(response?.code()==200){
-                        if(response?.body().listProduct.size>0){
-                            Log.d("REALMCONTROLLER",response?.body().listProduct.size.toString()+"//listProduct")
-                            showDialog("Đang đồng bộ dữ liệu...")
-                            myRealm?.updateorCreateListProduct(activity!!,response.body().listProduct,this@Home_Fragment)
-                        }else if(myRealm?.getlistProduct()!!.size==0){
-                            showDialogNotFound()
+
+
+    private fun getData(){
+
+        loadData()
+//
+//            override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
+//                if(response?.isSuccessful!!){
+//                    if(response?.code()==200){
+//                        if(response?.body().listProduct.size>0){
+//                            Log.d("REALMCONTROLLER",response?.body().listProduct.size.toString()+"//listProduct")
+//                            showDialog("Đang đồng bộ dữ liệu...")
+//                            myRealm?.updateorCreateListProduct(response?.body().listProduct,this@Home_Fragment)
+//                        }else if(myRealm?.getlistProduct()!!.size==0){
+//                            showDialogNotFound()
+//                        }
+//                    }
+//                }else{
+//                    Toast.makeText(activity,"Error! \n message:"+response?.message(), Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//
+//        })
+//        mRetrofitService = ApiUtils.getAPI()
+//        mRetrofitService?.getAllProductInGroup("5b14b582c040310f42d8e0ee")?.enqueue(object: Callback<Result_Product>{
+//            override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
+//                if(myRealm?.getlistProduct()!!.size==0){
+//                    showDialogNotFound()
+//                }else{
+//                    loadData()
+//                }
+//                Toast.makeText(activity,"Error! \n message:"+t?.message, Toast.LENGTH_SHORT).show()
+//            }
+//
+//            override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
+//                if(response?.isSuccessful!!){
+//                    if(response?.code()==200){
+//                        if(response?.body().listProduct.size>0){
+//                            Log.d("REALMCONTROLLER",response?.body().listProduct.size.toString()+"//listProduct")
+//                            showDialog("Đang đồng bộ dữ liệu...")
+//                            myRealm?.updateorCreateListProduct(activity!!, response?.body().listProduct,this@Home_Fragment)
+//                        }else if(myRealm?.getlistProduct()!!.size==0){
+//                            showDialogNotFound()
+//                        }
+//                    }
+//                }else{
+//                    Toast.makeText(activity,"Error! \n message:"+response?.message(), Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//
+//        })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(requestCode == AppIntent.REQUEST_UPDATE_ITEM){
+            if(resultCode == AppIntent.RESULT_UPDATE_ITEM){
+                val position = data!!.getIntExtra("position", -1)
+                val name = data!!.getStringExtra("name")
+                val expiredTime = data!!.getStringExtra("expiredTime")
+                val image = data!!.getStringExtra("image")
+
+                if (position != -1){
+                    var st = ""
+                    val sdf = SimpleDateFormat("dd/MM/yyyy")
+                    val stringToday = sdf.format(Date())
+                    val exToday = sdf.parse(stringToday)
+                    var miliexToday:Long = exToday.getTime()
+                    var check_hethan = false
+
+                    val product_v = listProduct!!.get(position)
+                    if(!TextUtils.isEmpty(expiredTime))
+                        product_v.expiretime = expiredTime.toLong()
+
+                    if(!TextUtils.isEmpty(image)){
+                        product_v.imagechanged = image
+                    }
+                    product_v.namechanged = name
+
+                    Mylog.d("aaaaaaaaa "+name +" imae: "+product_v.imagechanged + " expriredTime: "+product_v.expiretime + " position: "+position)
+
+                    if(st.indexOf(getDate(product_v.expiretime,"dd/MM/yyyy"))>0){
+                    }else{
+                        if(miliexToday<product_v.expiretime){
+                            st = st +" "+ getDate(product_v.expiretime,"dd/MM/yyyy")
+                            mCount++
+                        }else{
+                            if(!check_hethan){
+                                st = st +" "+ getDate(product_v.expiretime,"dd/MM/yyyy")
+                                check_hethan = true
+                                mCount++
+                            }
                         }
                     }
-                }else{
-                    Toast.makeText(activity,"Error! \n message:"+response?.message(), Toast.LENGTH_SHORT).show()
-                }
-            }
+                    mAdapter!!.notifyItemChanged(position)
 
-        })
+                    listProduct?.sortWith(Comparator(fun(a: Product_v, b: Product_v): Int {
+                        if (a.expiretime<b.expiretime)
+                            return -1
+                        if (a.expiretime>b.expiretime)
+                            return 1
+                        return 0
+                    }))
+
+                }
+
+
+            }
+        }
     }
+
     fun loadData(){
         listProduct = myRealm?.getlistProduct()
         if(listProduct != null && listProduct?.size!! > 0) {

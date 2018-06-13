@@ -1,4 +1,4 @@
-package com.finger.hsd
+package com.finger.hsd.common
 
 import android.app.Application
 import android.content.Context
@@ -15,12 +15,10 @@ import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.*
 
-
-
-
 class MyApplication : Application() {
     private var mSocket: Socket? = null
     private var googleApiHelper: GoogleApiHelper? = null
+
 
     fun getSocket(): Socket? = mSocket
     private fun getUnsafeOkHttpClient(): OkHttpClient {
@@ -67,7 +65,7 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-        MultiDex.install(this)
+        var GlideApp = MyGlideModule()
         Realm.init(this)
         val config = RealmConfiguration.Builder().name("myAlarm.realm").build()
         Realm.setDefaultConfiguration(config)

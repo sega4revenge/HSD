@@ -7,26 +7,33 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.facebook.FacebookSdk;
+import com.finger.hsd.BaseActivity;
 import com.finger.hsd.R;
-import com.finger.hsd.fragment.BlankFragment3;
-import com.finger.hsd.fragment.BlankFragment2;
+
 import com.finger.hsd.fragment.FragmentProfile;
 import com.finger.hsd.fragment.Home_Fragment;
+import com.finger.hsd.fragment.NotificationFragment;
 import com.finger.hsd.library.NavigationTabBar;
+import com.finger.hsd.manager.RealmController;
+import com.finger.hsd.util.SessionManager;
 
 import java.util.ArrayList;
 
-public class HorizontalNtbActivity extends AppCompatActivity{
+public class HorizontalNtbActivity extends BaseActivity implements NotificationFragment.NotificationBadgeListener{
 
+    RealmController realm;
+     NavigationTabBar navigationTabBar;
+     SessionManager session;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         FacebookSdk.sdkInitialize(getApplicationContext());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temp);
+        realm = new RealmController(this);
+        session = new SessionManager(this);
         initUI();
     }
 
@@ -50,7 +57,7 @@ public class HorizontalNtbActivity extends AppCompatActivity{
                     case 1: // Fragment # 0 - This will show FirstFragment different title
                         return new NotificationFragment();
                     case 2: // Fragment # 1 - This will show SecondFragment
-                        return new BlankFragment3();
+                        return new FragmentProfile();
                     default:
                         return null;
                 }
@@ -65,7 +72,7 @@ public class HorizontalNtbActivity extends AppCompatActivity{
 
         final String[] colors = getResources().getStringArray(R.array.default_preview);
 
-        final NavigationTabBar navigationTabBar = (NavigationTabBar) findViewById(R.id.ntb_horizontal);
+      navigationTabBar = (NavigationTabBar) findViewById(R.id.ntb_horizontal);
         final ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
         models.add(
                 new NavigationTabBar.Model.Builder(
@@ -105,7 +112,8 @@ public class HorizontalNtbActivity extends AppCompatActivity{
 
             @Override
             public void onPageSelected(final int position) {
-                navigationTabBar.getModels().get(position).hideBadge();
+//                navigationTabBar.getModels().get(position).hideBadge();
+                session.setCountNotification(0);
             }
 
             @Override
@@ -117,18 +125,47 @@ public class HorizontalNtbActivity extends AppCompatActivity{
         navigationTabBar.postDelayed(new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i < navigationTabBar.getModels().size(); i++) {
-                    final NavigationTabBar.Model model = navigationTabBar.getModels().get(i);
+                final NavigationTabBar.Model model = navigationTabBar.getModels().get(1);
+                if(realm.countNotification()!=0) {
+
                     navigationTabBar.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            model.setBadgeTitle(realm.countNotification()+"");
                             model.showBadge();
                         }
-                    }, i * 100);
+                    }, 1 * 100);
+                }else {
+                    model.setBadgeTitle(0+"");
+                    model.hideBadge();
+
                 }
             }
         }, 500);
     }
 
 
+    @Override
+    public void onBadgeUpdate(final int value) {
+        navigationTabBar.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                final NavigationTabBar.Model model = navigationTabBar.getModels().get(1);
+                if(realm.countNotification()!=0) {
+
+                    navigationTabBar.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            model.setBadgeTitle(value+"");
+                            model.showBadge();
+                        }
+                    }, 1 * 100);
+                }else {
+                    model.setBadgeTitle(0+"");
+                    model.hideBadge();
+
+                }
+            }
+        }, 500);
+    }
 }

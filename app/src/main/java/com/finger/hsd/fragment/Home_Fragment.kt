@@ -3,11 +3,8 @@ package com.finger.hsd.fragment
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.media.MediaScannerConnection
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
@@ -41,7 +38,7 @@ import kotlin.collections.ArrayList
 
 
 
-class Home_Fragment : Fragment(), Main_list_Adapter.OnproductClickListener, RealmController.updateData{
+class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmController.updateData{
     override fun onupdateProduct(type: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -60,7 +57,7 @@ class Home_Fragment : Fragment(), Main_list_Adapter.OnproductClickListener, Real
     private var mPositionEX = -1
     private var mPositionWaring = -1
     private var mPositionProtect = -1
-    private var mDialogProgress:Dialog? = null
+    private var mDialogProgress: Dialog? = null
     private var mDialogProgressDelete:Dialog? = null
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -88,6 +85,7 @@ class Home_Fragment : Fragment(), Main_list_Adapter.OnproductClickListener, Real
 //                getData()
 //            }
 //        }
+        Mylog.d("aaaaaaaa jaja "+ myRealm!!.countNotification())
 
     }
 
@@ -173,35 +171,58 @@ class Home_Fragment : Fragment(), Main_list_Adapter.OnproductClickListener, Real
         showDialogDelete(listDelete,arrID)
 
     }
+
+
+
     private fun getData(){
-        mRetrofitService = ApiUtils.getAPI()
-        mRetrofitService?.getAllProductInGroup("5b14b582c040310f42d8e0ee")?.enqueue(object: Callback<Result_Product>{
-            override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
-                if(myRealm?.getlistProduct()!!.size==0){
-                    showDialogNotFound()
-                }else{
-                    loadData()
-                }
-                Toast.makeText(activity,"Error! \n message:"+t?.message, Toast.LENGTH_SHORT).show()
-            }
 
-            override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
-                if(response?.isSuccessful!!){
-                    if(response?.code()==200){
-                        if(response?.body().listProduct.size>0){
-                            Log.d("REALMCONTROLLER",response?.body().listProduct.size.toString()+"//listProduct")
-                            showDialog("Đang đồng bộ dữ liệu...")
-                            myRealm?.updateorCreateListProduct(response?.body().listProduct,this@Home_Fragment)
-                        }else if(myRealm?.getlistProduct()!!.size==0){
-                            showDialogNotFound()
-                        }
-                    }
-                }else{
-                    Toast.makeText(activity,"Error! \n message:"+response?.message(), Toast.LENGTH_SHORT).show()
-                }
-            }
-
-        })
+        loadData()
+//
+//            override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
+//                if(response?.isSuccessful!!){
+//                    if(response?.code()==200){
+//                        if(response?.body().listProduct.size>0){
+//                            Log.d("REALMCONTROLLER",response?.body().listProduct.size.toString()+"//listProduct")
+//                            showDialog("Đang đồng bộ dữ liệu...")
+//                            myRealm?.updateorCreateListProduct(response?.body().listProduct,this@Home_Fragment)
+//                        }else if(myRealm?.getlistProduct()!!.size==0){
+//                            showDialogNotFound()
+//                        }
+//                    }
+//                }else{
+//                    Toast.makeText(activity,"Error! \n message:"+response?.message(), Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//
+//        })
+//        mRetrofitService = ApiUtils.getAPI()
+//        mRetrofitService?.getAllProductInGroup("5b14b582c040310f42d8e0ee")?.enqueue(object: Callback<Result_Product>{
+//            override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
+//                if(myRealm?.getlistProduct()!!.size==0){
+//                    showDialogNotFound()
+//                }else{
+//                    loadData()
+//                }
+//                Toast.makeText(activity,"Error! \n message:"+t?.message, Toast.LENGTH_SHORT).show()
+//            }
+//
+//            override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
+//                if(response?.isSuccessful!!){
+//                    if(response?.code()==200){
+//                        if(response?.body().listProduct.size>0){
+//                            Log.d("REALMCONTROLLER",response?.body().listProduct.size.toString()+"//listProduct")
+//                            showDialog("Đang đồng bộ dữ liệu...")
+//                            myRealm?.updateorCreateListProduct(activity!!, response?.body().listProduct,this@Home_Fragment)
+//                        }else if(myRealm?.getlistProduct()!!.size==0){
+//                            showDialogNotFound()
+//                        }
+//                    }
+//                }else{
+//                    Toast.makeText(activity,"Error! \n message:"+response?.message(), Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//
+//        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

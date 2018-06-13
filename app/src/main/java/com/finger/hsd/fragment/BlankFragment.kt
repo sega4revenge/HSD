@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.finger.hsd.R
 import com.finger.hsd.adapters.Main_list_Adapter
-import com.finger.hsd.model.Product
+import com.finger.hsd.model.Product_v
 import java.text.ParseException
 import java.text.SimpleDateFormat
 
@@ -36,7 +36,7 @@ class BlankFragment : Fragment() ,View.OnClickListener {
     private var mView:View? = null
     private var mRec:RecyclerView? = null
     private var mAdapter:Main_list_Adapter? = null
-    private var ListProduct:ArrayList<Product>? = null
+    private var ListProduct:ArrayList<Product_v>? = null
     private var arrType:ArrayList<Int>? = null
     private var mLayoutManager:LinearLayoutManager? = null
     override fun onActivityCreated(savedInstanceState: Bundle?) {

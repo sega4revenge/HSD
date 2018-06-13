@@ -1,10 +1,8 @@
 package com.finger.hsd.presenter
 
-import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import com.androidnetworking.error.ANError
-import com.androidnetworking.interfaces.DownloadProgressListener
 import com.finger.hsd.model.Response
 import com.finger.hsd.model.User
 import com.finger.hsd.util.Constants
@@ -34,22 +32,22 @@ var a : String?=null
         var current = 0
         var percent: Int = 0
 
-        task = object : TimerTask() {
-            internal var mHandler = Handler()
+//        task = object : TimerTask() {
+//            internal var mHandler = Handler()
+//
+//            override fun run() {
+//                mHandler.post(Runnable {
+//                    mLoginView.isProgressData(percent)
+//
+//                })
+//            }
+//        }
 
-            override fun run() {
-                mHandler.post(Runnable {
-                    mLoginView.isProgressData(percent)
-
-                })
-            }
-        }
-
-        timer = Timer()
-        timer!!.scheduleAtFixedRate(task, 0, 500)
+//        timer = Timer()
+//        timer!!.scheduleAtFixedRate(task, 0, 500)
 
 
-        return Rx2AndroidNetworking.post(Constants.BASE_URL + typesearch)
+        return Rx2AndroidNetworking.post(Constants.URL_LOGIN)
                 .setTag(login)
                 .addJSONObjectBody(jsonObject)
                 .build()
@@ -60,14 +58,15 @@ var a : String?=null
                     Log.d(login, " bytesSent : $bytesSent")
                     Log.d(login, " bytesReceived : $bytesReceived")
                     Log.d(login, " isFromCache : $isFromCache")
-                }.setDownloadProgressListener(object : DownloadProgressListener{
-                    override fun onProgress(bytesDownloaded: Long, totalBytes: Long) {
-
-                        percent = (bytesDownloaded* 100f /totalBytes).toInt()
-
-                    }
-
-                })
+                }
+//                }.setDownloadProgressListener(object : DownloadProgressListener{
+//                    override fun onProgress(bytesDownloaded: Long, totalBytes: Long) {
+//
+//                        percent = (bytesDownloaded* 100f /totalBytes).toInt()
+//
+//                    }
+//
+//                })
                 .getObjectObservable(Response::class.java)
 
     }
@@ -81,7 +80,7 @@ var a : String?=null
                     Log.d(register, "onResponse isMainThread : " + (Looper.myLooper() == Looper.getMainLooper()).toString())
 
                     mLoginView.getUserDetail(response.user!!)
-                    mLoginView.isRegisterSuccessful(true)
+                  //  mLoginView.isRegisterSuccessful(true)
                 } else {
                     mLoginView.setErrorMessage("201")
                 }
@@ -104,7 +103,7 @@ var a : String?=null
             }
 
             override fun onComplete() {
-                mLoginView.isLoginSuccessful(true)
+              //  mLoginView.isLoginSuccessful(true)
 
             }
         }
@@ -113,13 +112,13 @@ var a : String?=null
     fun login(user :User) {
 
         try {
-            jsonObject.put("iduser", user.iduser)
+            jsonObject.put("phone", user.phone)
             jsonObject.put("password", user.password)
             jsonObject.put("tokenfirebase", user.tokenfirebase)
         } catch (e: JSONException) {
             e.printStackTrace()
         }
-        disposables.add(getObservable_login("authenticate")
+        disposables.add(getObservable_login("login-android")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(getDisposableObserver_login()))
@@ -187,7 +186,7 @@ var a : String?=null
 
         try {
 
-                jsonObject.put("iduser", user.iduser)
+                jsonObject.put("phone", user.phone)
                 jsonObject.put("password", user.password)
                 jsonObject.put("tokenfirebase", user.tokenfirebase)
 

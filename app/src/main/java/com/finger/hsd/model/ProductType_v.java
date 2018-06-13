@@ -1,23 +1,24 @@
 package com.finger.hsd.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
-public class ProductType_v {
-    private String id;
+public class ProductType_v  extends RealmObject {
+   @PrimaryKey
+    private String _id;
     private String barcode;
     private String name;
     private String image;
     private Integer createAt;
     private Integer v;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
 
     public String getId() {
-        return id;
+        return _id;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this._id = id;
     }
 
     public String getBarcode() {
@@ -60,11 +61,5 @@ public class ProductType_v {
         this.v = v;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
 }

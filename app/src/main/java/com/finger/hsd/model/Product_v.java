@@ -1,22 +1,30 @@
 package com.finger.hsd.model;
 
 
-
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 public class Product_v extends RealmObject {
 
+    @PrimaryKey
+    private String _id;
     private String namechanged;
     private String barcode;
     private long expiretime;
     private String description;
     private String imagechanged;
+    private String imagepassed;
     private boolean delete;
-    private ProductType  productTypeId;
+    private ProductType_v  producttype_id;
     public int daybefore;
-    @PrimaryKey
-    private String _id;
+
+    public String getImagepassed() {
+        return imagepassed;
+    }
+
+    public void setImagepassed(String imagepassed) {
+        this.imagepassed = imagepassed;
+    }
 
     public String get_id() {
         return _id;
@@ -43,12 +51,12 @@ public class Product_v extends RealmObject {
         this._id = _id;
     }
 
-    public ProductType getProductTypeId() {
-        return productTypeId;
+    public ProductType_v getProductTypeId() {
+        return producttype_id;
     }
 
-    public void setProductTypeId(ProductType productTypeId) {
-        this.productTypeId = productTypeId;
+    public void setProductTypeId(ProductType_v productTypeId) {
+        this.producttype_id = productTypeId;
     }
 
     public boolean isDelete() {
@@ -101,6 +109,10 @@ public class Product_v extends RealmObject {
     }
 
     public void setImagechanged(String imagechanged) {
+
+
         this.imagechanged = imagechanged;
+
+
     }
 }

@@ -168,13 +168,17 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         }
                     });
             } else if (holder instanceof ItemViewHolder) { //Constants.INSTANCE.getIMAGE_URL()+
-                    Glide.with(mContext).load(mObject.getImagechanged()).apply(optionsGlide).into(((ItemViewHolder) holder).photo_product);
-                    ((ItemViewHolder) holder).txt_barcode.setText(mObject.getBarcode());
+
+                    Glide.with(mContext)
+                            .load(mObject.getImagechanged())
+                            .apply(optionsGlide)
+                            .into(((ItemViewHolder) holder).photo_product);
+
+                    ((ItemViewHolder) holder).txt_barcode.setText(mObject.getProductTypeId().getBarcode());
                     ((ItemViewHolder) holder).txt_detail.setText(mObject.getDescription());
                     ((ItemViewHolder) holder).txt_exdate.setText(getDate(mObject.getExpiretime(), "dd/MM/yyyy"));
                     ((ItemViewHolder) holder).txt_nameproduct.setText(mObject.getNamechanged());
 
-//
                     if(miliexToday>mObject.getExpiretime()){
                         if( ((ItemViewHolder) holder).txt_warring.getText()!="Hết hạn"){
                             ((ItemViewHolder) holder).txt_warring.setText("Hết hạn");

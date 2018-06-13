@@ -10,7 +10,6 @@ open class User() : Parcelable, RealmObject() {
 
     @PrimaryKey
     var _id: String? = null
-    var iduser: String? = null
     var phone : String? = null
     var password: String? = null
     var tokenfirebase: String? = null
@@ -23,7 +22,6 @@ open class User() : Parcelable, RealmObject() {
 
     constructor(parcel: Parcel) : this() {
         _id = parcel.readString()
-        iduser = parcel.readString()
         password = parcel.readString()
         tokenfirebase = parcel.readString()
         created_at = parcel.readString()
@@ -31,7 +29,6 @@ open class User() : Parcelable, RealmObject() {
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(_id)
-        parcel.writeString(iduser)
         parcel.writeString(password)
         parcel.writeString(tokenfirebase)
         parcel.writeString(created_at)

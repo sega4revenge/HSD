@@ -1,6 +1,8 @@
 package com.finger.hsd.fragment
 
-import android.content.Intent
+import android.app.Activity
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
@@ -10,15 +12,15 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.finger.hsd.BaseFragment
 import com.finger.hsd.R
 import com.finger.hsd.adapters.NotificationAdapter
 import com.finger.hsd.common.Prefs
 import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Notification
 import com.finger.hsd.model.Product_v
-import com.finger.hsd.model.User
-import com.finger.hsd.services.NotificationService
 import com.finger.hsd.util.Mylog
+import kotlinx.android.synthetic.main.fragment_notification.view.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -35,7 +37,7 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  *
  */
-class NotificationFragment : Fragment() {
+class NotificationFragment : BaseFragment() {
 
     // TODO: Rename and change types of parameters
 
@@ -46,8 +48,28 @@ class NotificationFragment : Fragment() {
     private val pageToDownload : Int = 0
     private var realm: RealmController? = null
     private var prefs : Prefs? = null
+    var mNotificationBadgeListener: NotificationBadgeListener? = null
+
+    override fun onAttach(context: Activity) {
+        super.onAttach(context)
+        if (Build.VERSION.SDK_INT < 23) {
+            onAttachToContext(context)
+        }
+    }
 
 
+   override fun onAttach(context: Context) {
+        super.onAttach(context)
+        onAttachToContext(context)
+
+    }
+
+    fun onAttachToContext(context: Context) {
+        if (context is NotificationBadgeListener) {
+            mNotificationBadgeListener = context
+
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -59,27 +81,26 @@ class NotificationFragment : Fragment() {
         prefs = Prefs(activity);
 
         initViews()
-        if(!prefs!!.preLoad) {
-           setData()
-        }
-
-        //refresh the realm instance
-        realm!!.refresh()
-        // get all presisted object
-        // create the helper adapter and notify data set changes
-        // changes will be reflected automatically
         setRealmAdapter()
 
+        mView!!.im_clear.setOnClickListener(View.OnClickListener {
+            showProgress()
+            realm!!.setWatchedNotification()
+            hideProgress()
 
+        })
         return mView
     }
 
     fun setRealmAdapter(){
-        listitem = realm!!.getListNotification()
-        mNotifiAdapter = NotificationAdapter(activity, listitem, mRecyclerView )
+        listitem = realm!!.getListNotification()!!
+
+        Mylog.d("aaaaaaa NotificationFragment: "+listitem.get(0).content)
+
+        mNotifiAdapter = NotificationAdapter(activity, listitem, mRecyclerView, mNotificationBadgeListener )
         mRecyclerView.adapter = mNotifiAdapter
 
-        activity!!.startService(Intent(activity, NotificationService::class.java))
+       // activity!!.startService(Intent(activity, NotificationService::class.java))
     }
 
     fun addOneNotification(){
@@ -88,7 +109,7 @@ class NotificationFragment : Fragment() {
         var user  = realm!!.getUser("5b06897ebb966e07b4fbd91a")!!
         notification._id = System.currentTimeMillis().toString()
 //        notification.iduser = user
-        notification.created_at = System.currentTimeMillis().toString()
+        notification.create_at = System.currentTimeMillis().toString()
         var product  = Product_v()
         product = realm!!.getProduct("5b17f6daea81a8639de962ea")!!
         if(product !=null) {
@@ -106,22 +127,22 @@ class NotificationFragment : Fragment() {
 
     private fun setData(){
 
-        var user = User()
-        user.iduser = "5b06897ebb966e07b4fbd91a"
-        realm!!.addUser(user)
+//        var user = User()
+//        user._id = "5b06897ebb966e07b4fbd91a"
+//        realm!!.addUser(user)
 
         for (i in 0..10) {
             var notification = Notification()
             notification._id = i.toString()
-            var user  = realm!!.getUser("5b06897ebb966e07b4fbd91a")!!
+          //  var user  = realm!!.getUser("5b06897ebb966e07b4fbd91a")!!
 
 //            notification.iduser = user
 
-            notification.created_at = System.currentTimeMillis().toString()
+            notification.create_at = System.currentTimeMillis().toString()
             var product  = Product_v()
             product = realm!!.getProduct("5b17f6daea81a8639de962ea")!!
             if(product !=null) {
-                notification.product = product
+                notification.id_product = "5b17f6daea81a8639de962ea"
                 if(i%2 == 0) {
                     notification.type = 1 // 1 single, 2 multi
                 }else{
@@ -195,6 +216,10 @@ class NotificationFragment : Fragment() {
 
 
 
+    }
+
+    interface NotificationBadgeListener {
+        fun onBadgeUpdate(value: Int)
     }
 
 

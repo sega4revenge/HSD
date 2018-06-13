@@ -17,6 +17,10 @@ import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_register.*
 
 class RegisterActivity : AppCompatActivity(), LoginPresenter.LoginView {
+    override fun isProgressData(percent: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     var user = User()
 
     var v: View? = null
@@ -92,7 +96,7 @@ class RegisterActivity : AppCompatActivity(), LoginPresenter.LoginView {
 //            progressBar.visibility = View.GONE
 //            CircularAnim.show(btn_join).go()
 
-            user.iduser = phone_number.text.toString()
+            user.phone = phone_number.text.toString()
 
             user.password = ""
             user.tokenfirebase = FirebaseInstanceId.getInstance().token

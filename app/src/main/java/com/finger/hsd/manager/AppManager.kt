@@ -67,9 +67,9 @@ object AppManager {
     fun onlyremoveAccount(context: Context, user : User){
         val am = context.getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
         val accountsFromFirstApp = am.getAccountsByType(AppManager.ACCOUNT_TYPE)
-        Log.e("name",getUserDatafromAccount(context,accountsFromFirstApp[0]).iduser)
+        Log.e("name",getUserDatafromAccount(context,accountsFromFirstApp[0])._id)
         am.setUserData(accountsFromFirstApp[0], AppManager.USER_DATA, Gson().toJson(user))
-        Log.e("name",getUserDatafromAccount(context,accountsFromFirstApp[0]).iduser)
+        Log.e("name",getUserDatafromAccount(context,accountsFromFirstApp[0])._id)
 
 
     }
@@ -136,7 +136,7 @@ object AppManager {
 
     fun saveAccountUser(context: Context, user: User) {
         val accountManager = context.getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
-        var account = Account(user.iduser, AppManager.ACCOUNT_TYPE)
+        var account = Account(user._id, AppManager.ACCOUNT_TYPE)
         if (accountManager.addAccountExplicitly(account, user.password, null)) {
             println("tao thanh cong")
         } else {

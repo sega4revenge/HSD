@@ -5,7 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.finger.hsd.Services.NotificationPlayingService;
+import com.finger.hsd.services.NotificationPlayingService;
+
 
 public class AlarmReceiver extends BroadcastReceiver {
 

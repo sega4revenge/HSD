@@ -33,7 +33,6 @@ import com.finger.hsd.R.string.days
 import com.finger.hsd.library.CompressImage
 import com.finger.hsd.library.image.TedBottomPicker
 import com.finger.hsd.manager.RealmController
-import com.finger.hsd.model.Product
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.Response
 import com.finger.hsd.presenter.DetailProductPresenter
@@ -317,8 +316,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                  delete = jsonInfoProduct.getBoolean("delete")
             }
             getWarningStatus(days)
-            var product = Product(idProduct, jsonInfoProductType.getString("name"),
-                    strImProduct,expiredTime.toString(), daysbefor!!,  delete, jsonInfoProduct.getString("description"))
+
 
          //   realm!!.updateProduct(product)
             //********* UPDATE THÀNH CÔNG *************
@@ -372,8 +370,8 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         }else
             // xóa sản phẩm
             if (typeError == 222){
-                var product: Product = Product()
-                product.delete = true
+                var product = Product_v()
+                product.isDelete = true
                 product._id= idProduct
                 realm!!.updateProduct(product)
 
@@ -383,13 +381,13 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                 note = mTvNote.text.toString()
                 name = mTvName.text.toString()
                 presenter.processInfomationUpdate(idProduct, name, expiredTime, note)
-                var product: Product = Product()
-                product.namechange = name
+                var product= Product_v()
+                product.namechanged = name
                 product._id= idProduct
                 if (!TextUtils.isEmpty(note))
                      product.description = note
                 if(!TextUtils.isEmpty(expiredTime))
-                    product.expiretime = expiredTime
+                    product.expiretime = expiredTime!!.toLong()
 
                 realm!!.updateProduct(product)
         }

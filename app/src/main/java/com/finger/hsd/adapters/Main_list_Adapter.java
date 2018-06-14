@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -140,7 +141,6 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 //                        }
 //                    }
 
-
                     ((HeaderViewHolder) holder).mClear.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -174,10 +174,19 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             .apply(optionsGlide)
                             .into(((ItemViewHolder) holder).photo_product);
 
+
+
                     ((ItemViewHolder) holder).txt_barcode.setText(mObject.getProductTypeId().getBarcode());
                     ((ItemViewHolder) holder).txt_detail.setText(mObject.getDescription());
                     ((ItemViewHolder) holder).txt_exdate.setText(getDate(mObject.getExpiretime(), "dd/MM/yyyy"));
                     ((ItemViewHolder) holder).txt_nameproduct.setText(mObject.getNamechanged());
+
+                ((ItemViewHolder) holder).lnItem.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onproductClickListener.onClickItem(position);
+                    }
+                });
 
                     if(miliexToday>mObject.getExpiretime()){
                         if( ((ItemViewHolder) holder).txt_warring.getText()!="Hết hạn"){
@@ -273,6 +282,7 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public ImageView photo_product;
         public View divide,divide_shadow;
         public TextView txt_warring;
+        public LinearLayout lnItem;
         public TextView txt_barcode,txt_exdate,txt_detail,txt_nameproduct,txt_group;
         public ItemViewHolder(View v) {
             super(v);
@@ -285,6 +295,7 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             divide = v.findViewById(R.id.divide);
             divide_shadow = v.findViewById(R.id.divide_shadow);
             txt_warring =  v.findViewById(R.id.txt_warring);
+            lnItem = v.findViewById(R.id.ln_item);
         }
 
 
@@ -304,5 +315,7 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
     public interface OnproductClickListener {
         void onproductClickedDelete(String listDelete,List<Product_v> arr);
+
+        void onClickItem(int position);
     }
 }

@@ -2,6 +2,7 @@ package com.finger.hsd.fragment
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -19,6 +20,7 @@ import com.finger.hsd.common.Prefs
 import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Notification
 import com.finger.hsd.model.Product_v
+import com.finger.hsd.services.NotificationService
 import com.finger.hsd.util.Mylog
 import kotlinx.android.synthetic.main.fragment_notification.view.*
 
@@ -95,72 +97,34 @@ class NotificationFragment : BaseFragment() {
     fun setRealmAdapter(){
         listitem = realm!!.getListNotification()!!
 
-        Mylog.d("aaaaaaa NotificationFragment: "+listitem.get(0).content)
+    //    Mylog.d("aaaaaaa NotificationFragment: "+listitem.get(0).id_product +" type: "+listitem.get(0).type)
 
         mNotifiAdapter = NotificationAdapter(activity, listitem, mRecyclerView, mNotificationBadgeListener )
         mRecyclerView.adapter = mNotifiAdapter
+        mNotifiAdapter.notifyDataSetChanged()
 
-       // activity!!.startService(Intent(activity, NotificationService::class.java))
+        activity!!.startService(Intent(activity, NotificationService::class.java))
     }
 
-    fun addOneNotification(){
+    fun addOneNotification() {
 
         var notification = Notification()
-        var user  = realm!!.getUser("5b06897ebb966e07b4fbd91a")!!
+        var user = realm!!.getUser("5b06897ebb966e07b4fbd91a")!!
         notification._id = System.currentTimeMillis().toString()
 //        notification.iduser = user
         notification.create_at = System.currentTimeMillis().toString()
-        var product  = Product_v()
+        var product = Product_v()
         product = realm!!.getProduct("5b17f6daea81a8639de962ea")!!
-        if(product !=null) {
+        if (product != null) {
             notification.type = 1 // 1 single, 2 multi
             notification.watched = false;
             realm!!.addNotification(notification)
 
             mRecyclerView.scrollToPosition(0)
-        }else{
-            Mylog.d("aaaaaaaaa "+null)
+        } else {
+            Mylog.d("aaaaaaaaa " + null)
         }
     }
-
-
-
-    private fun setData(){
-
-//        var user = User()
-//        user._id = "5b06897ebb966e07b4fbd91a"
-//        realm!!.addUser(user)
-
-        for (i in 0..10) {
-            var notification = Notification()
-            notification._id = i.toString()
-          //  var user  = realm!!.getUser("5b06897ebb966e07b4fbd91a")!!
-
-//            notification.iduser = user
-
-            notification.create_at = System.currentTimeMillis().toString()
-            var product  = Product_v()
-            product = realm!!.getProduct("5b17f6daea81a8639de962ea")!!
-            if(product !=null) {
-                notification.id_product = "5b17f6daea81a8639de962ea"
-                if(i%2 == 0) {
-                    notification.type = 1 // 1 single, 2 multi
-                }else{
-                    notification.type = 2
-                    notification.countProductExprited = 3
-                }
-                notification.watched = false;
-                realm!!.addNotification(notification)
-            }else{
-                Mylog.d("aaaaaaaaa "+null)
-            }
-        }
-
-        prefs!!.preLoad = true
-    }
-
-
-
 
     private fun initViews() {
         mRecyclerView.setHasFixedSize(true)

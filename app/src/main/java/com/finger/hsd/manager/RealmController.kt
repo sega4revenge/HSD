@@ -9,7 +9,6 @@ import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.error.ANError
 import com.facebook.FacebookSdk.getApplicationContext
 import com.finger.hsd.common.MyApplication
-import com.finger.hsd.model.Group
 import com.finger.hsd.model.Notification
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.User
@@ -46,6 +45,7 @@ class RealmController(application: Context) {
             realm.commitTransaction()
         }
     }
+
     fun getNotification() : RealmResults<Notification>{
         var create_at : String? = "create_at"
         var results = realm.where(com.finger.hsd.model.Notification::class.java).findAll()
@@ -62,14 +62,7 @@ class RealmController(application: Context) {
         realm.refresh()
     }
 
-    fun getUser(): User?{
-        return realm.where(User::class.java).findFirst()
-    }
-    fun getGroup(): Group?{
-        return realm.where(Group::class.java).findFirst()
-    }
-//    fun insert(data: Data) {
-//        }
+
 
     fun addUser(user: User){
 

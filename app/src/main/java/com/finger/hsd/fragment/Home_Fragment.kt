@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.finger.hsd.R
+import com.finger.hsd.activity.DetailProductActivity
 import com.finger.hsd.activity.Scanner_Barcode_Activity
 import com.finger.hsd.adapters.Main_list_Adapter
 import com.finger.hsd.manager.RealmController
@@ -39,6 +39,7 @@ import kotlin.collections.ArrayList
 
 
 class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmController.updateData{
+
     override fun onupdateProduct(type: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -226,12 +227,12 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode == AppIntent.REQUEST_UPDATE_ITEM){
+        if(requestCode == AppIntent.REQUEST_DETAIL_PRODUCT){
             if(resultCode == AppIntent.RESULT_UPDATE_ITEM){
+
+                var product_v: Product_v = data!!.getSerializableExtra("product_v") as Product_v
+
                 val position = data!!.getIntExtra("position", -1)
-                val name = data!!.getStringExtra("name")
-                val expiredTime = data!!.getStringExtra("expiredTime")
-                val image = data!!.getStringExtra("image")
 
                 if (position != -1){
                     var st = ""
@@ -241,16 +242,8 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
                     var miliexToday:Long = exToday.getTime()
                     var check_hethan = false
 
-                    val product_v = listProduct!!.get(position)
-                    if(!TextUtils.isEmpty(expiredTime))
-                        product_v.expiretime = expiredTime.toLong()
 
-                    if(!TextUtils.isEmpty(image)){
-                        product_v.imagechanged = image
-                    }
-                    product_v.namechanged = name
-
-                    Mylog.d("aaaaaaaaa "+name +" imae: "+product_v.imagechanged + " expriredTime: "+product_v.expiretime + " position: "+position)
+                    Mylog.d("aaaaaaaaa "+product_v.namechanged +" imae: "+product_v.imagechanged + " expriredTime: "+product_v.expiretime + " position: "+position)
 
                     if(st.indexOf(getDate(product_v.expiretime,"dd/MM/yyyy"))>0){
                     }else{
@@ -277,7 +270,11 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
 
                 }
 
-
+            }else if (resultCode == AppIntent.RESULT_DELETE_ITEM){
+               var product_v = data!!.getSerializableExtra("product_v")
+                var position = data!!.getIntExtra("position", -1)
+                listProduct!!.remove(product_v)
+                mAdapter!!.notifyItemRemoved(position)
             }
         }
     }
@@ -349,4 +346,16 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
         calendar.timeInMillis = milliSeconds
         return formatter.format(calendar.time)
     }
+
+    override fun onClickItem(position: Int) {
+        var product = listProduct!!.get(position)
+
+        var intent = Intent(activity, DetailProductActivity::class.java )
+            intent.putExtra("id_product", product._id)
+        intent.putExtra("position", position)
+
+        startActivityForResult(intent, AppIntent.REQUEST_DETAIL_PRODUCT)
+
+    }
+
 }

@@ -2,8 +2,7 @@ package com.finger.hsd.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
+import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,11 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.finger.hsd.R;
 import com.finger.hsd.fragment.NotificationFragment;
 import com.finger.hsd.manager.RealmController;
@@ -29,6 +24,7 @@ import com.finger.hsd.model.Notification;
 import com.finger.hsd.model.Product_v;
 import com.finger.hsd.util.TimeAgo;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -135,14 +131,15 @@ public class NotificationAdapter extends RecyclerView.Adapter {
             // kiểu thông báo: type == 1: kiểu single thông báo sản phẩm hết hạng
             // type == 2: thông báo có bao nhiêu sản phẩm hết hạn
 
-            if(information.getType() == 1){
+            if(information.getType() == 0){
                 myHolder.txtHsd.setVisibility(View.VISIBLE);
                 myHolder.imgInfo.setVisibility(View.VISIBLE);
                 myHolder.tvWarning.setVisibility(View.VISIBLE);
                 // day expiredtime
-
+                Log.d("aaaaaaa ", "NotificationFragment: "+information.getId_product());
                  Product_v  product = realm.getProduct(information.getId_product());
-                Log.d("aaaaaaa ", "NotificationFragment: "+product.getNamechanged());
+
+                Log.d("aaaaaaa ", "NotificationFragment: "+product.getImagechanged());
                 long expiredTime = product.getExpiretime();
                 Date date = new Date(expiredTime);
                 DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
@@ -155,37 +152,38 @@ public class NotificationAdapter extends RecyclerView.Adapter {
                 String txtExpiredTime = mContext.getResources().getString(R.string.expiredtime_notifi) + dateFormat.format(date);
                 myHolder.txtHsd.setText(txtExpiredTime);
 
-                myHolder.progressbarImage.setVisibility(View.VISIBLE);
-                String strImProduct = product.getImagechanged().toString();
+             //   myHolder.progressbarImage.setVisibility(View.VISIBLE);
+                File file = new File(product.getImagechanged());
+                Uri imageUri = Uri.fromFile(file);
+
                 RequestOptions options = new RequestOptions()
                         .centerCrop()
-                        .dontAnimate()
                         .placeholder(R.mipmap.ic_launcher_round)
-                        .priority(Priority.HIGH);
+                        .error(R.mipmap.ic_launcher_round)
+                        .priority(Priority.LOW);
                 Glide.with(mContext)
-                        .load(strImProduct)
-                        .thumbnail(0.1f)
+                        .load(product.getImagechanged())
                         .apply(options)
-                        .listener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                               myHolder.progressbarImage.setVisibility(View.GONE);
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                myHolder.progressbarImage.setVisibility(View.GONE);
-                                return false;
-                            }
-                        })
+//                        .listener(new RequestListener<Drawable>() {
+//                            @Override
+//                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                               myHolder.progressbarImage.setVisibility(View.GONE);
+//                                return false;
+//                            }
+//
+//                            @Override
+//                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//                                myHolder.progressbarImage.setVisibility(View.GONE);
+//                                return false;
+//                            }
+//                        })
                         .into(myHolder.imgInfo);
 
-            }else if(information.getType() == 2){
+            }else if(information.getType() == 1){
                 myHolder.txtHsd.setVisibility(View.GONE);
                 myHolder.imgInfo.setVisibility(View.GONE);
                 myHolder.tvWarning.setVisibility(View.GONE);
-                myHolder.progressbarImage.setVisibility(View.GONE);
+              //  myHolder.progressbarImage.setVisibility(View.GONE);
                 String txtDaystatus =  mContext.getResources().getString(R.string.status_count_product_1) +" "+ information.getCountProductExprited()+" "+
                         mContext.getResources().getString(R.string.status_count_product_2);
                 myHolder.tvStatus.setText(txtDaystatus);
@@ -251,7 +249,7 @@ public class NotificationAdapter extends RecyclerView.Adapter {
         TextView tvWarning;
         ImageView imgInfo;
         public LinearLayout clickitemlayout;
-        ProgressBar progressbarImage;
+//        ProgressBar progressbarImage;
 
 
         public MyHolder(View rowView) {
@@ -263,7 +261,7 @@ public class NotificationAdapter extends RecyclerView.Adapter {
             txtHsd =  rowView.findViewById(R.id.tv_hsd);
             tvWarning = rowView.findViewById(R.id.tv_warning);
             imgInfo =  rowView.findViewById(R.id.im_product_noti);
-            progressbarImage =  rowView.findViewById(R.id.progress_notification);
+//            progressbarImage =  rowView.findViewById(R.id.progress_notification);
 
 
         }

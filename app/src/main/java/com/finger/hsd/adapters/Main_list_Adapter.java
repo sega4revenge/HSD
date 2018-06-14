@@ -151,7 +151,7 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 if(_idDelete==""){
                                     _idDelete = mProducts.get(i).get_id()+",";
                                 }else{
-                                    _idDelete =_idDelete+mProducts.get(i).get_id()+",";
+                                    _idDelete =_idDelete + mProducts.get(i).get_id()+",";
                                 }
                                 try{
                                     if(mProducts.get(i+1).get_id()=="1"){
@@ -173,8 +173,6 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             .load(mObject.getImagechanged())
                             .apply(optionsGlide)
                             .into(((ItemViewHolder) holder).photo_product);
-
-
 
                     ((ItemViewHolder) holder).txt_barcode.setText(mObject.getProductTypeId().getBarcode());
                     ((ItemViewHolder) holder).txt_detail.setText(mObject.getDescription());

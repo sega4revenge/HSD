@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#ffa000</color>
+    <color name="colorPrimaryDark">#9c9c9c</color>
     <color name="colorAccent">#ff4081</color>
     <color name="color_background_button">#009a9a</color>
     <color name="input_register_bg">#979cb4</color>
@@ -32,4 +32,12 @@
     <color name="gray">#d7d7d7</color>
     <color name="black_gray">#464646</color>
     <color name="light_grey">#EBEBF1</color>
+
+    <color name="text_color">#464444</color>
+    <color name="text_hint">#9c9c9c</color>
+    <color name="divider">#9c9c9c</color>
+    <color name="start_color">#ffc017</color>
+    <color name="end_color">#ffa000</color>
+    <color name="fb_color">#0037c1</color>
+    <color name="gg_color">#e74c3c</color>
 </resources>

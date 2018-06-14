@@ -4,170 +4,129 @@
     android:id="@+id/root_register"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f4f5fa"
+    android:background="@color/white"
     android:orientation="vertical">
 
 
-    <LinearLayout
-        android:id="@+id/layout_input"
+    <android.support.v7.widget.CardView
+        android:background="@color/white"
+        android:layout_marginBottom="50dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_centerInParent="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp">
-
-
-
-        <android.support.design.widget.TextInputEditText
-
-            android:id="@+id/name"
+        app:cardCornerRadius="30dp"
+        android:layout_margin="24dp"
+        app:elevation="4dp"
+        app:cardPreventCornerOverlap="false"
+        >
+        <LinearLayout
+            android:id="@+id/layout_input"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:drawableLeft="@drawable/ic_phone_android_black_24dp"
-            android:drawablePadding="10dp"
-            android:drawableStart="@drawable/ic_phone_android_black_24dp"
-            android:ems="10"
-            android:hint="@string/txt_phone"
-            android:inputType="textAutoComplete"
-            android:paddingLeft="20dp"
-            android:textColor="@color/input_register_bg"
-            android:textColorHint="@color/input_register_bg"
-            android:textColorLink="@color/input_register_bg"
-            android:textSize="14sp"
-            android:background="@drawable/roundedttext"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:padding="24dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            />
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <android.support.design.widget.TextInputEditText
+                        android:textCursorDrawable="@null"
+                        android:id="@+id/name"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:ems="10"
+                        android:hint="@string/txt_phone"
+                        android:inputType="phone"
+                        android:textSize="14sp"
+                        android:background="@drawable/shape_edittext_login"
+                        android:gravity="center"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_hint"
 
-
-        <android.support.design.widget.TextInputEditText
-
-            android:id="@+id/txt_password"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:drawableLeft="@drawable/ic_lock_black_24dp"
-            android:drawablePadding="10dp"
-            android:drawableStart="@drawable/ic_lock_black_24dp"
-            android:ems="10"
-            android:hint="@string/txt_password"
-            android:inputType="textPassword"
-            android:paddingLeft="20dp"
-            android:textColor="@color/input_register_bg"
-            android:textColorHint="@color/input_register_bg"
-            android:textColorLink="@color/input_register_bg"
-            android:textSize="14sp"
-            android:background="@drawable/roundedttext"
-
-            />
-
-
-        <android.support.design.widget.TextInputEditText
-
-            android:id="@+id/repass"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:drawableLeft="@drawable/ic_lock_black_24dp"
-            android:drawablePadding="10dp"
-            android:drawableStart="@drawable/ic_lock_black_24dp"
-            android:ems="10"
-            android:hint="@string/txt_repassword"
-            android:inputType="textPassword"
-            android:paddingLeft="20dp"
-            android:textColor="@color/input_register_bg"
-            android:textColorHint="@color/input_register_bg"
-            android:textColorLink="@color/input_register_bg"
-            android:textSize="14sp"
-            android:background="@drawable/roundedttext"
-
-            />
+                        />
+                    <TextView
+                        android:textSize="14dp"
+                        android:background="@drawable/shape_edittext_login"
+                        android:gravity="center"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:text="+84"/>
+                </FrameLayout>
 
 
 
+                <android.support.design.widget.TextInputEditText
+                    android:textCursorDrawable="@null"
+                    android:layout_marginTop="24dp"
+                    android:id="@+id/txt_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:ems="10"
+                    android:hint="@string/txt_password"
+                    android:inputType="textPassword"
+                    android:textSize="14sp"
+                    android:background="@drawable/shape_edittext_login"
+                    android:gravity="center"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/text_hint"
 
-        <!--<android.support.design.widget.TextInputEditText-->
-
-        <!--android:id="@+id/password"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:drawableLeft="@drawable/ic_action_lock"-->
-        <!--android:drawablePadding="10dp"-->
-        <!--android:drawableStart="@drawable/ic_action_lock"-->
-        <!--android:ems="10"-->
-        <!--android:hint="@string/hint_password"-->
-        <!--android:inputType="textPassword"-->
-        <!--android:paddingLeft="20dp"-->
-        <!--android:textColor="@color/white"-->
-        <!--android:textColorHint="@color/white"-->
-        <!--android:textColorLink="@color/white"-->
-        <!--android:textSize="14sp"-->
-        <!--android:background="@drawable/roundeditttext"-->
-
-        <!--/>-->
+                    />
 
 
+                <android.support.design.widget.TextInputEditText
+                    android:textCursorDrawable="@null"
+                    android:layout_marginTop="24dp"
+                    android:id="@+id/repass"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:ems="10"
+                    android:hint="@string/txt_repassword"
+                    android:inputType="textPassword"
+                    android:textSize="14sp"
+                    android:background="@drawable/shape_edittext_login"
+                    android:gravity="center"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/text_hint"
 
-        <!--<android.support.design.widget.TextInputEditText-->
+                    />
 
-        <!--android:id="@+id/repassword"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:drawableLeft="@drawable/ic_action_lock"-->
-        <!--android:drawablePadding="10dp"-->
-        <!--android:drawableStart="@drawable/ic_action_lock"-->
-        <!--android:ems="10"-->
-        <!--android:hint="@string/hint_repassword"-->
-        <!--android:inputType="textPassword"-->
-        <!--android:paddingLeft="20dp"-->
-        <!--android:textColor="@color/white"-->
-        <!--android:textColorHint="@color/white"-->
-        <!--android:textColorLink="@color/white"-->
-        <!--android:textSize="14sp"-->
-        <!--android:background="@drawable/roundeditttext"-->
-
-        <!--/>-->
+            </LinearLayout>
 
 
-    </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/layout_singup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/layout_input"
-        android:layout_marginTop="30dp">
 
 
-        <Button
-            android:id="@+id/btn_join"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/roundbutton"
-            android:text="@string/btn_join"
-            android:textAllCaps="false"
-            android:textColor="@color/white" />
 
-    </FrameLayout>
+
+            <Button
+                android:id="@+id/btn_join"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/shape_button_login"
+                android:text="@string/btn_join"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+
+
+
 
 
     <Button
         android:id="@+id/btn_backtologin"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@android:color/transparent"
-        android:text="@string/btn_haveaccount"
-        android:textStyle="bold"
-        android:textAllCaps="false"
-        android:textColor="@color/input_register_bg" />
+        android:gravity="center"
+        android:textSize="16dp"
+        android:textColor="@color/white"
+        android:background="@drawable/shape_button_signup"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/btn_signin"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

@@ -2,12 +2,11 @@ package com.finger.hsd.activity
 
 import android.Manifest
 import android.app.AlertDialog
-import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.ContentResolver
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
@@ -27,9 +26,11 @@ import com.androidnetworking.error.ANError
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.SimpleTarget
 import com.finger.hsd.BaseActivity
 import com.finger.hsd.R
 import com.finger.hsd.R.string.days
+import com.finger.hsd.common.GlideApp
 import com.finger.hsd.library.CompressImage
 import com.finger.hsd.library.image.TedBottomPicker
 import com.finger.hsd.manager.RealmController
@@ -48,13 +49,18 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_detail_product.*
+
+import kotlinx.android.synthetic.main.dialog_timepicker.view.*
 import org.json.JSONObject
 import java.io.File
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProductPresenterView, DatePickerDialog.OnDateSetListener {
+
+
+class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProductPresenterView {
 
 
     private lateinit var mTvName: EditText
@@ -74,7 +80,6 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
     private lateinit var mImChange: ImageView
     private lateinit var mLayoutDayBefore: RelativeLayout
 
-
     private lateinit var idProduct: String
 
     lateinit var presenter: DetailProductPresenter;
@@ -83,23 +88,30 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
     private var name: String? = null
     private var expiredTime: String? = null
     private var note: String? = null
-    private var position : Int? = 0
-    private var expiredTimeChange :String? = null
+    private var position: Int? = 0
+    private var expiredTimeChange: String? = null
 
     var selectedUri: Uri? = null
     var daysbefor: Int? = 0
-
+    var rootFolder: File? = null
     val calendar = Calendar.getInstance()
+    private var realm: RealmController? = null
+    private var mDialog:Dialog? =null
+    
+    var product: Product_v? = null
 
-
-    private var realm : RealmController? = null
+    val options = RequestOptions()
+            .centerCrop()
+            .placeholder(R.drawable.ic_add_photo)
+            .error(R.drawable.ic_back)
+            .priority(Priority.LOW)
 
     // ? sau Kiểu biến, thể hiện cho có thể cho phép null
     // !! sau biến, thể hiện cho không cho phép null
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail_product)
+        setContentView(R.layout.activity_detail_product!!)
 
         mTvName = findViewById(R.id.tv_name)
         mTvBarcode = findViewById(R.id.tv_barcode)
@@ -112,7 +124,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         mTvDayCountDown = findViewById(R.id.tv_day_coudown)
         mTvNotification = findViewById(R.id.tv_notification)
         mBtSave = findViewById(R.id.bt_save)
-        mImProduct = findViewById(R.id.im_product)
+        mImProduct = findViewById(R.id.im_product!!)
         mImStatus = findViewById(R.id.im_status)
         mImChange = findViewById(R.id.im_change)
         mLayoutDayBefore = findViewById(R.id.layout_choose_day_before)
@@ -129,7 +141,10 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
             }
         })
 
-
+        rootFolder = File(filesDir.toString() + "/files")
+        if (!rootFolder!!.exists()) {
+            rootFolder!!.mkdirs()
+        }
         val strDataIntent: String = intent.getStringExtra("id_product")
         position = intent.getIntExtra("position", -1)
 
@@ -138,25 +153,124 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
         realm = RealmController.with(this)
         presenter = DetailProductPresenter(this)
+
+         product= realm!!.getProduct(idProduct)
 //        if(isInternetAvailable()) {
-            presenter.processDetailProduct(idProduct)
+        //  presenter.processDetailProduct(idProduct)
 //        }else{
-//            getDataFromRealm()
+        getDataFromRealm()
 //        }
 
 
         mBtSave.setOnClickListener {
+            /*
+            * update to realm*/
             val noteChange = mTvNote.text.toString()
             val nameChange = mTvName.text.toString()
-            if((!TextUtils.isEmpty(note) && !noteChange.equals(note))
+            if ((!TextUtils.isEmpty(noteChange) && !note.equals(noteChange))
                     || (!TextUtils.isEmpty(noteChange) && !name.equals(nameChange))
-                    ||(!TextUtils.isEmpty(expiredTimeChange) && !expiredTime.equals(expiredTimeChange)) ) {
+                    || (!TextUtils.isEmpty(expiredTimeChange) && !expiredTime.equals(expiredTimeChange))) {
 
-                presenter.processInfomationUpdate(idProduct, nameChange, expiredTimeChange, noteChange)
-            }else if (selectedUri != null) {
+          
+                if (!TextUtils.isEmpty(expiredTimeChange) && !expiredTime.equals(expiredTimeChange)) {
+                    product!!!!.expiretime = expiredTimeChange!!.toLong()
+
+                    var days = 0
+
+
+                    var longExpiredTime = expiredTimeChange!!.toLong()
+                    calendar.timeInMillis = longExpiredTime
+                    expiredTime = expiredTimeChange
+
+                    days = daysBetween(System.currentTimeMillis(), longExpiredTime)
+
+                    getWarningStatus(days)
+
+                }
+                if (!TextUtils.isEmpty(noteChange) && !name.equals(nameChange)) {
+                    product!!!!.namechanged = nameChange
+
+
+                }
+                if (!TextUtils.isEmpty(note) && !noteChange.equals(note)) {
+                    product!!!!.description = noteChange
+                }
+
+
+                if (selectedUri != null) {
+//********* UPDATE image NEEUS NHU co thay đổi  *************
+                    var file = File(getRealFilePath(this, selectedUri!!))
+
+                    GlideApp.with(this)
+                            .asBitmap()
+                            .load(file)
+                            .apply(options)
+                            .into(object : SimpleTarget<Bitmap>() {
+                                override fun onResourceReady(resource: Bitmap, transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {
+
+                                    try {
+                                        val namePassive = product!!!!._id + "passive" + ".jpg"
+
+                                        var myDir = File(rootFolder, namePassive)
+
+                                        Mylog.d("aaaaaaaaaa my dir: " + myDir)
+
+                                        if (myDir.exists())
+                                            myDir.delete()
+
+                                        val out3 = FileOutputStream(myDir)
+
+                                        resource?.compress(Bitmap.CompressFormat.JPEG, 90, out3)
+
+                                        product!!.imagechanged = Uri.fromFile(myDir).toString()
+
+                                        out3.flush()
+                                        out3.close()
+
+
+                                    } catch (e: Exception) {
+
+                                        println(e)
+
+                                    }
+
+
+                                }
+                            })
+
+
+                    //  UploadImage(idProduct, file)
+                }
+                realm!!.updateProduct(product!!!!)
+
+                val intent = Intent()
+                intent.putExtra("position", position!!)
+                intent.putExtra("product!!_v", product!!)
+                setResult(AppIntent.RESULT_UPDATE_ITEM, intent)
+
+                finish()
+
+
+            } else if (selectedUri != null) {
                 var file = File(getRealFilePath(this, selectedUri!!))
-                UploadImage(idProduct, file )
+                UploadImage(idProduct, file)
             }
+
+
+            /*
+            * update server
+            * */
+//            val noteChange = mTvNote.text.toString()
+//            val nameChange = mTvName.text.toString()
+//            if((!TextUtils.isEmpty(note) && !noteChange.equals(note))
+//                    || (!TextUtils.isEmpty(noteChange) && !name.equals(nameChange))
+//                    ||(!TextUtils.isEmpty(expiredTimeChange) && !expiredTime.equals(expiredTimeChange)) ) {
+//
+//                presenter.processInfomationUpdate(idProduct, nameChange, expiredTimeChange, noteChange)
+//            }else if (selectedUri != null) {
+//                var file = File(getRealFilePath(this, selectedUri!!))
+//                UploadImage(idProduct, file )
+//            }
         }
 
         mImChange.setOnClickListener {
@@ -170,7 +284,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
             intent.putExtra("day_before", days)
             startActivityForResult(intent, Constants.REQUEST_DAY_BEFORE)
         }
-        ln_expiredtime.setOnClickListener{
+        ln_expiredtime.setOnClickListener {
             showDialogCustomDay()
         }
     }
@@ -236,13 +350,13 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
     }
 
     override fun onSucess(response: JSONObject, type: Int) {
-        //*********thong tin của product*************
+        //*********thong tin của product!!*************
 
         if (type == 111) {
-           // realm!!.deleteProduct(idProduct)
+            // realm!!.deleteProduct(idProduct)
 
-            val jsonInfoProduct = JSONObject(response.getString("info_product"))
-            val jsonInfoProductType = JSONObject(jsonInfoProduct.getString("producttype_id"))
+            val jsonInfoProduct = JSONObject(response.getString("info_product!!"))
+            val jsonInfoProductType = JSONObject(jsonInfoProduct.getString("product!!type_id"))
             if (jsonInfoProduct.isNull("daybefor")) daysbefor = 2
             else {
                 daysbefor = jsonInfoProduct.getInt("daybefor")
@@ -276,7 +390,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                         .apply(options)
                         .into(mImProduct)
             }
-            if (jsonInfoProduct.isNull("namechanged")) null else{
+            if (jsonInfoProduct.isNull("namechanged")) null else {
                 name = jsonInfoProduct.getString("namechanged")
                 mTvName.setText(name)
             }
@@ -296,7 +410,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
             //  mTvBarcode.text = response.getString("barcode")
 
-            var days =0
+            var days = 0
             if (jsonInfoProduct.isNull("expiretime")) days = 0
             else {
 
@@ -310,18 +424,18 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                 days = daysBetween(System.currentTimeMillis(), expiredTime!!.toLong())
             }
             var delete = false
-            if (jsonInfoProduct.isNull("delete"))   delete = false
+            if (jsonInfoProduct.isNull("delete")) delete = false
             else {
 
-                 delete = jsonInfoProduct.getBoolean("delete")
+                delete = jsonInfoProduct.getBoolean("delete")
             }
             getWarningStatus(days)
 
 
-         //   realm!!.updateProduct(product)
+            //   realm!!.updateProduct(product!!)
             //********* UPDATE THÀNH CÔNG *************
         } else if (type == 333) {
-            val jsonInfoProduct = JSONObject(response.getString("info_product"))
+            val jsonInfoProduct = JSONObject(response.getString("info_product!!"))
             var days = 0
             if (jsonInfoProduct.isNull("expiretime")) days = 0
             else {
@@ -341,7 +455,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 //********* UPDATE image NEEUS NHU co thay đổi  *************
                 var file = File(getRealFilePath(this, selectedUri!!))
                 UploadImage(idProduct, file)
-            }else{
+            } else {
                 val intent = Intent()
                 intent.putExtra(AppIntent.DATA_UPDATE_ITEM, position)
                 intent.putExtra("expredTime", expiredTime)
@@ -362,47 +476,48 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
     override fun onError(typeError: Int) {
         // thông tin sản phẩm
-        if(typeError == 111){
+        if (typeError == 111) {
 
             //getDataFromRealm()
 
 
-        }else
-            // xóa sản phẩm
-            if (typeError == 222){
-                var product = Product_v()
-                product.isDelete = true
-                product._id= idProduct
-                realm!!.updateProduct(product)
+        } else
+        // xóa sản phẩm
+            if (typeError == 222) {
 
-        }else
-         // update thông tin: image, name, note, expiredtime
-            if (typeError == 333){
-                note = mTvNote.text.toString()
-                name = mTvName.text.toString()
-                presenter.processInfomationUpdate(idProduct, name, expiredTime, note)
-                var product= Product_v()
-                product.namechanged = name
-                product._id= idProduct
-                if (!TextUtils.isEmpty(note))
-                     product.description = note
-                if(!TextUtils.isEmpty(expiredTime))
-                    product.expiretime = expiredTime!!.toLong()
+                product!!.isDelete = true
+                product!!._id = idProduct
+                realm!!.updateProduct(product!!)
 
-                realm!!.updateProduct(product)
-        }
+            } else
+            // update thông tin: image, name, note, expiredtime
+                if (typeError == 333) {
+                    note = mTvNote.text.toString()
+                    name = mTvName.text.toString()
+                    presenter.processInfomationUpdate(idProduct, name, expiredTime, note)
+
+                    product!!.namechanged = name
+                    product!!._id = idProduct
+                    if (!TextUtils.isEmpty(note))
+                        product!!.description = note
+                    if (!TextUtils.isEmpty(expiredTime))
+                        product!!.expiretime = expiredTime!!.toLong()
+
+                    realm!!.updateProduct(product!!)
+                }
     }
-//===========LẤY DỮ LIỆU OFFLINE----------------
-    fun getDataFromRealm(){
-     var product: Product_v? =  realm!!.getProduct(idProduct)
-        //  var productType = product!!.productTypeId
-    if (product!!.daybefore == 0) daysbefor = 2
-    else {
-        daysbefor = product!!.daybefore
-    }
-        if (TextUtils.isEmpty(product.description)) mTvNote.setHint(resources.getString(R.string.note))
+
+    //===========LẤY DỮ LIỆU OFFLINE----------------
+    fun getDataFromRealm() {
+     
+        //  var product!!Type = product!!!!.product!!TypeId
+        if (product!!!!.daybefore == 0) daysbefor = 2
         else {
-            mTvNote.setText(product.description.toString())
+            daysbefor = product!!.daybefore
+        }
+        if (TextUtils.isEmpty(product!!!!.description)) mTvNote.setHint(resources.getString(R.string.note))
+        else {
+            mTvNote.setText(product!!.description.toString())
         }
 
         val strText =
@@ -410,12 +525,12 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
         mTvNotification.text = strText
 
-        idProduct = product._id!!
-        if (TextUtils.isEmpty(product!!.namechanged) ) mTvName.setHint(resources.getString(R.string.no_name))
-        else mTvName.setText(product!!.namechanged)
-        if (TextUtils.isEmpty(product!!.imagechanged)) strImProduct = ""
+        idProduct = product!!._id!!
+        if (TextUtils.isEmpty(product!!!!.namechanged)) mTvName.setHint(resources.getString(R.string.no_name))
+        else mTvName.setText(product!!!!.namechanged)
+        if (TextUtils.isEmpty(product!!!!.imagechanged)) strImProduct = ""
         else {
-            strImProduct = product!!.imagechanged.toString()
+            strImProduct = product!!!!.imagechanged.toString()
             val options = RequestOptions()
                     .centerCrop()
                     .dontAnimate()
@@ -427,9 +542,9 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                     .apply(options)
                     .into(mImProduct)
         }
-        if (TextUtils.isEmpty(product.namechanged)) null else mTvName.setText(product.namechanged)
-        if (TextUtils.isEmpty(product.imagechanged)) null else {
-            strImProduct = product.imagechanged.toString()
+        if (TextUtils.isEmpty(product!!.namechanged)) null else mTvName.setText(product!!.namechanged)
+        if (TextUtils.isEmpty(product!!.imagechanged)) null else {
+            strImProduct = product!!.imagechanged.toString()
             val options = RequestOptions()
                     .centerCrop()
                     .dontAnimate()
@@ -444,11 +559,11 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
         //  mTvBarcode.text = response.getString("barcode")
 
-        var days =0
-        if (TextUtils.isEmpty(product.expiretime.toString())) days = 0
+        var days = 0
+        if (TextUtils.isEmpty(product!!.expiretime.toString())) days = 0
         else {
 
-            expiredTime = product.expiretime.toString()
+            expiredTime = product!!.expiretime.toString()
             var longExpiredTime = expiredTime!!.toLong()
 
             calendar.timeInMillis = longExpiredTime
@@ -461,7 +576,8 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         getWarningStatus(days)
 
     }
-    fun getWarningStatus( days : Int){
+
+    fun getWarningStatus(days: Int) {
         var txt: String? = null
         if (days > 0 && days < 10) {
             // warning
@@ -494,6 +610,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                 resources.getString(R.string.detail_product_text_day)
         )
     }
+
     fun getRealFilePath(context: Context, uri: Uri): String? {
         if (null == uri) return null
         val scheme: String = uri.scheme
@@ -557,7 +674,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_detail_product, menu)
+        menuInflater.inflate(R.menu.menu_detail_product!!, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -584,35 +701,78 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
     }
 
     //=========DIALOG SHOW CHOOSE DATE=================
-    override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {
-        var montht = month +1
-        tv_expiredtime.text = day.toString() + "/"+montht.toString() +"/"+ year.toString()
+//    override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {
+//        var montht = month + 1
+//        tv_expiredtime.text = day.toString() + "/" + montht.toString() + "/" + year.toString()
+//
+//        calendar.set(year, month, day)
+//        expiredTimeChange = calendar.timeInMillis.toString()
+//
+//    }
 
-        calendar.set(year, month, day)
-        expiredTimeChange = calendar.timeInMillis.toString()
+    fun showDialogCustomDay() {
 
-    }
 
-    private fun showDialogCustomDay() {
-//        // dialog declare
-//        val dFragment = CustomeDatePickerFragment()
-//        dFragment.show(fragmentManager, "Date Picker")
-        val dpd = DatePickerDialog(this,
-                AlertDialog.THEME_HOLO_LIGHT, this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH))
+        var mDate = ""
+        var datedialog = AlertDialog.Builder(this)
+        var mView:View = View.inflate(this,R.layout.dialog_timepicker,null)
+        datedialog.setView(mView)
+        var datepicker = mView.datepicker
+        var txtout = mView.txt_out
+        var txtok = mView.txt_ok
+        val calendarChange = calendar
 
-        dpd.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel) , object:  DialogInterface.OnClickListener{
-            override fun onClick(p0: DialogInterface?, p1: Int) {
-                dpd.dismiss()
+        datepicker.init(calendarChange.get(Calendar.YEAR), calendarChange.get(Calendar.MONTH), calendarChange.get(Calendar.DAY_OF_MONTH),
+                DatePicker.OnDateChangedListener { datePicker, year, month, day->
+                    mDate = day.toString()+"/"+(month+1)+"/"+year
+                    calendarChange.set(year, month, day)
+                })
+        txtout.setOnClickListener(object: View.OnClickListener{
+            override fun onClick(v: View?) {
+                mDate = ""
+                mDialog?.dismiss()
             }
-        })
 
-        dpd.setCustomTitle(null)
-        dpd.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dpd.show()
+        })
+        txtok.setOnClickListener(object: View.OnClickListener{
+            override fun onClick(v: View?) {
+                if(mDate != ""){
+
+                    expiredTimeChange = calendarChange.timeInMillis.toString()
+
+                    val date = Date(calendarChange.timeInMillis)
+                    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    tv_expiredtime.text = dateFormat.format(date)
+                }
+                mDialog?.dismiss()
+            }
+
+        })
+        mDialog = datedialog.create()
+        mDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        mDialog?.show()
     }
 
-    //============ dialog delete product =================
+//    private fun showDialogCustomDay() {
+////        // dialog declare
+////        val dFragment = CustomeDatePickerFragment()
+////        dFragment.show(fragmentManager, "Date Picker")
+//        val dpd = DatePickerDialog(this,
+//                AlertDialog.THEME_HOLO_LIGHT, this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+//                calendar.get(Calendar.DAY_OF_MONTH))
+//
+//        dpd.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), object : DialogInterface.OnClickListener {
+//            override fun onClick(p0: DialogInterface?, p1: Int) {
+//                dpd.dismiss()
+//            }
+//        })
+//
+//        dpd.setCustomTitle(null)
+//        dpd.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//        dpd.show()
+//    }
+
+    //============ dialog delete product!! =================
     private fun showDialogDelete(idProduct: String) {
         // dialog declare
         val dialog = Dialog(this)
@@ -631,7 +791,17 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         })
         dialog_ok.setOnClickListener({
 
-            presenter.processDeleteProduct(idProduct)
+            //  presenter.processDeleteProduct(idProduct)
+            var product_v = realm!!.getProduct(idProduct)
+            product_v!!.isDelete = true
+            product_v!!.isChecksync = false
+            realm!!.updateProduct(product_v)
+            val intent = Intent()
+            intent.putExtra(AppIntent.DATA_UPDATE_ITEM, position)
+            intent.putExtra("product!!_v", product_v)
+            intent.putExtra("position", position)
+            setResult(AppIntent.RESULT_DELETE_ITEM, intent)
+
             dialog.dismiss()
             finish()
 

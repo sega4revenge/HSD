@@ -12,6 +12,7 @@ open class SessionManager {
     private var mContext: Context? = null
 
     private val KEY_COUNT_NOTIFICATION = "countNotification"
+    private val KEY_LOGIN = "isLogin"
 
     constructor(context: Context) {
         this.mContext = context
@@ -20,7 +21,7 @@ open class SessionManager {
 
     }
 
-    // save value friend notification __($_^)|__|()|/|@
+    // save value caculate notification __($_^)|__|()|/|@
     fun setCountNotification(count: Int) {
         mEditor!!.putInt(KEY_COUNT_NOTIFICATION, count)
         mEditor!!.commit()
@@ -30,4 +31,15 @@ open class SessionManager {
     fun getCountNotification(): Int {
         return mSharedPreferences!!.getInt(KEY_COUNT_NOTIFICATION, 0)
     }
+    // check login if user was login, set data true
+    fun setLogin(count: Boolean) {
+        mEditor!!.putBoolean(KEY_LOGIN, count)
+        mEditor!!.commit()
+    }
+
+
+    fun isLogin(): Boolean {
+        return mSharedPreferences!!.getBoolean(KEY_LOGIN, false)
+    }
+
 }

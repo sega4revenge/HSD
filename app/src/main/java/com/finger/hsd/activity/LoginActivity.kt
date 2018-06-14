@@ -27,6 +27,7 @@ import com.finger.hsd.model.User
 import com.finger.hsd.presenter.LoginPresenter
 import com.finger.hsd.util.Constants
 import com.finger.hsd.util.Mylog
+import com.finger.hsd.util.SessionManager
 import com.finger.hsd.util.Validation.validatePhone
 import com.finger.hsd.util.Validation.validatePhone2
 import com.google.android.gms.auth.api.Auth
@@ -50,6 +51,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
     var TAG = "Login Activity"
 
     var realm: RealmController? = null
+    var session: SessionManager? = null
 
 
     private var callbackManager: CallbackManager? = null
@@ -75,6 +77,12 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
         rootFolder = File(filesDir.toString() + "/files")
         if (!rootFolder!!.exists()) {
             rootFolder!!.mkdirs()
+        }
+        session = SessionManager(this)
+        if(session!!.isLogin()){
+            val intent = Intent(this, HorizontalNtbActivity::class.java)
+          startActivity(intent)
+            finish()
         }
 //        mAccountManager = AccountManager.get(this)
 //          val intent = Intent(this, HorizontalNtbActivity::class.java)
@@ -217,14 +225,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
     var temp = 0
     override fun getUserDetail(user: User) {
 
-        Mylog.d("aaaaaaaaaa "+" chay ngay di ngay di ngay di ngay di ngay di ngay di"+user)
         realm!!.addUser(user)
-
-        Mylog.d("aaaaaaa user "+realm!!.getUser()!!._id)
-        Mylog.d("aaaaaaaa group: "+realm!!.getGroup()!!.name)
-
-        Mylog.d("aaaaaaa user "+realm!!.getProduct("5b0b7093304e8e55e9a28617")!!.namechanged)
-        Mylog.d("aaaaa notification: "+realm!!.getOneNotification("5b1e4554db071a05681d3ce9")!!.create_at)
 
          listProduct  = realm!!.getlistProduct()
 //        val dataSync = DataSync(this, object : DataListener {
@@ -254,6 +255,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
 
 
         temp =0
+        Mylog.d("aaaaaaaaa size lisproduct:  "+listProduct!!.size)
         if (listProduct != null && !listProduct!!.isEmpty()) {
             Mylog.d("aaaaaaaaa temp at least:  "+temp)
             onDownload(listProduct!!.get(temp))
@@ -262,7 +264,9 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
 //            }
 
         }else{
+            session!!.setLogin(true)
             startActivity(Intent(this@LoginActivity, HorizontalNtbActivity::class.java))
+            finish()
         }
 
 
@@ -302,7 +306,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
 
                             var myDir = File(rootFolder, namePassive)
 
-                            Mylog.d("aaaaaaaaaa my dir: "+ myDir)
+
 
                             if (myDir.exists())
                                 myDir.delete()
@@ -310,8 +314,8 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
                             val out3 = FileOutputStream(myDir)
 
                             resource?.compress(Bitmap.CompressFormat.JPEG, 90, out3)
-
-                            product.imagechanged = Uri.fromFile(myDir).toString()
+                            Mylog.d("aaaaaaaaaa my dir: "+ myDir)
+                            product.setImagechanged(Uri.fromFile(myDir).toString())
                             realm!!.updateProduct(product)
 
                             temp++
@@ -319,15 +323,17 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
                             out3.close()
 
                             if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
-                                percent = (temp.toFloat() / listProduct!!.size.toFloat() * 100f).toInt()
+                                percent = (temp.toFloat() / (listProduct!!.size.toFloat() -1) * 100f).toInt()
 
                                 showToast("Sync... "+percent)
 
                                 onDownload(listProduct!!.get(temp))
                             }else{
-                                percent = (temp.toFloat() / listProduct!!.size.toFloat() * 100f).toInt()
+                                percent = (temp.toFloat() / (listProduct!!.size -1).toFloat() * 100f).toInt()
                                 showToast("Sync... "+percent+"% complete")
+                                session!!.setLogin(true)
                                 startActivity(Intent(this@LoginActivity, HorizontalNtbActivity::class.java))
+                                finish()
                             }
 
 

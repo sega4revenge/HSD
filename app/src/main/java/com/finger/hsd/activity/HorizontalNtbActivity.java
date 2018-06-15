@@ -3,11 +3,15 @@ package com.finger.hsd.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 
 import com.facebook.FacebookSdk;
 import com.finger.hsd.BaseActivity;
@@ -30,6 +34,8 @@ public class HorizontalNtbActivity extends BaseActivity implements NotificationF
     RealmController realm;
      NavigationTabBar navigationTabBar;
      SessionManager session;
+    EditText edit_search;
+    CountDownTimer mcoutdowntime;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -38,6 +44,32 @@ public class HorizontalNtbActivity extends BaseActivity implements NotificationF
         realm = new RealmController(this);
         session = new SessionManager(this);
         initUI();
+        edit_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mcoutdowntime = new CountDownTimer(2000,2000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                    }
+                };
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     private void initUI() {
@@ -49,7 +81,9 @@ public class HorizontalNtbActivity extends BaseActivity implements NotificationF
                 startActivity(i);
             }
         });
+        edit_search = (EditText) findViewById(R.id.edit_search);
         final ViewPager viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);
+
         viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override

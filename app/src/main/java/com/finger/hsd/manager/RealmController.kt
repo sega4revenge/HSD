@@ -282,7 +282,9 @@ class RealmController(application: Context) {
     fun getlistProduct(): ArrayList<Product_v> {
         return realm.copyFromRealm(realm.where(Product_v::class.java).equalTo("delete",false).findAll()) as ArrayList<Product_v>
     }
-
+    fun getlistProductLike(search: String): ArrayList<Product_v> {
+        return realm.copyFromRealm(realm.where(Product_v::class.java).equalTo("delete",false).and().like("namechanged", search).or().like("barcode",search).findAll()) as ArrayList<Product_v>
+    }
     fun getlistProductAsync(): ArrayList<Product_v> {
         return realm.copyFromRealm(realm.where(Product_v::class.java).findAll()) as ArrayList<Product_v>
     }

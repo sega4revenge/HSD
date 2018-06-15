@@ -73,9 +73,65 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+     //   Toast.makeText(activity,arguments?.getString("searchkey")+"/123/",Toast.LENGTH_SHORT).show()
+        if(arguments != null&& !arguments?.isEmpty!!){
+            var mSearch = arguments?.getString("searchkey")
+            searchKey(mSearch.toString())
+        }
 
         mView = inflater.inflate(R.layout.fragment_blank, container, false)
         return mView
+    }
+     fun searchKey(key :String){
+        listheader?.clear()
+        mPositionEX = -1
+        mPositionProtect = -1
+        mPositionWaring = -1
+
+        listProduct = myRealm?.getlistProductLike(key)
+        if(key == ""){
+            loadData()
+        }else
+        if(listProduct != null && listProduct?.size!! > 0) {
+            val sdf = SimpleDateFormat("dd/MM/yyyy")
+            val stringToday = sdf.format(Date())
+            val exToday = sdf.parse(stringToday)
+            var miliexToday: Long = exToday.getTime()
+
+            listProduct?.sortWith(Comparator(fun(a: Product_v, b: Product_v): Int {
+                if (a.expiretime < b.expiretime)
+                    return -1
+                if (a.expiretime > b.expiretime)
+                    return 1
+                return 0
+            }))
+            var listData = ArrayList<Product_v>()
+            for (i in 0 until  listProduct!!.size) {
+                Log.d("SEARCHHHHHHHHHH",listProduct?.get(i)?.description+"//vvv")
+                var dis = listProduct!!.get(i).getExpiretime() / 86400000 - miliexToday / 86400000
+                if(mPositionEX==-1 && dis<=0){
+                    mPositionEX = i
+                    listData.add(Product_v("1","","",0,"",""))
+                    listheader?.add(i)
+                }
+                if(mPositionWaring==-1 && dis<10 && dis>0){
+                    mPositionWaring = i
+                    listheader?.add(i)
+                    listData.add(Product_v("1","","",0,"",""))
+                }
+                if(mPositionProtect==-1 && dis>10){
+                    mPositionProtect = i
+                    listheader?.add(i)
+                    listData.add(Product_v("1","","",0,"",""))
+                }
+                listData.add(listProduct!!.get(i))
+            }
+
+            mAdapter = Main_list_Adapter(activity, listData, listheader, this)
+            mRec?.adapter = mAdapter
+            mDialogProgress?.dismiss()
+        }
+
     }
     private fun initView() {
         mRec = mView?.findViewById(R.id.rec)
@@ -194,17 +250,15 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
     override fun onproductClickedDelete(listDelete: String?, arrID : List<Product_v>) {
         showDialogDelete(listDelete,arrID)
     }
-    override fun onClickItem(product_v: Product_v) {
-        Toast.makeText(activity,product_v.namechanged+"//"+product_v.description,Toast.LENGTH_SHORT).show()
+    override fun onClickItem(product_v: Product_v,pos : Int) {
+        Toast.makeText(activity,product_v.namechanged+"//"+product_v.description+"//"+pos,Toast.LENGTH_SHORT).show()
     }
 
 
     private fun getData(){
         if(ConnectivityChangeReceiver.isConnected()){
             if(myRealm?.getlistProductOffline()!= null && (myRealm?.getlistProductOffline()?.size!! > 0)){
-                Log.d("REALMCONTROLLER","myRealm?.getlistProductOffline()?.size!!  "+myRealm?.getlistProductOffline()?.size!!)
                 val arrDataNotSync = myRealm?.getlistProductOffline()
-                Log.d("REALMCONTROLLER","myRealm?.getlistProductOffline()?.size//  "+arrDataNotSync.toString())
                 numLoading = arrDataNotSync?.size!!
                 showDialog("Đang đồng bộ dữ liệu...")
                 for(i in 0 until arrDataNotSync.size){

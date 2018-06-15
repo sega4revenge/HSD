@@ -183,7 +183,7 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ((ItemViewHolder) holder).lnItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onproductClickListener.onClickItem(mObject);
+                        onproductClickListener.onClickItem(mObject,position);
                     }
                 });
 
@@ -313,6 +313,6 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public interface OnproductClickListener {
         void onproductClickedDelete(String listDelete,List<Product_v> arr);
 
-        void onClickItem(Product_v position);
+        void onClickItem(Product_v position,int pos);
     }
 }

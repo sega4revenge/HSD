@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -12,6 +13,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.finger.hsd.BaseActivity;
@@ -36,6 +39,10 @@ public class HorizontalNtbActivity extends BaseActivity implements NotificationF
      SessionManager session;
     EditText edit_search;
     CountDownTimer mcoutdowntime;
+    String searchkey = "";
+     ViewPager viewPager;
+     ImageView mImageview;
+    FragmentPagerAdapter fragmentPagerAdapter;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -52,6 +59,14 @@ public class HorizontalNtbActivity extends BaseActivity implements NotificationF
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(searchkey!="" && mImageview.getDrawable() != getResources().getDrawable(R.drawable.ic_clear_black_24dp)){
+                    mImageview.setImageResource(R.drawable.ic_clear_black_24dp);
+                  //  mImageview.setImageDrawable(getResources().getDrawable(R.drawable.ic_clear_black_24dp));
+                }
+                searchkey =s.toString();
+                if(mcoutdowntime!=null){
+                    mcoutdowntime.cancel();
+                }
                 mcoutdowntime = new CountDownTimer(2000,2000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
@@ -60,9 +75,14 @@ public class HorizontalNtbActivity extends BaseActivity implements NotificationF
 
                     @Override
                     public void onFinish() {
-
+//                        Bundle bundle = new Bundle();
+//                        bundle.putString("searchkey", searchkey);
+//                        Home_Fragment fragobj = new Home_Fragment();
+//                        fragobj.setArguments(bundle);
+                        fragmentPagerAdapter.notifyDataSetChanged();
+                     //   Toast.makeText(HorizontalNtbActivity.this,searchkey+"//",Toast.LENGTH_SHORT).show();
                     }
-                };
+                }.start();
             }
 
             @Override
@@ -74,6 +94,17 @@ public class HorizontalNtbActivity extends BaseActivity implements NotificationF
 
     private void initUI() {
         FloatingActionButton fb = findViewById(R.id.fab);
+        mImageview = findViewById(R.id.img_selete);
+        mImageview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               // if(mImageview.getDrawable() != getResources().getDrawable(R.drawable.search_icon_black_14dp)){
+               //     mImageview.setImageResource(R.drawable.search_icon_black_14dp);
+               // }
+                edit_search.setText("");
+                searchkey="";
+            }
+        });
         fb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,10 +113,21 @@ public class HorizontalNtbActivity extends BaseActivity implements NotificationF
             }
         });
         edit_search = (EditText) findViewById(R.id.edit_search);
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);
+        viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);
 
         viewPager.setOffscreenPageLimit(3);
-        viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+        fragmentPagerAdapter =new FragmentPagerAdapter(getSupportFragmentManager()) {
+            @Override
+            public int getItemPosition(Object object) {
+                if(object instanceof Home_Fragment){
+                    ((Home_Fragment) object).searchKey(searchkey);
+                }
+                return POSITION_UNCHANGED;
+            }
+//            @Override
+//            public int getItemPosition(Object object) {
+//                return POSITION_NONE;
+//            }
             @Override
             public Fragment getItem(int position) {
                 switch (position) {
@@ -104,7 +146,8 @@ public class HorizontalNtbActivity extends BaseActivity implements NotificationF
             public int getCount() {
                 return 3;
             }
-        });
+        };
+        viewPager.setAdapter(fragmentPagerAdapter);
 
 
         final String[] colors = getResources().getStringArray(R.array.default_preview);
@@ -212,6 +255,7 @@ public class HorizontalNtbActivity extends BaseActivity implements NotificationF
         super.onResume();
         MyApplication.Companion.getConnectivityListener(this);
     }
+
 
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {

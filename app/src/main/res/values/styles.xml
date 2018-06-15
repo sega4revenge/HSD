@@ -37,7 +37,10 @@
         <item name="android:topBright">@android:color/transparent</item>
         <item name="android:topDark">@android:color/transparent</item>
     </style>
-
+    <style name="NavigationViewOwnStyle">
+        <item name="android:listPreferredItemHeightSmall">40dp</item><!--item height-->
+        <item name="android:textSize">20sp</item> <!--item text size-->
+    </style>
     <!---->
     <style name="TransparentToolbar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:windowActionBarOverlay">true</item>

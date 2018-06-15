@@ -296,8 +296,6 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txt_warring =  v.findViewById(R.id.txt_warring);
             lnItem = v.findViewById(R.id.ln_item);
         }
-
-
     }
     public static class HeaderViewHolder extends RecyclerView.ViewHolder {
 

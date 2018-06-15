@@ -17,6 +17,7 @@ import com.facebook.*
 import com.facebook.appevents.AppEventsLogger
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+import com.finger.hsd.AllInOneActivity
 import com.finger.hsd.BaseActivity
 import com.finger.hsd.R
 import com.finger.hsd.common.GlideApp
@@ -80,7 +81,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
         }
         session = SessionManager(this)
         if(session!!.isLogin()){
-            val intent = Intent(this, HorizontalNtbActivity::class.java)
+            val intent = Intent(this, AllInOneActivity::class.java)
           startActivity(intent)
             finish()
         }
@@ -91,8 +92,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
 //        if (accountsFromFirstApp.isNotEmpty()) {
 //
 //           // User is already logged in. Take him to main activity
-            val intent = Intent(this, HorizontalNtbActivity::class.java)
-            startActivity(intent)
+
 //            finish()
 //            overridePendingTransition(0, 0)
 //        }
@@ -193,7 +193,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
 
     override fun isLoginSuccessful(isLoginSuccessful: Boolean) {
         if (isLoginSuccessful) {
-            startActivity(Intent(this@LoginActivity, HorizontalNtbActivity::class.java))
+            startActivity(Intent(this@LoginActivity, AllInOneActivity::class.java))
             finish()
         } else {
             println("loi")
@@ -202,7 +202,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
 
     override fun isRegisterSuccessful(isRegisterSuccessful: Boolean) {
         if (isRegisterSuccessful) {
-            startActivity(Intent(this@LoginActivity, HorizontalNtbActivity::class.java))
+            startActivity(Intent(this@LoginActivity, AllInOneActivity::class.java))
             finish()
         } else {
             println("loi")
@@ -265,7 +265,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
 
         }else{
             session!!.setLogin(true)
-            startActivity(Intent(this@LoginActivity, HorizontalNtbActivity::class.java))
+            startActivity(Intent(this@LoginActivity, AllInOneActivity::class.java))
             finish()
         }
 
@@ -332,7 +332,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
                                 percent = (temp.toFloat() / (listProduct!!.size -1).toFloat() * 100f).toInt()
                                 showToast("Sync... "+percent+"% complete")
                                 session!!.setLogin(true)
-                                startActivity(Intent(this@LoginActivity, HorizontalNtbActivity::class.java))
+                                startActivity(Intent(this@LoginActivity, AllInOneActivity::class.java))
                                 finish()
                             }
 
@@ -340,15 +340,15 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
                         } catch (e: Exception) {
 
                             println(e)
-                            temp++
-                            Mylog.d("aaaaaaaaaa "+temp)
-                            if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
-                                percent = (temp.toFloat() / listProduct!!.size.toFloat() * 100f).toInt()
-
-                                showToast(percent)
-                                Mylog.d("aaaaaaaaaa chay tiep: "+temp)
-                                onDownload(listProduct!!.get(temp))
-                            }
+//                            temp++
+//                            Mylog.d("aaaaaaaaaa "+temp)
+//                            if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
+//                                percent = (temp.toFloat() / listProduct!!.size.toFloat() * 100f).toInt()
+//
+//                                showToast(percent)
+//                                Mylog.d("aaaaaaaaaa chay tiep: "+temp)
+//                                onDownload(listProduct!!.get(temp))
+//                            }
                         }
 
 

@@ -1,17 +1,14 @@
 package com.finger.hsd.fragment
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlarmManager
 import android.app.AlertDialog
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.media.MediaPlayer
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.app.Fragment
@@ -19,26 +16,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.TextView
-import com.facebook.FacebookSdk.getApplicationContext
 import com.finger.hsd.R
-import com.finger.hsd.R.id.*
-import com.finger.hsd.R.string.sound
 import com.finger.hsd.activity.AlarmReceiver
 import com.finger.hsd.activity.AlarmSetting
 import com.finger.hsd.manager.RealmAlarmController
 import com.finger.hsd.manager.SessionManager
-import com.finger.hsd.model.Sound
 import kotlinx.android.synthetic.main.activity_register.*
-import kotlinx.android.synthetic.main.custom_dialog_sound.*
-import kotlinx.android.synthetic.main.custom_dialog_sound.view.*
-import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 import java.io.File
-import java.lang.Package.getPackage
 import java.util.*
 
 
@@ -68,6 +54,13 @@ class FragmentProfile : Fragment(), View.OnClickListener {
 
     lateinit var txtview: TextView
     lateinit var txtViewSound: TextView
+    fun newInstance(info: String): FragmentProfile {
+        val args = Bundle()
+        val fragment = FragmentProfile()
+        args.putString("info", info)
+        fragment.setArguments(args)
+        return fragment
+    }
 
     private val listItems = arrayOf("off","suri_big_robot", "suri_chipmunk", "suri_creature", "suri_death",
             "suri_deep", "suri_grand", "suri_helium", "suri_robot", "suri_squirrel")

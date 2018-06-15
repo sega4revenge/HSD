@@ -9,17 +9,18 @@ import io.realm.annotations.PrimaryKey;
 public class Product_v extends RealmObject implements Serializable {
 
     @PrimaryKey
-    private String _id;
-    private String namechanged;
-    private String barcode;
-    private long expiretime;
-    private ProductType_v producttype_id;
-    private String description;
-    private String imagechanged;
+    private  String _id;
+    private   String namechanged;
+    private  String barcode;
+    private  long expiretime;
+    private  ProductType_v producttype_id;
+    private  String description;
+    private  String imagechanged;
 //    private String imagepassed;
-    private boolean delete;
-    public int daybefore;
-    public boolean checksync = true;
+    private  boolean delete;
+    public  int daybefore;
+    public  boolean checksync = true;
+    private  boolean isSyn = true;
 
     public boolean isChecksync() {
         return checksync;
@@ -28,7 +29,7 @@ public class Product_v extends RealmObject implements Serializable {
     public void setChecksync(boolean checksync) {
         this.checksync = checksync;
     }
-    private boolean isSyn;
+
 
     public ProductType_v getProducttype_id() {
         return producttype_id;

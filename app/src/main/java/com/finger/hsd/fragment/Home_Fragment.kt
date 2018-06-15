@@ -10,16 +10,12 @@ import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
-import com.androidnetworking.AndroidNetworking
-import com.facebook.FacebookSdk
-import com.finger.hsd.common.MyApplication
 import com.finger.hsd.R
 import com.finger.hsd.activity.Scanner_Barcode_Activity
 import com.finger.hsd.adapters.Main_list_Adapter
@@ -27,10 +23,6 @@ import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.Result_Product
 import com.finger.hsd.util.*
-import io.realm.Realm
-import com.finger.hsd.util.ApiUtils
-import com.finger.hsd.util.AppIntent
-import com.finger.hsd.util.RetrofitService
 import kotlinx.android.synthetic.main.not_found_product.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -69,6 +61,14 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
         initView()
         Log.d("REALMCONTROLLER","getDatagetDatagetDatagetData ")
         getData()
+    }
+
+    fun newInstance(info: String): Home_Fragment {
+        val args = Bundle()
+        val fragment = Home_Fragment()
+        args.putString("info", info)
+        fragment.setArguments(args)
+        return fragment
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -207,9 +207,9 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
                 Log.d("REALMCONTROLLER","myRealm?.getlistProductOffline()?.size//  "+arrDataNotSync.toString())
                 numLoading = arrDataNotSync?.size!!
                 showDialog("Đang đồng bộ dữ liệu...")
-                for(i in 0 until arrDataNotSync?.size!!){
-                    Log.d("REALMCONTROLLE",arrDataNotSync.get(i)!!.imagechanged+"//"+arrDataNotSync.get(i)!!.namechanged+"//"+arrDataNotSync.get(i)!!.expiretime+"//"+arrDataNotSync.get(i)!!.description+"//"+arrDataNotSync.get(i)!!.barcode)
-                    addProductOfflinetoServer(arrDataNotSync.get(i)!!)
+                for(i in 0 until arrDataNotSync.size){
+                    Log.d("REALMCONTROLLE",arrDataNotSync.get(i).imagechanged+"//"+arrDataNotSync.get(i).namechanged+"//"+arrDataNotSync.get(i)!!.expiretime+"//"+arrDataNotSync.get(i)!!.description+"//"+arrDataNotSync.get(i)!!.barcode)
+                    addProductOfflinetoServer(arrDataNotSync.get(i))
                 }
                // loadData()
             }else{
@@ -238,17 +238,17 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
             }
             override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
                 if(response?.isSuccessful!!){
-                    if(response?.code()==200){
-                        if(response?.body().listProduct.size>0){
-                            Log.d("REALMCONTROLLER",response?.body().listProduct.size.toString()+"//listProduct")
+                            if(response.code()==200){
+                                if(response.body().listProduct.size>0){
+                            Log.d("REALMCONTROLLER",response.body().listProduct.size.toString()+"//listProduct")
                             showDialog("Đang đồng bộ dữ liệu...")
-                            myRealm?.updateorCreateListProduct(response?.body().listProduct,this@Home_Fragment)
+                            myRealm?.updateorCreateListProduct(response.body().listProduct,this@Home_Fragment)
                         }else if(myRealm?.getlistProduct()!!.size==0){
                             showDialogNotFound()
                         }
                     }
                 }else{
-                    Toast.makeText(activity,"Error! \n message:"+response?.message(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity,"Error! \n message:"+response.message(), Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -370,4 +370,22 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
         calendar.timeInMillis = milliSeconds
         return formatter.format(calendar.time)
     }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == AppIntent.REQUEST_DETAIL_PRODUCT) {
+            if (resultCode == AppIntent.RESULT_UPDATE_ITEM) {
+
+
+
+                var extras = data!!.extras
+                if(extras !=null){
+                   var product =  extras.getSerializable("product_v") as Product_v
+
+                }
+
+            }
+        }
+    }
+
 }

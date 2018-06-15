@@ -15,12 +15,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.finger.hsd.BaseFragment
 import com.finger.hsd.R
+import com.finger.hsd.activity.DetailProductActivity
 import com.finger.hsd.adapters.NotificationAdapter
 import com.finger.hsd.common.Prefs
 import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Notification
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.services.NotificationService
+import com.finger.hsd.util.AppIntent
 import com.finger.hsd.util.Mylog
 import kotlinx.android.synthetic.main.fragment_notification.view.*
 
@@ -39,7 +41,7 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  *
  */
-class NotificationFragment : BaseFragment() {
+class NotificationFragment : BaseFragment(), NotificationAdapter.itemSeenClick {
 
     // TODO: Rename and change types of parameters
 
@@ -51,6 +53,14 @@ class NotificationFragment : BaseFragment() {
     private var realm: RealmController? = null
     private var prefs : Prefs? = null
     var mNotificationBadgeListener: NotificationBadgeListener? = null
+
+    fun newInstance(info: String): NotificationFragment {
+        val args = Bundle()
+        val fragment = NotificationFragment()
+        args.putString("info", info)
+        fragment.setArguments(args)
+        return fragment
+    }
 
     override fun onAttach(context: Activity) {
         super.onAttach(context)
@@ -83,7 +93,7 @@ class NotificationFragment : BaseFragment() {
         prefs = Prefs(activity);
 
         initViews()
-       // setRealmAdapter()
+        setRealmAdapter()
 
         mView!!.im_clear.setOnClickListener(View.OnClickListener {
             showProgress()
@@ -99,7 +109,7 @@ class NotificationFragment : BaseFragment() {
 
     //    Mylog.d("aaaaaaa NotificationFragment: "+listitem.get(0).id_product +" type: "+listitem.get(0).type)
 
-        mNotifiAdapter = NotificationAdapter(activity, listitem, mRecyclerView, mNotificationBadgeListener )
+        mNotifiAdapter = NotificationAdapter(activity, listitem, mRecyclerView, mNotificationBadgeListener, this )
         mRecyclerView.adapter = mNotifiAdapter
         mNotifiAdapter.notifyDataSetChanged()
 
@@ -186,13 +196,35 @@ class NotificationFragment : BaseFragment() {
         fun onBadgeUpdate(value: Int)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(requestCode == AppIntent.REQUEST_NOTIFICATION){
+            if(resultCode == AppIntent.RESULT_DETAIL_PRODUCT){
+                var extras = data!!.extras
 
-//    override fun onItemSeenClick(position: Int, type: Int, viewHolder: RecyclerView.ViewHolder?) {
-//        val holder = (NotificationAdapter.MyHolder) viewHolder
-//        if(type == 1){
-//            val item = listitem.get(position)
-//             ((NotificationAdapter.MyHolder) viewHolder).tv_expiredtime
-//        }
-//    }
+                if(extras !=null){
+                    var product =  extras.getSerializable("product_v") as Product_v
+                    var position = extras.getInt("position")
+                    var item = listitem.get(position)
+
+                    item.namechanged = product.namechanged
+                    item.expiredtime = product.expiretime
+
+                    mNotifiAdapter.notifyItemChanged(position)
+
+
+                }
+            }
+        }
+    }
+
+    override fun onItemSeenClick(position: Int, product: Product_v) {
+
+        val intent = Intent(activity, DetailProductActivity::class.java)
+        intent.putExtra("position", position)
+        intent.putExtra("id_product", product._id)
+        activity!!.startActivityForResult(intent, AppIntent.REQUEST_NOTIFICATION)
+
+
+    }
 
 }

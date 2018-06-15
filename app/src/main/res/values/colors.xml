@@ -40,4 +40,7 @@
     <color name="end_color">#ffa000</color>
     <color name="fb_color">#0037c1</color>
     <color name="gg_color">#e74c3c</color>
+
+    <color name="tab_checked">@color/colorPrimary</color>
+    <color name="tab_unchecked">#757575</color>
 </resources>

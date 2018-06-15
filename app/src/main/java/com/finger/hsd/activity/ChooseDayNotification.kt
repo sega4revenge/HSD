@@ -2,18 +2,25 @@ package com.finger.hsd.activity
 
 import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.Window
 import android.widget.Button
 import android.widget.NumberPicker
 import android.widget.RadioButton
+
 import com.finger.hsd.R
+import com.finger.hsd.manager.RealmController
 import com.finger.hsd.presenter.DetailProductPresenter
 import com.finger.hsd.presenter.DetailProductPresenter.IDetailProductPresenterView
 import com.finger.hsd.util.Constants
+import com.finger.hsd.util.Mylog
+import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_choose_day_notification.*
 import org.json.JSONObject
 
@@ -24,8 +31,10 @@ class ChooseDayNotification: AppCompatActivity(), IDetailProductPresenterView{
 
     private lateinit var mRbCustom : RadioButton
     lateinit  var idProduct: String
+    var realm: RealmController? = null
 
     var days : Int =0
+    lateinit var mToolbar : Toolbar
 
     private lateinit var  presenter: DetailProductPresenter
 
@@ -34,12 +43,25 @@ class ChooseDayNotification: AppCompatActivity(), IDetailProductPresenterView{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_choose_day_notification)
 
+        realm = RealmController(this)
         idProduct = intent.getStringExtra("id_product")
 
         days = intent.getIntExtra("day_before", 0)
 
-        presenter = DetailProductPresenter(this)
+       // presenter = DetailProductPresenter(this)
 
+        mToolbar = findViewById(R.id.toolbar)
+        this.setSupportActionBar(mToolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        mToolbar.setTitleTextColor(Color.GRAY)
+        mToolbar.setSubtitleTextColor(Color.GRAY)
+        mToolbar.setNavigationIcon(R.drawable.ic_move_through)
+        mToolbar.setNavigationOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                onBackPressed()
+            }
+        })
 
         if(days == 1){
             rb_oneday.isChecked
@@ -84,7 +106,18 @@ class ChooseDayNotification: AppCompatActivity(), IDetailProductPresenterView{
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         if (item.itemId == R.id.item_save) {
-            presenter.processDayBefore(idProduct, days)
+
+            var product = realm!!.getProduct(idProduct)
+            realm!!.realm.executeTransaction(Realm.Transaction {
+                product!!.daybefore = days
+            })
+
+            Mylog.d("aaaaaaaaaa check: "+realm!!.getProduct(idProduct)!!.daybefore)
+
+            val intent = Intent()
+            intent.putExtra(Constants.DATA_DAY_BEFORE, days)
+            setResult(Constants.RESULT_DAY_BEFORE, intent)
+            finish()
             return true
         }
         else if (item.itemId == R.id.home) {

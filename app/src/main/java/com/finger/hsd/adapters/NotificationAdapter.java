@@ -46,14 +46,15 @@ public class NotificationAdapter extends RecyclerView.Adapter {
     private OnLoadMoreListener onLoadMoreListener;
 
     Context mContext;
-    private itemSeenClick itemClick;
+    private itemSeenClick itemClickListener;
     NotificationFragment.NotificationBadgeListener mNotificationListener;
 
     public NotificationAdapter(Activity activity, List<Notification> listNotification, RecyclerView mRecyclerView,
-                               NotificationFragment.NotificationBadgeListener mNotificationlistener) {
+                               NotificationFragment.NotificationBadgeListener mNotificationlistener, itemSeenClick itemClickListener) {
         this.feedItems = listNotification;
         this.mContext = activity;
         this.mNotificationListener = mNotificationlistener;
+        this.itemClickListener = itemClickListener;
       //  this.itemClick = itemClick;
         realm = new RealmController(activity);
         if (mRecyclerView.getLayoutManager() instanceof LinearLayoutManager) {
@@ -130,14 +131,14 @@ public class NotificationAdapter extends RecyclerView.Adapter {
             }
             // kiểu thông báo: type == 1: kiểu single thông báo sản phẩm hết hạng
             // type == 2: thông báo có bao nhiêu sản phẩm hết hạn
-
+            final Product_v  product = realm.getProduct(information.getId_product());
             if(information.getType() == 0){
                 myHolder.txtHsd.setVisibility(View.VISIBLE);
                 myHolder.imgInfo.setVisibility(View.VISIBLE);
                 myHolder.tvWarning.setVisibility(View.VISIBLE);
                 // day expiredtime
                 Log.d("aaaaaaa ", "NotificationFragment: "+information.getId_product());
-                 Product_v  product = realm.getProduct(information.getId_product());
+
 
                 Log.d("aaaaaaa ", "NotificationFragment: "+product.getImagechanged());
                 long expiredTime = product.getExpiretime();
@@ -192,11 +193,13 @@ public class NotificationAdapter extends RecyclerView.Adapter {
             ((MyHolder) viewHolder).clickitemlayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mNotificationListener.onBadgeUpdate(realm.countNotification());
+                    mNotificationListener.onBadgeUpdate(20);
                     information.setWatched(true);
                     realm.updateNotification(information.get_id());
                     myHolder.clickitemlayout.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 
+
+                    itemClickListener.onItemSeenClick(position, product);
                 }
             });
             myHolder.txtTime.setText(timeAgo.getTimeAgo(new Date(Long.parseLong(information.getCreate_at())), mContext));
@@ -211,6 +214,7 @@ public class NotificationAdapter extends RecyclerView.Adapter {
             }
         }
     }
+
 
     //
     // xử lý ngày -> trả về số ngày
@@ -278,8 +282,8 @@ public class NotificationAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public interface itemSeenClick {
-        public void onItemSeenClick(int position, int type, RecyclerView.ViewHolder viewHolder);
+    public  interface itemSeenClick {
+         void onItemSeenClick(int position, Product_v product);
     }
 
 }

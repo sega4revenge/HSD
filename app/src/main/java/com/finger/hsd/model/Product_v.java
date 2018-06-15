@@ -13,11 +13,11 @@ public class Product_v extends RealmObject implements Serializable {
     private String namechanged;
     private String barcode;
     private long expiretime;
+    private ProductType_v producttype_id;
     private String description;
     private String imagechanged;
 //    private String imagepassed;
     private boolean delete;
-    private ProductType_v  producttype_id;
     public int daybefore;
     public boolean checksync = true;
 
@@ -27,6 +27,23 @@ public class Product_v extends RealmObject implements Serializable {
 
     public void setChecksync(boolean checksync) {
         this.checksync = checksync;
+    }
+    private boolean isSyn;
+
+    public ProductType_v getProducttype_id() {
+        return producttype_id;
+    }
+
+    public void setProducttype_id(ProductType_v producttype_id) {
+        this.producttype_id = producttype_id;
+    }
+
+    public boolean isSyn() {
+        return isSyn;
+    }
+
+    public void setSyn(boolean syn) {
+        isSyn = syn;
     }
 
 //    public String getImagepassed() {

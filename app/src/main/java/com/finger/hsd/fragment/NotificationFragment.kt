@@ -83,7 +83,7 @@ class NotificationFragment : BaseFragment() {
         prefs = Prefs(activity);
 
         initViews()
-        setRealmAdapter()
+       // setRealmAdapter()
 
         mView!!.im_clear.setOnClickListener(View.OnClickListener {
             showProgress()

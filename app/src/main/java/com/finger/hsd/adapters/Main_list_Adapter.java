@@ -86,7 +86,7 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-            Product_v mObject = mProducts.get((position));
+            final Product_v mObject = mProducts.get((position));
             if (holder instanceof HeaderViewHolder) {
                 Product_v mObjectHeader = mProducts.get((position+1));
                     if(miliexToday>mObjectHeader.getExpiretime()){
@@ -141,6 +141,7 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 //                        }
 //                    }
 
+
                     ((HeaderViewHolder) holder).mClear.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -151,7 +152,7 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 if(_idDelete==""){
                                     _idDelete = mProducts.get(i).get_id()+",";
                                 }else{
-                                    _idDelete =_idDelete + mProducts.get(i).get_id()+",";
+                                    _idDelete =_idDelete+mProducts.get(i).get_id()+",";
                                 }
                                 try{
                                     if(mProducts.get(i+1).get_id()=="1"){
@@ -174,7 +175,7 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             .apply(optionsGlide)
                             .into(((ItemViewHolder) holder).photo_product);
 
-                    ((ItemViewHolder) holder).txt_barcode.setText(mObject.getProductTypeId().getBarcode());
+                    ((ItemViewHolder) holder).txt_barcode.setText(mObject.getBarcode());
                     ((ItemViewHolder) holder).txt_detail.setText(mObject.getDescription());
                     ((ItemViewHolder) holder).txt_exdate.setText(getDate(mObject.getExpiretime(), "dd/MM/yyyy"));
                     ((ItemViewHolder) holder).txt_nameproduct.setText(mObject.getNamechanged());
@@ -182,7 +183,7 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ((ItemViewHolder) holder).lnItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onproductClickListener.onClickItem(position);
+                        onproductClickListener.onClickItem(mObject);
                     }
                 });
 
@@ -314,6 +315,6 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public interface OnproductClickListener {
         void onproductClickedDelete(String listDelete,List<Product_v> arr);
 
-        void onClickItem(int position);
+        void onClickItem(Product_v position);
     }
 }

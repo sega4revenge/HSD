@@ -23,11 +23,13 @@ import com.google.android.gms.vision.barcode.BarcodeDetector
 import java.io.IOException
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
+import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.*
 import com.finger.hsd.util.ApiUtils
 import com.finger.hsd.util.Constants
 import com.finger.hsd.util.RetrofitService
 import com.google.zxing.Result
+import io.realm.Realm
 import kotlinx.android.synthetic.main.dialog_put_barcode.view.*
 import me.dm7.barcodescanner.zxing.ZXingScannerView
 
@@ -51,12 +53,13 @@ class Scanner_Barcode_Activity : BaseScannerActivity(), View.OnClickListener ,ZX
     var mScannerView:ZXingScannerView? =null
     var arrBarcode = ""
     var contentFrame:ViewGroup? = null
+    private var mRealm: RealmController? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.scanner_barcode_layout)
 
         setupToolbar()
-
+        mRealm = RealmController.with(this@Scanner_Barcode_Activity)
         contentFrame =findViewById<ViewGroup>(R.id.content_frame)
         try {
             if (ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -142,12 +145,12 @@ class Scanner_Barcode_Activity : BaseScannerActivity(), View.OnClickListener ,ZX
                 ", Format = " + p0?.getBarcodeFormat().toString(), Toast.LENGTH_SHORT).show()
      //   if(!p0?.text.isNullOrEmpty()&& arrBarcode.indexOf(p0?.getText()!!)<0){
             checkBarcode(p0?.getText()!!)
-            arrBarcode = arrBarcode +" "+p0?.getText()!!
+            arrBarcode = p0?.getText()!!
      //   }
         val handler = Handler()
         handler.postDelayed(Runnable {
             mScannerView?.resumeCameraPreview(this@Scanner_Barcode_Activity)
-        }, 2000)
+        }, 5000)
     }
     public override fun onResume() {
         super.onResume()
@@ -163,7 +166,18 @@ class Scanner_Barcode_Activity : BaseScannerActivity(), View.OnClickListener ,ZX
         mRetrofitService = ApiUtils.getAPI()
         mRetrofitService?.checkBarcode(barcode)?.enqueue(object: Callback<Result_Product>{
             override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
-                Log.d("zzzzzzzzzzz",t?.message+"//")
+
+              var product =  mRealm?.getProductWithBarcode(barcode)
+                if(product != null){
+                    val i = Intent(this@Scanner_Barcode_Activity,Add_Product::class.java)
+                    i.putExtra("type",1)
+                    i.putExtra("barcode",product.barcode.toString())
+                    i.putExtra("name",product.namechanged.toString())
+                    i.putExtra("path",product.imagechanged.toString())
+                    startActivity(i)
+                }else{
+                    showDialogNotFound(barcode)
+                }
             }
 
             override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {

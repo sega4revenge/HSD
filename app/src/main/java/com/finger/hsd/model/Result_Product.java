@@ -9,7 +9,7 @@ public class Result_Product {
     private Integer status;
     private List<ProductType_v> ListProductType = null;
     private String message;
-    private Product_v Product;
+    private Product_v product;
     private ProductType_v ProductType;
     public ArrayList<Product_v> getListProduct() {
         return ListProduct;
@@ -52,11 +52,11 @@ public class Result_Product {
     }
 
     public Product_v getProduct() {
-        return Product;
+        return product;
     }
 
     public void setProduct(Product_v product) {
-        Product = product;
+        product = product;
     }
 
     public void setListProduct(ArrayList<Product_v> listProduct) {

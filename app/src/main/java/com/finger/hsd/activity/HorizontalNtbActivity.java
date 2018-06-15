@@ -13,16 +13,19 @@ import com.facebook.FacebookSdk;
 import com.finger.hsd.BaseActivity;
 import com.finger.hsd.R;
 
+import com.finger.hsd.common.MyApplication;
 import com.finger.hsd.fragment.FragmentProfile;
 import com.finger.hsd.fragment.Home_Fragment;
 import com.finger.hsd.fragment.NotificationFragment;
 import com.finger.hsd.library.NavigationTabBar;
+import com.finger.hsd.util.ConnectivityChangeReceiver;
 import com.finger.hsd.manager.RealmController;
 import com.finger.hsd.util.SessionManager;
 
 import java.util.ArrayList;
 
-public class HorizontalNtbActivity extends BaseActivity implements NotificationFragment.NotificationBadgeListener{
+public class HorizontalNtbActivity extends BaseActivity implements NotificationFragment.NotificationBadgeListener,ConnectivityChangeReceiver.ConnectivityReceiverListener{
+
 
     RealmController realm;
      NavigationTabBar navigationTabBar;
@@ -76,32 +79,33 @@ public class HorizontalNtbActivity extends BaseActivity implements NotificationF
         final ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
         models.add(
                 new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_first),
+                        getResources().getDrawable(R.drawable.ic_home_black_24dp),
                         Color.parseColor(colors[0]))
-                        .selectedIcon(getResources().getDrawable(R.drawable.ic_sixth))
+                      //  .selectedIcon(getResources().getDrawable(R.drawable.ic_sixth))
                         .title("Heart")
-                        .badgeTitle("NTB")
+                       // .badgeTitle("NTB")
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_second),
-                        Color.parseColor(colors[1]))
+                        getResources().getDrawable(R.drawable.ic_notifications_active_black_24dp),
+                        Color.parseColor(colors[0]))
 //                        .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
                         .title("Cup")
-                        .badgeTitle("with")
+                     //   .badgeTitle("with")
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_third),
+                        getResources().getDrawable(R.drawable.ic_person_black_24dp),
                         Color.parseColor(colors[2]))
                         .selectedIcon(getResources().getDrawable(R.drawable.ic_seventh))
                         .title("Profile")
                         .badgeTitle("Profile")
                         .build()
         );
-
+        navigationTabBar.setBgColor(getResources().getColor(R.color.white));
+        navigationTabBar.setActiveColor(getResources().getColor(R.color.viewfinder_border));
         navigationTabBar.setModels(models);
         navigationTabBar.setViewPager(viewPager, 0);
         navigationTabBar.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -167,5 +171,34 @@ public class HorizontalNtbActivity extends BaseActivity implements NotificationF
                 }
             }
         }, 500);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyApplication.Companion.getConnectivityListener(this);
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
+    }
+    private void showSnack(boolean isConnected) {
+        if (isConnected) {
+
+        } else {
+
+        }
+        //            Log.d("NetworkConnection","Sorry! Not connected to internet");
+//            message = "Sorry! Not connected to internet";
+//            color = Color.RED;
+//
+//        Snackbar snackbar = Snackbar
+//                .make(findViewById(R.id.fab), message, Snackbar.LENGTH_LONG);
+//
+//        View sbView = snackbar.getView();
+//        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+//        textView.setTextColor(color);
+//        snackbar.show();
     }
 }

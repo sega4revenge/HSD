@@ -13,6 +13,7 @@ public class ProductType_v  extends RealmObject {
     private Integer v;
 
 
+
     public String getId() {
         return _id;
     }

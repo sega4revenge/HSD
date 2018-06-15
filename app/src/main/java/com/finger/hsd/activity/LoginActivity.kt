@@ -91,8 +91,8 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
 //        if (accountsFromFirstApp.isNotEmpty()) {
 //
 //           // User is already logged in. Take him to main activity
-//            val intent = Intent(this, HorizontalNtbActivity::class.java)
-//            startActivity(intent)
+            val intent = Intent(this, HorizontalNtbActivity::class.java)
+            startActivity(intent)
 //            finish()
 //            overridePendingTransition(0, 0)
 //        }

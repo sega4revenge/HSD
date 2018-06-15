@@ -34,7 +34,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:layout_gravity="right"
-            android:src="@drawable/ic_clear"
+            android:src="@drawable/ic_back"
             android:layout_alignParentRight="true" />
 
     </RelativeLayout>

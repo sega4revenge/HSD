@@ -4,25 +4,32 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.support.v4.app.Fragment
-import android.util.Log
-import com.androidnetworking.AndroidNetworking
-import com.androidnetworking.error.ANError
+
+
 import com.facebook.FacebookSdk.getApplicationContext
 import com.finger.hsd.common.MyApplication
 import com.finger.hsd.model.Notification
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.User
-import com.finger.hsd.util.Constants
 import io.realm.Realm
-import io.realm.RealmResults
+import com.facebook.FacebookSdk.getApplicationContext
 import io.realm.Sort
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import android.util.Log
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.error.ANError
+import com.finger.hsd.model.ProductType_v
+import com.finger.hsd.util.Constants
+import io.realm.RealmResults
+import kotlin.collections.ArrayList
+
+
 
 
 class RealmController(application: Context) {
-    val realm: Realm
+    var realm: Realm
     private var mupdateData: updateData? = null
 
     init {
@@ -59,7 +66,7 @@ class RealmController(application: Context) {
 
     //Refresh the realm istance
     fun refresh() {
-        realm.refresh()
+        realm?.refresh()
     }
 
 
@@ -151,9 +158,9 @@ class RealmController(application: Context) {
     }
 //=========== END NOTIFICATION====================================//
     fun addProduct(product: Product_v){
-        realm.beginTransaction()
-        realm.copyToRealm(product)
-        realm.commitTransaction()
+        realm?.beginTransaction()
+        realm?.copyToRealmOrUpdate(product)
+        realm?.commitTransaction()
     }
     fun addProductWithNonImage(product: Product_v,mupdateData: updateData){
         this.mupdateData = mupdateData
@@ -166,14 +173,15 @@ class RealmController(application: Context) {
             override fun onDownloadComplete() {
                 Log.d("REALMCONTROLLER","UPDATE SUCCESS")
                 product.imagechanged = mediaStorageDir.path+path2
-                realm.beginTransaction()
-                realm.copyToRealmOrUpdate(product)
-                realm.commitTransaction()
+                product.barcode = product.producttype_id.barcode
+                realm?.beginTransaction()
+                realm?.copyToRealmOrUpdate(product)
+                realm?.commitTransaction()
                 Log.d("REALMCONTROLLER2",product._id)
-                mupdateData.onupdateProduct(1)
+                mupdateData.onupdateProduct(1, product)
             }
-                override fun onError(anError: ANError?) {
-                    mupdateData.onupdateProduct(0)
+            override fun onError(anError: ANError?) {
+                mupdateData.onupdateProduct(0,product)
                 Log.d("REALMCONTROLLER",anError?.errorDetail+"//ERROR"+anError?.errorBody+"//"+product.imagechanged)
             }
         })
@@ -189,9 +197,12 @@ class RealmController(application: Context) {
             {
                 var mProduct_v = getProduct(product[i]._id)
                 product[i].imagechanged = mProduct_v?.imagechanged
-                realm.beginTransaction()
-                realm.copyToRealmOrUpdate(product[i])
-                realm.commitTransaction()
+                product[i].barcode = product[i].producttype_id.barcode
+                product[i].isDelete = false
+                product[i].isSyn = true
+                realm?.beginTransaction()
+                realm?.copyToRealmOrUpdate(product[i])
+                realm?.commitTransaction()
 
                 if(mCout==(product.size-1)){
                     mupdateData!!.onupdate()
@@ -201,16 +212,19 @@ class RealmController(application: Context) {
                 val mediaStorageDir = getApplicationContext().getExternalFilesDir(null)
                 val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss")
                         .format(Date())
-                var path2 = File.separator+ "IMG_" + timeStamp +"_"+ product[i]?.barcode + ".jpg"
+                var path2 = File.separator+ "IMG_" + timeStamp +"_"+ product[i].producttype_id.barcode + ".jpg"
 
                 AndroidNetworking.initialize(getApplicationContext(),MyApplication.okhttpclient())
                 AndroidNetworking.download(Constants.IMAGE_URL+product[i].imagechanged,mediaStorageDir.path,path2).build().startDownload(object: com.androidnetworking.interfaces.DownloadListener{
                     override fun onDownloadComplete() {
                         Log.d("REALMCONTROLLER","UPDATE SUCCESS")
                         product[i].imagechanged = mediaStorageDir.path+path2
-                        realm.beginTransaction()
-                        realm.copyToRealmOrUpdate(product[i])
-                        realm.commitTransaction()
+                        product[i].barcode = product[i].producttype_id.barcode
+                        product[i].isDelete = false
+                        product[i].isSyn = true
+                        realm?.beginTransaction()
+                        realm?.copyToRealmOrUpdate(product[i])
+                        realm?.commitTransaction()
 
                         if(mCout==(product.size)-1){
                             mupdateData!!.onupdate()
@@ -233,7 +247,7 @@ class RealmController(application: Context) {
     interface updateData {
         fun onupdate()
         fun onupdateDelete()
-        fun onupdateProduct(type:Int)
+        fun onupdateProduct(type:Int,product: Product_v)
     }
 
     // get user
@@ -257,7 +271,13 @@ class RealmController(application: Context) {
         }
         mupdateData2.onupdateDelete()
     }
-
+    //delete list product
+    fun deleteProductFromDevice(product : Product_v,mupdateData2:updateData){
+                realm.beginTransaction()
+                product.deleteFromRealm()
+                realm.commitTransaction()
+    //   mupdateData2.onupdateDelete()
+    }
     //find all objects in the Champion.class
     fun getlistProduct(): ArrayList<Product_v> {
         return realm.copyFromRealm(realm.where(Product_v::class.java).equalTo("delete",false).findAll()) as ArrayList<Product_v>
@@ -271,9 +291,18 @@ class RealmController(application: Context) {
 
     }
 
+    //find all objects in the Champion.class
+    fun getlistProductOffline(): ArrayList<Product_v> {
+        return ArrayList(realm.where(Product_v::class.java).equalTo("delete",false).and().equalTo("isSyn",false).findAll())
+    }
+
     //query a single item with the given id
     fun getProduct(id: String): Product_v? {
         return realm.where(Product_v::class.java).equalTo("_id", id).findFirst()
+    }
+
+    fun getProductWithBarcode(barcode: String): Product_v? {
+        return realm.where(Product_v::class.java).equalTo("barcode", barcode).findFirst()
     }
     fun checkaddsuccess(id: String): Long? {
         return realm.where(Product_v::class.java).equalTo("_id", id).count()

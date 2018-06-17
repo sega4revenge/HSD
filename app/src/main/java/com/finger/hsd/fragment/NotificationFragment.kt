@@ -1,27 +1,27 @@
 package com.finger.hsd.fragment
 
 import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import com.finger.hsd.BaseFragment
 import com.finger.hsd.R
 import com.finger.hsd.activity.DetailProductActivity
-import com.finger.hsd.adapters.NotificationAdapter
+import com.finger.hsd.adapters.NotificationAdapterKotlin
 import com.finger.hsd.common.Prefs
 import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Notification
 import com.finger.hsd.model.Product_v
-import com.finger.hsd.services.NotificationService
 import com.finger.hsd.util.AppIntent
 import com.finger.hsd.util.Mylog
 import kotlinx.android.synthetic.main.fragment_notification.view.*
@@ -41,18 +41,20 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  *
  */
-class NotificationFragment : BaseFragment(), NotificationAdapter.itemSeenClick {
+class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClickListener {
 
     // TODO: Rename and change types of parameters
 
-    private var mView : View? = null
-    private lateinit var mRecyclerView : RecyclerView
-    private lateinit var mNotifiAdapter : NotificationAdapter
-    private lateinit var listitem : List<Notification>
-    private val pageToDownload : Int = 0
+    private var mView: View? = null
+
+    private lateinit var mNotifiAdapter: NotificationAdapterKotlin
+    private lateinit var listitem: ArrayList<Notification>
+    private lateinit var layoutManager: RecyclerView.LayoutManager
+    private val pageToDownload: Int = 0
     private var realm: RealmController? = null
-    private var prefs : Prefs? = null
+    private var prefs: Prefs? = null
     var mNotificationBadgeListener: NotificationBadgeListener? = null
+    var mContext: Context? = null
 
     fun newInstance(info: String): NotificationFragment {
         val args = Bundle()
@@ -70,7 +72,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapter.itemSeenClick {
     }
 
 
-   override fun onAttach(context: Context) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         onAttachToContext(context)
 
@@ -87,12 +89,12 @@ class NotificationFragment : BaseFragment(), NotificationAdapter.itemSeenClick {
                               savedInstanceState: Bundle?): View? {
 
         mView = inflater.inflate(R.layout.fragment_notification, container, false)
-        mRecyclerView = mView!!.findViewById(R.id.recycler_notification)
-        listitem = ArrayList()
+
         realm = RealmController(activity?.application!!)
         prefs = Prefs(activity);
+        mContext = activity
 
-        initViews()
+        initViews(mView!!)
         setRealmAdapter()
 
         mView!!.im_clear.setOnClickListener(View.OnClickListener {
@@ -104,16 +106,15 @@ class NotificationFragment : BaseFragment(), NotificationAdapter.itemSeenClick {
         return mView
     }
 
-    fun setRealmAdapter(){
+    fun setRealmAdapter() {
         listitem = realm!!.getListNotification()!!
 
-    //    Mylog.d("aaaaaaa NotificationFragment: "+listitem.get(0).id_product +" type: "+listitem.get(0).type)
-
-        mNotifiAdapter = NotificationAdapter(activity, listitem, mRecyclerView, mNotificationBadgeListener, this )
-        mRecyclerView.adapter = mNotifiAdapter
+        mNotifiAdapter = NotificationAdapterKotlin(mContext!!, listitem, realm!!, mNotificationBadgeListener!!, this)
+        mView!!.recycler_notification.adapter = mNotifiAdapter
         mNotifiAdapter.notifyDataSetChanged()
 
-        activity!!.startService(Intent(activity, NotificationService::class.java))
+
+        //activity!!.startService(Intent(activity, NotificationService::class.java))
     }
 
     fun addOneNotification() {
@@ -125,26 +126,32 @@ class NotificationFragment : BaseFragment(), NotificationAdapter.itemSeenClick {
         notification.create_at = System.currentTimeMillis().toString()
         var product = Product_v()
         product = realm!!.getProduct("5b17f6daea81a8639de962ea")!!
-        if (product != null) {
-            notification.type = 1 // 1 single, 2 multi
-            notification.watched = false;
-            realm!!.addNotification(notification)
 
-            mRecyclerView.scrollToPosition(0)
-        } else {
-            Mylog.d("aaaaaaaaa " + null)
-        }
+        notification.type = 0 // 1 single, 2 multi
+        notification.watched = false;
+        realm!!.addNotification(notification)
+        listitem.add(0, notification)
+
+        mView!!.recycler_notification.scrollToPosition(0)
+        mNotifiAdapter.notifyDataSetChanged()
+
     }
 
-    private fun initViews() {
-        mRecyclerView.setHasFixedSize(true)
+    private fun initViews(mView: View) {
 
-        val mLayoutManager = LinearLayoutManager(activity)
-        mRecyclerView.setNestedScrollingEnabled(false)
-        mRecyclerView.setLayoutManager(mLayoutManager)
-        mRecyclerView.setNestedScrollingEnabled(false)
-        mRecyclerView.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
-        mRecyclerView.setItemAnimator(DefaultItemAnimator())
+        listitem = java.util.ArrayList<Notification>()
+        layoutManager = LinearLayoutManager(activity, LinearLayout.VERTICAL, false)
+        // mNotifiAdapter = NotificationAdapterKotlin(mContext!! ,listitem, realm!!, mNotificationBadgeListener!!, this )
+
+        mView.recycler_notification.layoutManager = layoutManager
+
+//        mRecyclerView.setHasFixedSize(true)
+//
+//        val mLayoutManager = LinearLayoutManager(activity)
+//        mRecyclerView.setLayoutManager(mLayoutManager)
+//        mRecyclerView.setNestedScrollingEnabled(false)
+//        mRecyclerView.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
+//        mRecyclerView.setItemAnimator(DefaultItemAnimator())
 
         // create an empty adapter and add it to the recycler view
 //        listitem = realm!!.getListInfomation()
@@ -174,20 +181,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapter.itemSeenClick {
 //        }))
 
 
-
-//        mNotifiAdapter.setOnLoadMoreListener(object : NotificationAdapter.OnLoadMoreListener {
-//            override fun onLoadmore() {
-//                listitem.add
-//                mNotifiAdapter.notifyItemInserted(listitem.size - 1)
-//                if (listitem.size >= 10) {
-//                    Log.d("pageToDownload ", "onLoadmore communi: $pageToDownload")
-//                    ++pageToDownload
-//                    Log.d("pageToDownload ", "onLoadmore communi: $pageToDownload")
-//                  //  mCommunityPresenter.RepquestCommunityeSuri(pageToDownload)
-//                }
-//            }
-//        })
-
+//
 
 
     }
@@ -197,33 +191,129 @@ class NotificationFragment : BaseFragment(), NotificationAdapter.itemSeenClick {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode == AppIntent.REQUEST_NOTIFICATION){
-            if(resultCode == AppIntent.RESULT_DETAIL_PRODUCT){
+        if (requestCode == AppIntent.REQUEST_NOTIFICATION) {
+            if (resultCode == AppIntent.RESULT_DETAIL_PRODUCT) {
                 var extras = data!!.extras
 
-                if(extras !=null){
-                    var product =  extras.getSerializable("product_v") as Product_v
-                    var position = extras.getInt("position")
-                    var item = listitem.get(position)
-
-                    item.namechanged = product.namechanged
-                    item.expiredtime = product.expiretime
-
+                var position = data.getIntExtra("position", -1)
+                if (extras != null) {
+                    Mylog.d("aaaaaaaaa " + position)
                     mNotifiAdapter.notifyItemChanged(position)
-
 
                 }
             }
         }
     }
 
-    override fun onItemSeenClick(position: Int, product: Product_v) {
-
+    override fun onItemClick(position: Int, product: Product_v) {
         val intent = Intent(activity, DetailProductActivity::class.java)
+        intent.putExtra("checkNotification", true)
         intent.putExtra("position", position)
         intent.putExtra("id_product", product._id)
-        activity!!.startActivityForResult(intent, AppIntent.REQUEST_NOTIFICATION)
+        // startActivityForResult(intent, AppIntent.REQUEST_NOTIFICATION)
 
+        startActivity(intent)
+    }
+
+
+    var appendChatScreenMsgReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val bundle = intent.extras
+            Mylog.d("communition  BroadcastReceiver chay ngay di")
+            if (bundle != null) {
+                if (bundle.getBoolean("updateItem")) {
+                    //======= hàm này để load lại item vs position đã có
+                    if (!bundle.getBoolean("reloaditem")) {
+
+                        val position = bundle.getInt("position")
+
+                        mNotifiAdapter.notifyItemChanged(position)
+                        Mylog.d("communition  BroadcastReceiver  $position")
+
+                    }
+                    else {
+                        //======== hàm này để load lại toàn bộ item khi homeFragment chỉnh sửa item.
+//                        listitem.clear()
+//                        listitem = realm!!.getListNotification()!
+                        val idProduct = bundle.getString("id_product")
+                        for(i in 0.. listitem.size -1){
+                            var item = listitem[i]
+                            if(item.id_product.equals(idProduct)){
+                                mNotifiAdapter.notifyItemChanged(i)
+                                break
+                            }
+                        }
+
+                        Mylog.d("communition  BroadcastReceiver  chay chua chau")
+
+                    }
+                }else if(bundle.getBoolean("deleteItem")){
+                    if (!bundle.getBoolean("reloadItem")) {
+                        Mylog.d("communition  BroadcastReceiver  chay chua chau")
+                        val position = bundle.getInt("position")
+                        var item = listitem.get(position)
+                        listitem.remove(item)
+                        mNotifiAdapter.notifyDataSetChanged()
+
+                    }else{
+                        val idProduct = bundle.getInt("id_product")
+                        val item = mNotifiAdapter.listItem.iterator()
+
+                        while (item.hasNext()) {
+                            var value = item.next()
+                            if (value.id_product!!.equals(idProduct)) {
+                                item.remove()
+
+                            }
+                        }
+                        listitem.clear()
+                        listitem = realm!!.getListNotification()!!
+                        mNotifiAdapter.notifyDataSetChanged()
+
+                    }
+//============hàm này để khi có  thông báo là nó sẽ add vào list notification = alarm thông báo
+                } else if (bundle.getBoolean("addnotification")) {
+                    var notification = Notification()
+                    notification._id = System.currentTimeMillis().toString()
+                    notification.create_at = System.currentTimeMillis().toString()
+                    notification.type = 0 // 1 single, 2 multi
+                    notification.watched = false;
+
+                    var checkNewOrOldNotification = realm!!.addNotification(notification)
+                    if (checkNewOrOldNotification) {
+                        val item = mNotifiAdapter.listItem.iterator()
+
+                        while (item.hasNext()) {
+                            var value = item.next()
+                            if (value.id_product.equals(notification.id_product)) {
+                                item.remove()
+                            }
+                        }
+                        listitem.add(0, notification)
+                        mView!!.recycler_notification.adapter = mNotifiAdapter
+                        mView!!.recycler_notification.scrollToPosition(0)
+                        mNotifiAdapter.notifyDataSetChanged()
+                    } else {
+                        listitem.add(0, notification)
+                        mView!!.recycler_notification.adapter = mNotifiAdapter
+                        mView!!.recycler_notification.scrollToPosition(0)
+                        mNotifiAdapter.notifyDataSetChanged()
+                    }
+
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        activity!!.unregisterReceiver(this.appendChatScreenMsgReceiver)
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activity!!.registerReceiver(this.appendChatScreenMsgReceiver, IntentFilter(AppIntent.ACTION_UPDATE_ITEM))
 
     }
 

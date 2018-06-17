@@ -33,6 +33,7 @@ import com.finger.hsd.common.GlideApp
 import com.finger.hsd.library.CompressImage
 import com.finger.hsd.library.image.TedBottomPicker
 import com.finger.hsd.manager.RealmController
+import com.finger.hsd.model.Notification
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.Response
 import com.finger.hsd.presenter.DetailProductPresenter
@@ -98,6 +99,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
     private var mDialog:Dialog? =null
     
     var product: Product_v? = null
+    var  checkNotification : Boolean = false
 
     val options = RequestOptions()
             .centerCrop()
@@ -146,6 +148,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         }
         val strDataIntent: String = intent.getStringExtra("id_product")
         position = intent.getIntExtra("position", -1)
+        checkNotification = intent.getBooleanExtra("checkNotification", false)
 
         if (!strDataIntent.isEmpty())
             idProduct = strDataIntent
@@ -164,19 +167,18 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         mBtSave.setOnClickListener {
             /*
             * update to realm*/
-            val noteChange = mTvNote.text.toString()
-            val nameChange = mTvName.text.toString()
+            val noteChange :String?= mTvNote.text.toString()
+            val nameChange : String? = mTvName.text.toString()
+           // val changeProduct = product
+            if ((noteChange!=null &&!note.equals(noteChange))|| (nameChange !=null &&!name.equals(nameChange))
+                    || ( expiredTimeChange !=null && !expiredTime.equals(expiredTimeChange))) {
 
-            if ((!TextUtils.isEmpty(noteChange) && !note.equals(noteChange))
-                    || (!TextUtils.isEmpty(noteChange) && !name.equals(nameChange))
-                    || (!TextUtils.isEmpty(expiredTimeChange) && !expiredTime.equals(expiredTimeChange))) {
-
-                realm!!.realm.executeTransaction(Realm.Transaction {
-                    if (!TextUtils.isEmpty(expiredTimeChange) && !expiredTime.equals(expiredTimeChange)) {
-                        product!!.expiretime = expiredTimeChange!!.toLong()
-
+                    if (expiredTimeChange !=null && !expiredTime.equals(expiredTimeChange)){
+                      //  changeProduct!!.expiretime = expiredTimeChange!!.toLong()
+                        realm!!.realm.executeTransaction(Realm.Transaction {
+                            product!!.expiretime = expiredTimeChange!!.toLong()
+                        })
                         var days = 0
-
 
                         var longExpiredTime = expiredTimeChange!!.toLong()
                         calendar.timeInMillis = longExpiredTime
@@ -187,13 +189,21 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                         getWarningStatus(days)
 
                     }
-                    if (!TextUtils.isEmpty(noteChange) && !name.equals(nameChange)) {
-                        product!!.namechanged = nameChange
+                    if (nameChange!=null&&!name.equals(nameChange)) {
+                        //changeProduct!!.namechanged = nameChange
+                        realm!!.realm.executeTransaction(Realm.Transaction {
+                            product!!.namechanged = nameChange
+                        })
+
 
 
                     }
-                    if (!TextUtils.isEmpty(note) && !noteChange.equals(note)) {
-                        product!!.description = noteChange
+                    if (noteChange!= null && !noteChange.equals(note)) {
+                        //changeProduct!!.description = noteChange
+                        realm!!.realm.executeTransaction(Realm.Transaction {
+                            product!!.description = noteChange
+                        })
+
                     }
 
 
@@ -221,18 +231,15 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                                             val out3 = FileOutputStream(myDir)
 
                                             resource?.compress(Bitmap.CompressFormat.JPEG, 90, out3)
-
-                                            product!!.imagechanged = Uri.fromFile(myDir).toString()
+                                            //changeProduct!!.imagechanged = Uri.fromFile(myDir).toString()
+                                            realm!!.realm.executeTransaction(Realm.Transaction {
+                                                product!!.imagechanged = Uri.fromFile(myDir).toString()
+                                            })
 
                                             out3.flush()
                                             out3.close()
 
-                                            val intent = Intent()
-                                            intent.putExtra("position", position!!)
-                                            intent.putExtra("product_v", product!!)
-                                            setResult(AppIntent.RESULT_UPDATE_ITEM, intent)
-
-                                            finish()
+                                            putIntenDataBack()
 
 
                                         } catch (e: Exception) {
@@ -245,31 +252,12 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                                 })
                     }else {
 
-                        Mylog.d("aaaaaaaaa tesst: data have ? "+product!!.namechanged)
-
-                        val intent = Intent()
-                        intent.putExtra("position", position!!)
-                        var bundle = Bundle()
-                        bundle.putSerializable("product_v", realm!!.getProduct(idProduct))
-                        setResult(AppIntent.RESULT_UPDATE_ITEM, intent)
-
-                        finish()
+                        putIntenDataBack()
                     }
-                })
-
-
-
 
             } else if (selectedUri != null) {
 
-                val intent = Intent()
-                intent.putExtra("position", position!!)
-                intent.putExtra("product_v", product)
-                setResult(AppIntent.RESULT_UPDATE_ITEM, intent)
-
-
-
-
+                putIntenDataBack()
             }
 
 
@@ -305,6 +293,36 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         }
     }
 
+    fun putIntenDataBack(){
+//        val intent = Intent()
+//        intent.putExtra("position", position!!)
+//        intent.putExtra("id_product", idProduct)
+//        setResult(AppIntent.RESULT_UPDATE_ITEM, intent)
+//        finish()
+//        changeProduct.isSyn = false
+//        realm!!.updateProduct(changeProduct)
+
+            realm!!.realm.executeTransaction(Realm.Transaction {
+                product!!.isSyn = false
+            })
+            val a = Intent()
+            a.putExtra("updateItem", true)
+
+            a.action = AppIntent.ACTION_UPDATE_ITEM
+            if (!checkNotification) {
+                a.putExtra("reloaditem", true)
+                Mylog.d("aaaaaaaaa home " + AppIntent.ACTION_UPDATE_ITEM)
+            } else {
+                a.putExtra("reloaditem", false)
+                Mylog.d("aaaaaaaaa notification " + AppIntent.ACTION_UPDATE_ITEM)
+            }
+            a.putExtra("position", position!!)
+            a.putExtra("id_product", idProduct)
+            sendBroadcast(a)
+            finish()
+
+
+    }
 
     fun showImage() {
 
@@ -501,9 +519,11 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         } else
         // xóa sản phẩm
             if (typeError == 222) {
+                realm!!.realm.executeTransaction(Realm.Transaction {
+                    product!!.delete = true
+                    product!!._id = idProduct
+                })
 
-                product!!.isDelete = true
-                product!!._id = idProduct
                 realm!!.updateProduct(product!!)
 
             } else
@@ -574,7 +594,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                     .into(mImProduct)
         }
 
-          mTvBarcode.text = product!!.productTypeId.barcode
+          mTvBarcode.text = product!!.producttype_id!!.barcode
 
         var days = 0
         if (TextUtils.isEmpty(product!!.expiretime.toString())) days = 0
@@ -797,7 +817,6 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         btnDialog_cancel.setOnClickListener({
 
             dialog.dismiss()
-            finish()
 
         })
         dialog_ok.setOnClickListener({
@@ -805,20 +824,53 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
             //  presenter.processDeleteProduct(idProduct)
             var product_v = realm!!.getProduct(idProduct)
 
-            product_v!!.isDelete = true
-            product_v.isChecksync = false
-            realm!!.updateProduct(product_v)
-            val intent = Intent()
-            intent.putExtra(AppIntent.DATA_UPDATE_ITEM, position)
-            intent.putExtra("product_v", product_v)
-            intent.putExtra("position", position)
-            setResult(AppIntent.RESULT_DELETE_ITEM, intent)
+            realm!!.realm.executeTransaction(Realm.Transaction {
+                product_v!!.delete = true
+                product_v.isSyn = false
+            })
+            realm!!.updateProduct(product_v!!)
+            deleteProduct()
+
+//            val intent = Intent()
+//            intent.putExtra(AppIntent.DATA_UPDATE_ITEM, position)
+//            intent.putExtra("product_v", product_v)
+//            intent.putExtra("position", position)
+//            setResult(AppIntent.RESULT_DELETE_ITEM, intent)
 
             dialog.dismiss()
             finish()
 
         })
         dialog.show()
+    }
+
+    fun deleteProduct(){
+
+        var notification: Notification = realm!!.getOneNotification(idProduct)!!
+
+        realm!!.realm.executeTransaction(Realm.Transaction {
+            notification.delete = true
+            notification.isSync = false
+        })
+        val a = Intent()
+        a.putExtra("deleteItem", true)
+        a.action = AppIntent.ACTION_UPDATE_ITEM
+        if (!checkNotification) {
+
+            a.putExtra("reloadItem", true)
+            Mylog.d("aaaaaaaaa home ")
+        } else {
+
+            a.putExtra("reloadItem", false)
+            Mylog.d("aaaaaaaaa notification " )
+        }
+
+        a.putExtra("position", position!!)
+        a.putExtra("id_product", idProduct)
+        sendBroadcast(a)
+        finish()
+
+
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
@@ -850,7 +902,6 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                 .addMultipartFile("image", CompressImage.compressImage(this@DetailProductActivity, file))
                 .build()
                 .setAnalyticsListener { timeTakenInMillis, bytesSent, bytesReceived, isFromCache -> }
-
                 .getObjectObservable(Response::class.java)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

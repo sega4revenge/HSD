@@ -33,8 +33,6 @@ import retrofit2.Response
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.zip.Inflater
-import javax.sql.ConnectionEventListener
 
 
 class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.updateData, ConnectivityChangeReceiver.ConnectivityReceiverListener {
@@ -243,14 +241,14 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
 
                                 override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
                                     if(response?.isSuccessful!!){
-                                        if(response?.code()==200){
+                                        if(response.code()==200){
                                             Log.d("ErrorErrorError",response.body().product.toString()+"//"+response.body().product._id)
                                             var mProduct = response.body().product
                                             mProduct.imagechanged = path
                                             mProduct.barcode = barcodeIn
                                             mProduct.isSyn = true
                                             myRealm?.addProduct(mProduct)
-                                            if(myRealm?.checkaddsuccess(mProduct._id)!!>0){
+                                            if(myRealm?.checkaddsuccess(mProduct._id!!)!!>0){
                                                 onupdateProduct(1,mProduct)
                                             }
                                         }
@@ -271,11 +269,12 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
                         var r =  Random()
                         var ran = r.nextInt(2000)
                         if(myRealm?.checkaddsuccess(exToday.time.toString())!!<=0){
-                            var mProduct = Product_v((exToday.time +ran).toString(),edit_nameproduct?.text.toString(),barcodeIn,miliexDate!!,edit_chitiet?.text.toString(),path)
-                            mProduct.isDelete = false
+                            var mProduct = Product_v((exToday.time +ran).toString(),edit_nameproduct?.text.toString(),
+                                    barcodeIn!!,miliexDate!!,edit_chitiet?.text.toString(),path!!)
+                            mProduct.delete = false
                             mProduct.isSyn = false
                             myRealm?.addProduct(mProduct)
-                            if(myRealm?.checkaddsuccess(mProduct._id)!!>0){
+                            if(myRealm?.checkaddsuccess(mProduct._id!!)!!>0){
                                 onupdateProduct(1,mProduct)
                             }
                         }

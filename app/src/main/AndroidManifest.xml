@@ -39,6 +39,8 @@
             android:name="com.finger.hsd.common.MyGlideModule"
             android:value="GlideApp" />
 
+
+
         <activity android:name=".activity.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -56,6 +58,17 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"/>
         </provider>
+
+        <!--<service-->
+            <!--android:name=".account.AuthenticatorService">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.accounts.AccountAuthenticator"/>-->
+            <!--</intent-filter>-->
+            <!--<meta-data-->
+                <!--android:name="android.accounts.AccountAuthenticator"-->
+                <!--android:resource="@xml/account_authenticator" />-->
+        <!--</service>-->
+
 
         <activity android:name=".activity.DetailProductActivity"
             android:screenOrientation="portrait"/>

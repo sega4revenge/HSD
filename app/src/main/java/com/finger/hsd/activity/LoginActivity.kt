@@ -315,7 +315,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
 
                             resource?.compress(Bitmap.CompressFormat.JPEG, 90, out3)
                             Mylog.d("aaaaaaaaaa my dir: "+ myDir)
-                            product.setImagechanged(Uri.fromFile(myDir).toString())
+                            product.imagechanged = Uri.fromFile(myDir).toString()
                             realm!!.updateProduct(product)
 
                             temp++
@@ -323,13 +323,13 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
                             out3.close()
 
                             if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
-                                percent = (temp.toFloat() / (listProduct!!.size.toFloat() -1) * 100f).toInt()
+                                percent = (temp.toFloat() / (listProduct!!.size.toFloat()) * 100f).toInt()
 
                                 showToast("Sync... "+percent)
 
                                 onDownload(listProduct!!.get(temp))
                             }else{
-                                percent = (temp.toFloat() / (listProduct!!.size -1).toFloat() * 100f).toInt()
+                                percent = (temp.toFloat() / (listProduct!!.size).toFloat() * 100f).toInt()
                                 showToast("Sync... "+percent+"% complete")
                                 session!!.setLogin(true)
                                 startActivity(Intent(this@LoginActivity, AllInOneActivity::class.java))

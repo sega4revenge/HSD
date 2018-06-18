@@ -273,11 +273,11 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                     }
 //============hàm này để khi có  thông báo là nó sẽ add vào list notification = alarm thông báo
                 } else if (bundle.getBoolean("addnotification")) {
+
                     var notification = Notification()
-                    notification._id = System.currentTimeMillis().toString()
-                    notification.create_at = System.currentTimeMillis().toString()
-                    notification.type = 0 // 1 single, 2 multi
-                    notification.watched = false;
+
+                    notification = bundle.getSerializable("notificationModel") as Notification
+                    Mylog.d("ttttttt " +notification.id_product)
 
                     var checkNewOrOldNotification = realm!!.addNotification(notification)
                     if (checkNewOrOldNotification) {

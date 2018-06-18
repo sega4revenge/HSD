@@ -108,8 +108,9 @@
         <activity android:name=".activity.show_PhotoProduct"></activity>
         <activity android:name=".activity.Scanner_HSD_Activity"
             tools:ignore="DuplicateActivity"></activity>
-        <activity android:name=".AllInOneActivity"/>
-
+        <activity android:name=".AllInOneActivity"
+            android:launchMode="singleTask"
+            />
         <activity android:name=".activity.AlarmSetting" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

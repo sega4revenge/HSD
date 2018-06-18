@@ -2,13 +2,14 @@ package com.finger.hsd.model
 
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
+import java.io.Serializable
 
-open class Notification : RealmObject() {
-
+open class Notification : RealmObject() , Serializable{
     @PrimaryKey
     var _id : String?=null
     var idinvite : Invite? = null
     var id_product    : String? = null
+    var status_expiry : String?  = null
     var idgeneral : General?=null
     var type : Int?=null
     var create_at : String?=null

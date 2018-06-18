@@ -45,6 +45,6 @@ class SessionManager {
 
 
     fun get_open_Alarm(): Boolean {
-        return mSharedPreferences.getBoolean(KEY_SETTING_NOTI_ALARM, false)
+        return mSharedPreferences.getBoolean(KEY_SETTING_NOTI_ALARM, true)
     }
 }

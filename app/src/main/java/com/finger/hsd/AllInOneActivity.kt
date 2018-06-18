@@ -1,5 +1,6 @@
 package com.finger.hsd
 
+import android.content.Intent
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
@@ -11,12 +12,14 @@ import android.support.design.widget.TabLayout
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.*
 import com.finger.hsd.adapters.ViewPagerAdapter
 import com.finger.hsd.fragment.FragmentProfile
 import com.finger.hsd.fragment.Home_Fragment
 import com.finger.hsd.fragment.NotificationFragment
 import com.finger.hsd.fragment.NotificationFragment.NotificationBadgeListener
+import com.finger.hsd.util.Mylog
 import com.finger.hsd.view.BadgeView
 import java.net.Socket
 
@@ -60,6 +63,11 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener{
         bottomNavigationView = findViewById(R.id.bottom_navigation)
         setSupportActionBar(toolbar)
 
+
+        val bundle=intent.extras
+        val samplename:String
+
+
         viewPager!!.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
 
         fabCreate = findViewById(R.id.fab_fixer)
@@ -79,14 +87,10 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener{
                         R.id.item_home -> viewPager!!.setCurrentItem(0)
                         R.id.item_notification -> viewPager!!.setCurrentItem(1)
                         R.id.item_profile -> viewPager!!.setCurrentItem(2)
-
-
-
                     }
                     //                                    viewPager.setCurrentItem(3);
                     //                                    mBadgeView.setText(formatBadgeNumber(0));
                     //                                    ShortcutBadger.removeCount(MainActivity.this);
-
                     false
                 })
 
@@ -96,6 +100,8 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener{
         viewPager!!.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {
+
+
                 if (prevMenuItem != null) {
                     prevMenuItem!!.setChecked(false)
                 } else {
@@ -109,7 +115,24 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener{
             override fun onPageScrollStateChanged(state: Int) {}
         })
 
+
         setupViewPager(viewPager!!)
+
+        if(bundle!=null)
+        {
+            samplename = bundle.getString("InNotificationFragment")
+            if (prevMenuItem != null) {
+                prevMenuItem!!.setChecked(false)
+            } else {
+                bottomNavigationView!!.getMenu().getItem(0).isChecked = false
+            }
+            bottomNavigationView!!.getMenu().getItem(1).isChecked = true
+            prevMenuItem = bottomNavigationView!!.getMenu().getItem(1)
+            menuVisible(1)
+            viewPager!!.setCurrentItem(1)
+            Log.d("InNotificationFragment","InNotificationFragment " + samplename)
+
+        }
     }
 
     private fun setupViewPager(viewPager: ViewPager) {
@@ -122,6 +145,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener{
         viewPager.offscreenPageLimit = 3
     }
 
+
     // get tabItemView
     fun getTabItemView(): View {
         val view = LayoutInflater.from(this).inflate(R.layout.layout_badge_view, null)
@@ -133,6 +157,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener{
         mBadgeView!!.setText(formatBadgeNumber(10))
         return view
     }
+
     override fun onBadgeUpdate(value: Int) {
         mBadgeView!!.text = formatBadgeNumber(value)
     }

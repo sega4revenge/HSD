@@ -3,6 +3,9 @@ package com.finger.hsd.activity
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.app.Activity
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -20,6 +23,7 @@ import com.facebook.login.LoginResult
 import com.finger.hsd.AllInOneActivity
 import com.finger.hsd.BaseActivity
 import com.finger.hsd.R
+import com.finger.hsd.R.id.*
 import com.finger.hsd.common.GlideApp
 import com.finger.hsd.common.MyApplication
 import com.finger.hsd.manager.RealmController
@@ -41,6 +45,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 import org.json.JSONException
 import java.io.File
 import java.io.FileOutputStream
+import java.util.*
 
 class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.OnConnectionFailedListener {
 
@@ -52,7 +57,10 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
     var TAG = "Login Activity"
 
     var realm: RealmController? = null
-    var session: SessionManager? = null
+    lateinit var alarmManager : AlarmManager
+    private val milDay = 86400000L
+    private var pending_intent: PendingIntent? = null
+    lateinit var session : SessionManager
 
 
     private var callbackManager: CallbackManager? = null
@@ -85,6 +93,10 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
           startActivity(intent)
             finish()
         }
+
+        realm!!.DatabseLlistAlarm()
+
+        alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 //        mAccountManager = AccountManager.get(this)
 //          val intent = Intent(this, HorizontalNtbActivity::class.java)
 //          startActivity(intent)
@@ -225,7 +237,14 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
     var temp = 0
     override fun getUserDetail(user: User) {
 
+        Mylog.d("aaaaaaaaaa "+" chay ngay di ngay di ngay di ngay di ngay di ngay di"+user)
         realm!!.addUser(user)
+
+//        Mylog.d("aaaaaaa user "+realm!!.getUser()!!._id)
+//        Mylog.d("aaaaaaaa group: "+realm!!.getGroup()!!.name)
+//
+//        Mylog.d("aaaaaaa user "+realm!!.getProduct("5b0b7093304e8e55e9a28617")!!.namechanged)
+//        Mylog.d("aaaaa notification: "+realm!!.getOneNotification("5b1e4554db071a05681d3ce9")!!.create_at)
 
          listProduct  = realm!!.getlistProduct()
 //        val dataSync = DataSync(this, object : DataListener {
@@ -255,7 +274,6 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
 
 
         temp =0
-        Mylog.d("aaaaaaaaa size lisproduct:  "+listProduct!!.size)
         if (listProduct != null && !listProduct!!.isEmpty()) {
             Mylog.d("aaaaaaaaa temp at least:  "+temp)
             onDownload(listProduct!!.get(temp))
@@ -332,6 +350,19 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
                                 percent = (temp.toFloat() / (listProduct!!.size).toFloat() * 100f).toInt()
                                 showToast("Sync... "+percent+"% complete")
                                 session!!.setLogin(true)
+
+                                var list =  realm!!.getDataTimeAlarm()
+
+                                for (index in list!!.indices) {
+
+                                    val model = list.get(index)
+                                    if (model.isSelected!!) {
+                                        SettingAlarm(model.listtime!!.toInt(), true)
+                                    }else{
+                                        SettingAlarm(model.listtime!!.toInt(), false)
+                                    }
+                                }
+                                Log.d("isLoginSuccessful","isLoginSuccessful1    "   +"  list   " +list)
                                 startActivity(Intent(this@LoginActivity, AllInOneActivity::class.java))
                                 finish()
                             }
@@ -408,6 +439,32 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
 //                    }
 //                })
 
+    }
+
+    private fun SettingAlarm(hour: Int, boolean: Boolean) {
+        val calendars = Calendar.getInstance()
+        val now = Calendar.getInstance()
+        val myIntent = Intent(this, AlarmReceiver::class.java)
+        myIntent.putExtra("extra", "yes")
+        calendars.set(Calendar.MINUTE, 0)
+        calendars.set(Calendar.SECOND, 0)
+        calendars.set(Calendar.HOUR_OF_DAY, hour)
+
+        if(calendars.timeInMillis < now.timeInMillis){
+            calendars.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH)+1)
+        }
+        if (boolean) {
+            Log.d("LoginActivity", "boolean..true  ====>>>>    " + boolean + " =====  " + hour)
+            pending_intent = PendingIntent.getBroadcast(this, hour, myIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars.timeInMillis, milDay, pending_intent)
+
+        } else {
+            Log.d("LoginActivity", "boolean..false  ====>>>>>>    " + boolean + " =====  " + hour)
+            pending_intent = PendingIntent.getBroadcast(this, hour, myIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+            alarmManager.cancel(pending_intent)
+
+
+        }
     }
 
 

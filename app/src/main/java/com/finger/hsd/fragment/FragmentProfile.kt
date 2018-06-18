@@ -22,7 +22,6 @@ import com.finger.hsd.activity.AlarmReceiver
 import com.finger.hsd.activity.AlarmSetting
 import com.finger.hsd.manager.RealmAlarmController
 import com.finger.hsd.manager.SessionManager
-import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 import java.io.File
 import java.util.*
@@ -75,19 +74,39 @@ class FragmentProfile : Fragment(), View.OnClickListener {
         txtViewSound = v.txt_ViewSound
 
         res  =resources
+
 //        btn_yes = v.btn_yes
 //        btn_no = v.btn_no
+
         realms = RealmAlarmController.with(this)
+        realms!!.DatabseLlistAlarm()
+
+        // get user
+        var listUser =  realms!!.getUser()
+        for (index in listUser!!.indices) {
+            val model = listUser.get(index)
+            v.phone_user.text = model.phone
+        }
+        // dem so luong san pham
+        var number = realms!!.numberproduct()
+        if(number>0){
+            v.txt_numberProduct.text  = number.toString()
+        }else{
+            v.txt_numberProduct.text  = "0"
+        }
 
         v.txt_Expiry.setOnClickListener {
             val intent = Intent(activity, AlarmSetting::class.java)
             startActivityForResult(intent, SECOND_ACTIVITY_REQUEST_CODE)
         }
+
         v.txt_sound.setOnClickListener(this)
         v.txt_share.setOnClickListener(this)
         v.send_feedback.setOnClickListener(this)
 
+//        v.export_file.setOnClickListener(this)
 
+        Log.d("FragmentProfile", "list... " + listUser)
         Log.d("FragmentProfile", "sessionManager... " + sessionManager.get_open_Alarm())
 
         if (sessionManager.get_open_Alarm()) {
@@ -96,11 +115,17 @@ class FragmentProfile : Fragment(), View.OnClickListener {
             for (index in list!!.indices) {
                 val model = list.get(index)
                 if (model.isSelected!!) {
+//                    SettingAlarm(model.listtime!!.toInt(), true)
                     if (!output.equals("")) {
                         output += ", "
                     }
                     output += model.listtime.toString() + "h"
+
                 }
+//                else{
+//
+//                    SettingAlarm(model.listtime!!.toInt(), false)
+//                }
             }
             setAlarmText(output!!)
 
@@ -117,6 +142,11 @@ class FragmentProfile : Fragment(), View.OnClickListener {
         return v
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        realms!!.closeRealm()
+    }
+
     override fun onClick(p0: View?) {
         when (p0!!.getId()) {
             R.id.txt_sound -> {
@@ -129,30 +159,67 @@ class FragmentProfile : Fragment(), View.OnClickListener {
                 showDialogSound(cheked!!)
             }
             R.id.txt_share -> {
-                val a = resources.getString(R.string.person_share)
-                val b = resources.getString(R.string.name_share)
-                val c = resources.getString(R.string.status)
-                val d = resources.getString(R.string.description)
-                val e = resources.getString(R.string.date_share)
-                val f = resources.getString(R.string.where_share)
-                val g = resources.getString(R.string.link)
-
-//                    val timestamp = java.lang.Long.parseLong(time)
-//                    val mStrTimeStamp = getDate(timestamp)
-                    val message = ("\n" + b + name
-//                            + "\n" + c + status
-//                            + "\n" + d + description
-//                            + "\n" + e + mStrTimeStamp
-                            + "\n" + g + "https://play.google.com/store/apps/details?id=com.finger.suri&hl=vi")
+                    val message = ("\n" + "I want invite you to join me on HSD. Please click the link to download. "+" https://play.google.com/store/apps/details?id=com.finger.suri&hl=vi")
                     shareAction(message)
-
             }
             R.id.send_feedback -> {
                 sendEmail()
             }
+
+//            R.id.export_file->{
+//
+//            }
+
         }
 
     }
+
+//    private fun ExportToExcel(){
+//
+//        val workbook = XSSFWorkbook()
+//        val createHelper = workbook.getCreationHelper()
+//
+//        val sheet = workbook.createSheet("Customers")
+//
+//        val headerFont = workbook.createFont()
+//        headerFont.setBold(true)
+//        headerFont.setColor(IndexedColors.BLUE.getIndex())
+//
+//        val headerCellStyle = workbook.createCellStyle()
+//        headerCellStyle.setFont(headerFont)
+//
+//        // Row for Header
+//        val headerRow = sheet.createRow(0)
+//
+//        // Header
+//
+//
+//        for (col in COLUMNs.indices) {
+//            val cell = headerRow.createCell(col)
+//            cell.setCellValue(COLUMNs[col])
+//            cell.setCellStyle(headerCellStyle)
+//        }
+//
+//        // CellStyle for Age
+//        val ageCellStyle = workbook.createCellStyle()
+//        ageCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("#"))
+//
+//        var rowIdx = 1
+//        for (customer in customers) {
+//            val row = sheet.createRow(rowIdx++)
+//            row.createCell(0).setCellValue(customer.id)
+//            row.createCell(1).setCellValue(customer.name)
+//            row.createCell(2).setCellValue(customer.address)
+//            val ageCell = row.createCell(3)
+//            ageCell.setCellValue(customer.age.toDouble())
+//            ageCell.setCellStyle(ageCellStyle)
+//        }
+//
+//        val fileOut = FileOutputStream("customers.xlsx")
+//        workbook.write(fileOut)
+//        fileOut.close()
+//        workbook.close()
+//    }
 
     private fun sendEmail() {
         val filename = "contacts_sid.vcf"
@@ -180,9 +247,11 @@ class FragmentProfile : Fragment(), View.OnClickListener {
                 alarmManager = activity!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
                 // Session manager == true (mo)
                 if (sessionManager.get_open_Alarm()) {
+
                     val list = realms!!.view_to_dataTimeAlarm()
                     var output: String? = ""
                     for (index in list!!.indices) {
+
                         val model = list.get(index)
 
                         if (model.isSelected!!) {
@@ -194,8 +263,10 @@ class FragmentProfile : Fragment(), View.OnClickListener {
 
                         } else {
                             SettingAlarm(model.listtime!!.toInt(), false)
-//                            Log.d("FragmentProfile","model..false  ====    " + model.listtime)
+                            Log.d("FragmentProfile","model..false  ====    " + model.listtime)
                         }
+
+
                     }
 
                     setAlarmText(output!!)
@@ -217,15 +288,24 @@ class FragmentProfile : Fragment(), View.OnClickListener {
 
     private fun SettingAlarm(hour: Int, boolean: Boolean) {
 
-
         val calendars = Calendar.getInstance()
         val now = Calendar.getInstance()
-
         val myIntent = Intent(context, AlarmReceiver::class.java)
         myIntent.putExtra("extra", "yes")
         calendars.set(Calendar.MINUTE, 0)
         calendars.set(Calendar.SECOND, 0)
         calendars.set(Calendar.HOUR_OF_DAY, hour)
+
+        Log.d("FragmentProfile", " 1 calendars.timeInMillis+milDay ====>>>>    " +   calendars.timeInMillis)
+
+        if(calendars.timeInMillis < now.timeInMillis){
+
+//            calendars.timeInMillis+milDay
+            calendars.set(Calendar.DAY_OF_YEAR, Calendar.DAY_OF_YEAR+1)
+            Log.d("FragmentProfile", " 2 DAY_OF_WEEK ====>>>>    " +   calendars.timeInMillis)
+        }
+
+        Log.d("FragmentProfile", "  calendars.timeInMillis+milDay ====>>>>    " +   calendars.timeInMillis+milDay + " =====  " + hour)
 
         if (boolean) {
             Log.d("FragmentProfile", "boolean..true  ====>>>>    " + boolean + " =====  " + hour)
@@ -261,7 +341,7 @@ class FragmentProfile : Fragment(), View.OnClickListener {
 
     //    @SuppressLint("InflateParams")
     private fun showDialogSound(id :Int) {
-        var sound :String? =null
+        var sound : String?  = null
         var soundOff : Boolean? = false
 
         val mBuilder = AlertDialog.Builder(activity)
@@ -293,11 +373,12 @@ class FragmentProfile : Fragment(), View.OnClickListener {
             // Do something when click the neutral button
             if (mMediaPlayer != null && soundOff!!) {
                 mMediaPlayer!!.release()
-
             }
 
-            sessionManager.set_Sound(sound!!)
-            setSoundText(sessionManager.get_Sound())
+            if(sound!=null){
+                    sessionManager.set_Sound(sound!!)
+                    setSoundText(sessionManager.get_Sound())
+            }
 
             dialog.cancel()
         }

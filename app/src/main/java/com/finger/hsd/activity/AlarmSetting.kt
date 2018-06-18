@@ -17,6 +17,7 @@ import com.finger.hsd.manager.RealmAlarmController
 import com.finger.hsd.manager.SessionManager
 import com.finger.hsd.model.TimeAlarm
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout
+import io.realm.Realm
 import kotlinx.android.synthetic.main.alarm_setting.*
 import java.util.*
 
@@ -46,10 +47,7 @@ class AlarmSetting : AppCompatActivity(), CompoundButton.OnCheckedChangeListener
         sessionManager = SessionManager(applicationContext)
          realms = RealmAlarmController(this)
 
-//        realms!!.view_to_database()
-//        if (realms==null){
         realms!!.DatabseLlistAlarm()
-//        }
 
         switch_notification.isChecked = sessionManager.get_open_Alarm()
         Log.d(Tag, "sessionManager.get_open_Alarm()..." + sessionManager.get_open_Alarm() )
@@ -83,20 +81,6 @@ class AlarmSetting : AppCompatActivity(), CompoundButton.OnCheckedChangeListener
 
     override fun onClick(view: View?) {
         when (view!!.getId()) {
-
-            R.id.btn_settime -> {
-                // do your code
-//                val now = Calendar.getInstance()
-//                val tpd = TimePickerDialog.newInstance(
-//                        this,
-//                        now.get(Calendar.HOUR_OF_DAY),
-//                        now.get(Calendar.MINUTE),
-//                        true
-//                )
-//                tpd.isThemeDark = false
-//                tpd.show(fragmentManager, "Timepickerdialog")
-            }
-
             R.id.btn_save -> {
                 val intent = Intent()
                 intent.putExtra("keyAlarm", mTime)
@@ -136,10 +120,15 @@ class AlarmSetting : AppCompatActivity(), CompoundButton.OnCheckedChangeListener
             for (index in list.indices) {
                 val model = list.get(index) as TimeAlarm
                 sb.append(model.listtime.toString() + "\n")
-                realms!!.save_to_database(model.listtime!!.toInt() , calendars.timeInMillis.toString())
+                realms!!.update_to_SetAlarm(model.listtime!!.toInt() , true)
 
                 calendars.set(Calendar.HOUR_OF_DAY, model.listtime!!)
+//                calendars.set(Calendar.DAY_OF_WEEK)
                 Log.d(Tag, " curent_Timemili ... " + " ====   time choose model.listtime ==== " + calendars.timeInMillis  + "\n")
+//                Log.d(Tag, " curent_Timemili ... " + " ====   Calendar.DAY_OF_MONTH ==== " +Calendar.DAY_OF_MONTH  + "\n"  )
+//                Log.d(Tag, " curent_Timemili ... " + " ====   time choose model.listtime ==== " + Calendar.DAY_OF_WEEK  + "\n" )
+//                Log.d(Tag, " curent_Timemili ... " + " ====   time choose model.listtime ==== " + Calendar.DAY_OF_WEEK_IN_MONTH  + "\n")
+//                Log.d(Tag, " curent_Timemili ... " + " ====   time choose model.listtime ==== " + Calendar.DAY_OF_YEAR + "\n" )
 
                 Log.d(Tag, " curent_Timemili ... " + " ====   time choose 3600000L ==== " +(model.listtime!! * 3600000L)  + "\n")
 

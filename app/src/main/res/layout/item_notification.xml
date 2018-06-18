@@ -25,11 +25,11 @@
             android:layout_marginTop="19dp"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="32dp" />
-
         <ImageView
             android:id="@+id/im_product_noti"
             android:layout_width="91dp"
             android:layout_height="wrap_content"
+
             android:layout_alignParentLeft="true" />
 
     <TextView

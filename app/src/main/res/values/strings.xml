@@ -73,7 +73,7 @@
     <string name="weeks_ago">weeks ago</string>
     <!--close time ago-->
     <!--profile-->
-    <string name="_0_50">0/50</string>
+    <string name="_0_50">/50</string>
     <string name="change_password">Change password</string>
     <string name="version">Version</string>
     <string name="_1_0_0">1.0.0</string>
@@ -116,6 +116,30 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="share">Share</string>
     <string name="faqs">FAQs</string>
+
+    // notification
+    <string name="notification_">Hạn Sử Dụng </string>
+    <string name="notification_expiry">Thông báo hết hạn </string>
+    <string name="warring_expiry">Cảnh báo hạn sử dụng</string>
+
+    <string name="You_have">Bạn có </string>
+    <string name="Warring_You_have">Cảnh báo bạn có </string>
+
+    <string name="expiry"> hết hạn sử dụng. </string>
+    <string name="expiry_and"> hết hạn và </string>
+    <string name="expiry_"> sắp hết hạn sử dụng. </string>
+
+    <string name="please_check_product"> Vui lòng kiểm tra sản phẩm của bạn! </string>
+
+
+    <string name="product_expiry">sản phẩm :</string>
+    <string name="con">còn </string>
+    <string name="expired">của bạn đã hết hạn </string>
+    <string name="expiring">ngày hết hạn sử dụng! </string>
+    <string name="day">ngày.</string>
+    <string name="_5">5</string>
+    <string name="export_to_excel">Export to Excel</string>
+
 
     <string-array name="choose_days_before">
         <item>1 day before</item>

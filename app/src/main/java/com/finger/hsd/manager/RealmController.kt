@@ -12,6 +12,7 @@ import com.facebook.FacebookSdk.getApplicationContext
 import com.finger.hsd.common.MyApplication
 import com.finger.hsd.model.Notification
 import com.finger.hsd.model.Product_v
+import com.finger.hsd.model.TimeAlarm
 import com.finger.hsd.model.User
 import com.finger.hsd.util.Constants
 import io.realm.Realm
@@ -173,6 +174,7 @@ class RealmController(application: Context) {
         realm?.copyToRealmOrUpdate(product)
         realm?.commitTransaction()
     }
+
     fun addProductWithNonImage(product: Product_v,mupdateData: updateData){
         this.mupdateData = mupdateData
         val mediaStorageDir = getApplicationContext().getExternalFilesDir(null)
@@ -199,7 +201,7 @@ class RealmController(application: Context) {
 
     }
     //clear all objects from Champion.class
-    fun updateorCreateListProduct(product: ArrayList<Product_v>,mupdateData2:updateData){
+    fun updateorCreateListProduct(product: ArrayList<Product_v>, mupdateData2:updateData){
         this.mupdateData = mupdateData2
         var mCout = 0
         for (i in 0 until product.size){
@@ -260,6 +262,62 @@ class RealmController(application: Context) {
         fun onupdateDelete()
         fun onupdateProduct(type:Int,product: Product_v)
     }
+
+
+    fun getDataTimeAlarm(): List<TimeAlarm>? {
+        val result = realm.where(TimeAlarm::class.java).findAllAsync()
+        result.load()
+        var output = ""
+        for (alarm in result) {
+            output += alarm.toString()
+            Log.d("view_to_dataTimeAlarm ", "data Realm  ===========  " + output + " \n ")
+        }
+        return result
+    }
+
+
+    fun DatabseLlistAlarm(){
+        val timeAlarm : ArrayList<TimeAlarm> = ArrayList<TimeAlarm>()
+        val result = realm.where(TimeAlarm::class.java).findAllAsync()
+        result.load()
+        if(result.size == 0){
+            timeAlarm.add(TimeAlarm(0,false))
+            timeAlarm.add(TimeAlarm(1,false))
+            timeAlarm.add(TimeAlarm(2,false))
+            timeAlarm.add(TimeAlarm(3,false))
+            timeAlarm.add(TimeAlarm(4,false))
+            timeAlarm.add(TimeAlarm(5,false))
+            timeAlarm.add(TimeAlarm(6,false))
+            timeAlarm.add(TimeAlarm(7,false))
+            timeAlarm.add(TimeAlarm(8,false))
+            timeAlarm.add(TimeAlarm(9,false))
+            timeAlarm.add(TimeAlarm(10,false))
+            timeAlarm.add(TimeAlarm(11,false))
+            timeAlarm.add(TimeAlarm(12,true))
+            timeAlarm.add(TimeAlarm(13,false))
+            timeAlarm.add(TimeAlarm(14,false))
+            timeAlarm.add(TimeAlarm(15,false))
+            timeAlarm.add(TimeAlarm(16,false))
+            timeAlarm.add(TimeAlarm(17,false))
+            timeAlarm.add(TimeAlarm(18,true))
+            timeAlarm.add(TimeAlarm(19,false))
+            timeAlarm.add(TimeAlarm(20,false))
+            timeAlarm.add(TimeAlarm(21,false))
+            timeAlarm.add(TimeAlarm(22,false))
+            timeAlarm.add(TimeAlarm(23,false))
+            addTimeAlarm(timeAlarm)
+            Log.d("Realm add ", "create table Alarm realm >>>>>>>>>>>>>> ")
+        }
+
+    }
+
+    fun addTimeAlarm(models: List<TimeAlarm>) {
+        realm.beginTransaction()
+        realm.copyToRealmOrUpdate(models)
+        realm.commitTransaction()
+
+    }
+
 
     // get user
     fun getUser(id: String): User? {

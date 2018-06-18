@@ -23,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
+            android:id="@+id/Image_user"
             android:layout_margin="10dp"
             android:background="@color/color_background_button"
             android:layout_width="100dp"
@@ -35,6 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
+                android:id="@+id/name_user"
                 android:textSize="@dimen/icon_size_20dp"
                 android:textStyle="bold"
                 android:layout_width="match_parent"
@@ -42,6 +44,7 @@
                 android:text="@string/ca_si_chipici"
                 tools:ignore="SpUsage" />
             <TextView
+                android:id="@+id/phone_user"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/_012234567987" />
@@ -53,39 +56,41 @@
         android:background="@color/gray"
         android:layout_width="match_parent"
         android:layout_height="10dp"/>
-    <TextView
-        android:textStyle="bold"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="10dp"
-        android:text="@string/account_setting"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginLeft="10dp" />
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:ignore="UseCompoundDrawables">
-            <ImageView
-                android:background="@drawable/rhombus"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                tools:ignore="ContentDescription" />
-            <TextView
-                android:layout_marginLeft="10dp"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/change_password"
-                android:layout_marginStart="10dp" />
+    <!--<TextView-->
+        <!--android:textStyle="bold"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:layout_marginStart="10dp"-->
+        <!--android:text="@string/account_setting"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_marginLeft="10dp" />-->
 
-        </LinearLayout>
-        <View
-            android:layout_marginLeft="32dp"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:alpha=".9"
-            android:background="@color/black" />
+        <!--<LinearLayout-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--tools:ignore="UseCompoundDrawables">-->
+            <!--<ImageView-->
+                <!--android:background="@drawable/rhombus"-->
+                <!--android:layout_width="50dp"-->
+                <!--android:layout_height="50dp"-->
+                <!--tools:ignore="ContentDescription" />-->
+            <!--<TextView-->
+                <!--android:layout_marginLeft="10dp"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/change_password"-->
+                <!--android:layout_marginStart="10dp" />-->
+
+        <!--</LinearLayout>-->
+        <!--<View-->
+            <!--android:layout_marginLeft="32dp"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0.5dp"-->
+            <!--android:alpha=".9"-->
+            <!--android:background="@color/black" />-->
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -103,12 +108,21 @@
             android:text="@string/product"
             android:layout_marginLeft="10dp" />
         <TextView
-            android:layout_marginStart="10dp"
+            android:id="@+id/txt_numberProduct"
+            android:layout_gravity="center_vertical"
+            android:gravity="right"
+            android:text="@string/_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp" />
+        <TextView
+            android:layout_marginStart="3dp"
             android:layout_gravity="center_vertical"
             android:text="@string/_0_50"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="3dp" />
 
     </LinearLayout>
         <View
@@ -238,6 +252,8 @@
                 android:text="@string/faqs"
                 android:layout_marginStart="10dp" />
         </LinearLayout>
+
+
         <View
             android:layout_marginLeft="32dp"
             android:layout_width="match_parent"
@@ -318,6 +334,33 @@
         </LinearLayout>
 
 
+
+        <View
+            android:layout_marginLeft="32dp"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:alpha=".9"
+            android:background="@color/black" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="UseCompoundDrawables">
+            <ImageView
+                android:background="@drawable/rhombus"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                tools:ignore="ContentDescription" />
+            <TextView
+                android:id="@+id/export_file"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/export_to_excel"
+                android:layout_marginStart="10dp" />
+        </LinearLayout>
 
         <View
             android:layout_marginLeft="32dp"

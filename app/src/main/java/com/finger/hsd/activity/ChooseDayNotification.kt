@@ -16,6 +16,7 @@ import android.widget.RadioButton
 
 import com.finger.hsd.R
 import com.finger.hsd.manager.RealmController
+import com.finger.hsd.model.Product_v
 import com.finger.hsd.presenter.DetailProductPresenter
 import com.finger.hsd.presenter.DetailProductPresenter.IDetailProductPresenterView
 import com.finger.hsd.util.Constants
@@ -27,6 +28,9 @@ import org.json.JSONObject
 
 
 class ChooseDayNotification: AppCompatActivity(), IDetailProductPresenterView{
+    override fun onSucess(response: Product_v, type: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
 
     private lateinit var mRbCustom : RadioButton

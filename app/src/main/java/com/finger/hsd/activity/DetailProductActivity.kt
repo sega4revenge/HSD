@@ -38,6 +38,7 @@ import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.Response
 import com.finger.hsd.presenter.DetailProductPresenter
 import com.finger.hsd.util.AppIntent
+import com.finger.hsd.util.ConnectivityChangeReceiver
 import com.finger.hsd.util.Constants
 import com.finger.hsd.util.Mylog
 import com.gun0912.tedpermission.PermissionListener
@@ -56,8 +57,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
-
-
 
 
 class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProductPresenterView {
@@ -96,10 +95,10 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
     var rootFolder: File? = null
     val calendar = Calendar.getInstance()
     private var realm: RealmController? = null
-    private var mDialog:Dialog? =null
-    
+    private var mDialog: Dialog? = null
+
     var product: Product_v? = null
-    var  checkNotification : Boolean = false
+    var checkNotification: Boolean = false
 
     val options = RequestOptions()
             .centerCrop()
@@ -112,7 +111,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail_product!!)
+        setContentView(R.layout.activity_detail_product)
 
         mTvName = findViewById(R.id.tv_name)
         mTvBarcode = findViewById(R.id.tv_barcode)
@@ -125,7 +124,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         mTvDayCountDown = findViewById(R.id.tv_day_coudown)
         mTvNotification = findViewById(R.id.tv_notification)
         mBtSave = findViewById(R.id.bt_save)
-        mImProduct = findViewById(R.id.im_product!!)
+        mImProduct = findViewById(R.id.im_product)
         mImStatus = findViewById(R.id.im_status)
         mImChange = findViewById(R.id.im_change)
         mLayoutDayBefore = findViewById(R.id.layout_choose_day_before)
@@ -156,7 +155,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         realm = RealmController.with(this)
         presenter = DetailProductPresenter(this)
 
-         product= realm!!.getProduct(idProduct)
+        product = realm!!.getProduct(idProduct)
 //        if(isInternetAvailable()) {
         //  presenter.processDetailProduct(idProduct)
 //        }else{
@@ -165,99 +164,23 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
 
         mBtSave.setOnClickListener {
-            /*
-            * update to realm*/
-            val noteChange :String?= mTvNote.text.toString()
-            val nameChange : String? = mTvName.text.toString()
-           // val changeProduct = product
-            if ((noteChange!=null &&!note.equals(noteChange))|| (nameChange !=null &&!name.equals(nameChange))
-                    || ( expiredTimeChange !=null && !expiredTime.equals(expiredTimeChange))) {
+            val noteChange: String? = mTvNote.text.toString()
+            val nameChange: String? = mTvName.text.toString()
 
-                    if (expiredTimeChange !=null && !expiredTime.equals(expiredTimeChange)){
-                      //  changeProduct!!.expiretime = expiredTimeChange!!.toLong()
-                        realm!!.realm.executeTransaction(Realm.Transaction {
-                            product!!.expiretime = expiredTimeChange!!.toLong()
-                        })
-                        var days = 0
+            if (ConnectivityChangeReceiver.isConnected()) {
+                if ((!TextUtils.isEmpty(note) && !noteChange.equals(note))
+                        || (!TextUtils.isEmpty(noteChange) && !name.equals(nameChange))
+                        || (!TextUtils.isEmpty(expiredTimeChange) && !expiredTime.equals(expiredTimeChange))) {
 
-                        var longExpiredTime = expiredTimeChange!!.toLong()
-                        calendar.timeInMillis = longExpiredTime
-                        expiredTime = expiredTimeChange
+                    presenter.processInfomationUpdate(idProduct, nameChange, expiredTimeChange, noteChange)
 
-                        days = daysBetween(System.currentTimeMillis(), longExpiredTime)
+                } else if (selectedUri != null) {
 
-                        getWarningStatus(days)
-
-                    }
-                    if (nameChange!=null&&!name.equals(nameChange)) {
-                        //changeProduct!!.namechanged = nameChange
-                        realm!!.realm.executeTransaction(Realm.Transaction {
-                            product!!.namechanged = nameChange
-                        })
-
-
-
-                    }
-                    if (noteChange!= null && !noteChange.equals(note)) {
-                        //changeProduct!!.description = noteChange
-                        realm!!.realm.executeTransaction(Realm.Transaction {
-                            product!!.description = noteChange
-                        })
-
-                    }
-
-
-                    if (selectedUri != null) {
-//********* UPDATE image NEEUS NHU co thay đổi  *************
-                        var file = File(getRealFilePath(this, selectedUri!!))
-
-                        GlideApp.with(this)
-                                .asBitmap()
-                                .load(file)
-                                .apply(options)
-                                .into(object : SimpleTarget<Bitmap>() {
-                                    override fun onResourceReady(resource: Bitmap, transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {
-
-                                        try {
-                                            val namePassive = product!!._id + "passive" + ".jpg"
-
-                                            var myDir = File(rootFolder, namePassive)
-
-                                            Mylog.d("aaaaaaaaaa my dir: " + myDir)
-
-                                            if (myDir.exists())
-                                                myDir.delete()
-
-                                            val out3 = FileOutputStream(myDir)
-
-                                            resource?.compress(Bitmap.CompressFormat.JPEG, 90, out3)
-                                            //changeProduct!!.imagechanged = Uri.fromFile(myDir).toString()
-                                            realm!!.realm.executeTransaction(Realm.Transaction {
-                                                product!!.imagechanged = Uri.fromFile(myDir).toString()
-                                            })
-
-                                            out3.flush()
-                                            out3.close()
-
-                                            putIntenDataBack()
-
-
-                                        } catch (e: Exception) {
-
-                                            println(e)
-
-                                        }
-
-                                    }
-                                })
-                    }else {
-
-                        putIntenDataBack()
-                    }
-
-            } else if (selectedUri != null) {
-
-                putIntenDataBack()
+                    var file = File(getRealFilePath(this, selectedUri!!))
+                    UploadImage(idProduct, file)
+                }
+            } else {
+                updateToRealm(noteChange!!, nameChange!!)
             }
 
 
@@ -293,7 +216,143 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         }
     }
 
-    fun putIntenDataBack(){
+    fun updateToRealm(noteChange: String, nameChange: String) {
+        /*
+          * update to realm*/
+        // val changeProduct = product
+        if ((noteChange != null && !note.equals(noteChange)) || (nameChange != null && !name.equals(nameChange))
+                || (expiredTimeChange != null && !expiredTime.equals(expiredTimeChange))) {
+
+            if (expiredTimeChange != null && !expiredTime.equals(expiredTimeChange)) {
+                //  changeProduct!!.expiretime = expiredTimeChange!!.toLong()
+                realm!!.realm.executeTransaction(Realm.Transaction {
+                    product!!.expiretime = expiredTimeChange!!.toLong()
+                })
+                var days = 0
+
+                var longExpiredTime = expiredTimeChange!!.toLong()
+                calendar.timeInMillis = longExpiredTime
+                expiredTime = expiredTimeChange
+
+                days = daysBetween(System.currentTimeMillis(), longExpiredTime)
+
+                getWarningStatus(days)
+
+            }
+            if (nameChange != null && !name.equals(nameChange)) {
+                //changeProduct!!.namechanged = nameChange
+                realm!!.realm.executeTransaction(Realm.Transaction {
+                    product!!.namechanged = nameChange
+                })
+
+
+            }
+            if (noteChange != null && !noteChange.equals(note)) {
+                //changeProduct!!.description = noteChange
+                realm!!.realm.executeTransaction(Realm.Transaction {
+                    product!!.description = noteChange
+                })
+
+            }
+//fasdf
+
+
+            if (selectedUri != null) {
+//********* UPDATE image NEEUS NHU co thay đổi  *************
+                var file = File(getRealFilePath(this, selectedUri!!))
+
+                GlideApp.with(this)
+                        .asBitmap()
+                        .load(file)
+                        .apply(options)
+                        .into(object : SimpleTarget<Bitmap>() {
+                            override fun onResourceReady(resource: Bitmap, transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {
+
+                                try {
+                                    val namePassive = product!!._id + "passive" + ".jpg"
+
+                                    var myDir = File(rootFolder, namePassive)
+
+                                    Mylog.d("aaaaaaaaaa my dir: " + myDir)
+
+                                    if (myDir.exists())
+                                        myDir.delete()
+
+                                    val out3 = FileOutputStream(myDir)
+
+                                    resource?.compress(Bitmap.CompressFormat.JPEG, 90, out3)
+                                    //changeProduct!!.imagechanged = Uri.fromFile(myDir).toString()
+                                    realm!!.realm.executeTransaction(Realm.Transaction {
+                                        product!!.imagechanged = Uri.fromFile(myDir).toString()
+                                    })
+
+                                    out3.flush()
+                                    out3.close()
+
+                                    putIntenDataBack(false)
+
+
+                                } catch (e: Exception) {
+
+                                    println(e)
+
+                                }
+
+                            }
+                        })
+            } else {
+
+                putIntenDataBack(false)
+            }
+
+        } else if (selectedUri != null) {
+
+            var file = File(getRealFilePath(this, selectedUri!!))
+
+            GlideApp.with(this)
+                    .asBitmap()
+                    .load(file)
+                    .apply(options)
+                    .into(object : SimpleTarget<Bitmap>() {
+                        override fun onResourceReady(resource: Bitmap, transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {
+
+                            try {
+                                val namePassive = product!!._id + "passive" + ".jpg"
+
+                                var myDir = File(rootFolder, namePassive)
+
+                                Mylog.d("aaaaaaaaaa my dir: " + myDir)
+
+                                if (myDir.exists())
+                                    myDir.delete()
+
+                                val out3 = FileOutputStream(myDir)
+
+                                resource?.compress(Bitmap.CompressFormat.JPEG, 90, out3)
+                                //changeProduct!!.imagechanged = Uri.fromFile(myDir).toString()
+                                realm!!.realm.executeTransaction(Realm.Transaction {
+                                    product!!.imagechanged = Uri.fromFile(myDir).toString()
+                                })
+
+                                out3.flush()
+                                out3.close()
+
+                                putIntenDataBack(false)
+
+
+                            } catch (e: Exception) {
+
+                                println(e)
+
+                            }
+
+                        }
+                    })
+        }
+
+    }
+
+    fun putIntenDataBack(isSync: Boolean) {
 //        val intent = Intent()
 //        intent.putExtra("position", position!!)
 //        intent.putExtra("id_product", idProduct)
@@ -302,24 +361,24 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 //        changeProduct.isSyn = false
 //        realm!!.updateProduct(changeProduct)
 
-            realm!!.realm.executeTransaction(Realm.Transaction {
-                product!!.isSyn = false
-            })
-            val a = Intent()
-            a.putExtra("updateItem", true)
+        realm!!.realm.executeTransaction(Realm.Transaction {
+            product!!.isSyn = isSync
+        })
+        val a = Intent()
+        a.putExtra("updateItem", true)
 
-            a.action = AppIntent.ACTION_UPDATE_ITEM
-            if (!checkNotification) {
-                a.putExtra("reloaditem", true)
-                Mylog.d("aaaaaaaaa home " + AppIntent.ACTION_UPDATE_ITEM)
-            } else {
-                a.putExtra("reloaditem", false)
-                Mylog.d("aaaaaaaaa notification " + AppIntent.ACTION_UPDATE_ITEM)
-            }
-            a.putExtra("position", position!!)
-            a.putExtra("id_product", idProduct)
-            sendBroadcast(a)
-            finish()
+        a.action = AppIntent.ACTION_UPDATE_ITEM
+        if (!checkNotification) {
+            a.putExtra("reloaditem", true)
+            Mylog.d("aaaaaaaaa home " + AppIntent.ACTION_UPDATE_ITEM)
+        } else {
+            a.putExtra("reloaditem", false)
+            Mylog.d("aaaaaaaaa notification " + AppIntent.ACTION_UPDATE_ITEM)
+        }
+        a.putExtra("position", position!!)
+        a.putExtra("id_product", idProduct)
+        sendBroadcast(a)
+        finish()
 
 
     }
@@ -384,127 +443,177 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         }
     }
 
-    override fun onSucess(response: JSONObject, type: Int) {
-        //*********thong tin của product!!*************
-
-        if (type == 111) {
-            // realm!!.deleteProduct(idProduct)
-
-            val jsonInfoProduct = JSONObject(response.getString("info_product!!"))
-            val jsonInfoProductType = JSONObject(jsonInfoProduct.getString("product!!type_id"))
-            if (jsonInfoProduct.isNull("daybefor")) daysbefor = 2
-            else {
-                daysbefor = jsonInfoProduct.getInt("daybefor")
-            }
-
-            if (jsonInfoProduct.isNull("description")) mTvNote.setHint(resources.getString(R.string.note))
-            else {
-                note = jsonInfoProduct.getString("description").toString()
-                mTvNote.setText(note)
-            }
-
-            val strText =
-                    resources.getString(R.string.recieve_one_notification) + " (" + daysbefor + " " + resources.getString(R.string.days) + ")"
-
-            mTvNotification.text = strText
-
-
-            idProduct = jsonInfoProduct.getString("_id")
-            if (jsonInfoProductType.isNull("name")) mTvName.setHint(resources.getString(R.string.no_name)) else mTvName.setText(jsonInfoProductType.getString("name"))
-            if (jsonInfoProductType.isNull("image")) strImProduct = ""
-            else {
-                strImProduct = jsonInfoProductType.getString("image")
-                val options = RequestOptions()
-                        .centerCrop()
-                        .dontAnimate()
-                        .placeholder(R.mipmap.ic_launcher)
-                        .priority(Priority.HIGH)
-                Glide.with(this@DetailProductActivity)
-                        .load( strImProduct)
-                        .thumbnail(0.1f)
-                        .apply(options)
-                        .into(mImProduct)
-            }
-            if (jsonInfoProduct.isNull("namechanged")) null else {
-                name = jsonInfoProduct.getString("namechanged")
-                mTvName.setText(name)
-            }
-            if (jsonInfoProduct.isNull("imagechanged")) null else {
-                strImProduct = jsonInfoProduct.getString("imagechanged")
-                val options = RequestOptions()
-                        .centerCrop()
-                        .dontAnimate()
-                        .placeholder(R.mipmap.ic_launcher_round)
-                        .priority(Priority.HIGH)
-                Glide.with(this@DetailProductActivity)
-                        .load( strImProduct)
-                        .thumbnail(0.1f)
-                        .apply(options)
-                        .into(mImProduct)
-            }
-
-            //  mTvBarcode.text = response.getString("barcode")
+    override fun onSucess(response: Product_v, type: Int) {
+        if (type == 333) {
 
             var days = 0
-            if (jsonInfoProduct.isNull("expiretime")) days = 0
-            else {
 
-                expiredTime = jsonInfoProduct.getString("expiretime")
-                var longExpiredTime = expiredTime!!.toLong()
-
-                calendar.timeInMillis = longExpiredTime
-                val date = Date(longExpiredTime)
-                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                tv_expiredtime.text = dateFormat.format(date)
-                days = daysBetween(System.currentTimeMillis(), expiredTime!!.toLong())
-            }
-            var delete = false
-            if (jsonInfoProduct.isNull("delete")) delete = false
-            else {
-
-                delete = jsonInfoProduct.getBoolean("delete")
-            }
-            getWarningStatus(days)
-
-
-            //   realm!!.updateProduct(product!!)
-            //********* UPDATE THÀNH CÔNG *************
-        } else if (type == 333) {
-            val jsonInfoProduct = JSONObject(response.getString("info_product!!"))
-            var days = 0
-            if (jsonInfoProduct.isNull("expiretime")) days = 0
-            else {
-
-                expiredTime = jsonInfoProduct.getString("expiretime")
-                var longExpiredTime = expiredTime!!.toLong()
-                calendar.timeInMillis = longExpiredTime
-                val date = Date(expiredTime!!.toLong())
-                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                mTvExpiredtime.text = dateFormat.format(date)
-                days = daysBetween(System.currentTimeMillis(), longExpiredTime)
-            }
+            expiredTime = response.expiretime.toString()
+            var longExpiredTime = expiredTime!!.toLong()
+            calendar.timeInMillis = longExpiredTime
+            val date = Date(expiredTime!!.toLong())
+            val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            mTvExpiredtime.text = dateFormat.format(date)
+            days = daysBetween(System.currentTimeMillis(), longExpiredTime)
 
             getWarningStatus(days)
 
             if (selectedUri != null) {
 //********* UPDATE image NEEUS NHU co thay đổi  *************
                 var file = File(getRealFilePath(this, selectedUri!!))
-                UploadImage(idProduct, file)
-            } else {
-                val intent = Intent()
-                intent.putExtra(AppIntent.DATA_UPDATE_ITEM, position)
-                intent.putExtra("expredTime", expiredTime)
-                intent.putExtra("name", jsonInfoProduct.getString("namechanged"))
-                setResult(AppIntent.RESULT_UPDATE_ITEM, intent)
+                GlideApp.with(this)
+                        .asBitmap()
+                        .load(file)
+                        .apply(options)
+                        .into(object : SimpleTarget<Bitmap>() {
+                            override fun onResourceReady(resource: Bitmap, transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {
 
-                finish()
+                                try {
+                                    val namePassive = product!!._id + "passive" + ".jpg"
+
+                                    var myDir = File(rootFolder, namePassive)
+
+                                    Mylog.d("aaaaaaaaaa my dir: " + myDir)
+
+                                    if (myDir.exists())
+                                        myDir.delete()
+
+                                    val out3 = FileOutputStream(myDir)
+
+                                    resource?.compress(Bitmap.CompressFormat.JPEG, 90, out3)
+                                    //changeProduct!!.imagechanged = Uri.fromFile(myDir).toString()
+                                    realm!!.realm.executeTransaction(Realm.Transaction {
+                                        product!!.imagechanged = Uri.fromFile(myDir).toString()
+                                    })
+
+                                    out3.flush()
+                                    out3.close()
+
+                                    putIntenDataBack(false)
+
+
+                                } catch (e: Exception) {
+
+                                    println(e)
+
+                                }
+
+                            }
+                        })
+                UploadImage(response._id!!, file)
+            } else {
+
+                realm!!.realm.executeTransaction(Realm.Transaction {
+                    product = response
+                })
+
+                putIntenDataBack(true)
+
             }
 
         }
+    }
+
+    override fun onSucess(response: JSONObject, type: Int) {
+        //*********thong tin của product!!*************
+
+        if (type == 111) {
+            // realm!!.deleteProduct(idProduct)
+//
+//            val jsonInfoProduct = JSONObject(response.getString("info_product!!"))
+//            val jsonInfoProductType = JSONObject(jsonInfoProduct.getString("product!!type_id"))
+//            if (jsonInfoProduct.isNull("daybefor")) daysbefor = 2
+//            else {
+//                daysbefor = jsonInfoProduct.getInt("daybefor")
+//            }
+//
+//            if (jsonInfoProduct.isNull("description")) mTvNote.setHint(resources.getString(R.string.note))
+//            else {
+//                note = jsonInfoProduct.getString("description").toString()
+//                mTvNote.setText(note)
+//            }
+//
+//            val strText =
+//                    resources.getString(R.string.recieve_one_notification) + " (" + daysbefor + " " + resources.getString(R.string.days) + ")"
+//
+//            mTvNotification.text = strText
+//
+//
+//            idProduct = jsonInfoProduct.getString("_id")
+//            if (jsonInfoProductType.isNull("name")) mTvName.setHint(resources.getString(R.string.no_name)) else mTvName.setText(jsonInfoProductType.getString("name"))
+//            if (jsonInfoProductType.isNull("image")) strImProduct = ""
+//            else {
+//                strImProduct = jsonInfoProductType.getString("image")
+//                val options = RequestOptions()
+//                        .centerCrop()
+//                        .dontAnimate()
+//                        .placeholder(R.mipmap.ic_launcher)
+//                        .priority(Priority.HIGH)
+//                Glide.with(this@DetailProductActivity)
+//                        .load( strImProduct)
+//                        .thumbnail(0.1f)
+//                        .apply(options)
+//                        .into(mImProduct)
+//            }
+//            if (jsonInfoProduct.isNull("namechanged")) null else {
+//                name = jsonInfoProduct.getString("namechanged")
+//                mTvName.setText(name)
+//            }
+//            if (jsonInfoProduct.isNull("imagechanged")) null else {
+//                strImProduct = jsonInfoProduct.getString("imagechanged")
+//                val options = RequestOptions()
+//                        .centerCrop()
+//                        .dontAnimate()
+//                        .placeholder(R.mipmap.ic_launcher_round)
+//                        .priority(Priority.HIGH)
+//                Glide.with(this@DetailProductActivity)
+//                        .load( strImProduct)
+//                        .thumbnail(0.1f)
+//                        .apply(options)
+//                        .into(mImProduct)
+//            }
+//
+//            //  mTvBarcode.text = response.getString("barcode")
+//
+//            var days = 0
+//            if (jsonInfoProduct.isNull("expiretime")) days = 0
+//            else {
+//
+//                expiredTime = jsonInfoProduct.getString("expiretime")
+//                var longExpiredTime = expiredTime!!.toLong()
+//
+//                calendar.timeInMillis = longExpiredTime
+//                val date = Date(longExpiredTime)
+//                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+//                tv_expiredtime.text = dateFormat.format(date)
+//                days = daysBetween(System.currentTimeMillis(), expiredTime!!.toLong())
+//            }
+//            var delete = false
+//            if (jsonInfoProduct.isNull("delete")) delete = false
+//            else {
+//
+//                delete = jsonInfoProduct.getBoolean("delete")
+//            }
+//            getWarningStatus(days)
+//
+
+            //   realm!!.updateProduct(product!!)
+            //********* UPDATE THÀNH CÔNG *************
+        }
+
 //********* XÓA SẢN PHẨM THÀNH CÔNG*************
         else if (type == 222) {
-            showToast(R.string.delete_sucess)
-            finish()
+            var item = realm!!.getProduct(idProduct)
+            val fdelete = File(item!!.imagechanged)
+            if (fdelete.exists()) {
+                if (fdelete.delete()) {
+                    System.out.println("file Deleted :" )
+                } else {
+                    System.out.println("file not Deleted :")
+                }
+            }
+            realm!!.deleteProduct(idProduct)
+           deleteProduct(true)
         }
 
     }
@@ -531,22 +640,24 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                 if (typeError == 333) {
                     note = mTvNote.text.toString()
                     name = mTvName.text.toString()
-                    presenter.processInfomationUpdate(idProduct, name, expiredTime, note)
-
-                    product!!.namechanged = name
-                    product!!._id = idProduct
-                    if (!TextUtils.isEmpty(note))
-                        product!!.description = note
-                    if (!TextUtils.isEmpty(expiredTime))
-                        product!!.expiretime = expiredTime!!.toLong()
-
-                    realm!!.updateProduct(product!!)
+                    var days = 0
+                    if (expiredTimeChange != null) {
+                        expiredTime = expiredTimeChange
+                        var longExpiredTime = expiredTime!!.toLong()
+                        calendar.timeInMillis = longExpiredTime
+                        val date = Date(expiredTime!!.toLong())
+                        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                        mTvExpiredtime.text = dateFormat.format(date)
+                        days = daysBetween(System.currentTimeMillis(), longExpiredTime)
+                        getWarningStatus(days)
+                    }
+                    updateToRealm(note!!, name!!)
                 }
     }
 
     //===========LẤY DỮ LIỆU OFFLINE----------------
     fun getDataFromRealm() {
-     
+
         //  var product!!Type = product!!.product!!TypeId
         if (product!!.daybefore == 0) daysbefor = 2
         else {
@@ -574,7 +685,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                     .placeholder(R.mipmap.ic_launcher)
                     .priority(Priority.HIGH)
             Glide.with(this@DetailProductActivity)
-                    .load( strImProduct)
+                    .load(strImProduct)
                     .thumbnail(0.1f)
                     .apply(options)
                     .into(mImProduct)
@@ -594,7 +705,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                     .into(mImProduct)
         }
 
-          mTvBarcode.text = product!!.producttype_id!!.barcode
+        mTvBarcode.text = product!!.producttype_id!!.barcode
 
         var days = 0
         if (TextUtils.isEmpty(product!!.expiretime.toString())) days = 0
@@ -729,8 +840,6 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
     }
 
 
-
-
     //=========DIALOG SHOW CHOOSE DATE=================
 //    override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {
 //        var montht = month + 1
@@ -746,7 +855,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
         var mDate = ""
         var datedialog = AlertDialog.Builder(this)
-        var mView:View = View.inflate(this,R.layout.dialog_timepicker,null)
+        var mView: View = View.inflate(this, R.layout.dialog_timepicker, null)
         datedialog.setView(mView)
         var datepicker = mView.datepicker
         var txtout = mView.txt_out
@@ -754,20 +863,20 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         val calendarChange = calendar
 
         datepicker.init(calendarChange.get(Calendar.YEAR), calendarChange.get(Calendar.MONTH), calendarChange.get(Calendar.DAY_OF_MONTH),
-                DatePicker.OnDateChangedListener { datePicker, year, month, day->
-                    mDate = day.toString()+"/"+(month+1)+"/"+year
+                DatePicker.OnDateChangedListener { datePicker, year, month, day ->
+                    mDate = day.toString() + "/" + (month + 1) + "/" + year
                     calendarChange.set(year, month, day)
                 })
-        txtout.setOnClickListener(object: View.OnClickListener{
+        txtout.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 mDate = ""
                 mDialog?.dismiss()
             }
 
         })
-        txtok.setOnClickListener(object: View.OnClickListener{
+        txtok.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                if(mDate != ""){
+                if (mDate != "") {
 
                     expiredTimeChange = calendarChange.timeInMillis.toString()
 
@@ -820,16 +929,21 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
         })
         dialog_ok.setOnClickListener({
+            if (ConnectivityChangeReceiver.isConnected()) {
 
-            //  presenter.processDeleteProduct(idProduct)
-            var product_v = realm!!.getProduct(idProduct)
+                presenter.processDeleteProduct(idProduct)
 
-            realm!!.realm.executeTransaction(Realm.Transaction {
-                product_v!!.delete = true
-                product_v.isSyn = false
-            })
-            realm!!.updateProduct(product_v!!)
-            deleteProduct()
+            } else {
+
+                var product_v = realm!!.getProduct(idProduct)
+
+                realm!!.realm.executeTransaction(Realm.Transaction {
+                    product_v!!.delete = true
+                    product_v.isSyn = false
+                })
+                realm!!.updateProduct(product_v!!)
+                deleteProduct(true)
+            }
 
 //            val intent = Intent()
 //            intent.putExtra(AppIntent.DATA_UPDATE_ITEM, position)
@@ -844,17 +958,22 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         dialog.show()
     }
 
-    fun deleteProduct(){
+    fun deleteProduct(isSync: Boolean) {
 
-        var notification: Notification = realm!!.getOneNotification(idProduct)!!
+        if (!isSync){
+            var notification: Notification = realm!!.getOneNotification(idProduct)!!
+            realm!!.realm.executeTransaction(Realm.Transaction {
+                notification.delete = true
+                notification.isSync = isSync
+            })
+        }else{
+            realm!!.deleteNotification(idProduct)
+        }
 
-        realm!!.realm.executeTransaction(Realm.Transaction {
-            notification.delete = true
-            notification.isSync = false
-        })
         val a = Intent()
         a.putExtra("deleteItem", true)
         a.action = AppIntent.ACTION_UPDATE_ITEM
+
         if (!checkNotification) {
 
             a.putExtra("reloadItem", true)
@@ -862,14 +981,13 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         } else {
 
             a.putExtra("reloadItem", false)
-            Mylog.d("aaaaaaaaa notification " )
+            Mylog.d("aaaaaaaaa notification ")
         }
 
         a.putExtra("position", position!!)
         a.putExtra("id_product", idProduct)
         sendBroadcast(a)
         finish()
-
 
     }
 
@@ -922,20 +1040,13 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                     }
 
                     override fun onNext(response: Response) {
-                        val intent = Intent()
-                        intent.putExtra(AppIntent.DATA_UPDATE_ITEM, position)
-                        intent.putExtra("expredTime", expiredTime)
-                        intent.putExtra("name", response.nameProduct)
-                        intent.putExtra("image", response.image)
-                        setResult(AppIntent.RESULT_UPDATE_ITEM, intent)
 
-                        finish()
-
-                        finish()
+                        putIntenDataBack(true)
 
 
                     }
                 })
-
     }
+
+
 }

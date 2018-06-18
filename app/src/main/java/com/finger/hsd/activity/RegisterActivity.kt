@@ -6,7 +6,6 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.finger.hsd.R
-import com.finger.hsd.R.id.txt_registerpass
 import com.finger.hsd.manager.AppManager
 import com.finger.hsd.model.User
 import com.finger.hsd.presenter.LoginPresenter
@@ -123,7 +122,7 @@ class RegisterActivity : AppCompatActivity(), LoginPresenter.LoginView {
 
         name!!.error = null
         repass.error = null
-        txt_registerpass.error = null
+        txt_password.error = null
     }
 
 

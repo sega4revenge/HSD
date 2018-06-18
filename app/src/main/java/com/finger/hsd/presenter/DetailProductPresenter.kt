@@ -1,6 +1,8 @@
 package com.finger.hsd.presenter
 
 import com.finger.hsd.common.getObservable
+import com.finger.hsd.model.Product_v
+import com.finger.hsd.model.Response
 import com.finger.hsd.util.Constants
 import com.finger.hsd.util.Mylog
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -22,32 +24,7 @@ class DetailProductPresenter : getObservable{
         this.Ipresenter = IpresenterView
 
     }
-// lấy thông tin sản phẩm
-    fun processDetailProduct(idProduct : String){
-      try {
-          jsonObject.put("id_product", idProduct)
-      }catch (e: JSONException){
-          e.printStackTrace()
-      }
-        disposable.add(getJsonObjectObservable(Constants.URL_DETAIL_PRODUCT)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableObserver<JSONObject>(){
-                    override fun onComplete() {
 
-                    }
-
-                    override fun onNext(t: JSONObject?) {
-                       Ipresenter.onSucess(t!!, 111)
-                    }
-
-                    override fun onError(e: Throwable?) {
-                        Mylog.d(e!!.printStackTrace().toString())
-                        Ipresenter.onError(111)
-                    }
-
-                }))
-    }
 // xóa sản phẩm
     fun processDeleteProduct(idProduct : String){
         try {
@@ -117,16 +94,16 @@ class DetailProductPresenter : getObservable{
         }catch (e: JSONException){
             e.printStackTrace()
         }
-        disposable.add(getJsonObjectObservable(Constants.URL_UPDATE_INFOMATION_PRODUCT)
+        disposable.add(getJsonResponseObservable(Constants.URL_UPDATE_INFOMATION_PRODUCT)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableObserver<JSONObject>(){
+                .subscribeWith(object : DisposableObserver<Response>(){
                     override fun onComplete() {
 
                     }
 
-                    override fun onNext(t: JSONObject?) {
-                        Ipresenter.onSucess(t!!, 333)
+                    override fun onNext(t: Response?) {
+                        Ipresenter.onSucess(t!!.product!!, 333)
                     }
 
                     override fun onError(e: Throwable?) {
@@ -138,7 +115,8 @@ class DetailProductPresenter : getObservable{
     }
 
     interface IDetailProductPresenterView{
-        fun onSucess(response : JSONObject, type: Int)
+        fun onSucess(response : Product_v, type: Int)
+        fun onSucess(response: JSONObject,type: Int)
         fun onError (typeError : Int)
     }
 }

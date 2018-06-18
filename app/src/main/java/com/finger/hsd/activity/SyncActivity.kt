@@ -152,8 +152,9 @@ class SyncActivity : BaseActivity() {
 
                     }
                 })
-
     }
+
+
     fun processNotificationUpdate(notification: Notification){
         var jsonObject = JSONObject()
         try {

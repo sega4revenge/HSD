@@ -26,6 +26,8 @@ import kotlin.collections.ArrayList
 
 
 
+
+
 class RealmController(application: Context) {
     var realm: Realm
     private var mupdateData: updateData? = null
@@ -43,6 +45,7 @@ class RealmController(application: Context) {
     }
 
     fun deleteProduct(id: String){
+
         realm.beginTransaction()
          var product = realm.where(Product_v::class.java).equalTo("_id", id).findFirst()
         if(product !=null) {
@@ -50,6 +53,16 @@ class RealmController(application: Context) {
             realm.commitTransaction()
         }
     }
+
+    fun deleteNotification(id: String){
+        realm.beginTransaction()
+        var notification = realm.where(Notification::class.java).equalTo("id_product", id).findFirst()
+        if(notification !=null) {
+            notification.deleteFromRealm()
+            realm.commitTransaction()
+        }
+    }
+
 
     fun getNotification() : RealmResults<Notification>{
         var create_at : String? = "create_at"
@@ -360,6 +373,7 @@ class RealmController(application: Context) {
     }
 
     fun getListNotificationNotSync(): ArrayList<Notification>{
+
         return realm.copyFromRealm(realm.where(Notification::class.java).equalTo("isSync", false)
                 .findAll()) as ArrayList<Notification>
 

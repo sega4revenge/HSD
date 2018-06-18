@@ -11,12 +11,11 @@ open class Notification : RealmObject() {
     var id_product    : String? = null
     var idgeneral : General?=null
     var type : Int?=null
-    var countProductExprited : Int? = null
     var create_at : String?=null
     var content : String?=null
     var watched : Boolean?=false
-    var namechanged : String? = null
-    var imagechanged : String? = null
+    var delete : Boolean = false // if(false) chưa xóa else xóa rồi
+    var isSync : Boolean = true // if(false) chưa đồng bộ ELSE đồng bộ rồi
     var expiredtime : Long? = null
 
 }

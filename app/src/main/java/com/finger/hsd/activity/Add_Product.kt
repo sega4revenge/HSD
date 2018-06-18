@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import android.widget.*
 import com.afollestad.materialdialogs.MaterialDialog
@@ -16,9 +17,11 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
 import com.finger.hsd.R
 import com.finger.hsd.manager.RealmController
+import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.Result_Product
 import com.finger.hsd.util.ApiUtils
 import com.finger.hsd.util.CompressImage
+import com.finger.hsd.util.ConnectivityChangeReceiver
 import com.finger.hsd.util.RetrofitService
 import kotlinx.android.synthetic.main.dialog_timepicker.view.*
 import okhttp3.MediaType
@@ -32,7 +35,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.updateData {
+class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.updateData, ConnectivityChangeReceiver.ConnectivityReceiverListener {
     private var img_product: ImageView? = null
     private var arrow_back: ImageView? = null
     private var select_img: LinearLayout? = null
@@ -49,6 +52,7 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
     private val RESULT_SCANNER = 1001
     private var miliexDate:Long? = 0L
     private var miliexToday:Long? = 0L
+    private var myRealmNotNetwork:RealmController? = null
     private var myRealm:RealmController? = null
     private var mRetrofitService: RetrofitService? = null
     private var mDialog:Dialog? =null
@@ -74,11 +78,23 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
         }
 
     }
+    override fun onupdateProduct(type: Int, product: Product_v) {
+        if(type!=0){
+            Toast.makeText(this@Add_Product,"Update Success!",Toast.LENGTH_SHORT).show()
+            var i = Intent(this@Add_Product,HorizontalNtbActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(i)
+        }else{
+           // Toast.makeText(this@Add_Product,"Error Update Image",Toast.LENGTH_SHORT).show()
+        }
 
+    }
     override fun onupdateDelete() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+    override fun onNetworkConnectionChanged(isConnected: Boolean) {
 
+    }
     private fun getData() {
         val stringToday = sdf.format(Date())
         val exToday = sdf.parse(stringToday)
@@ -89,6 +105,7 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
 
         if(type==1 || type ==0){
             path = mData.getStringExtra("path")
+
             img_product?.setImageBitmap(BitmapFactory.decodeFile(path))
             if(type==1){
                 barcodeIn = mData.getStringExtra("barcode")
@@ -171,49 +188,10 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
                     mDialogProgress?.dismiss()
                     bt_post?.visibility = View.VISIBLE
                 }else{
+                 if(ConnectivityChangeReceiver.isConnected()){
                     mRetrofitService = ApiUtils.getAPI()
                     if(type==2){//==========Truong Hop k update image
-                        mRetrofitService?.addProduct_nonImage(edit_nameproduct?.text.toString(),barcodeIn.toString(),miliexDate.toString(),"5b14b582c040310f42d8e0ee",edit_chitiet?.text.toString())?.enqueue(object: Callback<Result_Product>{
-                            override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
-                                Toast.makeText(this@Add_Product,"Error! \n message:"+t?.message,Toast.LENGTH_SHORT)
-                                mDialogProgress?.dismiss()
-                                bt_post?.visibility = View.VISIBLE
-                            }
-
-                            override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
-                                if(response?.isSuccessful!!){
-                                    if(response?.code()==200){
-                                        myRealm?.addProductWithNonImage(response?.body().product,this@Add_Product)
-                                    }
-                                }else{
-                                    mDialogProgress?.dismiss()
-                                    bt_post?.visibility = View.VISIBLE
-                                    Toast.makeText(this@Add_Product,"Error! Code:"+response?.code()+"\n message:"+response?.message(),Toast.LENGTH_SHORT)
-                                }
-                            }
-
-                        })
-                    }else{ //==========Truong Hop  update image
-                        val mediaFile = File(path)
-
-                        val requestFile =
-                                RequestBody.create(MediaType.parse("multipart/form-data"), CompressImage.compressImage(mediaFile,getApplicationContext()))
-                        val photoproduct =
-                                MultipartBody.Part.createFormData("image", mediaFile.getName(), requestFile)
-
-                        val nameproduct =
-                                RequestBody.create(MediaType.parse("multipart/form-data"), edit_nameproduct?.text.toString())
-                        val hsd_ex =
-                                RequestBody.create(MediaType.parse("multipart/form-data"),miliexDate.toString())
-                        val detail =
-                                RequestBody.create(MediaType.parse("multipart/form-data"),edit_chitiet?.text.toString())
-                        val barcodenum =
-                                RequestBody.create(MediaType.parse("multipart/form-data"),barcodeIn)
-
-                        val iduser =
-                                RequestBody.create(MediaType.parse("multipart/form-data"),"5b14b582c040310f42d8e0ee")
-
-                        mRetrofitService?.addProduct(nameproduct,barcodenum,hsd_ex,detail,iduser,photoproduct)?.enqueue(object: Callback<Result_Product>{
+                        mRetrofitService?.addProduct_nonImage(edit_nameproduct?.text.toString(),barcodeIn.toString(),miliexDate.toString(),"5b21d1f9fe313f03da828118",edit_chitiet?.text.toString())?.enqueue(object: Callback<Result_Product>{
                             override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
                                 Toast.makeText(this@Add_Product,"Error! \n message:"+t?.message,Toast.LENGTH_SHORT).show()
                                 mDialogProgress?.dismiss()
@@ -223,12 +201,9 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
                             override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
                                 if(response?.isSuccessful!!){
                                     if(response?.code()==200){
-                                        var mProduct = response.body().product
-                                        mProduct.imagechanged = path
-                                        myRealm?.addProduct(mProduct)
-                                        if(myRealm?.checkaddsuccess(mProduct._id)!!>0){
-                                             onupdateProduct(1)
-                                        }
+                                        response?.body().product.barcode = barcodeIn
+                                        response?.body().product.isSyn = true
+                                        myRealm?.addProductWithNonImage(response?.body().product,this@Add_Product)
                                     }
                                 }else{
                                     mDialogProgress?.dismiss()
@@ -236,10 +211,77 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
                                     Toast.makeText(this@Add_Product,"Error! Code:"+response?.code()+"\n message:"+response?.message(),Toast.LENGTH_SHORT).show()
                                 }
                             }
-
                         })
-                    }
+                    }else{ //==========Truong Hop  update image
+                            val mediaFile = File(path)
 
+                            val requestFile =
+                                    RequestBody.create(MediaType.parse("multipart/form-data"), CompressImage.compressImage(mediaFile,getApplicationContext()))
+                            val photoproduct =
+                                    MultipartBody.Part.createFormData("image", mediaFile.getName(), requestFile)
+
+                            val nameproduct =
+                                    RequestBody.create(MediaType.parse("multipart/form-data"), edit_nameproduct?.text.toString())
+                            val hsd_ex =
+                                    RequestBody.create(MediaType.parse("multipart/form-data"),miliexDate.toString())
+                            val detail =
+                                    RequestBody.create(MediaType.parse("multipart/form-data"),edit_chitiet?.text.toString())
+                            val barcodenum =
+                                    RequestBody.create(MediaType.parse("multipart/form-data"),barcodeIn)
+
+                            val iduser =
+                                    RequestBody.create(MediaType.parse("multipart/form-data"),"5b21d1f9fe313f03da828118")
+
+                            mRetrofitService?.addProduct(nameproduct,barcodenum,hsd_ex,detail,iduser,photoproduct)?.enqueue(object: Callback<Result_Product>{
+                                override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
+                                    Toast.makeText(this@Add_Product,"Error! \n message:"+t?.message,Toast.LENGTH_SHORT).show()
+                                    mDialogProgress?.dismiss()
+                                    bt_post?.visibility = View.VISIBLE
+                                }
+
+                                override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
+                                    if(response?.isSuccessful!!){
+                                        if(response.code()==200){
+                                            Log.d("ErrorErrorError",response.body().product.toString()+"//"+response.body().product._id)
+                                            var mProduct = response.body().product
+                                            mProduct.imagechanged = path
+                                            mProduct.barcode = barcodeIn
+                                            mProduct.isSyn = true
+                                            myRealm?.addProduct(mProduct)
+                                            if(myRealm?.checkaddsuccess(mProduct._id!!)!!>0){
+                                                onupdateProduct(1,mProduct)
+                                            }
+                                        }
+                                    }else{
+                                        mDialogProgress?.dismiss()
+                                        bt_post?.visibility = View.VISIBLE
+                                        Toast.makeText(this@Add_Product,"Error! Code:"+response?.code()+"\n message:"+response?.message(),Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+
+                            })
+                        }
+
+                    }else{
+
+                        val stringToday = sdf.format(Date())
+                        val exToday = sdf.parse(stringToday)
+                        var r =  Random()
+                        var ran = r.nextInt(2000)
+                        if(myRealm?.checkaddsuccess(exToday.time.toString())!!<=0){
+                            var mProduct = Product_v((exToday.time +ran).toString(),edit_nameproduct?.text.toString(),
+                                    barcodeIn!!,miliexDate!!,edit_chitiet?.text.toString(),path!!)
+                            mProduct.delete = false
+                            mProduct.isSyn = false
+                            myRealm?.addProduct(mProduct)
+                            if(myRealm?.checkaddsuccess(mProduct._id!!)!!>0){
+                                onupdateProduct(1,mProduct)
+                            }
+                        }
+                     //   if(myRealm?.checkaddsuccess(mProduct._id)!!>0){
+                     //        onupdateProduct(1)
+                     //  }
+                    }
 
 
                 }
@@ -247,18 +289,8 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
         }
     }
     override fun onupdate() {
+    }
 
-    }
-    override fun onupdateProduct(type: Int) {
-        if(type!=0){
-            Toast.makeText(this@Add_Product,"Update Success!",Toast.LENGTH_SHORT).show()
-        }else{
-            Toast.makeText(this@Add_Product,"Error Update Image",Toast.LENGTH_SHORT).show()
-        }
-        var i = Intent(this@Add_Product,HorizontalNtbActivity::class.java)
-        i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-        startActivity(i)
-    }
 
     fun showHourPicker() {
         var mDate = ""

@@ -39,6 +39,8 @@
             android:name="com.finger.hsd.common.MyGlideModule"
             android:value="GlideApp" />
 
+
+
         <activity android:name=".activity.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -57,6 +59,17 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
 
+        <!--<service-->
+            <!--android:name=".account.AuthenticatorService">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.accounts.AccountAuthenticator"/>-->
+            <!--</intent-filter>-->
+            <!--<meta-data-->
+                <!--android:name="android.accounts.AccountAuthenticator"-->
+                <!--android:resource="@xml/account_authenticator" />-->
+        <!--</service>-->
+
+
         <activity android:name=".activity.DetailProductActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.HorizontalNtbActivity"
@@ -65,7 +78,7 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.ChooseDayNotification"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme.NoActionbar"/>
 
         <activity android:name=".activity.testImageActivity"/>
 
@@ -95,6 +108,7 @@
         <activity android:name=".activity.show_PhotoProduct"></activity>
         <activity android:name=".activity.Scanner_HSD_Activity"
             tools:ignore="DuplicateActivity"></activity>
+        <activity android:name=".AllInOneActivity"/>
 
         <activity android:name=".activity.AlarmSetting" />
         <meta-data

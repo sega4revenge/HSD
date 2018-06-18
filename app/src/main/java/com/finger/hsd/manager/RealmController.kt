@@ -1,5 +1,6 @@
 package com.finger.hsd.manager
 
+
 import android.app.Activity
 import android.app.Application
 import android.content.Context
@@ -19,10 +20,13 @@ import io.realm.Sort
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
+
+
 
 
 class RealmController(application: Context) {
-    val realm: Realm
+    var realm: Realm
     private var mupdateData: updateData? = null
 
     init {
@@ -53,13 +57,13 @@ class RealmController(application: Context) {
         return results
     }
 
-    fun getOneNotification(id: String) : Notification?{
-        return realm.where(Notification::class.java).equalTo("_id", id).findFirst()
+    fun getOneNotification(idProduct: String) : Notification?{
+        return realm.where(Notification::class.java).equalTo("id_product", idProduct).findFirst()
     }
 
     //Refresh the realm istance
     fun refresh() {
-        realm.refresh()
+        realm?.refresh()
     }
 
 
@@ -79,10 +83,24 @@ class RealmController(application: Context) {
     }
 
 //===========   NOTIFICATION====================================//
-    fun addNotification(notification: Notification){
-        realm.beginTransaction()
-        realm.copyToRealmOrUpdate(notification)
-        realm.commitTransaction()
+    fun addNotification(notification: Notification): Boolean{
+        val toEdit = realm.where(Notification::class.java)
+                .equalTo("id_product", notification.id_product).findFirst()
+
+        if(toEdit !=null){
+            toEdit.watched = false
+            toEdit.create_at = notification.create_at
+            realm.commitTransaction()
+            return  false
+        }else{
+            realm.beginTransaction()
+            realm.copyToRealmOrUpdate(notification)
+            realm.commitTransaction()
+            return  true
+        }
+
+
+
     }
 
     //find all object in the Notification.class
@@ -110,7 +128,7 @@ class RealmController(application: Context) {
     //find all objects in the  table Notification
     fun getListNotification(): ArrayList<Notification>?{
 
-        return realm.copyFromRealm(realm.where(Notification::class.java )
+        return realm.copyFromRealm(realm.where(Notification::class.java ).equalTo("delete", false)
                 .findAll().sort("create_at", Sort.DESCENDING)) as ArrayList<Notification>
 
 //        realm.executeTransactionAsync(Realm.Transaction { realm ->
@@ -151,9 +169,9 @@ class RealmController(application: Context) {
     }
 //=========== END NOTIFICATION====================================//
     fun addProduct(product: Product_v){
-        realm.beginTransaction()
-        realm.copyToRealm(product)
-        realm.commitTransaction()
+        realm?.beginTransaction()
+        realm?.copyToRealmOrUpdate(product)
+        realm?.commitTransaction()
     }
     fun addProductWithNonImage(product: Product_v,mupdateData: updateData){
         this.mupdateData = mupdateData
@@ -166,14 +184,15 @@ class RealmController(application: Context) {
             override fun onDownloadComplete() {
                 Log.d("REALMCONTROLLER","UPDATE SUCCESS")
                 product.imagechanged = mediaStorageDir.path+path2
-                realm.beginTransaction()
-                realm.copyToRealmOrUpdate(product)
-                realm.commitTransaction()
+                product.barcode = product.producttype_id!!.barcode
+                realm?.beginTransaction()
+                realm?.copyToRealmOrUpdate(product)
+                realm?.commitTransaction()
                 Log.d("REALMCONTROLLER2",product._id)
-                mupdateData.onupdateProduct(1)
+                mupdateData.onupdateProduct(1, product)
             }
-                override fun onError(anError: ANError?) {
-                    mupdateData.onupdateProduct(0)
+            override fun onError(anError: ANError?) {
+                mupdateData.onupdateProduct(0,product)
                 Log.d("REALMCONTROLLER",anError?.errorDetail+"//ERROR"+anError?.errorBody+"//"+product.imagechanged)
             }
         })
@@ -187,11 +206,14 @@ class RealmController(application: Context) {
             Log.d("REALMCONTROLLER3",product[i]?._id)
             if(checkaddsuccess(product[i]?._id!!)!!>0)
             {
-                var mProduct_v = getProduct(product[i]._id)
+                var mProduct_v = getProduct(product[i]._id!!)
                 product[i].imagechanged = mProduct_v?.imagechanged
-                realm.beginTransaction()
-                realm.copyToRealmOrUpdate(product[i])
-                realm.commitTransaction()
+                product[i].barcode = product[i].producttype_id!!.barcode
+                product[i].delete = false
+                product[i].isSyn = true
+                realm?.beginTransaction()
+                realm?.copyToRealmOrUpdate(product[i])
+                realm?.commitTransaction()
 
                 if(mCout==(product.size-1)){
                     mupdateData!!.onupdate()
@@ -201,16 +223,19 @@ class RealmController(application: Context) {
                 val mediaStorageDir = getApplicationContext().getExternalFilesDir(null)
                 val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss")
                         .format(Date())
-                var path2 = File.separator+ "IMG_" + timeStamp +"_"+ product[i]?.barcode + ".jpg"
+                var path2 = File.separator+ "IMG_" + timeStamp +"_"+ product[i].producttype_id!!.barcode + ".jpg"
 
                 AndroidNetworking.initialize(getApplicationContext(),MyApplication.okhttpclient())
                 AndroidNetworking.download(Constants.IMAGE_URL+product[i].imagechanged,mediaStorageDir.path,path2).build().startDownload(object: com.androidnetworking.interfaces.DownloadListener{
                     override fun onDownloadComplete() {
                         Log.d("REALMCONTROLLER","UPDATE SUCCESS")
                         product[i].imagechanged = mediaStorageDir.path+path2
-                        realm.beginTransaction()
-                        realm.copyToRealmOrUpdate(product[i])
-                        realm.commitTransaction()
+                        product[i].barcode = product[i].producttype_id!!.barcode
+                        product[i].delete = false
+                        product[i].isSyn = true
+                        realm?.beginTransaction()
+                        realm?.copyToRealmOrUpdate(product[i])
+                        realm?.commitTransaction()
 
                         if(mCout==(product.size)-1){
                             mupdateData!!.onupdate()
@@ -233,7 +258,7 @@ class RealmController(application: Context) {
     interface updateData {
         fun onupdate()
         fun onupdateDelete()
-        fun onupdateProduct(type:Int)
+        fun onupdateProduct(type:Int,product: Product_v)
     }
 
     // get user
@@ -247,7 +272,7 @@ class RealmController(application: Context) {
         for(i in 0 until arr.size){
             try{
                 Log.d("RealmController","error delete :"+arr.get(i))
-                arr.get(i).isDelete = true
+                arr.get(i).delete = true
                 realm.beginTransaction()
                 realm.copyToRealmOrUpdate(arr)
                 realm.commitTransaction()
@@ -257,10 +282,29 @@ class RealmController(application: Context) {
         }
         mupdateData2.onupdateDelete()
     }
-
+    //delete list product
+    fun deleteProductFromDevice(product : Product_v,mupdateData2:updateData){
+                realm.beginTransaction()
+                product.deleteFromRealm()
+                realm.commitTransaction()
+    //   mupdateData2.onupdateDelete()
+    }
     //find all objects in the Champion.class
     fun getlistProduct(): ArrayList<Product_v> {
         return realm.copyFromRealm(realm.where(Product_v::class.java).equalTo("delete",false).findAll()) as ArrayList<Product_v>
+    }
+    fun getlistProductLike(search: String): ArrayList<Product_v> {
+        return realm.copyFromRealm(realm.where(Product_v::class.java).equalTo("delete",false).and().like("namechanged", search).or().like("barcode",search).findAll()) as ArrayList<Product_v>
+    }
+
+    fun getListProductNotSync(): ArrayList<Product_v>{
+        return realm.copyFromRealm(realm.where(Product_v::class.java).equalTo("isSyn", false).findAll()) as ArrayList<Product_v>
+    }
+
+    fun getListNotificationNotSync(): ArrayList<Notification>{
+        return realm.copyFromRealm(realm.where(Notification::class.java).equalTo("isSync", false)
+                .findAll()) as ArrayList<Notification>
+
     }
 
     fun getlistProductAsync(): ArrayList<Product_v> {
@@ -271,9 +315,18 @@ class RealmController(application: Context) {
 
     }
 
+    //find all objects in the Champion.class
+    fun getlistProductOffline(): ArrayList<Product_v> {
+        return ArrayList(realm.where(Product_v::class.java).equalTo("delete",false).and().equalTo("isSyn",false).findAll())
+    }
+
     //query a single item with the given id
     fun getProduct(id: String): Product_v? {
         return realm.where(Product_v::class.java).equalTo("_id", id).findFirst()
+    }
+
+    fun getProductWithBarcode(barcode: String): Product_v? {
+        return realm.where(Product_v::class.java).equalTo("barcode", barcode).findFirst()
     }
     fun checkaddsuccess(id: String): Long? {
         return realm.where(Product_v::class.java).equalTo("_id", id).count()

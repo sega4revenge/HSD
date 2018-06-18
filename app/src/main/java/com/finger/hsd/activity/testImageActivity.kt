@@ -15,7 +15,7 @@ class testImageActivity : AppCompatActivity() {
     val calendar: Calendar? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.test_layout)
+        setContentView(R.layout.dialog_put_barcode_layout)
 
         val monthsList = ArrayList<String>()
         val months = DateFormatSymbols().getMonths()

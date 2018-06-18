@@ -17,9 +17,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.finger.hsd.AllInOneActivity
 import com.finger.hsd.R
+import com.finger.hsd.R.string.sound
 import com.finger.hsd.activity.AlarmReceiver
 import com.finger.hsd.activity.AlarmSetting
+import com.finger.hsd.activity.LoginActivity
 import com.finger.hsd.manager.RealmAlarmController
 import com.finger.hsd.manager.SessionManager
 import kotlinx.android.synthetic.main.fragment_profile.view.*
@@ -103,6 +106,8 @@ class FragmentProfile : Fragment(), View.OnClickListener {
         v.txt_sound.setOnClickListener(this)
         v.txt_share.setOnClickListener(this)
         v.send_feedback.setOnClickListener(this)
+        v.log_out.setOnClickListener(this)
+
 
 //        v.export_file.setOnClickListener(this)
 
@@ -169,6 +174,14 @@ class FragmentProfile : Fragment(), View.OnClickListener {
 //            R.id.export_file->{
 //
 //            }
+
+            R.id.log_out ->{
+
+                DialogLogout()
+
+
+
+            }
 
         }
 
@@ -339,6 +352,30 @@ class FragmentProfile : Fragment(), View.OnClickListener {
 
     }
 
+    private fun DialogLogout() {
+        val mBuilder = AlertDialog.Builder(activity)
+        mBuilder.setTitle("Do you want logout?")
+        mBuilder.setPositiveButton("OK") { dialog, which ->
+            // Do something when click the neutral button
+            realms!!.deleteAllData()
+            if(realms!=null){
+                sessionManager.setLogin(false)
+                startActivity(Intent(activity, LoginActivity::class.java))
+                activity!!.finish()
+            }
+            dialog.cancel()
+        }
+
+        // Set the neutral/cancel button click listener
+        mBuilder.setNeutralButton("Cancel") { dialog, which ->
+            // Do something when click the neutral button-
+            dialog.cancel()
+        }
+
+
+        val mDialog = mBuilder.create()
+        mDialog.show()
+    }
     //    @SuppressLint("InflateParams")
     private fun showDialogSound(id :Int) {
         var sound : String?  = null

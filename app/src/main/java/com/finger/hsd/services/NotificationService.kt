@@ -3,14 +3,13 @@ package com.finger.hsd.services
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import com.finger.hsd.manager.SessionManager
 import com.finger.hsd.util.Mylog
-import com.finger.hsd.util.SessionManager
+
 import me.leolin.shortcutbadger.ShortcutBadger
 
 class NotificationService: Service() {
-
     var session : SessionManager? = null
-
     override fun onCreate() {
         session = SessionManager(applicationContext)
         badgeIconScreen()

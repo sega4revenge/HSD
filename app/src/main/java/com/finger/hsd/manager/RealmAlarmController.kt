@@ -2,6 +2,7 @@ package com.finger.hsd.manager
 
 import android.app.Activity
 import android.app.Application
+import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.support.v4.app.Fragment
 import android.util.Log
@@ -284,6 +285,26 @@ class RealmAlarmController (application: Context) {
         }
     }
 
+    fun deleteAllData(){
+        try {
+
+            val realm = Realm.getDefaultInstance()
+            realm.beginTransaction()
+            realm.deleteAll()
+            realm.commitTransaction()
+
+            Log.d("deleteAllData ", "delete data realm  ===========  "  + " \n ")
+
+            view_to_dataTimeAlarm()
+            getUser()
+            realm.close()
+
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+
+    }
+
     //Refresh the realm istance
     fun refresh() {
 
@@ -297,3 +318,4 @@ class RealmAlarmController (application: Context) {
 
     }
 }
+

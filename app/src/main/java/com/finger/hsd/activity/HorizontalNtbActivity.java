@@ -25,9 +25,10 @@ import com.finger.hsd.fragment.FragmentProfile;
 import com.finger.hsd.fragment.Home_Fragment;
 import com.finger.hsd.fragment.NotificationFragment;
 import com.finger.hsd.library.NavigationTabBar;
+import com.finger.hsd.manager.SessionManager;
 import com.finger.hsd.util.ConnectivityChangeReceiver;
 import com.finger.hsd.manager.RealmController;
-import com.finger.hsd.util.SessionManager;
+
 
 import java.util.ArrayList;
 

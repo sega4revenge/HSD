@@ -27,12 +27,12 @@ import com.finger.hsd.R.id.*
 import com.finger.hsd.common.GlideApp
 import com.finger.hsd.common.MyApplication
 import com.finger.hsd.manager.RealmController
+import com.finger.hsd.manager.SessionManager
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.User
 import com.finger.hsd.presenter.LoginPresenter
 import com.finger.hsd.util.Constants
 import com.finger.hsd.util.Mylog
-import com.finger.hsd.util.SessionManager
 import com.finger.hsd.util.Validation.validatePhone
 import com.finger.hsd.util.Validation.validatePhone2
 import com.google.android.gms.auth.api.Auth
@@ -131,6 +131,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
                         loginResult.accessToken
                 ) { _, response ->
                     // Application code
+
                     try {
                         Log.i("Response", response.toString())
 
@@ -139,6 +140,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
                         user.facebook = id
                         user.password = ""
                         user.tokenfirebase = (tokenfirebase)
+
                         mLoginPresenter!!.register(user)
 
 

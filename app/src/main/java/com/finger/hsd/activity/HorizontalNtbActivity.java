@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,24 +26,26 @@ import com.finger.hsd.fragment.FragmentProfile;
 import com.finger.hsd.fragment.Home_Fragment;
 import com.finger.hsd.fragment.NotificationFragment;
 import com.finger.hsd.library.NavigationTabBar;
-import com.finger.hsd.manager.SessionManager;
+
 import com.finger.hsd.util.ConnectivityChangeReceiver;
 import com.finger.hsd.manager.RealmController;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 
 import java.util.ArrayList;
 
 public class HorizontalNtbActivity extends BaseActivity implements NotificationFragment.NotificationBadgeListener,ConnectivityChangeReceiver.ConnectivityReceiverListener{
 
-
+    public final int CUSTOMIZED_REQUEST_CODE = 0x0000ffff;
     RealmController realm;
      NavigationTabBar navigationTabBar;
-     SessionManager session;
+    // SessionManager session;
     EditText edit_search;
     CountDownTimer mcoutdowntime;
     String searchkey = "";
      ViewPager viewPager;
-     ImageView mImageview;
+     ImageView mImageview,scan_barcode_img;
     FragmentPagerAdapter fragmentPagerAdapter;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -50,7 +53,7 @@ public class HorizontalNtbActivity extends BaseActivity implements NotificationF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temp);
         realm = new RealmController(this);
-        session = new SessionManager(this);
+       // session = new SessionManager(this);
         initUI();
         edit_search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -62,7 +65,6 @@ public class HorizontalNtbActivity extends BaseActivity implements NotificationF
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(searchkey!="" && mImageview.getDrawable() != getResources().getDrawable(R.drawable.ic_clear_black_24dp)){
                     mImageview.setImageResource(R.drawable.ic_clear_black_24dp);
-                  //  mImageview.setImageDrawable(getResources().getDrawable(R.drawable.ic_clear_black_24dp));
                 }
                 searchkey =s.toString();
                 if(mcoutdowntime!=null){
@@ -76,12 +78,10 @@ public class HorizontalNtbActivity extends BaseActivity implements NotificationF
 
                     @Override
                     public void onFinish() {
-//                        Bundle bundle = new Bundle();
-//                        bundle.putString("searchkey", searchkey);
-//                        Home_Fragment fragobj = new Home_Fragment();
-//                        fragobj.setArguments(bundle);
+                        if(viewPager.getCurrentItem()!=0){
+                            viewPager.setCurrentItem(0);
+                        }
                         fragmentPagerAdapter.notifyDataSetChanged();
-                     //   Toast.makeText(HorizontalNtbActivity.this,searchkey+"//",Toast.LENGTH_SHORT).show();
                     }
                 }.start();
             }
@@ -96,6 +96,19 @@ public class HorizontalNtbActivity extends BaseActivity implements NotificationF
     private void initUI() {
         FloatingActionButton fb = findViewById(R.id.fab);
         mImageview = findViewById(R.id.img_selete);
+        scan_barcode_img = findViewById(R.id.scan_barcode_img);
+        scan_barcode_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(HorizontalNtbActivity.this,ContinuousCaptureActivity.class);
+                startActivity(i);
+//                IntentIntegrator intentIntegrator =    new IntentIntegrator(HorizontalNtbActivity.this);
+//                intentIntegrator.setOrientationLocked(false);
+//                intentIntegrator.setCaptureActivity(Scanner_with_google_vision.class);
+//                intentIntegrator.setCameraId(0);
+//                intentIntegrator.initiateScan();
+            }
+        });
         mImageview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,8 +122,13 @@ public class HorizontalNtbActivity extends BaseActivity implements NotificationF
         fb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(HorizontalNtbActivity.this,Scanner_Barcode_Activity.class);
-                startActivity(i);
+                if(ConnectivityChangeReceiver.isConnected()){
+                    Intent i = new Intent(HorizontalNtbActivity.this,ContinuousCaptureActivity.class);
+                  //  startActivityForResult(i,999);
+                    startActivity(i);
+                }else{
+                   Toast.makeText(HorizontalNtbActivity.this,"Không thể kết nối mạng",Toast.LENGTH_SHORT).show();
+                }
             }
         });
         edit_search = (EditText) findViewById(R.id.edit_search);
@@ -125,10 +143,7 @@ public class HorizontalNtbActivity extends BaseActivity implements NotificationF
                 }
                 return POSITION_UNCHANGED;
             }
-//            @Override
-//            public int getItemPosition(Object object) {
-//                return POSITION_NONE;
-//            }
+
             @Override
             public Fragment getItem(int position) {
                 switch (position) {
@@ -195,7 +210,7 @@ public class HorizontalNtbActivity extends BaseActivity implements NotificationF
             @Override
             public void onPageSelected(final int position) {
 //                navigationTabBar.getModels().get(position).hideBadge();
-                session.setCountNotification(0);
+            //    session.setCountNotification(0);
             }
 
             @Override
@@ -280,4 +295,23 @@ public class HorizontalNtbActivity extends BaseActivity implements NotificationF
 //        textView.setTextColor(color);
 //        snackbar.show();
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        Toast.makeText(this,requestCode+"///"+resultCode,Toast.LENGTH_LONG).show();
+//        if(requestCode==969 && resultCode == 696){
+//            int pos = data.getIntExtra("position",1);
+//            Toast.makeText(this,pos+"///123",Toast.LENGTH_LONG).show();
+//
+//        }
+////        IntentResult result = IntentIntegrator.parseActivityResult(resultCode, data);
+////        if(result.getContents() == null) {
+////            if(resultCode==999 && resultCode == 999){
+////                Toast.makeText(this, "Scanned TYPE123: " + data.getStringExtra("result"), Toast.LENGTH_LONG).show();
+////            }
+////        } else {
+////                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+////        }
+//
+//    }
 }

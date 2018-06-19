@@ -15,6 +15,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
+import com.finger.hsd.AllInOneActivity
 import com.finger.hsd.R
 import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Product_v
@@ -35,7 +36,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.updateData, ConnectivityChangeReceiver.ConnectivityReceiverListener {
+class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.updateData,
+        ConnectivityChangeReceiver.ConnectivityReceiverListener {
     private var img_product: ImageView? = null
     private var arrow_back: ImageView? = null
     private var select_img: LinearLayout? = null
@@ -81,7 +83,7 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
     override fun onupdateProduct(type: Int, product: Product_v) {
         if(type!=0){
             Toast.makeText(this@Add_Product,"Update Success!",Toast.LENGTH_SHORT).show()
-            var i = Intent(this@Add_Product,HorizontalNtbActivity::class.java)
+            var i = Intent(this@Add_Product,AllInOneActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(i)
         }else{

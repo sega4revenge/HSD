@@ -169,7 +169,7 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         }
                     });
             } else if (holder instanceof ItemViewHolder) { //Constants.INSTANCE.getIMAGE_URL()+
-
+                    Log.d("IMAGEGGGGGGGGGG",mObject.getImagechanged()+"//");
                     Glide.with(mContext)
                             .load(mObject.getImagechanged())
                             .apply(optionsGlide)
@@ -195,11 +195,16 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         }
                     }else{
                         long dis = (mObject.getExpiretime()/86400000 - miliexToday/86400000);
-                            if(((ItemViewHolder) holder).txt_warring.getText()!= dis+" day left"){
-                                ((ItemViewHolder) holder).txt_warring.setText(dis+" day left");
-                                ((ItemViewHolder) holder).txt_warring.setTextColor(mContext.getResources().getColor(R.color.white));
-                                ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_item_at);
-                            }
+                        if(((ItemViewHolder) holder).txt_warring.getText()!= dis+" day left"){
+                            ((ItemViewHolder) holder).txt_warring.setText(dis+" day left");
+                            ((ItemViewHolder) holder).txt_warring.setTextColor(mContext.getResources().getColor(R.color.white));
+                        }
+                        if(dis>10){
+                            ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_item_at);
+                        }else{
+                            ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_item_cb);
+                        }
+
 
                     }
 

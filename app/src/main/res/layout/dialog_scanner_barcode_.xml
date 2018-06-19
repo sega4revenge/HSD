@@ -1,54 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center"
-    android:layout_margin="10dp"
     android:background="@drawable/border_dialog"
     >
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/radius_edit_put_barcode"
-        android:gravity="center"
-        android:hint="Nhập barcode"
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="30dp"
-        android:id="@+id/edit_barcode"
-        android:inputType="number"/>
+    <ImageView
+        android:id="@+id/img_barcode"
+        android:layout_width="150dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="10dp"/>
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="25dp"
-        android:text="Nhập barcode nếu không thể scan."
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="18dp"
         android:gravity="center"
-        android:textSize="18dp" />
+        android:maxWidth="250dp"
+        android:text="Not found product! Would you like to add this product information to our system?"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="45dp"
         android:orientation="horizontal"
         android:gravity="center"
         >
         <TextView
-            android:id="@+id/txt_out_put_barcode"
+            android:id="@+id/txt_out_scanbarcode"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="Thoát"
+            android:text="Trở lại"
             android:layout_weight="1"
             android:gravity="center"
             android:textSize="17dp"
             android:textColor="@color/white"
             android:background="@drawable/radius_bottom_dialog"/>
         <TextView
-            android:id="@+id/txt_ok_put_barcode"
-            android:layout_width="1dp"
+            android:id="@+id/txt_ok_scanbarcode"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="Chọn"
+            android:text="Tạo"
             android:gravity="center"
             android:textSize="17dp"
             android:textColor="@color/white"

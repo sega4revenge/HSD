@@ -73,12 +73,10 @@
     <dimen name="floating_width">500dp</dimen>
 
 
-
     <dimen name="small_margin">8dp</dimen>
 
     <dimen name="recycler_item_padding">1dp</dimen>
     <dimen name="recycler_view_padding">6dp</dimen>
-
 
 
     <!-- product Grid Item -->
@@ -132,7 +130,6 @@
     <dimen name="detail_arrow_size">12dp</dimen>
 
 
-
     <dimen name="size_avatar_toolbar">40dp</dimen>
     <dimen name="spacing_double">16dp</dimen>
 
@@ -142,4 +139,5 @@
     <dimen name="ms__item_height">48dp</dimen>
     <dimen name="ms__popup_padding_left">24dp</dimen>
     <dimen name="ms__popup_padding_top">12dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

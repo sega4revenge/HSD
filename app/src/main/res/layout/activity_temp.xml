@@ -30,6 +30,7 @@
             android:paddingRight="55dp"
             android:singleLine="true"
             android:ellipsize="end"
+            android:focusable="auto"
             />
         <ImageView
             android:id="@+id/img_selete"

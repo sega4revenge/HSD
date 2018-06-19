@@ -508,6 +508,7 @@
         <item>364 days before</item>
         <item>365 days before</item>
     </string-array>
+    <string name="title_activity_test_scanner">test_scanner</string>
 
 
 </resources>

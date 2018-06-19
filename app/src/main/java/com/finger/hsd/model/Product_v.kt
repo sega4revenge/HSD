@@ -23,8 +23,11 @@ open class Product_v : RealmObject, Serializable {
     var producttype_id: ProductType_v?= null
     var description: String? = null
     var imagechanged: String? = null
+    //    private String imagepassed;
     var delete: Boolean = false
     var daybefore: Int = 0
+    var isChecksync = true
+    var create_at: Long? = null
     var isSyn = true
 
     constructor() {}

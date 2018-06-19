@@ -58,7 +58,6 @@ class SyncActivity : BaseActivity() {
             processInfomationUpdate(listProduct!![temp])
 
         } else {
-
             syncNotification()
         }
     }

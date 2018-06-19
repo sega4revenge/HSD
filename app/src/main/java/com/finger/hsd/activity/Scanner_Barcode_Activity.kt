@@ -1,6 +1,7 @@
 package com.finger.hsd.activity
 
 import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
@@ -241,8 +242,8 @@ class Scanner_Barcode_Activity : BaseScannerActivity(), View.OnClickListener ,ZX
         val mView:View = View.inflate(this@Scanner_Barcode_Activity,R.layout.dialog_put_barcode,null)
         datedialog.setView(mView)
         val mEdit = mView.edit_barcode
-        val txtout:TextView = mView.txt_out
-        val txtok = mView.txt_ok
+        val txtout:TextView = mView.txt_out_put_barcode
+        val txtok = mView.txt_ok_put_barcode
 
         txtout.setOnClickListener(object: View.OnClickListener{
             override fun onClick(v: View?) {

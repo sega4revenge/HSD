@@ -90,6 +90,11 @@ class RealmController(application: Context) {
 //        }, Realm.Transaction.OnSuccess {
 //            Log.e("setting", "success")
 //        } )
+        for(ii in 0 until user.listgroup!!.size){
+            for(i in 0 until user.listgroup!![ii]!!.listproduct!!.size){
+                user.listgroup!![ii]!!.listproduct!![i]?.barcode = user.listgroup!![ii]!!.listproduct!![i]?.producttype_id?.barcode
+            }
+        }
 
         realm.beginTransaction()
         realm.copyToRealmOrUpdate(user)
@@ -365,7 +370,7 @@ class RealmController(application: Context) {
         return realm.copyFromRealm(realm.where(Product_v::class.java).equalTo("delete",false).findAll()) as ArrayList<Product_v>
     }
     fun getlistProductLike(search: String): ArrayList<Product_v> {
-        return realm.copyFromRealm(realm.where(Product_v::class.java).equalTo("delete",false).and().like("namechanged", search).or().like("barcode",search).findAll()) as ArrayList<Product_v>
+        return realm.copyFromRealm(realm.where(Product_v::class.java).equalTo("delete",false).and().contains("namechanged", search).or().contains("barcode",search).findAll()) as ArrayList<Product_v>
     }
 
     fun getListProductNotSync(): ArrayList<Product_v>{
@@ -398,7 +403,7 @@ class RealmController(application: Context) {
     }
 
     fun getProductWithBarcode(barcode: String): Product_v? {
-        return realm.where(Product_v::class.java).equalTo("barcode", barcode).findFirst()
+        return realm.copyFromRealm(realm.where(Product_v::class.java).equalTo("barcode", barcode).findFirst()) as Product_v
     }
     fun checkaddsuccess(id: String): Long? {
         return realm.where(Product_v::class.java).equalTo("_id", id).count()

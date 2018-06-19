@@ -2,13 +2,11 @@ package com.finger.hsd.manager
 
 import android.app.Activity
 import android.app.Application
-import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.support.v4.app.Fragment
 import android.util.Log
 import com.finger.hsd.model.*
 import io.realm.Realm
-import io.realm.RealmResults
 import java.util.*
 
 @Suppress("DEPRECATION")
@@ -234,6 +232,9 @@ class RealmAlarmController (application: Context) {
             Log.d("NoPlayingService ", "view_to_dataNotification  ===========  " + output + " \n ")
         }
         return result
+    }
+    fun getSingleUser(): User? {
+        return realm.where(User::class.java).findFirst()
     }
 
     fun getUser() : List<User>{

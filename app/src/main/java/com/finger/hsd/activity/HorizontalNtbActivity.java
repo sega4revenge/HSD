@@ -4,14 +4,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,22 +18,18 @@ import android.widget.Toast;
 import com.facebook.FacebookSdk;
 import com.finger.hsd.BaseActivity;
 import com.finger.hsd.R;
-
 import com.finger.hsd.common.MyApplication;
 import com.finger.hsd.fragment.FragmentProfile;
 import com.finger.hsd.fragment.Home_Fragment;
 import com.finger.hsd.fragment.NotificationFragment;
 import com.finger.hsd.library.NavigationTabBar;
-
-import com.finger.hsd.util.ConnectivityChangeReceiver;
 import com.finger.hsd.manager.RealmController;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-
+import com.finger.hsd.util.ConnectivityChangeReceiver;
 
 import java.util.ArrayList;
 
-public class HorizontalNtbActivity extends BaseActivity implements NotificationFragment.NotificationBadgeListener,ConnectivityChangeReceiver.ConnectivityReceiverListener{
+public class HorizontalNtbActivity extends BaseActivity implements NotificationFragment.NotificationBadgeListener,
+        ConnectivityChangeReceiver.ConnectivityReceiverListener{
 
     public final int CUSTOMIZED_REQUEST_CODE = 0x0000ffff;
     RealmController realm;

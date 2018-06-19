@@ -1,14 +1,12 @@
 package com.finger.hsd.services
 
 import android.annotation.SuppressLint
-
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
@@ -17,15 +15,22 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.finger.hsd.AllInOneActivity
 import com.finger.hsd.R
-
 import com.finger.hsd.activity.HorizontalNtbActivity
 import com.finger.hsd.manager.RealmAlarmController
 import com.finger.hsd.manager.SessionManager
-import com.finger.hsd.model.General
-import com.finger.hsd.model.Invite
 import com.finger.hsd.model.Notification
 import com.finger.hsd.model.Product_v
+import com.finger.hsd.model.Response
 import com.finger.hsd.util.AppIntent
+import com.finger.hsd.util.ConnectivityChangeReceiver
+import com.finger.hsd.util.Constants
+import com.finger.hsd.util.Mylog
+import com.rx2androidnetworking.Rx2AndroidNetworking
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.observers.DisposableObserver
+import io.reactivex.schedulers.Schedulers
+import me.leolin.shortcutbadger.ShortcutBadger
+import org.json.JSONObject
 import java.util.*
 
 @Suppress("DEPRECATION")
@@ -139,6 +144,7 @@ class NotificationPlayingService : Service() {
                     notification_new.type = 0
                     notification_new.create_at = now.timeInMillis.toString()
                     notification_new.watched = false
+                    notification_new.isSync = true
 //                        realms!!.addInTableNotification(notification_new)
 //                        realms!!.view_to_dataNotification()
                     var intent = Intent()
@@ -149,16 +155,22 @@ class NotificationPlayingService : Service() {
                     intent.putExtras(bundle)
                     sendBroadcast(intent)
 
-
-
-                    countAddNotification = 0
+                    // the second update notification to server
+                    if (ConnectivityChangeReceiver.isConnected()) {
+                        updateNotficationOnServer(notification_new)
+                    }else{
+                        notification_new.isSync = false
+                        realms!!.addInTableNotification(notification_new)
+                    }
                 }
 
             }
 
-
-
         }
+        var count = sessionManager.getCountNotification() + countExpiry + countWarnings
+        //count notification
+        sessionManager.setCountNotification(count)
+        badgeIconScreen()
         Log.d("NoPlayingService" ," 333 " +"countExpiry == " + countExpiry + "countWarnings == " + countWarnings )
         // chi co san pham het han
         if(countExpiry > 0 && countWarnings== 0){
@@ -189,8 +201,23 @@ class NotificationPlayingService : Service() {
         return Service.START_NOT_STICKY
     }
 
+    // count notification on home screen
+    fun badgeIconScreen() {
+        var badgeCount = 0
 
+        if (sessionManager.getCountNotification() > 0) {
+            try {
+                badgeCount = sessionManager.getCountNotification()
+            } catch (e: NumberFormatException) {
+                Mylog.d("badge Count screen: ", e.message!!)
+            }
+            ShortcutBadger.applyCount(applicationContext, badgeCount)
+        } else {
+            ShortcutBadger.removeCount(applicationContext)
+        }
 
+    }
+    // group of notification
     fun Group_Notification( title:String,  content : String){
 
         val intent = Intent(this, AllInOneActivity::class.java)
@@ -299,8 +326,6 @@ class NotificationPlayingService : Service() {
                     .setContentIntent(pIntent)
                     .setLights(5,5,5)
 
-
-
         } else {
 
             builder.setAutoCancel(true)
@@ -316,6 +341,50 @@ class NotificationPlayingService : Service() {
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(int, builder.build())
+
+    }
+
+    fun updateNotficationOnServer(notification: Notification){
+        var user = realms!!.getSingleUser()
+        var jsonObject = JSONObject()
+        try {
+            jsonObject.put("id_product", notification.id_product)
+            jsonObject.put("idUser", user!!._id)
+            jsonObject.put("type", notification.type)
+            jsonObject.put("watched", notification.watched)
+            jsonObject.put("time", notification.create_at)
+        }catch (e:Exception){
+            Mylog.d("Error "+e.message)
+        }
+       Rx2AndroidNetworking.post(Constants.URL_UPDATE_NOTIFICATION)
+                .addJSONObjectBody(jsonObject)
+                .build()
+                .setAnalyticsListener { timeTakenInMillis, bytesSent, bytesReceived, isFromCache ->
+                    Log.d("", " timeTakenInMillis : $timeTakenInMillis")
+                    Log.d("", " bytesSent : $bytesSent")
+                    Log.d("", " bytesReceived : $bytesReceived")
+                    Log.d("", " isFromCache : $isFromCache")
+                }
+               .getObjectObservable(Response::class.java)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableObserver<Response>(){
+                    override fun onComplete() {
+
+                    }
+
+                    override fun onNext(t: Response?) {
+                        realms!!.addInTableNotification(notification)
+                    }
+
+                    override fun onError(e: Throwable?) {
+                        Mylog.d(e!!.printStackTrace().toString())
+                        notification.isSync = false
+                        realms!!.addInTableNotification(notification)
+
+                    }
+
+                })
 
     }
 

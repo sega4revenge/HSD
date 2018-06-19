@@ -31,7 +31,7 @@ class SessionManager {
     private val KEY_LOGIN = "isLogin"
     private  val KEY_SETTING_NOTI_ALARM : String = "settingAlarm"
     private  val KEY_SOUND_SETTING  : String = "settingSound"
-
+    private val KEY_CHECK_IS_SYNC : String = "isCheckSync"
 
     fun set_Sound(ischeck: String) {
         mEditor!!.putString(KEY_SOUND_SETTING, ischeck)
@@ -66,6 +66,7 @@ class SessionManager {
     fun getCountNotification(): Int {
         return mSharedPreferences!!.getInt(KEY_COUNT_NOTIFICATION, 0)
     }
+
     // check login if user was login, set data true
     fun setLogin(count: Boolean) {
         mEditor!!.putBoolean(KEY_LOGIN, count)
@@ -75,5 +76,15 @@ class SessionManager {
 
     fun isLogin(): Boolean {
         return mSharedPreferences!!.getBoolean(KEY_LOGIN, false)
+    }
+    // check đang đồng bộ
+    fun setIsSync(count: Boolean) {
+        mEditor!!.putBoolean(KEY_CHECK_IS_SYNC, count)
+        mEditor!!.commit()
+    }
+
+
+    fun isSync(): Boolean {
+        return mSharedPreferences!!.getBoolean(KEY_CHECK_IS_SYNC, false)
     }
 }

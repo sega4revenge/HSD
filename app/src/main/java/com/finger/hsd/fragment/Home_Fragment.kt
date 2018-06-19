@@ -2,11 +2,13 @@ package com.finger.hsd.fragment
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -19,7 +21,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.finger.hsd.R
 import com.finger.hsd.activity.DetailProductActivity
 import com.finger.hsd.activity.Scanner_Barcode_Activity
-import com.finger.hsd.adapters.Main_list_Adapter
+import com.finger.hsd.adapters.MainListAdapterKotlin
 import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.Result_Product
@@ -39,12 +41,13 @@ import kotlin.collections.ArrayList
 
 
 
-class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmController.updateData{
+class Home_Fragment : android.support.v4.app.Fragment(),MainListAdapterKotlin.OnproductClickListener,RealmController.updateData{
+
     private var mCount  = 0
     private var checkRefresh  = false
     private var mView: View? = null
     private var mRec: RecyclerView? = null
-    private var mAdapter: Main_list_Adapter? = null
+    private lateinit var mAdapter: MainListAdapterKotlin
     private var mRetrofitService: RetrofitService? = null
     private var listProduct:ArrayList<Product_v>? = ArrayList<Product_v>()
     private var listheader:ArrayList<Int>? = ArrayList<Int>()
@@ -57,11 +60,11 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
     private var mPositionProtect = -1
     private var mDialogProgress: Dialog? = null
     private var mDialogProgressDelete:Dialog? = null
+    var mContext: Context? = null
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         initView()
         loadData()
-        //getData()
     }
 
     fun newInstance(info: String): Home_Fragment {
@@ -79,6 +82,7 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
             var mSearch = arguments?.getString("searchkey")
             searchKey(mSearch.toString())
         }
+        mContext = activity
 
         mView = inflater.inflate(R.layout.fragment_blank, container, false)
         return mView
@@ -128,7 +132,7 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
                 listData.add(listProduct!!.get(i))
             }
 
-            mAdapter = Main_list_Adapter(activity, listData, listheader, this)
+            mAdapter = MainListAdapterKotlin(mContext!!, listData, listheader!!, this)
             mRec?.adapter = mAdapter
             mDialogProgress?.dismiss()
         }
@@ -141,15 +145,17 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
         mRec?.layoutManager = mLayoutManager
         mRec?.setHasFixedSize(true)
         myRealm = RealmController(activity?.application!!)
+//        mRefresh?.setOnRefreshListener {
+//            if(!checkRefresh)
+//            {
+//                checkRefresh = true
+//                getData()
+//            }
+//        }
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        if(mCount>0){
-            mCount =0
-        }
-    }
+
     private fun showDialog(title: String) {
         val m = MaterialDialog.Builder(activity!!)
                 .content(title)
@@ -191,6 +197,7 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
         mDialogProgressDelete?.show()
     }
     fun showDialogNotFound(){
+        Log.d("REALMCONTROLLER","//zzzzzzzzzzz//showDialogNotFound//")
         var mDialog: Dialog? = null
         var dialog = AlertDialog.Builder(activity)
         val mView:View = View.inflate(activity,R.layout.not_found_product,null)
@@ -226,6 +233,7 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
         mPositionWaring = -1
         getDataFromServer()
     }
+
     override fun onupdateProduct(type: Int,product:Product_v) {
         Log.d("REALMCONTROLLER",type.toString()+"//")
         if(type==1){
@@ -240,17 +248,7 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
         }
 
     }
-    override fun onproductClickedDelete(listDelete: String?, arrID : List<Product_v>) {
-        showDialogDelete(listDelete,arrID)
-    }
-    override fun onClickItem(product_v: Product_v,pos : Int) {
-        val intent = Intent(activity, DetailProductActivity::class.java)
-        intent.putExtra("position", pos)
-        intent.putExtra("checkNotification", false)
-        intent.putExtra("id_product", product_v._id)
-        startActivityForResult(intent,969)
-       // startActivity(intent)
-    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
    //   Toast.makeText(activity,requestCode.toString()+"///"+resultCode,Toast.LENGTH_LONG).show()
@@ -264,14 +262,16 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
         if(ConnectivityChangeReceiver.isConnected()){
             if(myRealm?.getlistProductOffline()!= null && (myRealm?.getlistProductOffline()?.size!! > 0)){
                 val arrDataNotSync = myRealm?.getlistProductOffline()
+                Log.d("REALMCONTROLLER","myRealm?.getlistProductOffline()?.size//  "+arrDataNotSync.toString())
                 numLoading = arrDataNotSync?.size!!
                 showDialog("Đang đồng bộ dữ liệu...")
                 for(i in 0 until arrDataNotSync.size){
-                   // Log.d("REALMCONTROLLE",arrDataNotSync.get(i).imagechanged+"//"+arrDataNotSync.get(i).namechanged+"//"+arrDataNotSync.get(i)!!.expiretime+"//"+arrDataNotSync.get(i)!!.description+"//"+arrDataNotSync.get(i)!!.barcode)
+                    Log.d("REALMCONTROLLE",arrDataNotSync.get(i).imagechanged+"//"+arrDataNotSync.get(i).namechanged+"//"+arrDataNotSync.get(i)!!.expiretime+"//"+arrDataNotSync.get(i)!!.description+"//"+arrDataNotSync.get(i)!!.barcode)
                     addProductOfflinetoServer(arrDataNotSync.get(i))
                 }
                // loadData()
             }else{
+                Log.d("REALMCONTROLLER","ConnectivityChangeReceiver ")
                 getDataFromServer()
             }
         }else{
@@ -345,7 +345,7 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
                         response?.body().product.imagechanged = mProduct_v.imagechanged
                         response?.body().product.delete = false
                         response?.body().product.isSyn = true
-                        response?.body().product.barcode = response?.body().product.producttype_id?.barcode
+                        response?.body().product.barcode = response?.body().product.producttype_id!!.barcode
                         myRealm?.deleteProductFromDevice(mProduct_v,this@Home_Fragment)
                         myRealm?.addProduct(response?.body().product)
                         mDialogProgress?.dismiss()
@@ -364,8 +364,6 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
     }
     fun loadData(){
         listProduct = myRealm?.getlistProduct()
-        Mylog.d(listProduct?.size.toString()+"dataaaaaaaaaa")
-
         if(listProduct != null && listProduct?.size!! > 0) {
 
             val sdf = SimpleDateFormat("dd/MM/yyyy")
@@ -418,10 +416,74 @@ class Home_Fragment : Fragment(),Main_list_Adapter.OnproductClickListener,RealmC
                  listData.add(listProduct!!.get(i))
              }
 
-            mAdapter = Main_list_Adapter(activity, listData, listheader, this)
+            mAdapter = MainListAdapterKotlin(mContext!!, listData, listheader!!, this)
             mRec?.adapter = mAdapter
             mDialogProgress?.dismiss()
         }
     }
+
+
+    fun getDate(milliSeconds: Long, dateFormat: String): String {
+        // Create a DateFormatter object for displaying date in specified format.
+        val formatter = SimpleDateFormat(dateFormat)
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = milliSeconds
+        return formatter.format(calendar.time)
+    }
+
+
+
+    override fun onproductClickedDelete(listDelete: String, arr: List<Product_v>) {
+        showDialogDelete(listDelete, arr)
+    }
+
+
+    override fun onClickItem(product: Product_v, pos: Int) {
+        Toast.makeText(activity, product.namechanged + "//" + product.description + "//" + pos, Toast.LENGTH_SHORT).show()
+        val intent = Intent(activity, DetailProductActivity::class.java)
+        intent.putExtra("position", pos)
+        intent.putExtra("checkNotification", false)
+        intent.putExtra("id_product", product._id)
+        startActivity(intent)
+
+    }
+
+    //=========== broad case
+    internal var broadcastFromDetail: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val bundle = intent.extras
+            if (bundle != null) {
+                if (bundle.getBoolean("updateItem")) {
+                    listProduct!!.clear()
+                    onupdate()
+                } else if (bundle.getBoolean("deleteItem")) {
+
+                    listProduct!!.clear()
+                    onupdate()
+
+                }else if(bundle.getBoolean("addProduct")){
+                   // send information of new create product from Addproduct_activity :)*&% ()
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        activity!!.unregisterReceiver(this.broadcastFromDetail)
+        super.onDestroy()
+
+    }
+
+    override fun onResume() {
+        activity!!.registerReceiver(this.broadcastFromDetail, IntentFilter(AppIntent.ACTION_UPDATE_ITEM))
+
+        super.onResume()
+        if (mCount > 0) {
+            mCount = 0
+        }
+    }
+
 
 }

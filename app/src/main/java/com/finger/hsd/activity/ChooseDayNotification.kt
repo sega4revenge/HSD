@@ -13,12 +13,12 @@ import android.view.Window
 import android.widget.Button
 import android.widget.NumberPicker
 import android.widget.RadioButton
-
 import com.finger.hsd.R
 import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.presenter.DetailProductPresenter
 import com.finger.hsd.presenter.DetailProductPresenter.IDetailProductPresenterView
+import com.finger.hsd.util.ConnectivityChangeReceiver
 import com.finger.hsd.util.Constants
 import com.finger.hsd.util.Mylog
 import io.realm.Realm
@@ -38,6 +38,7 @@ class ChooseDayNotification: AppCompatActivity(), IDetailProductPresenterView{
     var realm: RealmController? = null
 
     var days : Int =0
+    var dayIntent : Int =0
     lateinit var mToolbar : Toolbar
 
     private lateinit var  presenter: DetailProductPresenter
@@ -50,9 +51,9 @@ class ChooseDayNotification: AppCompatActivity(), IDetailProductPresenterView{
         realm = RealmController(this)
         idProduct = intent.getStringExtra("id_product")
 
-        days = intent.getIntExtra("day_before", 0)
+        dayIntent = intent.getIntExtra("day_before", 0)
 
-       // presenter = DetailProductPresenter(this)
+        presenter = DetailProductPresenter(this)
 
         mToolbar = findViewById(R.id.toolbar)
         this.setSupportActionBar(mToolbar)
@@ -67,21 +68,21 @@ class ChooseDayNotification: AppCompatActivity(), IDetailProductPresenterView{
             }
         })
 
-        if(days == 1){
+        if(dayIntent == 1){
             rb_oneday.isChecked
             rb_oneday.isChecked = true
 
-        }else if (days == 3){
+        }else if (dayIntent == 3){
             rb_three.isChecked
             rb_three.isChecked = true
-        }else if(days == 7){
+        }else if(dayIntent == 7){
             rb_week.isChecked
             rb_week.isChecked = true
-        }else if(days == 30){
+        }else if(dayIntent == 30){
             rb_month.isChecked
             rb_month.isChecked = true
         }else {
-            val texDay = resources.getString(R.string.custome_day)+" ("+days+" "+resources.getString(R.string.days) + ")"
+            val texDay = resources.getString(R.string.custome_day)+" ("+dayIntent+" "+resources.getString(R.string.days) + ")"
             rb_custom.text =  texDay
             rb_custom.isChecked
             rb_custom.isChecked = true
@@ -110,18 +111,15 @@ class ChooseDayNotification: AppCompatActivity(), IDetailProductPresenterView{
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         if (item.itemId == R.id.item_save) {
-
-            var product = realm!!.getProduct(idProduct)
-            realm!!.realm.executeTransaction(Realm.Transaction {
-                product!!.daybefore = days
-            })
-
-            Mylog.d("aaaaaaaaaa check: "+realm!!.getProduct(idProduct)!!.daybefore)
-
-            val intent = Intent()
-            intent.putExtra(Constants.DATA_DAY_BEFORE, days)
-            setResult(Constants.RESULT_DAY_BEFORE, intent)
-            finish()
+            if(days != dayIntent) {
+                if (ConnectivityChangeReceiver.isConnected()) {
+                    presenter.processDayBefore(idProduct, days)
+                } else {
+                    updateToRealm()
+                }
+            }else{
+                finish()
+            }
             return true
         }
         else if (item.itemId == R.id.home) {
@@ -131,6 +129,22 @@ class ChooseDayNotification: AppCompatActivity(), IDetailProductPresenterView{
         else return super.onOptionsItemSelected(item)
 
     }
+
+    fun updateToRealm(){
+        var product = realm!!.getProduct(idProduct)
+        realm!!.realm.executeTransaction(Realm.Transaction {
+            product!!.daybefore = days
+            product!!.isSyn = false
+        })
+
+        Mylog.d("aaaaaaaaaa check: " + realm!!.getProduct(idProduct)!!.daybefore)
+
+        val intent = Intent()
+        intent.putExtra(Constants.DATA_DAY_BEFORE, days)
+        setResult(Constants.RESULT_DAY_BEFORE, intent)
+        finish()
+    }
+
     var dayIndex: Int = 0
 
     private fun showDialogCustomDay(idProduct: String) {
@@ -180,6 +194,6 @@ class ChooseDayNotification: AppCompatActivity(), IDetailProductPresenterView{
     }
 
     override fun onError(typeError: Int) {
-
+        updateToRealm()
     }
 }

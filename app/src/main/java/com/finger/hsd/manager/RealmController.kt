@@ -338,8 +338,8 @@ class RealmController(application: Context) {
 
 
     // get user
-    fun getUser(id: String): User? {
-        return realm.where(User::class.java).equalTo("_id", id).findFirst()
+    fun getUser(): User? {
+        return realm.where(User::class.java).findFirst()
     }
 
     //delete list product

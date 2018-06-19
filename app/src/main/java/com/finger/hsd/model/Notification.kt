@@ -9,7 +9,7 @@ open class Notification : RealmObject() , Serializable{
     var _id : String?=null
     var idinvite : Invite? = null
     var id_product    : String? = null
-    var status_expiry : String?  = null
+    var status_expiry : String?  = null // trạng thái thông báo
     var idgeneral : General?=null
     var type : Int?=null
     var create_at : String?=null

@@ -20,6 +20,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            debuggable true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
@@ -30,8 +31,8 @@ android {
         }
     }
     compileOptions {
-        targetCompatibility JavaVersion.VERSION_1_7
-        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility
+        sourceCompatibility
     }
     buildToolsVersion '27.0.3'
 }
@@ -91,7 +92,7 @@ dependencies {
     implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
     implementation 'me.dm7.barcodescanner:zxing:1.9.8'
     implementation 'com.android.support:multidex:1.0.3'
-    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    //implementation 'com.github.bumptech.glide:glide:4.7.1'
     kapt 'com.github.bumptech.glide:compiler:4.7.1'
     implementation 'com.github.bumptech.glide:okhttp3-integration:4.7.1'
     testImplementation 'junit:junit:4.12'

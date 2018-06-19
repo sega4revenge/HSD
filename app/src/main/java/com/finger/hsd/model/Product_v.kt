@@ -25,6 +25,7 @@ open class Product_v : RealmObject, Serializable {
     var imagechanged: String? = null
     //    private String imagepassed;
     var delete: Boolean = false
+    var isNewImage = false
     var daybefore: Int = 0
     var isChecksync = true
     var create_at: Long? = null

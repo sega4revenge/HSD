@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,9 +23,18 @@ import com.finger.hsd.common.Prefs
 import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Notification
 import com.finger.hsd.model.Product_v
+import com.finger.hsd.model.Response
 import com.finger.hsd.util.AppIntent
+import com.finger.hsd.util.ConnectivityChangeReceiver
+import com.finger.hsd.util.Constants
 import com.finger.hsd.util.Mylog
+import com.rx2androidnetworking.Rx2AndroidNetworking
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.observers.DisposableObserver
+import io.reactivex.schedulers.Schedulers
+import io.realm.Realm
 import kotlinx.android.synthetic.main.fragment_notification.view.*
+import org.json.JSONObject
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -117,25 +127,6 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
         //activity!!.startService(Intent(activity, NotificationService::class.java))
     }
 
-    fun addOneNotification() {
-
-        var notification = Notification()
-        var user = realm!!.getUser("5b06897ebb966e07b4fbd91a")!!
-        notification._id = System.currentTimeMillis().toString()
-//        notification.iduser = user
-        notification.create_at = System.currentTimeMillis().toString()
-        var product = Product_v()
-        product = realm!!.getProduct("5b17f6daea81a8639de962ea")!!
-
-        notification.type = 0 // 1 single, 2 multi
-        notification.watched = false;
-        realm!!.addNotification(notification)
-        listitem.add(0, notification)
-
-        mView!!.recycler_notification.scrollToPosition(0)
-        mNotifiAdapter.notifyDataSetChanged()
-
-    }
 
     private fun initViews(mView: View) {
 
@@ -211,7 +202,18 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
         intent.putExtra("position", position)
         intent.putExtra("id_product", product._id)
         // startActivityForResult(intent, AppIntent.REQUEST_NOTIFICATION)
+        var notification = realm!!.getOneNotification(product._id!!)
+        if (ConnectivityChangeReceiver.isConnected()) {
+            updateNotficationOnServer(notification!!)
+        } else {
 
+            realm!!.realm.executeTransaction(Realm.Transaction {
+                notification!!.isSync = false
+                notification.watched = true
+
+            })
+
+        }
         startActivity(intent)
     }
 
@@ -230,15 +232,14 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                         mNotifiAdapter.notifyItemChanged(position)
                         Mylog.d("communition  BroadcastReceiver  $position")
 
-                    }
-                    else {
+                    } else {
                         //======== hàm này để load lại toàn bộ item khi homeFragment chỉnh sửa item.
 //                        listitem.clear()
 //                        listitem = realm!!.getListNotification()!
                         val idProduct = bundle.getString("id_product")
-                        for(i in 0.. listitem.size -1){
+                        for (i in 0..listitem.size - 1) {
                             var item = listitem[i]
-                            if(item.id_product.equals(idProduct)){
+                            if (item.id_product.equals(idProduct)) {
                                 mNotifiAdapter.notifyItemChanged(i)
                                 break
                             }
@@ -247,7 +248,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                         Mylog.d("communition  BroadcastReceiver  chay chua chau")
 
                     }
-                }else if(bundle.getBoolean("deleteItem")){
+                } else if (bundle.getBoolean("deleteItem")) {
                     if (!bundle.getBoolean("reloadItem")) {
                         Mylog.d("communition  BroadcastReceiver  chay chua chau")
                         val position = bundle.getInt("position")
@@ -255,7 +256,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                         listitem.remove(item)
                         mNotifiAdapter.notifyDataSetChanged()
 
-                    }else{
+                    } else {
                         val idProduct = bundle.getInt("id_product")
                         val item = mNotifiAdapter.listItem.iterator()
 
@@ -277,7 +278,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                     var notification = Notification()
 
                     notification = bundle.getSerializable("notificationModel") as Notification
-                    Mylog.d("ttttttt " +notification.id_product)
+                    Mylog.d("ttttttt " + notification.id_product)
 
                     var checkNewOrOldNotification = realm!!.addNotification(notification)
                     if (checkNewOrOldNotification) {
@@ -303,6 +304,60 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                 }
             }
         }
+    }
+
+    fun updateNotficationOnServer(notification: Notification) {
+        Mylog.d("ttttttttt idproduct: "+notification.id_product)
+        var user = realm!!.getUser()
+        var jsonObject = JSONObject()
+        try {
+            jsonObject.put("id_product", notification.id_product)
+            jsonObject.put("idUser", user!!._id)
+            jsonObject.put("type", notification.type)
+            jsonObject.put("watched", true)
+            jsonObject.put("time", notification.create_at)
+        } catch (e: Exception) {
+            Mylog.d("Error " + e.message)
+        }
+        Rx2AndroidNetworking.post(Constants.URL_UPDATE_NOTIFICATION)
+                .addJSONObjectBody(jsonObject)
+                .build()
+                .setAnalyticsListener { timeTakenInMillis, bytesSent, bytesReceived, isFromCache ->
+                    Log.d("", " timeTakenInMillis : $timeTakenInMillis")
+                    Log.d("", " bytesSent : $bytesSent")
+                    Log.d("", " bytesReceived : $bytesReceived")
+                    Log.d("", " isFromCache : $isFromCache")
+                }
+                .getObjectObservable(Response::class.java)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableObserver<Response>() {
+                    override fun onComplete() {
+
+                    }
+
+                    override fun onNext(t: Response?) {
+                        Mylog.d("onsucess")
+                        realm!!.realm.executeTransaction(Realm.Transaction {
+                            notification.isSync = true
+                            notification.watched = false
+                        })
+                    }
+
+                    override fun onError(e: Throwable?) {
+                        Mylog.d(e!!.printStackTrace().toString())
+                        realm!!.realm.executeTransaction(Realm.Transaction {
+                            notification!!.isSync = false
+                            notification.watched = true
+
+                        })
+
+
+
+                    }
+
+                })
+
     }
 
     override fun onDestroy() {

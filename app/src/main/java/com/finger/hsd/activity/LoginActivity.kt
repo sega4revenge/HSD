@@ -8,6 +8,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -23,7 +24,6 @@ import com.facebook.login.LoginResult
 import com.finger.hsd.AllInOneActivity
 import com.finger.hsd.BaseActivity
 import com.finger.hsd.R
-import com.finger.hsd.R.id.*
 import com.finger.hsd.common.GlideApp
 import com.finger.hsd.common.MyApplication
 import com.finger.hsd.manager.RealmController
@@ -319,14 +319,28 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
                 .load(Constants.IMAGE_URL + product.imagechanged)
                 .apply(options)
                 .into(object : SimpleTarget<Bitmap>() {
+                    override fun onLoadFailed(errorDrawable: Drawable?) {
+                        temp++
+                        Mylog.d("aaaaaaaaaa "+temp+" sizelistproduct: " + listProduct!!.size)
+                        if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
+                            percent = (temp.toFloat() / listProduct!!.size.toFloat() * 100f).toInt()
+
+                            //showToast(percent)
+                            Mylog.d("aaaaaaaaaa chay tiep: "+percent)
+                            onDownload(listProduct!!.get(temp))
+                        }else{
+                            session!!.setLogin(true)
+                            startActivity(Intent(this@LoginActivity, AllInOneActivity::class.java))
+                            finish()
+                        }
+                    }
+
                     override fun onResourceReady(resource: Bitmap, transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {
 
                         try {
                             val namePassive = product._id + "passive" + ".jpg"
 
                             var myDir = File(rootFolder, namePassive)
-
-
 
                             if (myDir.exists())
                                 myDir.delete()
@@ -373,73 +387,20 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
                         } catch (e: Exception) {
 
                             println(e)
-//                            temp++
-//                            Mylog.d("aaaaaaaaaa "+temp)
-//                            if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
-//                                percent = (temp.toFloat() / listProduct!!.size.toFloat() * 100f).toInt()
-//
-//                                showToast(percent)
-//                                Mylog.d("aaaaaaaaaa chay tiep: "+temp)
-//                                onDownload(listProduct!!.get(temp))
-//                            }
+                            temp++
+                            Mylog.d("aaaaaaaaaa "+temp)
+                            if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
+                                percent = (temp.toFloat() / listProduct!!.size.toFloat() * 100f).toInt()
+
+                                showToast(percent)
+                                Mylog.d("aaaaaaaaaa chay tiep: "+temp)
+                                onDownload(listProduct!!.get(temp))
+                            }
                         }
 
 
                     }
                 })
-
-//        current ++
-//        val mediaStorageDir = this@LoginActivity.getExternalFilesDir(null)
-//        val timeStamp = System.currentTimeMillis()
-//        var path2 = File.separator + "IMG_" + timeStamp + "_" + product.productTypeId.barcode + ".jpg"
-//
-//        Mylog.d("aaaaaaaaa product: "+product.imagechanged)
-//
-//        AndroidNetworking.initialize(this@LoginActivity, MyApplication.okhttpclient())
-//        AndroidNetworking.download(Constants.IMAGE_URL + product.imagechanged, mediaStorageDir.path, path2)
-//                .build()
-//                .setDownloadProgressListener(object: DownloadProgressListener{
-//                    override fun onProgress(bytesDownloaded: Long, totalBytes: Long) {
-//                        percent = (bytesDownloaded.toFloat() / totalBytes.toFloat() * 100f).toInt()
-//                        showToast("Sync... "+percent+"%")
-//                        Mylog.d("current=" + bytesDownloaded + ", total=" + totalBytes + ", percent=" + percent);
-//
-//                    }
-//
-//                })
-//                .startDownload(object : com.androidnetworking.interfaces.DownloadListener {
-//                    override fun onDownloadComplete() {
-//                        Log.d("REALMCONTROLLER", "UPDATE SUCCESS")
-//                        product.imagechanged = mediaStorageDir.path + path2
-//                        realm!!.updateProduct(product)
-////                                realm.beginTransaction()
-////                                backgroundRealm.copyToRealmOrUpdate(product)
-////                                backgroundRealm.commitTransaction()
-//                        Log.d("REALMCONTROLLER2", product.imagechanged)
-//
-//                        percent = (current / (listProduct!!.size) * 100f).toInt()
-//                        showToast("Sync... "+percent+"%")
-//                        temp ++
-//                        if(temp  < listProduct!!.size){
-//                            onDownload(listProduct!!.get(temp))
-//                        }else {
-//                            showToast("Sync... "+percent+"% complete")
-//                            startActivity(Intent(this@LoginActivity, HorizontalNtbActivity::class.java))
-//                        }
-//                    }
-//
-//                    override fun onError(anError: ANError?) {
-//                        temp ++
-//                        if(temp  < listProduct!!.size){
-//                                  onDownload(listProduct!!.get(temp))
-//                        }else {
-//                            showToast("Sync... "+percent+"% complete")
-//                            startActivity(Intent(this@LoginActivity, HorizontalNtbActivity::class.java))
-//                        }
-//                        Log.d("REALMCONTROLLER", anError?.errorDetail + "//ERROR" +
-//                                anError?.errorBody + "//" + product.imagechanged)
-//                    }
-//                })
 
     }
 

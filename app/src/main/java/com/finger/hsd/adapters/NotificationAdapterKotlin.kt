@@ -114,8 +114,7 @@ class NotificationAdapterKotlin(val mContext: Context, val listItem: ArrayList<N
 
             view.ln_item.setOnClickListener(View.OnClickListener {
                 mNotificationListener.onBadgeUpdate(20)
-                items.watched = true
-                realm.updateNotification(items._id!!)
+
                 view.ln_item.setBackgroundColor(mContext.resources.getColor(R.color.white))
 
                 itemClick.onItemClick(position, product!!)

@@ -46,7 +46,6 @@ import com.gun0912.tedpermission.TedPermission
 import com.rx2androidnetworking.Rx2AndroidNetworking
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
@@ -168,36 +167,63 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
             val nameChange: String? = mTvName.text.toString()
 
             if (ConnectivityChangeReceiver.isConnected()) {
-                if ((!TextUtils.isEmpty(note) && !noteChange.equals(note))
-                        || (!TextUtils.isEmpty(noteChange) && !name.equals(nameChange))
-                        || (!TextUtils.isEmpty(expiredTimeChange) && !expiredTime.equals(expiredTimeChange))) {
+                if ((!noteChange.equals(note))
+                        || (!name.equals(nameChange))
+                        || (expiredTimeChange!=null && !expiredTime.equals(expiredTimeChange))) {
 
                     presenter.processInfomationUpdate(idProduct, nameChange, expiredTimeChange, noteChange)
 
                 } else if (selectedUri != null) {
-
+                    Mylog.d("ttttttttt updateImage sau if(name!,name!..so on): "+selectedUri)
                     var file = File(getRealFilePath(this, selectedUri!!))
-                    UploadImage(idProduct, file)
+
+                    GlideApp.with(this)
+                            .asBitmap()
+                            .load(selectedUri)
+                            .apply(options)
+                            .into(object : SimpleTarget<Bitmap>() {
+                                override fun onResourceReady(resource: Bitmap,
+                                                             transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {
+
+                                    try {
+                                        val namePassive = product!!._id + "passive" + ".jpg"
+
+                                        var myDir = File(rootFolder, namePassive)
+
+                                        Mylog.d("aaaaaaaaaa my dir: " + myDir)
+
+                                        if (myDir.exists())
+                                            myDir.delete()
+
+                                        val out3 = FileOutputStream(myDir)
+
+                                        resource?.compress(Bitmap.CompressFormat.JPEG, 90, out3)
+                                        //changeProduct!!.imagechanged = Uri.fromFile(myDir).toString()
+                                        realm!!.realm.executeTransaction(Realm.Transaction {
+                                            product!!.imagechanged = Uri.fromFile(myDir).toString()
+
+                                        })
+
+                                        out3.flush()
+                                        out3.close()
+
+//                                    putIntenDataBack(false)
+
+                                        UploadImage(idProduct, file)
+
+                                    } catch (e: Exception) {
+
+                                        println(e)
+
+                                    }
+
+                                }
+                            })
                 }
             } else {
                 updateToRealm(noteChange!!, nameChange!!)
             }
 
-
-            /*
-            * update server
-            * */
-//            val noteChange = mTvNote.text.toString()
-//            val nameChange = mTvName.text.toString()
-//            if((!TextUtils.isEmpty(note) && !noteChange.equals(note))
-//                    || (!TextUtils.isEmpty(noteChange) && !name.equals(nameChange))
-//                    ||(!TextUtils.isEmpty(expiredTimeChange) && !expiredTime.equals(expiredTimeChange)) ) {
-//
-//                presenter.processInfomationUpdate(idProduct, nameChange, expiredTimeChange, noteChange)
-//            }else if (selectedUri != null) {
-//                var file = File(getRealFilePath(this, selectedUri!!))
-//                UploadImage(idProduct, file )
-//            }
         }
 
         mImChange.setOnClickListener {
@@ -220,7 +246,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         /*
           * update to realm*/
         // val changeProduct = product
-        if ((noteChange != null && !note.equals(noteChange)) || (nameChange != null && !name.equals(nameChange))
+        if (( !note.equals(noteChange)) || (!name.equals(nameChange))
                 || (expiredTimeChange != null && !expiredTime.equals(expiredTimeChange))) {
 
             if (expiredTimeChange != null && !expiredTime.equals(expiredTimeChange)) {
@@ -284,12 +310,13 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                                     //changeProduct!!.imagechanged = Uri.fromFile(myDir).toString()
                                     realm!!.realm.executeTransaction(Realm.Transaction {
                                         product!!.imagechanged = Uri.fromFile(myDir).toString()
+                                        product!!.isNewImage = true
                                     })
 
                                     out3.flush()
                                     out3.close()
 
-                                    putIntenDataBack(false)
+                                    putIntenDataBack(false, null, null)
 
 
                                 } catch (e: Exception) {
@@ -302,7 +329,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                         })
             } else {
 
-                putIntenDataBack(false)
+                putIntenDataBack(false, null, null)
             }
 
         } else if (selectedUri != null) {
@@ -328,16 +355,17 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
                                 val out3 = FileOutputStream(myDir)
 
-                                resource?.compress(Bitmap.CompressFormat.JPEG, 90, out3)
+                                resource.compress(Bitmap.CompressFormat.JPEG, 90, out3)
                                 //changeProduct!!.imagechanged = Uri.fromFile(myDir).toString()
                                 realm!!.realm.executeTransaction(Realm.Transaction {
                                     product!!.imagechanged = Uri.fromFile(myDir).toString()
+                                    product!!.isNewImage = true
                                 })
 
                                 out3.flush()
                                 out3.close()
 
-                                putIntenDataBack(false)
+                                putIntenDataBack(false, null, null)
 
 
                             } catch (e: Exception) {
@@ -352,7 +380,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
     }
 
-    fun putIntenDataBack(isSync: Boolean) {
+    fun putIntenDataBack(isSync: Boolean, nameChanged: String?, description: String?) {
 //        val intent = Intent()
 //        intent.putExtra("position", position!!)
 //        intent.putExtra("id_product", idProduct)
@@ -361,9 +389,20 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 //        changeProduct.isSyn = false
 //        realm!!.updateProduct(changeProduct)
 
-        realm!!.realm.executeTransaction(Realm.Transaction {
-            product!!.isSyn = isSync
-        })
+        if(isSync){
+            realm!!.realm.executeTransaction(Realm.Transaction {
+                product!!.namechanged = nameChanged
+                product!!.description = description
+                product!!.isSyn = isSync
+            })
+
+        }else{
+            realm!!.realm.executeTransaction(Realm.Transaction {
+                product!!.isSyn = isSync
+            })
+        }
+
+
         val a = Intent()
         a.putExtra("updateItem", true)
 
@@ -444,6 +483,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
     }
 
     override fun onSucess(response: Product_v, type: Int) {
+
         if (type == 333) {
 
             var days = 0
@@ -460,13 +500,15 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
             if (selectedUri != null) {
 //********* UPDATE image NEEUS NHU co thay đổi  *************
+                Mylog.d("ttttttttt updateImage onSucess: "+selectedUri)
                 var file = File(getRealFilePath(this, selectedUri!!))
                 GlideApp.with(this)
                         .asBitmap()
-                        .load(file)
+                        .load(selectedUri)
                         .apply(options)
                         .into(object : SimpleTarget<Bitmap>() {
-                            override fun onResourceReady(resource: Bitmap, transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {
+                            override fun onResourceReady(resource: Bitmap,
+                                                         transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {
 
                                 try {
                                     val namePassive = product!!._id + "passive" + ".jpg"
@@ -484,13 +526,17 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                                     //changeProduct!!.imagechanged = Uri.fromFile(myDir).toString()
                                     realm!!.realm.executeTransaction(Realm.Transaction {
                                         product!!.imagechanged = Uri.fromFile(myDir).toString()
+                                            product!!.namechanged = response.namechanged
+                                            product!!.description = response.description
+
                                     })
 
                                     out3.flush()
                                     out3.close()
 
-                                    putIntenDataBack(false)
+//                                    putIntenDataBack(false)
 
+                                    UploadImage(response._id!!, file)
 
                                 } catch (e: Exception) {
 
@@ -500,14 +546,10 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
                             }
                         })
-                UploadImage(response._id!!, file)
+
             } else {
 
-                realm!!.realm.executeTransaction(Realm.Transaction {
-                    product = response
-                })
-
-                putIntenDataBack(true)
+                putIntenDataBack(true, response.namechanged, response.description)
 
             }
 
@@ -601,15 +643,17 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
             //********* UPDATE THÀNH CÔNG *************
         }
 
-//********* XÓA SẢN PHẨM THÀNH CÔNG*************
+//********* XÓA SẢN PHẨM THÀNH CÔNG *************
         else if (type == 222) {
             var item = realm!!.getProduct(idProduct)
-            val fdelete = File(item!!.imagechanged)
-            if (fdelete.exists()) {
-                if (fdelete.delete()) {
-                    System.out.println("file Deleted :" )
-                } else {
-                    System.out.println("file not Deleted :")
+            if (item!!.imagechanged !=null) {
+                val fdelete = File(item!!.imagechanged)
+                if (fdelete.exists()) {
+                    if (fdelete.delete()) {
+                        System.out.println("file Deleted :")
+                    } else {
+                        System.out.println("file not Deleted :")
+                    }
                 }
             }
             realm!!.deleteProduct(idProduct)
@@ -672,6 +716,9 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                 resources.getString(R.string.recieve_one_notification) + " (" + daysbefor + " " + resources.getString(R.string.days) + ")"
 
         mTvNotification.text = strText
+        note = product!!.description
+        name = product!!.namechanged
+        expiredTime = product!!.expiretime.toString()
 
         idProduct = product!!._id!!
         if (TextUtils.isEmpty(product!!.namechanged)) mTvName.setHint(resources.getString(R.string.no_name))
@@ -829,7 +876,6 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         if (item.itemId == R.id.item_delete) {
-
             showDialogDelete(idProduct)
             return true
         } else if (item.itemId == R.id.home) {
@@ -839,16 +885,6 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
     }
 
-
-    //=========DIALOG SHOW CHOOSE DATE=================
-//    override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {
-//        var montht = month + 1
-//        tv_expiredtime.text = day.toString() + "/" + montht.toString() + "/" + year.toString()
-//
-//        calendar.set(year, month, day)
-//        expiredTimeChange = calendar.timeInMillis.toString()
-//
-//    }
 
     fun showDialogCustomDay() {
 
@@ -930,8 +966,9 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         })
         dialog_ok.setOnClickListener({
             if (ConnectivityChangeReceiver.isConnected()) {
+                var user = realm!!.getUser()!!
 
-                presenter.processDeleteProduct(idProduct)
+                presenter.processDeleteProduct(idProduct, user._id!!)
 
             } else {
 
@@ -1014,7 +1051,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
     }
 
     fun UploadImage(idProduct: String, file: File?) {
-        val disposable = CompositeDisposable()
+
         Rx2AndroidNetworking.upload(Constants.URL_UPDATE_IMAGE)
                 .addMultipartParameter("id_product", idProduct)
                 .addMultipartFile("image", CompressImage.compressImage(this@DetailProductActivity, file))
@@ -1040,8 +1077,8 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                     }
 
                     override fun onNext(response: Response) {
-
-                        putIntenDataBack(true)
+                        var productImage = response.product
+                        putIntenDataBack(true, productImage!!.namechanged, productImage!!.description)
 
 
                     }

@@ -1,12 +1,15 @@
 package com.finger.hsd
 
 import android.Manifest
+import android.content.ContentResolver
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.LocationManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.provider.MediaStore
 import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
@@ -18,7 +21,6 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
-import android.support.v7.widget.Toolbar
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -26,26 +28,39 @@ import android.view.*
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import com.androidnetworking.error.ANError
 import com.finger.hsd.activity.ContinuousCaptureActivity
-import com.finger.hsd.adapters.ViewPagerAdapter
 import com.finger.hsd.common.MyApplication
 import com.finger.hsd.fragment.FragmentProfile
 import com.finger.hsd.fragment.Home_Fragment
 import com.finger.hsd.fragment.NotificationFragment
 import com.finger.hsd.fragment.NotificationFragment.NotificationBadgeListener
+import com.finger.hsd.library.CompressImage
+import com.finger.hsd.manager.RealmController
+import com.finger.hsd.manager.SessionManager
+import com.finger.hsd.model.Notification
+import com.finger.hsd.model.Product_v
+import com.finger.hsd.model.Response
+import com.finger.hsd.model.User
+import com.finger.hsd.presenter.SyncPresenter
 import com.finger.hsd.util.ConnectivityChangeReceiver
+import com.finger.hsd.util.Constants
+import com.finger.hsd.util.Mylog
 import com.finger.hsd.view.BadgeView
+import com.rx2androidnetworking.Rx2AndroidNetworking
+import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import io.realm.Realm
+import me.leolin.shortcutbadger.ShortcutBadger
+import org.json.JSONObject
+import java.io.File
 import java.io.IOException
-import java.net.Socket
 
-class AllInOneActivity : BaseActivity(), NotificationBadgeListener, ConnectivityChangeReceiver.ConnectivityReceiverListener{
-    override fun onNetworkConnectionChanged(isConnected: Boolean) {
-        if (isConnected) {
-            showToast("CO MANG")
-        } else {
-            showToast(" KO CO MANG")
-        }
-    }
+class AllInOneActivity : BaseActivity(), NotificationBadgeListener, ConnectivityChangeReceiver.ConnectivityReceiverListener, SyncPresenter.ISyncPresenter{
+
+
 
     override fun onResume() {
         super.onResume()
@@ -62,16 +77,17 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
     internal var searchkey = ""
     internal var mImageview: ImageView? = null
     internal var scan_barcode_img:ImageView? = null
-    private var mSocket: Socket? = null
-    private var menuItemNotification: MenuItem? = null
-    val menusetting: MenuItem? = null
+
     private val perID = 1001
     internal var fabCreate: FloatingActionButton? = null
     private val tabLayout: TabLayout? = null
-    private var mLocationManager: LocationManager? = null
-    private var toolbar: Toolbar? = null
-    private val check = false
+
     var adapter:FragmentPagerAdapter? = null
+    var session : SessionManager? = null
+    var presenter: SyncPresenter? = null
+    var realm: RealmController? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_in_one)
@@ -86,6 +102,9 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimaryDark)
         }
+        presenter = SyncPresenter(this)
+        realm = RealmController(this)
+        session = SessionManager(this)
         viewPager = findViewById(R.id.viewpager)
         bottomNavigationView = findViewById(R.id.bottom_navigation)
         mImageview = findViewById<ImageView>(R.id.img_selete)
@@ -272,31 +291,32 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
 
     fun menuVisible(postion: Int) {
         //        check = true;
-//        when (postion) {
-//            0 ->
-//                // Its visible
-//                fabCreate!!.setVisibility(View.VISIBLE)
-//                //                    menusetting.getActionView().setVisibility(View.GONE);
-//
-//            1 ->
-//                if (toolbar!!.getVisibility() == View.VISIBLE) {
-//                // Its visible
-//                fabCreate!!.setVisibility(View.VISIBLE)
-//
-//            } else {
-//                fabCreate!!.setVisibility(View.VISIBLE)
-//                toolbar!!.setVisibility(View.VISIBLE)
-//
-//            }
-//            2 -> {
-//                toolbar!!.setVisibility(View.VISIBLE)
-//
-//                fabCreate!!.setVisibility(View.GONE)
-//
-//            }
-//
-//        }
+        when (postion) {
+
+            1 ->{
+                session!!.setCountNotification(0)
+                badgeIconScreen()
+            }
+
+
+        }
   }
+    fun badgeIconScreen() {
+        var badgeCount = 0
+
+        if (session!!.getCountNotification() > 0) {
+            try {
+                badgeCount = session!!.getCountNotification()
+            } catch (e: NumberFormatException) {
+                Mylog.d("badge Count screen: ", e.message!!)
+            }
+            ShortcutBadger.applyCount(applicationContext, badgeCount)
+        } else {
+            ShortcutBadger.removeCount(applicationContext)
+        }
+
+    }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
@@ -317,4 +337,170 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
         }
     }
 
+    var listProduct : ArrayList<Product_v>? = null
+    var listNotification : ArrayList<Notification>? = null
+    var temp: Int = 0
+    var indexNotification : Int = 0
+    var user : User? = null
+
+    override fun onNetworkConnectionChanged(isConnected: Boolean) {
+
+        if (isConnected) {
+            if(!session!!.isSync()) {
+                session!!.setIsSync(true)
+                listProduct = realm!!.getListProductNotSync()
+                user = realm!!.getUser()
+                temp = 0
+                indexNotification = 0
+                syncProduct()
+
+            }
+
+        } else {
+            // k update
+        }
+    }
+
+    fun syncProduct(){
+        if (listProduct != null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
+            if(listProduct!![temp].delete) {
+                presenter!!.processDeleteProduct(listProduct!![temp]._id!!, user!!._id!!)
+            }else{
+                presenter!!.updateProduct(listProduct!![temp])
+            }
+
+        } else {
+            listNotification = realm!!.getListNotificationNotSync()
+            syncNotification()
+        }
+    }
+
+    fun syncNotification(){
+        if (listNotification != null && !listNotification!!.isEmpty() && temp < listProduct!!.size) {
+            presenter!!.updateNotficationOnServer(listNotification!![indexNotification], user!!._id!!)
+        }else{
+            session!!.setIsSync(false)
+        }
+    }
+
+    override fun onSucess(response: JSONObject, type: Int) {
+        if(type == 111){
+            // delete product success
+            var idProduct = listProduct!![temp]._id!!
+            var item = realm!!.getProduct(idProduct)
+            if (item!!.imagechanged !=null) {
+                val fdelete = File(item.imagechanged)
+                if (fdelete.exists()) {
+                    if (fdelete.delete()) {
+                        System.out.println("file Deleted :")
+                    } else {
+                        System.out.println("file not Deleted :")
+                    }
+                }
+            }
+            realm!!.deleteProduct(idProduct)
+            realm!!.deleteNotification(idProduct)
+            var product = realm!!.getProduct(idProduct)
+            realm!!.realm.executeTransaction(Realm.Transaction {
+                product!!.isSyn = true
+            })
+
+            temp++
+            syncProduct()
+
+        }else if(type == 222){
+            // update product success
+            var idProduct = listProduct!![temp]._id!!
+            if (listProduct!![temp].isNewImage){
+
+                var file = File( listProduct!![temp].imagechanged!!)
+                UploadImage(idProduct, file)
+
+            }else{
+                var product = realm!!.getProduct(idProduct)
+                realm!!.realm.executeTransaction(Realm.Transaction {
+                    product!!.isSyn = true
+                })
+                temp++
+                syncProduct()
+            }
+        }else if (type == 333){
+            var  notification = listNotification!![indexNotification]
+            realm!!.realm.executeTransaction(Realm.Transaction {
+                notification.isSync = true
+                notification.watched = false
+            })
+            indexNotification++
+            syncNotification()
+
+        }
+    }
+
+    override fun onError(typeError: Int) {
+        if(typeError == 111){
+            // delete product fail
+            session!!.setIsSync(false)
+        }else if(typeError == 222){
+            // update product fail
+            session!!.setIsSync(false)
+        }else if(typeError== 333){
+            // update notification fail
+           session!!.setIsSync(false)
+        }
+    }
+
+    fun UploadImage(idProduct: String, file: File?) {
+
+        Rx2AndroidNetworking.upload(Constants.URL_UPDATE_IMAGE)
+                .addMultipartParameter("id_product", idProduct)
+                .addMultipartFile("image", CompressImage.compressImage(this, file))
+                .build()
+                .setAnalyticsListener { timeTakenInMillis, bytesSent, bytesReceived, isFromCache -> }
+                .getObjectObservable(Response::class.java)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : Observer<Response> {
+
+                    override fun onError(e: Throwable) {
+                        if (e is ANError) {
+                            Mylog.d(e.message!!)
+                        }
+                    }
+
+                    override fun onComplete() {
+
+                    }
+
+                    override fun onSubscribe(d: Disposable) {
+
+                    }
+
+                    override fun onNext(response: Response) {
+                        temp++
+                        syncProduct()
+                    }
+                })
+    }
+    fun getRealFilePath(context: Context, uri: Uri): String? {
+        if (null == uri) return null
+        val scheme: String = uri.scheme
+        var data: String? = null
+        if (scheme == null) {
+            data = uri.path
+        } else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
+            data = uri.path
+        } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
+            val cursor = context.getContentResolver().query(uri, arrayOf(MediaStore.Images.ImageColumns.DATA), null, null, null)
+            if (null != cursor) {
+                if (cursor.moveToFirst()) {
+                    val index: Int = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+                    if (index > -1) {
+                        data = cursor.getString(index)
+                    }
+                }
+                cursor.close()
+            }
+        }
+        return data
+    }
 }

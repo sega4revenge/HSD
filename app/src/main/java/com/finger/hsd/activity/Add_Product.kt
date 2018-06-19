@@ -68,6 +68,7 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
         super.onCreate(savedInstanceState)
         setContentView(R.layout.add_product_layout)
 
+
         initView()
         getData()
         if(barcodeIn!=null){

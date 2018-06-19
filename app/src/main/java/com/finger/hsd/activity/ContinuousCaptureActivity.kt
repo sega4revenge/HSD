@@ -159,6 +159,7 @@ class ContinuousCaptureActivity : Activity() {
 
         txtout2.setOnClickListener(object: View.OnClickListener{
             override fun onClick(v: View?) {
+                lastText = ""
                 mDialog_scan?.dismiss()
             }
 

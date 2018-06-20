@@ -17,7 +17,9 @@ val IMAGE_URL = Constants.BASE_URL + "getimage/?image="
     val URL_UPDATE_INFOMATION_PRODUCT = BASE_URL+ "product/update-infomation"
     val URL_CHANGE_DAY_BEFORE = BASE_URL + "product/changedaybefore"
     val URL_UPDATE_IMAGE = BASE_URL +"product/upload_image_product"
+//    -====Login==============
     val URL_LOGIN = BASE_URL +"login-android"
+    val URL_REGISTER_USER = BASE_URL +"register-android"
 
     val URL_UPDATE_NOTIFICATION = BASE_URL+"notification/update_or_add_notification"
 

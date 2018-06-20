@@ -307,6 +307,7 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
 
 
         } else {
+
             builder.onImageSelectedListener.onImageSelected(uri);
             dismissAllowingStateLoss();
         }

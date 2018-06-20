@@ -6,6 +6,7 @@ import com.androidnetworking.error.ANError
 import com.finger.hsd.model.Response
 import com.finger.hsd.model.User
 import com.finger.hsd.util.Constants
+import com.finger.hsd.util.Mylog
 import com.rx2androidnetworking.Rx2AndroidNetworking
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -127,7 +128,7 @@ var a : String?=null
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private fun getObservable_register(typesearch: String): Observable<Response> {
-        return Rx2AndroidNetworking.post(Constants.BASE_URL + typesearch)
+        return Rx2AndroidNetworking.post(typesearch)
                 .setTag(register)
                 .addJSONObjectBody(jsonObject)
                 .build()
@@ -152,7 +153,7 @@ var a : String?=null
                     Log.d(register, "onResponse isMainThread : " + (Looper.myLooper() == Looper.getMainLooper()).toString())
 
                     mLoginView.getUserDetail(response.user!!)
-                    mLoginView.isRegisterSuccessful(true)
+                  //  mLoginView.isRegisterSuccessful(true)
                 } else {
                     mLoginView.setErrorMessage("201")
                 }
@@ -182,18 +183,18 @@ var a : String?=null
         }
     }
 
-    fun register(user: User) {
-
+    fun register(user: User, type: Int) {
+        Mylog.d("aaaaaa types: "+type)
         try {
-
                 jsonObject.put("phone", user.phone)
                 jsonObject.put("password", user.password)
                 jsonObject.put("tokenfirebase", user.tokenfirebase)
+                jsonObject.put("type", type)
 
         } catch (e: JSONException) {
             e.printStackTrace()
         }
-        disposables.add(getObservable_register("users")
+        disposables.add(getObservable_register(Constants.URL_REGISTER_USER)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(getDisposableObserver_register()))

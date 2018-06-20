@@ -13,7 +13,6 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.util.Base64
 import android.util.Log
 import android.view.View
 import com.bumptech.glide.Priority
@@ -26,6 +25,7 @@ import com.facebook.login.LoginResult
 import com.finger.hsd.AllInOneActivity
 import com.finger.hsd.BaseActivity
 import com.finger.hsd.R
+import com.finger.hsd.R.id.*
 import com.finger.hsd.common.GlideApp
 import com.finger.hsd.common.MyApplication
 import com.finger.hsd.manager.RealmController
@@ -188,7 +188,7 @@ fun getKeyHash(){
         for (signature in info.signatures) {
             val md = MessageDigest.getInstance("SHA")
             md.update(signature.toByteArray())
-            Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+          //  Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
         }
     } catch (e: PackageManager.NameNotFoundException) {
 

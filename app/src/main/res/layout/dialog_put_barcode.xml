@@ -19,6 +19,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginBottom="30dp"
         android:id="@+id/edit_barcode"
+        android:maxLength="13"
         android:inputType="number"/>
     <TextView
         android:layout_width="match_parent"

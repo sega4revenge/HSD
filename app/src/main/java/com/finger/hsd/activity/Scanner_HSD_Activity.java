@@ -123,7 +123,7 @@ public class Scanner_HSD_Activity extends AppCompatActivity {
                     .setAutoFocusEnabled(true)
                     .setFacing(CameraSource.CAMERA_FACING_BACK)
                     .setRequestedFps(2.0f)
-                    .setRequestedPreviewSize(width/2, height/2)
+                    .setRequestedPreviewSize(width, height)
                     .build();
 
             textRecognizer.setProcessor(new Detector.Processor<TextBlock>() {

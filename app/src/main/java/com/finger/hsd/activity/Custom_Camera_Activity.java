@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Surface;
 import android.view.View;
@@ -58,6 +59,7 @@ public class Custom_Camera_Activity extends Activity {
     private MaterialDialog mDialogProgress;
     private String name="",detail="",ex="";
     private long exTime = 0;
+    FrameLayout preview;
     private String TAG = "Custom_Camera_Activity";
     /** Called when the activity is first created. */
     @Override
@@ -89,7 +91,7 @@ public class Custom_Camera_Activity extends Activity {
 
 
         mCameraPreview = new Camera_Preview(this, mCamera);
-        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+        preview = (FrameLayout) findViewById(R.id.camera_preview);
         arrow_back = (ImageView) findViewById(R.id.arrow_back);
         preview.addView(mCameraPreview);
 
@@ -118,7 +120,21 @@ public class Custom_Camera_Activity extends Activity {
             }
         });
     }
-
+    private int findFrontFacingCameraID() {
+        int cameraId = -1;
+        // Search for the front facing camera
+        int numberOfCameras = Camera.getNumberOfCameras();
+        for (int i = 0; i < numberOfCameras; i++) {
+            Camera.CameraInfo info = new Camera.CameraInfo();
+            Camera.getCameraInfo(i, info);
+            if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                Log.d(TAG, "Camera found");
+                cameraId = i;
+                break;
+            }
+        }
+        return cameraId;
+    }
     private void getData() {
         Intent i = getIntent();
         type = i.getIntExtra("type",1);
@@ -135,12 +151,26 @@ public class Custom_Camera_Activity extends Activity {
 
 
     /** A safe way to get an instance of the Camera object. */
-    public static Camera getCameraInstance(){
+    public  Camera getCameraInstance(){
         Camera c = null;
+//        boolean cameraAccessible = false;
+//        while (!cameraAccessible) {
+//            try {
+//                c = Camera.open(); // attempt to get a Camera instance
+//                cameraAccessible = true;
+//            }
+//            catch (Exception e){
+//                Log.v(TAG, "Camera not yet accessible");
+//            }
+//        }
+//        c.release();
+//        c = Camera.open();
+//        return c;
         try {
             c = Camera.open(); // attempt to get a Camera instance
         }
         catch (Exception e){
+            Log.d("IMAGEEEEEEEEEEEEEEE",e.getMessage()+"////messss");
             // Camera is not available (in use or does not exist)
         }
         return c; // returns null if camera is unavailable
@@ -160,9 +190,11 @@ public class Custom_Camera_Activity extends Activity {
                 fos.close();
                 check = true;
             } catch (FileNotFoundException e) {
+                Log.d("aaaaaaaaaaaaaaa",e.getMessage());
                 mDialogProgress.dismiss();
 
             } catch (IOException e) {
+                Log.d("aaaaaaaaaaaaaaa222222",e.getMessage());
                 mDialogProgress.dismiss();
             }
             if(check){

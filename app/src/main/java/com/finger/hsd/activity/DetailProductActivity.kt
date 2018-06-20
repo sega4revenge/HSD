@@ -289,7 +289,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
                 GlideApp.with(this)
                         .asBitmap()
-                        .load(file)
+                        .load(selectedUri)
                         .apply(options)
                         .into(object : SimpleTarget<Bitmap>() {
                             override fun onResourceReady(resource: Bitmap, transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {

@@ -26,8 +26,8 @@ object CompressImage{
         var actualWidth = options.outWidth
 
 
-        val maxHeight = 1632.0f
-        val maxWidth = 1224.0f
+        val maxHeight = 816.0f
+        val maxWidth = 612.0f
         var imgRatio = (actualWidth / actualHeight).toFloat()
         val maxRatio = maxWidth / maxHeight
 

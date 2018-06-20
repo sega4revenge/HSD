@@ -19,6 +19,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.finger.hsd.R
+import com.finger.hsd.activity.ContinuousCaptureActivity
 import com.finger.hsd.activity.DetailProductActivity
 import com.finger.hsd.activity.Scanner_Barcode_Activity
 import com.finger.hsd.adapters.MainListAdapterKotlin
@@ -175,8 +176,10 @@ class Home_Fragment : android.support.v4.app.Fragment(),MainListAdapterKotlin.On
                     mRetrofitService = ApiUtils.getAPI()
                     mRetrofitService?.deleteGroup(listDelete!!)?.enqueue(object: Callback<Result_Product>{
                         override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
+                            for(i in 0 until arrID.size){
+                                arrID.get(i).isSyn = false
+                            }
                             myRealm?.deletelistproduct(arrID,this@Home_Fragment)
-                          //  Toast.makeText(activity,"Error! \n message:"+t?.message, Toast.LENGTH_SHORT).show()
                         }
 
                         override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
@@ -203,10 +206,10 @@ class Home_Fragment : android.support.v4.app.Fragment(),MainListAdapterKotlin.On
         val mView:View = View.inflate(activity,R.layout.not_found_product,null)
         dialog.setView(mView)
         var create = mView.lin_create
-        dialog.setCancelable(false)
+       // dialog.setCancelable(false)
         create.setOnClickListener(object: View.OnClickListener{
             override fun onClick(v: View?) {
-                val i = Intent(activity,Scanner_Barcode_Activity::class.java)
+                val i = Intent(activity,ContinuousCaptureActivity::class.java)
                 startActivity(i)
                 mDialog?.dismiss()
             }
@@ -231,7 +234,8 @@ class Home_Fragment : android.support.v4.app.Fragment(),MainListAdapterKotlin.On
         mPositionEX = -1
         mPositionProtect = -1
         mPositionWaring = -1
-        getDataFromServer()
+        loadData()
+     //   getDataFromServer()
     }
 
     override fun onupdateProduct(type: Int,product:Product_v) {
@@ -303,6 +307,7 @@ class Home_Fragment : android.support.v4.app.Fragment(),MainListAdapterKotlin.On
                             showDialog("Đang đồng bộ dữ liệu...")
                             myRealm?.updateorCreateListProduct(response.body().listProduct,this@Home_Fragment)
                         }else if(myRealm?.getlistProduct()!!.size==0){
+
                             showDialogNotFound()
                         }
                     }
@@ -365,7 +370,7 @@ class Home_Fragment : android.support.v4.app.Fragment(),MainListAdapterKotlin.On
     fun loadData(){
         listProduct = myRealm?.getlistProduct()
         if(listProduct != null && listProduct?.size!! > 0) {
-
+            if(mRec?.visibility != View.VISIBLE) {mRec?.visibility = View.VISIBLE}
             val sdf = SimpleDateFormat("dd/MM/yyyy")
             val stringToday = sdf.format(Date())
             val exToday = sdf.parse(stringToday)
@@ -419,6 +424,9 @@ class Home_Fragment : android.support.v4.app.Fragment(),MainListAdapterKotlin.On
             mAdapter = MainListAdapterKotlin(mContext!!, listData, listheader!!, this)
             mRec?.adapter = mAdapter
             mDialogProgress?.dismiss()
+        }else{
+            if(mRec?.visibility != View.GONE) {mRec?.visibility = View.GONE}
+            showDialogNotFound()
         }
     }
 

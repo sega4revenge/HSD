@@ -6,13 +6,13 @@
 
 
 
-    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+    <com.finger.hsd.library.DecoratedBarcodeView
         android:id="@+id/barcode_scanner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:zxing_scanner_layout="@layout/custom_barcode_scanner">
 
-    </com.journeyapps.barcodescanner.DecoratedBarcodeView>
+    </com.finger.hsd.library.DecoratedBarcodeView>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"

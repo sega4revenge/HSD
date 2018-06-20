@@ -72,8 +72,11 @@ class Scanner_Barcode_Activity : BaseScannerActivity(), View.OnClickListener ,ZX
         } catch (ie: IOException) {
             Log.e("CAMERA SOURCE", ie.message)
         }
-
-
+        var addproduct =findViewById<TextView>(R.id.addproduct)
+        addproduct.setOnClickListener {
+            val i = Intent(this@Scanner_Barcode_Activity, Custom_Camera_Activity::class.java)
+            startActivity(i)
+        }
 
     //    txManual = findViewById<TextView>(R.id.addmanual)
     //    txAddProduct = findViewById<TextView>(R.id.addproduct)

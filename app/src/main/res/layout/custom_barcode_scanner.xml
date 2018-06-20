@@ -3,14 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.journeyapps.barcodescanner.BarcodeView
+    <com.finger.hsd.library.BarcodeView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/zxing_barcode_surface"
         app:zxing_framing_rect_width="250dp"
         app:zxing_framing_rect_height="100dp"/>
 
-    <com.journeyapps.barcodescanner.ViewfinderView
+    <com.finger.hsd.library.ViewfinderView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/zxing_viewfinder_view"

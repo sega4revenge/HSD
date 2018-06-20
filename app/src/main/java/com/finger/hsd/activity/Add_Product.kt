@@ -1,12 +1,23 @@
 package com.finger.hsd.activity
 
+import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.ContentResolver
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
@@ -15,15 +26,15 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.SimpleTarget
 import com.finger.hsd.AllInOneActivity
 import com.finger.hsd.R
+import com.finger.hsd.common.GlideApp
 import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.Result_Product
-import com.finger.hsd.util.ApiUtils
-import com.finger.hsd.util.CompressImage
-import com.finger.hsd.util.ConnectivityChangeReceiver
-import com.finger.hsd.util.RetrofitService
+import com.finger.hsd.util.*
+import io.realm.Realm
 import kotlinx.android.synthetic.main.dialog_timepicker.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -32,6 +43,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -60,9 +73,15 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
     private var mDialog:Dialog? =null
     private final val CODE_RESULT_IMAGE_SELECT = 1001
     var path:String? = null
+    var pathUri:Uri? = null
     private var haveImage = false
     var barcodeIn:String? = null
     private var mDialogProgress: MaterialDialog? = null
+    val options = RequestOptions()
+            .centerCrop()
+            .dontAnimate()
+            .placeholder(R.mipmap.ic_launcher)
+            .priority(Priority.HIGH)
     var type:Int? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,58 +127,69 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
 
         if(type==1 || type ==0){
             path = mData.getStringExtra("path")
-
-            img_product?.setImageBitmap(BitmapFactory.decodeFile(path))
+            pathUri = Uri.parse(path)
+            Glide.with(this@Add_Product)
+                    .load(pathUri?.path)
+                    .thumbnail(0.1f)
+                    .apply(options)
+                    .into(img_product!!)
             if(type==1){
                 barcodeIn = mData.getStringExtra("barcode")
             }
         }else if(type ==2 || type ==3){
             if(type==2)
             {
-                path = mData.getStringExtra("image")
-                val options = RequestOptions()
-                        .centerCrop()
-                        .dontAnimate()
-                        .placeholder(R.mipmap.ic_launcher)
-                        .priority(Priority.HIGH)
+                path = mData.getStringExtra("path")
+
                 Glide.with(this@Add_Product)
                         .load(path)
                         .thumbnail(0.1f)
                         .apply(options)
                         .into(img_product!!)
-
-//                Picasso.Builder(this)
-//                        .downloader(OkHttp3Downloader(MyApplication.okhttpclient()))
-//                        .build().load(path).resize(60,60).error(R.drawable.ic_add_photo).placeholder(R.drawable.ic_calendar).into(img_product!!)
             }
             barcodeIn = mData.getStringExtra("barcode")
             edit_nameproduct?.setText(mData.getStringExtra("name"))
-            if(type==3){
-                path = mData.getStringExtra("path")
-                img_product?.setImageBitmap(BitmapFactory.decodeFile(path))
-                edit_chitiet?.setText(mData.getStringExtra("detail"))
-                edit_ex?.setText(mData.getStringExtra("ex"))
-                miliexDate = mData.getLongExtra("exTime",20)
-                if(!edit_ex?.text.isNullOrEmpty()){
-                    updateEX(miliexToday!!, miliexDate!!)
-                }
+            if(type==3)
+            {
+                path = mData.getStringExtra("image")
 
+                Glide.with(this@Add_Product)
+                        .load(path)
+                        .thumbnail(0.1f)
+                        .apply(options)
+                        .into(img_product!!)
             }
+//            if(type==3){
+//                path = mData.getStringExtra("path")
+//                Glide.with(this@Add_Product)
+//                        .load(path)
+//                        .thumbnail(0.1f)
+//                        .apply(options)
+//                        .into(img_product!!)
+//                edit_chitiet?.setText(mData.getStringExtra("detail"))
+//                edit_ex?.setText(mData.getStringExtra("ex"))
+//                miliexDate = mData.getLongExtra("exTime",20)
+//                if(!edit_ex?.text.isNullOrEmpty()){
+//                    updateEX(miliexToday!!, miliexDate!!)
+//                }
+//
+//            }
         }
     }
 
     override fun onClick(v: View?) {
         when(v?.id){
             select_img?.id ->{
-                val i = Intent(this@Add_Product,Custom_Camera_Activity::class.java)
-                    i.putExtra("type",CODE_RESULT_IMAGE_SELECT)
-                    i.putExtra("name",edit_nameproduct?.text.toString())
-                    i.putExtra("ex",edit_ex?.text.toString())
-                    i.putExtra("exTime",miliexDate)
-                    i.putExtra("detail",edit_chitiet?.text.toString())
-                    i.putExtra("barcode",barcode?.text.toString())
-                    startActivity(i)
-               //     startActivityForResult(i,CODE_RESULT_IMAGE_SELECT)
+                dispatchTakePictureIntent(111)
+//                val i = Intent(this@Add_Product,Custom_Camera_Activity::class.java)
+//                    i.putExtra("type",CODE_RESULT_IMAGE_SELECT)
+//                    i.putExtra("name",edit_nameproduct?.text.toString())
+//                    i.putExtra("ex",edit_ex?.text.toString())
+//                    i.putExtra("exTime",miliexDate)
+//                    i.putExtra("detail",edit_chitiet?.text.toString())
+//                    i.putExtra("barcode",barcode?.text.toString())
+//                    startActivity(i)
+//               //     startActivityForResult(i,CODE_RESULT_IMAGE_SELECT)
             }
             scanner_ex?.id ->{
                 val i = Intent(this@Add_Product,Scanner_HSD_Activity::class.java)
@@ -187,13 +217,13 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
                 bt_post?.visibility = View.GONE
                 showDialog()
                 if(path.isNullOrEmpty() || edit_nameproduct?.text.isNullOrEmpty() || edit_ex?.text.isNullOrEmpty() || txtEX?.text.isNullOrEmpty() || barcodeIn?.isNullOrEmpty()!! || miliexDate == 0L){
-                    Toast.makeText(this,"Nhập đầy đủ thôngtin",Toast.LENGTH_LONG).show()
+                    Toast.makeText(this,"Nhập đầy đủ thông tin",Toast.LENGTH_LONG).show()
                     mDialogProgress?.dismiss()
                     bt_post?.visibility = View.VISIBLE
                 }else{
                  if(ConnectivityChangeReceiver.isConnected()){
                     mRetrofitService = ApiUtils.getAPI()
-                    if(type==2){//==========Truong Hop k update image
+                    if(type==2 || type==3){//==========Truong Hop k update image
                         mRetrofitService?.addProduct_nonImage(edit_nameproduct?.text.toString(),barcodeIn.toString(),miliexDate.toString(),"5b21d1f9fe313f03da828118",edit_chitiet?.text.toString())?.enqueue(object: Callback<Result_Product>{
                             override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
                                 Toast.makeText(this@Add_Product,"Error! \n message:"+t?.message,Toast.LENGTH_SHORT).show()
@@ -216,7 +246,7 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
                             }
                         })
                     }else{ //==========Truong Hop  update image
-                            val mediaFile = File(path)
+                            val mediaFile = File(pathUri?.path)
 
                             val requestFile =
                                     RequestBody.create(MediaType.parse("multipart/form-data"), CompressImage.compressImage(mediaFile,getApplicationContext()))
@@ -245,15 +275,16 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
                                 override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
                                     if(response?.isSuccessful!!){
                                         if(response.code()==200){
-                                            Log.d("ErrorErrorError",response.body().product.toString()+"//"+response.body().product._id)
-                                            var mProduct = response.body().product
-                                            mProduct.imagechanged = path
-                                            mProduct.barcode = barcodeIn
-                                            mProduct.isSyn = true
-                                            myRealm?.addProduct(mProduct)
-                                            if(myRealm?.checkaddsuccess(mProduct._id!!)!!>0){
-                                                onupdateProduct(1,mProduct)
-                                            }
+                                            saveimageinMyApp(response.body().product,pathUri!!)
+//                                            Log.d("ErrorErrorError",response.body().product.toString()+"//"+response.body().product._id)
+//                                            var mProduct = response.body().product
+//                                            mProduct.imagechanged = path
+//                                            mProduct.barcode = barcodeIn
+//                                            mProduct.isSyn = true
+//                                            myRealm?.addProduct(mProduct)
+//                                            if(myRealm?.checkaddsuccess(mProduct._id!!)!!>0){
+//                                                onupdateProduct(1,mProduct)
+//                                            }
                                         }
                                     }else{
                                         mDialogProgress?.dismiss()
@@ -291,10 +322,127 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
             }
         }
     }
+    private var cameraImageUri: Uri? = null
+    private fun getImageFile(): File? {
+        // Create an image file name
+        var imageFile: File? = null
+        try {
+            val timeStamp = SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(Date())
+            val imageFileName = "JPEG_" + timeStamp + "_"
+            val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+
+            if (!storageDir.exists())
+                storageDir.mkdirs()
+
+            imageFile = File.createTempFile(
+                    imageFileName, /* prefix */
+                    ".jpg", /* suffix */
+                    storageDir      /* directory */
+            )
+
+
+            // Save a file: path for use with ACTION_VIEW intents
+            cameraImageUri = Uri.fromFile(imageFile)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            // errorMessage("Could not create imageFile for camera")
+        }
+
+
+        return imageFile
+    }
+    private fun dispatchTakePictureIntent(mType:Int) {
+        var permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1001)
+        }else {
+            val cameraInent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            if (cameraInent.resolveActivity(this.getPackageManager()) == null) {
+                //      errorMessage("This Application do not have Camera Application")
+                return
+            }
+
+            val imageFile = getImageFile()
+            val photoURI = FileProvider.getUriForFile(this, this.getApplicationContext().getPackageName() + ".provider", imageFile!!)
+
+            val resolvedIntentActivities = this.getPackageManager().queryIntentActivities(cameraInent, PackageManager.MATCH_DEFAULT_ONLY)
+            for (resolvedIntentInfo in resolvedIntentActivities) {
+                val packageName = resolvedIntentInfo.activityInfo.packageName
+                this.grantUriPermission(packageName, photoURI, Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+
+            cameraInent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+
+            startActivityForResult(cameraInent, mType)
+        }
+    }
     override fun onupdate() {
     }
+    fun saveimageinMyApp(product : Product_v,uri:Uri){
+        var file = File(getRealFilePath(this, uri))
+        GlideApp.with(this)
+                .asBitmap()
+                .load(file)
+                .apply(options)
+                .into(object : SimpleTarget<Bitmap>() {
+                    override fun onResourceReady(resource: Bitmap, transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {
+
+                        try {
+                            val namePassive = product!!._id + "passive" + ".jpg"
+                            var rootFolder = File(filesDir.toString() + "/files")
+                            var myDir = File(rootFolder, namePassive)
 
 
+                            if (myDir.exists())
+                                myDir.delete()
+
+                            val out3 = FileOutputStream(myDir)
+
+                            resource.compress(Bitmap.CompressFormat.JPEG, 90, out3)
+
+                            product!!.imagechanged = Uri.fromFile(myDir).toString()
+                            product.barcode = barcodeIn
+                            product.isSyn = true
+                            myRealm?.addProduct(product)
+                            if(myRealm?.checkaddsuccess(product._id!!)!!>0){
+                                onupdateProduct(1,product)
+                            }
+
+                            out3.flush()
+                            out3.close()
+
+                        } catch (e: Exception) {
+
+                            println(e)
+
+                        }
+
+                    }
+                })
+    }
+    fun getRealFilePath(context: Context, uri: Uri): String? {
+        if (null == uri) return null
+        val scheme: String = uri.scheme
+        var data: String? = null
+        if (scheme == null) {
+            data = uri.path
+        } else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
+            data = uri.path
+        } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
+            val cursor = context.getContentResolver().query(uri, arrayOf(MediaStore.Images.ImageColumns.DATA), null, null, null)
+            if (null != cursor) {
+                if (cursor.moveToFirst()) {
+                    val index: Int = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+                    if (index > -1) {
+                        data = cursor.getString(index)
+                    }
+                }
+                cursor.close()
+            }
+        }
+        return data
+    }
     fun showHourPicker() {
         var mDate = ""
         var datedialog = AlertDialog.Builder(this@Add_Product)
@@ -399,6 +547,19 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == Activity.RESULT_OK){
+            if(requestCode==111){
+                if(!cameraImageUri.toString().isNullOrEmpty()){
+                    type = 1
+                    pathUri = cameraImageUri
+                    Glide.with(this@Add_Product)
+                            .load(pathUri?.path)
+                            .thumbnail(0.1f)
+                            .apply(options)
+                            .into(img_product!!)
+                }
+            }
+        }
         if(requestCode == RESULT_SCANNER){
             if(resultCode == 1000){
                 var dateChoose = data?.getStringExtra("dateChoose")
@@ -417,5 +578,6 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
                 updateEX(miliexToday!!,miliexDate!!)
             }
         }
+
     }
 }

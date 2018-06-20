@@ -1,13 +1,22 @@
 package com.finger.hsd.activity
 
+import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.hardware.Camera
+import android.media.MediaScannerConnection
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.FileProvider
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
@@ -16,6 +25,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
+import com.finger.hsd.BuildConfig
 
 import com.finger.hsd.R
 import com.finger.hsd.manager.RealmController
@@ -28,8 +38,10 @@ import com.google.zxing.ResultPoint
 import com.google.zxing.client.android.BeepManager
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
-import com.journeyapps.barcodescanner.DecoratedBarcodeView
+import com.finger.hsd.library.DecoratedBarcodeView
+import com.finger.hsd.util.Mylog
 import com.journeyapps.barcodescanner.DefaultDecoderFactory
+import com.journeyapps.barcodescanner.camera.CameraManager
 import kotlinx.android.synthetic.main.dialog_put_barcode.view.*
 import kotlinx.android.synthetic.main.dialog_scanner_barcode_.view.*
 import kotlinx.android.synthetic.main.dialog_timepicker.view.*
@@ -38,6 +50,9 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -51,9 +66,10 @@ class ContinuousCaptureActivity : Activity() {
     private var mDialog: Dialog? = null
     private var mDialog_scan: Dialog? = null
     private var mRetrofitService: RetrofitService? = null
-    private val arrBarcode = ""
+    private var arrBarcode:String = ""
     private var mBitmap:Bitmap? = null
     private val mRealm: RealmController? = null
+    private var mStatusChoose = 0
     private val callback = object : BarcodeCallback {
         override fun barcodeResult(result: BarcodeResult) {
             if (result.text == null || result.text == lastText) {
@@ -73,10 +89,8 @@ class ContinuousCaptureActivity : Activity() {
         }
 
         override fun possibleResultPoints(resultPoints: List<ResultPoint>) {
-        ///    if (resultPoints.size > 0)
-         //       Log.d("ContinuousCapt", resultPoints[0].toString() + "/123/")
-            // Toast.makeText(ContinuousCaptureActivity.this, resultPoints.get(0).toString()+"//", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,9 +104,7 @@ class ContinuousCaptureActivity : Activity() {
             showDialogInputBarcoe()
         })
         addproduct.setOnClickListener(View.OnClickListener {
-            val i = Intent(this@ContinuousCaptureActivity, Custom_Camera_Activity::class.java)
-            i.putExtra("type",0)
-            startActivity(i)
+            dispatchTakePictureIntent(111)
         })
         backimg.setOnClickListener(View.OnClickListener {
             finish()
@@ -101,7 +113,6 @@ class ContinuousCaptureActivity : Activity() {
         val formats = Arrays.asList(BarcodeFormat.EAN_13, BarcodeFormat.EAN_8)
         barcodeView!!.barcodeView.decoderFactory = DefaultDecoderFactory(formats)
         barcodeView!!.decodeContinuous(callback)
-
         beepManager = BeepManager(this)
     }
 
@@ -113,7 +124,7 @@ class ContinuousCaptureActivity : Activity() {
                 var product =  mRealm?.getProductWithBarcode(barcode)
                 if(product != null){
                     val i = Intent(this@ContinuousCaptureActivity,Add_Product::class.java)
-                    i.putExtra("type",1)
+                    i.putExtra("type",2)
                     i.putExtra("barcode",product.barcode.toString())
                     i.putExtra("name",product.namechanged.toString())
                     i.putExtra("path",product.imagechanged.toString())
@@ -129,7 +140,7 @@ class ContinuousCaptureActivity : Activity() {
                     if(response?.code()==200){
                         val mProduct = response.body().productType
                         val i = Intent(this@ContinuousCaptureActivity,Add_Product::class.java)
-                        i.putExtra("type",2)
+                        i.putExtra("type",3)
                         i.putExtra("barcode",mProduct.barcode.toString())
                         i.putExtra("name",mProduct.name.toString())
                         i.putExtra("image", Constants.IMAGE_URL+mProduct.image.toString())
@@ -160,16 +171,15 @@ class ContinuousCaptureActivity : Activity() {
         txtout2.setOnClickListener(object: View.OnClickListener{
             override fun onClick(v: View?) {
                 lastText = ""
+             //   barcodeView!!.decodeSingle(callback)
                 mDialog_scan?.dismiss()
             }
 
         })
         txtok2.setOnClickListener(object: View.OnClickListener{
             override fun onClick(v: View?) {
-                val i = Intent(this@ContinuousCaptureActivity,Custom_Camera_Activity::class.java)
-                    i.putExtra("type",1)
-                    i.putExtra("barcode",barcode)
-                    startActivity(i)
+                arrBarcode = barcode
+                dispatchTakePictureIntent(222)
                 mDialog_scan?.dismiss()
             }
 
@@ -216,6 +226,7 @@ class ContinuousCaptureActivity : Activity() {
                     if(mEdit.text.toString().length<6){
                         Toast.makeText(applicationContext,"Barcode not true", Toast.LENGTH_LONG).show()
                     }else{
+                        arrBarcode = mEdit.text.toString();
                         checkBarcode(mEdit.text.toString())
                     }
                 }else{
@@ -232,16 +243,134 @@ class ContinuousCaptureActivity : Activity() {
     }
     override fun onResume() {
         super.onResume()
+        lastText = ""
         barcodeView!!.resume()
     }
 
     override fun onPause() {
         super.onPause()
-        barcodeView!!.pause()
+        barcodeView!!.pauseAndWait()
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         return barcodeView!!.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            Log.d("aaaaaaaaa",cameraImageUri.toString())
+            when(requestCode){
+                111 ->{
+                    if(cameraImageUri != null&&!cameraImageUri.toString().isNullOrEmpty()){
+                        val i = Intent(this@ContinuousCaptureActivity,Add_Product::class.java)
+                        i.putExtra("type",0)
+                        i.putExtra("path",cameraImageUri.toString())
+                        startActivity(i)
+                    }
+                }
+                222->{
+                    if(cameraImageUri != null && !cameraImageUri.toString().isNullOrEmpty()){
+                        val i = Intent(this@ContinuousCaptureActivity,Add_Product::class.java)
+                        i.putExtra("type",1)
+                        i.putExtra("path",cameraImageUri.toString())
+                        i.putExtra("barcode",arrBarcode)
+                        startActivity(i)
+                    }
+                }
+                1001->{
+
+                }
+            }
+        }
+
+    }
+
+
+    val REQUEST_TAKE_PHOTO = 1
+    var mCurrentPhotoPath: String? = null
+
+    private fun dispatchTakePictureIntent(mType:Int) {
+        var permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1001)
+        }else{
+            val cameraInent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            if (cameraInent.resolveActivity(this.getPackageManager()) == null) {
+                //      errorMessage("This Application do not have Camera Application")
+                return
+            }
+
+            val imageFile = getImageFile()
+            val photoURI = FileProvider.getUriForFile(this, this.getApplicationContext().getPackageName() + ".provider", imageFile!!)
+
+            val resolvedIntentActivities = this.getPackageManager().queryIntentActivities(cameraInent, PackageManager.MATCH_DEFAULT_ONLY)
+            for (resolvedIntentInfo in resolvedIntentActivities) {
+
+                val packageName = resolvedIntentInfo.activityInfo.packageName
+                this.grantUriPermission(packageName, photoURI, Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+
+            cameraInent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+
+            startActivityForResult(cameraInent, mType)
+        }
+
+
+    }
+
+
+    private var cameraImageUri: Uri? = null
+    private fun getImageFile(): File? {
+        // Create an image file name
+        var imageFile: File? = null
+        try {
+            val timeStamp = SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(Date())
+            val imageFileName = "JPEG_" + timeStamp + "_"
+            val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+
+            if (!storageDir.exists())
+                storageDir.mkdirs()
+
+            imageFile = File.createTempFile(
+                    imageFileName, /* prefix */
+                    ".jpg", /* suffix */
+                    storageDir      /* directory */
+            )
+            cameraImageUri = Uri.fromFile(imageFile)
+        } catch (e: IOException) {
+            e.printStackTrace()
+           // errorMessage("Could not create imageFile for camera")
+        }
+
+
+        return imageFile
+    }
+
+
+    private fun getOutputMediaFile(): File {
+        val mediaStorageDir = this.getExternalFilesDir(null)
+        //   if (!mediaStorageDir.exists()) {
+        //    if (!mediaStorageDir.mkdirs()) {
+        //        Log.d("Custom_Camera_Activity", "failed to create directory");
+        //        return null;
+        //     }
+        //  }
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss")
+                .format(Date())
+        val mediaFile: File
+        mediaFile = File(mediaStorageDir!!.path + File.separator
+                + "IMG_" + timeStamp + ".jpg")
+
+        mCurrentPhotoPath = mediaFile.absolutePath
+        return mediaFile
     }
 
     companion object {

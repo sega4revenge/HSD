@@ -28,25 +28,6 @@ var a : String?=null
     var task: TimerTask? = null
     var timer : Timer? = null
     private fun getObservable_login(typesearch: String): Observable<Response> {
-        var  startTime = System.nanoTime();
-        val total = 100
-        var current = 0
-        var percent: Int = 0
-
-//        task = object : TimerTask() {
-//            internal var mHandler = Handler()
-//
-//            override fun run() {
-//                mHandler.post(Runnable {
-//                    mLoginView.isProgressData(percent)
-//
-//                })
-//            }
-//        }
-
-//        timer = Timer()
-//        timer!!.scheduleAtFixedRate(task, 0, 500)
-
 
         return Rx2AndroidNetworking.post(Constants.URL_LOGIN)
                 .setTag(login)
@@ -208,7 +189,7 @@ var a : String?=null
 
 
     interface LoginView {
-        fun isProgressData(percent : Int)
+
         fun isLoginSuccessful(isLoginSuccessful: Boolean)
         fun isRegisterSuccessful(isRegisterSuccessful: Boolean)
         fun setErrorMessage(errorMessage: String)

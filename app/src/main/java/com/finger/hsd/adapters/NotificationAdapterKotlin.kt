@@ -73,11 +73,18 @@ class NotificationAdapterKotlin(val mContext: Context, val listItem: ArrayList<N
                 val date = Date(expiredTime)
                 val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 val days = daysBetween(System.currentTimeMillis(), expiredTime)
-                val txtDaystatus = product.namechanged + " " + days + " " + mContext.resources.getString(R.string.days_left)
-
+                val txtDaystatus = " " + days + " " + mContext.resources.getString(R.string.days_left)
+                if(items.status_expiry.equals("expired")){
+                    view.tv_warning.setBackgroundResource(R.drawable.roundedtext_red)
+                    view.tv_status.setBackgroundResource(R.drawable.roundedtext_red)
+                }else{
+                    view.tv_warning.setBackgroundResource(R.drawable.roundedtext_orange)
+                    view.tv_status.setBackgroundResource(R.drawable.roundedtext_orange)
+                }
                 view.tv_status.text = txtDaystatus
                 val txtExpiredTime = mContext.resources.getString(R.string.expiredtime_notifi) + dateFormat.format(date)
                 view.tv_hsd.setText(txtExpiredTime)
+                view.tv_name.text = product.namechanged!!.toString()
                 Log.d("aaaaaaa ", "NotificationFragment: " + product.imagechanged)
                 val options = RequestOptions()
                         .centerCrop()
@@ -113,7 +120,7 @@ class NotificationAdapterKotlin(val mContext: Context, val listItem: ArrayList<N
             }
 
             view.ln_item.setOnClickListener(View.OnClickListener {
-                mNotificationListener.onBadgeUpdate(20)
+                mNotificationListener.onBadgeUpdate(realm.countNotification() - 1)
 
                 view.ln_item.setBackgroundColor(mContext.resources.getColor(R.color.white))
 

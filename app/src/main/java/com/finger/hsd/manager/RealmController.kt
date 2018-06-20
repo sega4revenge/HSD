@@ -138,7 +138,7 @@ class RealmController(application: Context) {
     fun listNotWatch():ArrayList<Notification> {
 
         return realm.copyFromRealm(realm.where(Notification::class.java).findAll().
-                sort("created_at", Sort.DESCENDING)) as ArrayList<Notification>
+                sort("create_at", Sort.DESCENDING)) as ArrayList<Notification>
 
     }
 

@@ -50,9 +50,6 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
             .error(R.drawable.ic_back)
             .priority(Priority.LOW)
 
-    override fun isProgressData(percent: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     var user = User()
 
@@ -118,24 +115,10 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
             repass!!.error = "Mật khẩu không trùng khớp"
         }
 
-//        if (!validatePassword(password!!.text.toString())) {
-//
-//            err++
-//            password!!.error = getString(R.string.st_errpass2)
-//        }
-//        if (password!!.text.toString() != repassword!!.text.toString() || repassword!!.text.toString() == "") {
-//
-//            err++
-//
-//            repassword!!.error = getString(R.string.err_repass)
-//
-//        }
-
 
         if (err == 0) {
-//            progressBar.visibility = View.GONE
-//            CircularAnim.show(btn_join).go()
 
+            showProgress()
             user.phone = phone_number.text.toString()
 
             user.password = ""
@@ -151,7 +134,6 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
 
     private fun gotologin() {
         val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
-
         startActivity(intent)
         finish()
         overridePendingTransition(0, 0)
@@ -171,15 +153,21 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
 
     override fun setErrorMessage(errorMessage: String) {
 
+        hideProgress()
+        if (errorMessage.equals("0")) {
+            showSnack("Disconnect from server!", R.id.root_register)
+        }else if(errorMessage.equals("500")){
+            showSnack("Server disconnect!", R.id.root_register)
+        }
 
-        showSnack(errorMessage, R.id.root_register)
     }
     var listProduct : ArrayList<Product_v>? = null
     var temp = 0
+
     override fun getUserDetail(user: User) {
        // AppManager.saveAccountUser(this, user)
         this.user = user
-        Mylog.d("aaaaaaaaaa "+" chay ngay di ngay di ngay di ngay di ngay di ngay di"+user)
+
         realm!!.addUser(user)
 
         listProduct  = realm!!.getlistProduct()
@@ -187,10 +175,11 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
 
         temp =0
         if (listProduct != null && !listProduct!!.isEmpty()) {
-            Mylog.d("aaaaaaaaa temp at least:  "+temp)
+
             onDownload(listProduct!!.get(temp))
 
         }else{
+            hideProgress()
             session!!.setLogin(true)
             startActivity(Intent(this@RegisterActivity, AllInOneActivity::class.java))
             finish()
@@ -209,14 +198,13 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onLoadFailed(errorDrawable: Drawable?) {
                         temp++
-                        Mylog.d("aaaaaaaaaa "+temp+" sizelistproduct: " + listProduct!!.size)
+
                         if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
                             percent = (temp.toFloat() / listProduct!!.size.toFloat() * 100f).toInt()
 
-                            //showToast(percent)
-                            Mylog.d("aaaaaaaaaa chay tiep: "+percent)
                             onDownload(listProduct!!.get(temp))
                         }else{
+                            hideProgress()
                             session!!.setLogin(true)
                             startActivity(Intent(this@RegisterActivity, AllInOneActivity::class.java))
                             finish()
@@ -247,12 +235,12 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
                             if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
                                 percent = (temp.toFloat() / (listProduct!!.size.toFloat()) * 100f).toInt()
 
-                                showToast("Sync... "+percent)
+                                showProgress("Sync... "+percent)
 
                                 onDownload(listProduct!!.get(temp))
                             }else{
                                 percent = (temp.toFloat() / (listProduct!!.size).toFloat() * 100f).toInt()
-                                showToast("Sync... "+percent+"% complete")
+                                showProgress("Sync... "+percent+"% complete")
                                 session!!.setLogin(true)
 
                                 var list =  realm!!.getDataTimeAlarm()
@@ -266,6 +254,7 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
                                         SettingAlarm(model.listtime!!.toInt(), false)
                                     }
                                 }
+                                hideProgress()
                                 Log.d("isLoginSuccessful","isLoginSuccessful1    "   +"  list   " +list)
                                 startActivity(Intent(this@RegisterActivity, AllInOneActivity::class.java))
                                 finish()
@@ -280,17 +269,21 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
                             if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
                                 percent = (temp.toFloat() / listProduct!!.size.toFloat() * 100f).toInt()
 
-                                showToast(percent)
                                 Mylog.d("aaaaaaaaaa chay tiep: "+temp)
                                 onDownload(listProduct!!.get(temp))
+                            }else{
+                                hideProgress()
+                                session!!.setLogin(true)
+                                startActivity(Intent(this@RegisterActivity, AllInOneActivity::class.java))
+                                finish()
                             }
                         }
 
 
                     }
                 })
-
     }
+
     private fun SettingAlarm(hour: Int, boolean: Boolean) {
         val calendars = Calendar.getInstance()
         val now = Calendar.getInstance()
@@ -312,7 +305,6 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
             Log.d("LoginActivity", "boolean..false  ====>>>>>>    " + boolean + " =====  " + hour)
             pending_intent = PendingIntent.getBroadcast(this, hour, myIntent, PendingIntent.FLAG_CANCEL_CURRENT)
             alarmManager.cancel(pending_intent)
-
 
         }
     }

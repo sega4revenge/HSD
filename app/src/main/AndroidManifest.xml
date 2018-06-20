@@ -29,9 +29,9 @@
         android:name=".common.MyApplication"
         android:allowBackup="true"
         android:largeHeap="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher_hsd"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_launcher_hsd"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionbar"
 
@@ -72,7 +72,8 @@
 
 
         <activity android:name=".activity.DetailProductActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity android:name=".activity.HorizontalNtbActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
@@ -82,7 +83,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionbar"/>
 
-        <activity android:name=".activity.testImageActivity"/>
 
         <service
             android:name=".services.NotificationService"
@@ -116,7 +116,9 @@
         <activity android:name=".AllInOneActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".activity.AlarmSetting" />
+
+        <activity android:name=".activity.AlarmSetting"
+            android:label="Alarm Setting"/>
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />

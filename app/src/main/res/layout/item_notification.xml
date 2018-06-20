@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ln_item"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -9,67 +10,90 @@
 
 
     <RelativeLayout
-        android:layout_margin="10dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="14dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center">
 
-        <ProgressBar
-            android:id="@+id/progress_notification"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="19dp"
+        <FrameLayout
+            android:id="@+id/img"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="32dp" />
-        <ImageView
-            android:id="@+id/im_product_noti"
-            android:layout_width="91dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp">
+            <ProgressBar
+                android:id="@+id/progress_notification"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"/>
+
+            <ImageView
+                android:id="@+id/im_product_noti"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_marginLeft="14dp"
+            android:layout_toRightOf="@id/img"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="12dp"
+                android:id="@+id/tv_hsd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hết hạn: 12/10/2018"
+                android:textColor="@color/text_hint" />
+            <TextView
+                android:id="@+id/tv_name"
+                android:textColor="@color/red"
+                android:textSize="16dp"
+                android:text="Stawbery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+        <TextView
+            android:layout_marginTop="14dp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:background="@color/red"
+            android:layout_below="@id/img"
+            android:id="@+id/tv_status"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="Strawberry Fruit còn 2 ngày nữa là hết hạn"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
 
-            android:layout_alignParentLeft="true" />
 
-    <TextView
-        android:id="@+id/tv_hsd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="12dp"
-        android:layout_marginLeft="15dp"
-        android:layout_toEndOf="@+id/im_product_noti"
-        android:text="Hết hạn: 12/10/2018"
-        android:textColor="@color/black"
-        android:layout_toRightOf="@+id/im_product_noti" />
+
+
 
     <TextView
-        android:id="@+id/tv_status"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_below="@+id/tv_hsd"
-        android:layout_toEndOf="@+id/im_product_noti"
-        android:text="Strawberry Fruit còn 2 ngày nữa là hết hạn"
-        android:textColor="@color/colorAccent"
-        android:textSize="18sp"
-        android:layout_toRightOf="@+id/im_product_noti" />
-
-    <TextView
+        android:textSize="12dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="3dp"
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp"
         android:id="@+id/tv_warning"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/tv_hsd"
-        android:paddingRight="5dp"
-        android:paddingLeft="5dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/roundedtext_red"
         android:text="Warning"
         android:textColor="@color/white"
         android:layout_alignParentRight="true" />
 
         <TextView
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:textSize="10dp"
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -77,22 +101,9 @@
             android:layout_below="@+id/tv_status"
             android:gravity="right"
             android:text="10 giờ trước"
-            android:textColor="@color/grey"
+            android:textColor="@color/divider"
             android:layout_alignParentRight="true" />
     </RelativeLayout>
-
-
-    <!--<RelativeLayout-->
-        <!--android:id="@+id/ln_warning"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content">-->
-        <!--<TextView-->
-            <!--android:id="@+id/tv_title"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="TextView" />-->
-    <!--</RelativeLayout>-->
-
 
 
 </LinearLayout>

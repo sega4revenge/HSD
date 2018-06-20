@@ -91,16 +91,16 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 Product_v mObjectHeader = mProducts.get((position+1));
                     if(miliexToday>mObjectHeader.getExpiretime()){
                         ((HeaderViewHolder) holder).mTypeProduct.setText("Expired");
-                        ((HeaderViewHolder) holder).mTypeProduct.setTextColor(mContext.getResources().getColor(R.color.viewfinder_laser));
+                        ((HeaderViewHolder) holder).mTypeProduct.setTextColor(mContext.getResources().getColor(R.color.red));
                     }else{
 
                         long dis = (mProducts.get(position+1).getExpiretime()/86400000 - miliexToday/86400000);
                         if(dis<10 && dis>0){
                             ((HeaderViewHolder) holder).mTypeProduct.setText("Warring Eat Now!!");
-                            ((HeaderViewHolder) holder).mTypeProduct.setTextColor(mContext.getResources().getColor(R.color.viewfinder_border));
+                            ((HeaderViewHolder) holder).mTypeProduct.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
                         }else if(dis>10){
                             ((HeaderViewHolder) holder).mTypeProduct.setText("Protected!!");
-                            ((HeaderViewHolder) holder).mTypeProduct.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+                            ((HeaderViewHolder) holder).mTypeProduct.setTextColor(mContext.getResources().getColor(R.color.green));
                         }
 
                     }
@@ -188,15 +188,15 @@ public class Main_list_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
 
                     if(miliexToday>mObject.getExpiretime()){
-                        if( ((ItemViewHolder) holder).txt_warring.getText()!="Hết hạn"){
-                            ((ItemViewHolder) holder).txt_warring.setText("Hết hạn");
+                        if( ((ItemViewHolder) holder).txt_warring.getText()!="HẾT HẠN"){
+                            ((ItemViewHolder) holder).txt_warring.setText("HẾT HẠN");
                             ((ItemViewHolder) holder).txt_warring.setTextColor(mContext.getResources().getColor(R.color.white));
                             ((ItemViewHolder) holder).txt_warring.setBackgroundResource(R.drawable.text_warring_itemview);
                         }
                     }else{
                         long dis = (mObject.getExpiretime()/86400000 - miliexToday/86400000);
-                        if(((ItemViewHolder) holder).txt_warring.getText()!= dis+" day left"){
-                            ((ItemViewHolder) holder).txt_warring.setText(dis+" day left");
+                        if(((ItemViewHolder) holder).txt_warring.getText()!= dis+" DAYS LEFT"){
+                            ((ItemViewHolder) holder).txt_warring.setText(dis+" DAYS LEFT");
                             ((ItemViewHolder) holder).txt_warring.setTextColor(mContext.getResources().getColor(R.color.white));
                         }
                         if(dis>10){

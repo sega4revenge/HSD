@@ -1,14 +1,14 @@
 <resources>
     <string name="app_name">HSD</string>
 
-    <string name="btn_signin">Sign in</string>
-    <string name="btn_join">Sign up</string>
-    <string name="btn_forgot">Forgot password</string>
+    <string name="btn_signin">SIGNIN</string>
+    <string name="btn_join">SINGUP</string>
+    <string name="btn_forgot">FORGOT PASSWORD</string>
     <string name="btn_signup">Don\'t have account ? CLICK HERE</string>
     <string name="btn_haveaccount">Already have account ?</string>
-    <string name="txt_phone">Phone number</string>
-    <string name="txt_password">Password</string>
-    <string name="txt_repassword">Retype Password</string>
+    <string name="txt_phone">PHONE NUMBER</string>
+    <string name="txt_password">PASSWORD</string>
+    <string name="txt_repassword">RE - PASSWORD</string>
     <string name="txt_or">Or</string>
     <string name="facebook_app_id">171986543489907</string>
     <!-- TODO: Remove or change this placeholder text -->
@@ -19,7 +19,7 @@
 
     <!--=======NOTIFICATION=-========-->
     <string name="expiredtime_notifi">Expiredtime: </string>
-    <string name="days_left">days left</string>
+    <string name="days_left">DAYS LEFT</string>
     <string name="status_count_product_1">You have </string>
     <string name="status_count_product_2"> product(s) about to expire. Please check you inventory</string>
     <!-- Detail Product -->
@@ -94,7 +94,7 @@
     <string name="off_alarm">off Alarm</string>
     <string name="title_activity_alarm_setting">Alarm Setting</string>
     <string name="notification">Notification</string>
-    <string name="save">Save</string>
+    <string name="save">SAVE</string>
     <string name="time_setting">Time Setting</string>
     <string name="expiry_date_notification">Expiry Date Notification</string>
     <string name="_1_am">1 AM</string>

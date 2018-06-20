@@ -1,5 +1,6 @@
 package com.finger.hsd.presenter
 
+import android.util.Log
 import com.finger.hsd.common.getObservable
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.Response
@@ -114,6 +115,12 @@ class DetailProductPresenter : getObservable{
 
                 }))
     }
+
+    fun cancelRequest() {
+        Log.e("Cancel", "Cancel Request")
+        disposable.clear()
+    }
+
 
     interface IDetailProductPresenterView{
         fun onSucess(response : Product_v, type: Int)

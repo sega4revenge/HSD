@@ -95,29 +95,19 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
         session = SessionManager(this)
         if(session!!.isLogin()){
             val intent = Intent(this, AllInOneActivity::class.java)
-          startActivity(intent)
+            startActivity(intent)
             finish()
         }
 
         realm!!.DatabseLlistAlarm()
 
         alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-//        mAccountManager = AccountManager.get(this)
-//          val intent = Intent(this, HorizontalNtbActivity::class.java)
-//          startActivity(intent)
-//        val accountsFromFirstApp = mAccountManager!!.getAccountsByType(AppManager.ACCOUNT_TYPE)
-//        if (accountsFromFirstApp.isNotEmpty()) {
-//
-//           // User is already logged in. Take him to main activity
-
-//            finish()
-//            overridePendingTransition(0, 0)
-//        }
 
         AppEventsLogger.activateApp(this)
         mLoginPresenter = LoginPresenter(this)
 
         btn_login!!.setOnClickListener {
+
             login()
         }
         btn_toRegister!!.setOnClickListener {
@@ -145,7 +135,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
                         user.phone = id
                         user.password = ""
                         user.tokenfirebase = (tokenfirebase)
-
+                        showProgress()
                         mLoginPresenter!!.register(user, 1)
 
 
@@ -211,6 +201,7 @@ fun getKeyHash(){
             }
         }
         if (err == 0) {
+            showProgress("processing...")
             user.phone = phone_number.text.toString()
             user.password = password.text.toString()
             user.tokenfirebase = FirebaseInstanceId.getInstance().token
@@ -232,6 +223,7 @@ fun getKeyHash(){
             startActivity(Intent(this@LoginActivity, AllInOneActivity::class.java))
             finish()
         } else {
+
             println("loi")
         }
     }
@@ -246,14 +238,15 @@ fun getKeyHash(){
     }
 
     override fun setErrorMessage(errorMessage: String) {
-
-        showSnack(errorMessage, R.id.root_login)
+        hideProgress()
+        if (errorMessage.equals("0")) {
+            showSnack("Disconnect from server!", R.id.root_login)
+        }else if(errorMessage.equals("500")){
+            showSnack("Server disconnect!", R.id.root_login)
+        }
 
     }
-    override fun isProgressData(percent: Int) {
-//        showProgress("Sync data.. "+percent+ "%")
-        showToast("Sync data.. "+percent+ "%")
-    }
+
     var listProduct : ArrayList<Product_v>? = null
     var temp = 0
     override fun getUserDetail(user: User) {
@@ -270,6 +263,7 @@ fun getKeyHash(){
             onDownload(listProduct!!.get(temp))
 
         }else{
+            hideProgress()
             session!!.setLogin(true)
             startActivity(Intent(this@LoginActivity, AllInOneActivity::class.java))
             finish()
@@ -305,14 +299,15 @@ fun getKeyHash(){
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onLoadFailed(errorDrawable: Drawable?) {
                         temp++
-                        Mylog.d("aaaaaaaaaa "+temp+" sizelistproduct: " + listProduct!!.size)
+
+                       // Mylog.d("aaaaaaaaaa "+temp+" sizelistproduct: " + listProduct!!.size)
                         if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
                             percent = (temp.toFloat() / listProduct!!.size.toFloat() * 100f).toInt()
 
-                            //showToast(percent)
-                            Mylog.d("aaaaaaaaaa chay tiep: "+percent)
+
                             onDownload(listProduct!!.get(temp))
                         }else{
+                            hideProgress()
                             session!!.setLogin(true)
                             startActivity(Intent(this@LoginActivity, AllInOneActivity::class.java))
                             finish()
@@ -343,12 +338,12 @@ fun getKeyHash(){
                             if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
                                 percent = (temp.toFloat() / (listProduct!!.size.toFloat()) * 100f).toInt()
 
-                                showToast("Sync... "+percent)
+                                showProgress("Sync data.. "+percent+ "%")
 
                                 onDownload(listProduct!!.get(temp))
                             }else{
                                 percent = (temp.toFloat() / (listProduct!!.size).toFloat() * 100f).toInt()
-                                showToast("Sync... "+percent+"% complete")
+                                showProgress("Sync data.. "+percent+ " completed!")
                                 session!!.setLogin(true)
 
                                 var list =  realm!!.getDataTimeAlarm()
@@ -376,8 +371,7 @@ fun getKeyHash(){
                             if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
                                 percent = (temp.toFloat() / listProduct!!.size.toFloat() * 100f).toInt()
 
-                                showToast(percent)
-                                Mylog.d("aaaaaaaaaa chay tiep: "+temp)
+
                                 onDownload(listProduct!!.get(temp))
                             }
                         }
@@ -448,7 +442,7 @@ fun getKeyHash(){
         Log.d(TAG, "handleSignInResult:" + result.status)
         if (result.isSuccess) {
             // Signed in successfully, show authenticated UI.
-
+            showProgress()
             val acct: GoogleSignInAccount? = result.signInAccount
             Log.e(TAG, "display name: " + acct!!.displayName)
             val tokenfirebase = FirebaseInstanceId.getInstance().token
@@ -466,6 +460,7 @@ fun getKeyHash(){
 
     override fun onConnectionFailed(p0: ConnectionResult) {
         Log.d(TAG, "onConnectionFailed:" + p0)
+        hideProgress()
     }
 
 

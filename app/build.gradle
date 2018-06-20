@@ -6,7 +6,7 @@ apply plugin: 'kotlin-kapt'
 //apply plugin: 'maven'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     defaultConfig {
         applicationId "com.finger.hsd"
         minSdkVersion 15
@@ -103,6 +103,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.wdullaer:materialdatetimepicker:1.2.1'
     implementation 'com.android.support:cardview-v7:27.1.1'
+    implementation 'com.makeramen:roundedimageview:2.3.0'
     // read file Excel
     //        implementation 'org.apache.poi:poi:3.17'
     //        implementation 'org.apache.poi:poi-ooxml:3.17'

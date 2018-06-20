@@ -7,15 +7,15 @@
     android:id="@+id/ln_all_in_one"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
 >
-
     <RelativeLayout
         android:id="@+id/actionbar"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="@color/viewfinder_border"
+        android:background="@color/colorPrimary"
         android:layout_alignParentTop="true"
         >
         <EditText
+            android:textCursorDrawable="@null"
             android:id="@+id/edit_search"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -28,6 +28,8 @@
             android:paddingLeft="45dp"
             android:hint="Bạn muốn tìm gì?"
             android:maxLines="1"
+            android:textSize="14dp"
+            android:textColor="@color/text_color"
             android:paddingRight="55dp"
             android:singleLine="true"
             android:ellipsize="end"
@@ -43,69 +45,71 @@
             android:layout_marginLeft="28dp"/>
         <ImageView
             android:id="@+id/scan_barcode_img"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@drawable/icon_scan_barcode_black_24dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/ic_scan_barcode"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="64dp"/>
+        <ImageView
+            android:id="@+id/sync"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/ic_sync_ing"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="28dp"/>
     </RelativeLayout>
 
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/main_content"
+    <RelativeLayout
+        android:layout_below="@id/actionbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/actionbar">
+        android:layout_height="match_parent">
 
 
-
-
-
-        <RelativeLayout
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/bottom_navigation"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+        <android.support.design.widget.BottomNavigationView
+            android:background="@color/white"
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            app:elevation="0dp"
+            app:itemTextAppearance="@style/NavigationViewOwnStyle"
+            app:itemIconTint="@drawable/bottom_navigation_color_selector"
+            app:itemTextColor="@drawable/bottom_navigation_color_selector"
+            app:menu="@menu/menu_bottom_navigation"/>
+
+        <!---->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_above="@id/bottom_navigation"
+            android:background="@color/grey"/>
+
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="66dp"
+            android:id="@+id/fab_fixer"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/appBarLayout">
+            app:backgroundTint="@color/colorPrimary"
+            android:src="@drawable/ic_add_product"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
 
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewpager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/bottom_navigation"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-            <android.support.design.widget.BottomNavigationView
-                android:background="@color/white"
-                android:id="@+id/bottom_navigation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:gravity="center"
-                app:elevation="0dp"
-                app:itemTextAppearance="@style/NavigationViewOwnStyle"
-                app:itemIconTint="@drawable/bottom_navigation_color_selector"
-                app:itemTextColor="@drawable/bottom_navigation_color_selector"
-                app:menu="@menu/menu_bottom_navigation"/>
 
-            <!---->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_above="@id/bottom_navigation"
-                android:background="@color/grey"/>
 
-        </RelativeLayout>
-
-    </android.support.design.widget.CoordinatorLayout>
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_fixer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="80dp"
-        android:layout_marginLeft="10dp"
-        android:src="@drawable/ic_fab_button"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"/>
 </RelativeLayout>

@@ -4,7 +4,7 @@
     android:shape="rectangle"
     android:padding="2dp"
     >
-    <solid android:color="@color/orange"/>
+    <solid android:color="@color/colorPrimary"/>
     <corners
         android:bottomRightRadius="25dp"
         android:bottomLeftRadius="25dp"

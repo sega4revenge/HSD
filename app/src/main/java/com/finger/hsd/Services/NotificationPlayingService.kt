@@ -139,7 +139,7 @@ class NotificationPlayingService : Service() {
                     notification_new._id = id_notification
                     notification_new.idinvite = null
                     notification_new.id_product = product_v[index]._id
-                    notification_new.status_expiry = "warring"
+                    notification_new.status_expiry = "warning"
                     notification_new.idgeneral = null
                     notification_new.type = 0
                     notification_new.create_at = now.timeInMillis.toString()

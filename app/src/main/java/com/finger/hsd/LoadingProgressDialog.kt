@@ -32,8 +32,6 @@ class LoadingProgressDialog : ProgressDialog{
         mLoadingImage = mContentView!!.findViewById<View>(R.id.progress_loading) as ImageView
         mTxtMessage = mContentView!!.findViewById<View>(R.id.message) as TextView
 
-
-
     }
 
     override fun show() {

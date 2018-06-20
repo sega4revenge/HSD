@@ -87,7 +87,7 @@ class MainListAdapterKotlin:
             val mObjectHeader = mProducts[position + 1]
             if (miliexToday > mObjectHeader.expiretime) {
                 holder.mTypeProduct.text = "Expired"
-                holder.mTypeProduct.setTextColor(mContext.resources.getColor(R.color.viewfinder_laser))
+                holder.mTypeProduct.setTextColor(mContext.resources.getColor(R.color.red))
             } else {
 
                 val dis = mProducts[position + 1].expiretime / 86400000 - miliexToday / 86400000
@@ -175,15 +175,15 @@ class MainListAdapterKotlin:
             holder.lnItem.setOnClickListener { onproductClickListener.onClickItem(mObject, position) }
 
             if (miliexToday > mObject.expiretime) {
-                if (holder.txt_warring.text !== "Hết hạn") {
-                    holder.txt_warring.text = "Hết hạn"
+                if (holder.txt_warring.text !== "HẾT HẠN") {
+                    holder.txt_warring.text = "HẾT HẠN"
                     holder.txt_warring.setTextColor(mContext.resources.getColor(R.color.white))
                     holder.txt_warring.setBackgroundResource(R.drawable.text_warring_itemview)
                 }
             } else {
                 val dis = mObject.expiretime / 86400000 - miliexToday / 86400000
-                if (holder.txt_warring.text !== dis.toString() + " day left") {
-                    holder.txt_warring.text = dis.toString() + " day left"
+                if (holder.txt_warring.text !== dis.toString() + " DAYS LEFT") {
+                    holder.txt_warring.text = dis.toString() + " DAYS LEFT"
                     holder.txt_warring.setTextColor(mContext.resources.getColor(R.color.white))
                     holder.txt_warring.setBackgroundResource(R.drawable.text_warring_item_at)
                 }

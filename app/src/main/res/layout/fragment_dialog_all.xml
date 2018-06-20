@@ -40,8 +40,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/grey"
+            android:background="@drawable/shape_dialog_cancel"
             android:text="cancel"
+            android:textColor="@color/white"
             android:onClick="cancel"
 
             />
@@ -51,8 +52,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/orange"
+            android:background="@drawable/shape_dialog_ok"
             android:onClick="ok"
+            android:textColor="@color/white"
             android:text="Ok" />
 
     </LinearLayout>

@@ -18,10 +18,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
+import com.finger.hsd.BaseFragment
 import com.finger.hsd.R
 import com.finger.hsd.activity.ContinuousCaptureActivity
 import com.finger.hsd.activity.DetailProductActivity
-import com.finger.hsd.activity.Scanner_Barcode_Activity
 import com.finger.hsd.adapters.MainListAdapterKotlin
 import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Product_v
@@ -42,7 +42,7 @@ import kotlin.collections.ArrayList
 
 
 
-class Home_Fragment : android.support.v4.app.Fragment(),MainListAdapterKotlin.OnproductClickListener,RealmController.updateData{
+class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListener,RealmController.updateData{
 
     private var mCount  = 0
     private var checkRefresh  = false
@@ -60,7 +60,7 @@ class Home_Fragment : android.support.v4.app.Fragment(),MainListAdapterKotlin.On
     private var mPositionWaring = -1
     private var mPositionProtect = -1
     private var mDialogProgress: Dialog? = null
-    private var mDialogProgressDelete:Dialog? = null
+
     var mContext: Context? = null
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -172,7 +172,7 @@ class Home_Fragment : android.support.v4.app.Fragment(),MainListAdapterKotlin.On
                 .positiveText("OK")
                 .negativeText("Cancel")
                 .onPositive { dialog, which ->
-                    showDialog("Đang xóa sản phẩm...")
+                    showProgress("Đang xóa sản phẩm...")
                     mRetrofitService = ApiUtils.getAPI()
                     mRetrofitService?.deleteGroup(listDelete!!)?.enqueue(object: Callback<Result_Product>{
                         override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
@@ -190,14 +190,14 @@ class Home_Fragment : android.support.v4.app.Fragment(),MainListAdapterKotlin.On
                             }else{
                                 Toast.makeText(activity,"Error! \n message:"+response?.message(), Toast.LENGTH_SHORT).show()
                             }
-                            mDialogProgressDelete?.dismiss()
+                            hideProgress()
                         }
 
                     })
                 }
 
-        mDialogProgressDelete = dialogdelete.build()
-        mDialogProgressDelete?.show()
+
+        showProgress("deleting...")
     }
     fun showDialogNotFound(){
         Log.d("REALMCONTROLLER","//zzzzzzzzzzz//showDialogNotFound//")
@@ -337,6 +337,7 @@ class Home_Fragment : android.support.v4.app.Fragment(),MainListAdapterKotlin.On
 
         val iduser =
                 RequestBody.create(MediaType.parse("multipart/form-data"),"5b21d1f9fe313f03da828118")
+
         mRetrofitService = ApiUtils.getAPI()
         mRetrofitService?.addProduct(nameproduct,barcodenum,hsd_ex,detail,iduser,photoproduct)?.enqueue(object: Callback<Result_Product>{
             override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
@@ -449,7 +450,6 @@ class Home_Fragment : android.support.v4.app.Fragment(),MainListAdapterKotlin.On
 
 
     override fun onClickItem(product: Product_v, pos: Int) {
-        Toast.makeText(activity, product.namechanged + "//" + product.description + "//" + pos, Toast.LENGTH_SHORT).show()
         val intent = Intent(activity, DetailProductActivity::class.java)
         intent.putExtra("position", pos)
         intent.putExtra("checkNotification", false)
@@ -481,6 +481,7 @@ class Home_Fragment : android.support.v4.app.Fragment(),MainListAdapterKotlin.On
     override fun onDestroy() {
         activity!!.unregisterReceiver(this.broadcastFromDetail)
         super.onDestroy()
+
 
     }
 

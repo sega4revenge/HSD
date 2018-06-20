@@ -8,6 +8,8 @@ import java.text.DateFormatSymbols
 import java.util.*
 
 
+
+
 class testImageActivity : AppCompatActivity() {
 
 
@@ -29,7 +31,23 @@ class testImageActivity : AppCompatActivity() {
 
     }
 
-
+//    fun completeRefresh() {
+//        sync.clearAnimation()
+//        refreshItem.setActionView(null)
+//    }
+//    fun refresh() {
+//        /* Attach a rotating ImageView to the refresh item as an ActionView */
+//        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+//        val iv = inflater.inflate(R.layout.animation_layout, null) as ImageView
+//
+//        val rotation = AnimationUtils.loadAnimation(this, R.anim.sync_animation)
+//        rotation.repeatCount = Animation.INFINITE
+//        iv.startAnimation(rotation)
+//
+//        refreshItem.setActionView(iv)
+//
+//        //TODO trigger loading
+//    }
 
     fun UploadImage(idProduct: String, file: File) {
 

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat">
@@ -6,6 +6,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
+        <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
     </style>
 
     <style name="AppTheme.NoActionbar" parent="Theme.AppCompat.DayNight.NoActionBar">
@@ -39,8 +42,8 @@
     </style>
 
     <style name="NavigationViewOwnStyle">
-        <item name="android:listPreferredItemHeightSmall">40dp</item><!--item height-->
-        <item name="android:textSize">20sp</item> <!--item text size-->
+        <item name="android:listPreferredItemHeightSmall">30dp</item><!--item height-->
+        <item name="android:textSize">10sp</item> <!--item text size-->
     </style>
     <!---->
     <style name="TransparentToolbar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -52,4 +55,12 @@
     <style name="AppTheme.NoActionbar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.NoActionbar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif-light</item>
+    </style>
+
+    <style name="RobotoButtonStyle" parent="android:Widget.Holo.Button">
+        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif-light</item>
+    </style>
 </resources>

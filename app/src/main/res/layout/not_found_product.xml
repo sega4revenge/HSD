@@ -25,7 +25,7 @@
         android:layout_height="50dp"
         android:orientation="horizontal"
         android:gravity="center"
-        android:background="@drawable/radius_bottom_dialog_notfound"
+        android:background="@drawable/shape_button_login"
         >
         <TextView
             android:layout_width="match_parent"

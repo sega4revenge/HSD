@@ -3,16 +3,16 @@
 
     <item
         android:id="@+id/item_home"
-        android:icon="@drawable/ic_third"
-        android:title="Trang chủ"/>
+        android:icon="@drawable/ic_home"
+        android:title="HOME"/>
     <item
         android:id="@+id/item_notification"
-        android:icon="@drawable/ic_second"
-        android:title="Thông báo"/>
+        android:icon="@drawable/ic_notfication"
+        android:title="NOTIFICATION"/>
     <item
         android:id="@+id/item_profile"
-        android:icon="@drawable/ic_seventh"
-        android:title="Trang cá nhân"/>
+        android:icon="@drawable/ic_user"
+        android:title="PROFILE"/>
 
     <!--<item-->
     <!--android:id="@+id/item_message"-->

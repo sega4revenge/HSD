@@ -9,7 +9,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -18,23 +17,23 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.FileProvider
-import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.View
 import android.widget.*
-import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
 import com.finger.hsd.AllInOneActivity
+import com.finger.hsd.BaseActivity
 import com.finger.hsd.R
 import com.finger.hsd.common.GlideApp
 import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.Result_Product
-import com.finger.hsd.util.*
-import io.realm.Realm
+import com.finger.hsd.util.ApiUtils
+import com.finger.hsd.util.CompressImage
+import com.finger.hsd.util.ConnectivityChangeReceiver
+import com.finger.hsd.util.RetrofitService
 import kotlinx.android.synthetic.main.dialog_timepicker.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -49,7 +48,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.updateData,
+class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateData,
         ConnectivityChangeReceiver.ConnectivityReceiverListener {
     private var img_product: ImageView? = null
     private var arrow_back: ImageView? = null
@@ -72,11 +71,12 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
     private var mRetrofitService: RetrofitService? = null
     private var mDialog:Dialog? =null
     private final val CODE_RESULT_IMAGE_SELECT = 1001
+    private  var idUser : String?= null
     var path:String? = null
     var pathUri:Uri? = null
     private var haveImage = false
     var barcodeIn:String? = null
-    private var mDialogProgress: MaterialDialog? = null
+//    private var mDialogProgress: MaterialDialog? = null
     val options = RequestOptions()
             .centerCrop()
             .dontAnimate()
@@ -218,16 +218,16 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
                 showDialog()
                 if(path.isNullOrEmpty() || edit_nameproduct?.text.isNullOrEmpty() || edit_ex?.text.isNullOrEmpty() || txtEX?.text.isNullOrEmpty() || barcodeIn?.isNullOrEmpty()!! || miliexDate == 0L){
                     Toast.makeText(this,"Nhập đầy đủ thông tin",Toast.LENGTH_LONG).show()
-                    mDialogProgress?.dismiss()
+                    hideProgress()
                     bt_post?.visibility = View.VISIBLE
                 }else{
                  if(ConnectivityChangeReceiver.isConnected()){
                     mRetrofitService = ApiUtils.getAPI()
                     if(type==2 || type==3){//==========Truong Hop k update image
-                        mRetrofitService?.addProduct_nonImage(edit_nameproduct?.text.toString(),barcodeIn.toString(),miliexDate.toString(),"5b21d1f9fe313f03da828118",edit_chitiet?.text.toString())?.enqueue(object: Callback<Result_Product>{
+                        mRetrofitService?.addProduct_nonImage(edit_nameproduct?.text.toString(),barcodeIn.toString(),miliexDate.toString(),idUser!!,edit_chitiet?.text.toString())?.enqueue(object: Callback<Result_Product>{
                             override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
                                 Toast.makeText(this@Add_Product,"Error! \n message:"+t?.message,Toast.LENGTH_SHORT).show()
-                                mDialogProgress?.dismiss()
+                              hideProgress()
                                 bt_post?.visibility = View.VISIBLE
                             }
 
@@ -239,7 +239,7 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
                                         myRealm?.addProductWithNonImage(response?.body().product,this@Add_Product)
                                     }
                                 }else{
-                                    mDialogProgress?.dismiss()
+                                  hideProgress()
                                     bt_post?.visibility = View.VISIBLE
                                     Toast.makeText(this@Add_Product,"Error! Code:"+response?.code()+"\n message:"+response?.message(),Toast.LENGTH_SHORT).show()
                                 }
@@ -263,12 +263,12 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
                                     RequestBody.create(MediaType.parse("multipart/form-data"),barcodeIn)
 
                             val iduser =
-                                    RequestBody.create(MediaType.parse("multipart/form-data"),"5b21d1f9fe313f03da828118")
+                                    RequestBody.create(MediaType.parse("multipart/form-data"),idUser)
 
                             mRetrofitService?.addProduct(nameproduct,barcodenum,hsd_ex,detail,iduser,photoproduct)?.enqueue(object: Callback<Result_Product>{
                                 override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
                                     Toast.makeText(this@Add_Product,"Error! \n message:"+t?.message,Toast.LENGTH_SHORT).show()
-                                    mDialogProgress?.dismiss()
+                                 hideProgress()
                                     bt_post?.visibility = View.VISIBLE
                                 }
 
@@ -287,7 +287,7 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
 //                                            }
                                         }
                                     }else{
-                                        mDialogProgress?.dismiss()
+                                       hideProgress()
                                         bt_post?.visibility = View.VISIBLE
                                         Toast.makeText(this@Add_Product,"Error! Code:"+response?.code()+"\n message:"+response?.message(),Toast.LENGTH_SHORT).show()
                                     }
@@ -484,30 +484,33 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
         mDialog?.show()
     }
     private fun showDialog() {
-        val m = MaterialDialog.Builder(this@Add_Product)
-                .content("Please wait...")
-                .cancelable(false)
-                .progress(true, 0)
-        mDialogProgress = m.show()
+        showProgress("Please wait...")
+//        val m = MaterialDialog.Builder(this@Add_Product)
+//                .content("Please wait...")
+//                .cancelable(false)
+//                .progress(true, 0)
+//        mDialogProgress = m.show()
     }
 
     public override fun onDestroy() {
         super.onDestroy()
-        if (mDialogProgress != null) {
-            if (mDialogProgress?.isShowing()!!) {
-                mDialogProgress?.dismiss()
-                mDialogProgress = null
-            }
-        }
+        hideProgress()
+//        if (mDialogProgress != null) {
+//            if (mDialogProgress?.isShowing()!!) {
+//                mDialogProgress?.dismiss()
+//                mDialogProgress = null
+//            }
+//        }
     }
     override fun onResume() {
         super.onResume()
-        if (mDialogProgress != null) {
-            if (mDialogProgress?.isShowing()!!) {
-                mDialogProgress?.dismiss()
-
-            }
-        }
+        hideProgress()
+//        if (mDialogProgress != null) {
+//            if (mDialogProgress?.isShowing()!!) {
+//                mDialogProgress?.dismiss()
+//
+//            }
+//        }
     }
 
     private fun updateEX(miliexToday:Long, miliexDate:Long) {
@@ -542,6 +545,7 @@ class Add_Product : AppCompatActivity() ,View.OnClickListener,RealmController.up
         arrow_back?.setOnClickListener(this)
         bt_post?.setOnClickListener(this)
         myRealm = RealmController(this@Add_Product)
+        idUser= myRealm!!.getUser()!!._id!!
         currentDateandTime = sdf.format(Date())
     }
 

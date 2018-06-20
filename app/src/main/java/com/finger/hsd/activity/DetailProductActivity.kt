@@ -131,9 +131,8 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         this.setSupportActionBar(mToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
-        mToolbar.setTitleTextColor(Color.GRAY)
-        mToolbar.setSubtitleTextColor(Color.GRAY)
-        mToolbar.setNavigationIcon(R.drawable.ic_move_through)
+        mToolbar.setTitleTextColor(Color.WHITE)
+        mToolbar.setNavigationIcon(R.drawable.ic_back_arrow)
         mToolbar.setNavigationOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
                 onBackPressed()
@@ -1085,5 +1084,8 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                 })
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.cancelRequest()
+    }
 }

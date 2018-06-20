@@ -52,6 +52,7 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  *
  */
+
 class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClickListener {
 
     // TODO: Rename and change types of parameters
@@ -109,6 +110,8 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
 
         initViews(mView!!)
         setRealmAdapter()
+
+        mView!!.count_notification.text = realm!!.countNotification().toString() +  " thông báo"
 
         mView!!.im_clear.setOnClickListener(View.OnClickListener {
 //            showProgress()
@@ -234,17 +237,18 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
         intent.putExtra("checkNotification", true)
         intent.putExtra("position", position)
         intent.putExtra("id_product", product._id)
+
         // startActivityForResult(intent, AppIntent.REQUEST_NOTIFICATION)
         var notification = realm!!.getOneNotification(product._id!!)
         if (ConnectivityChangeReceiver.isConnected()) {
             updateNotficationOnServer(notification!!, 1)
         } else {
-
             realm!!.realm.executeTransaction(Realm.Transaction {
                 notification!!.isSync = false
                 notification.watched = true
 
             })
+            mView!!.count_notification.text = realm!!.countNotification().toString() +  " thông báo"
 
         }
         startActivity(intent)
@@ -310,6 +314,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
 
                     var notification = Notification()
 
+
                     notification = bundle.getSerializable("notificationModel") as Notification
                     Mylog.d("ttttttt " + notification.id_product)
 
@@ -327,11 +332,15 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                         mView!!.recycler_notification.adapter = mNotifiAdapter
                         mView!!.recycler_notification.scrollToPosition(0)
                         mNotifiAdapter.notifyDataSetChanged()
+                        mView!!.count_notification.text = realm!!.countNotification().toString() +  " thông báo"
+                        mNotificationBadgeListener!!.onBadgeUpdate(realm!!.countNotification())
                     } else {
                         listitem.add(0, notification)
                         mView!!.recycler_notification.adapter = mNotifiAdapter
                         mView!!.recycler_notification.scrollToPosition(0)
                         mNotifiAdapter.notifyDataSetChanged()
+                        mView!!.count_notification.text = realm!!.countNotification().toString() +  " thông báo"
+                        mNotificationBadgeListener!!.onBadgeUpdate(realm!!.countNotification())
                     }
 
                 }
@@ -426,6 +435,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
     override fun onDestroy() {
         super.onDestroy()
         activity!!.unregisterReceiver(this.appendChatScreenMsgReceiver)
+
 
     }
 

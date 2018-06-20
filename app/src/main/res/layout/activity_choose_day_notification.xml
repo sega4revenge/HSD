@@ -3,14 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/bg_hint"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <android.support.design.widget.AppBarLayout
-        app:elevation="0dp"
-        android:layout_height="wrap_content"
+    <FrameLayout
+        android:layout_height="50dp"
         android:layout_width="match_parent"
-
         android:fitsSystemWindows="true"
         android:id="@+id/appBarLayout">
 
@@ -18,24 +17,40 @@
             android:elevation="0dp"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="?attr/colorPrimary"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
             />
-    </android.support.design.widget.AppBarLayout>
+
+        <TextView
+            android:id="@+id/bt_save"
+            android:layout_marginRight="@dimen/search_key_line_16"
+            android:layout_gravity="center|right"
+            android:textSize="@dimen/search_key_line_16"
+            android:text="SAVE"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
+
+    <TextView
+        android:background="@color/white"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:text="Notification setting days before" />
     <RadioGroup
+        android:padding="24dp"
+        android:background="@color/white"
         android:id="@+id/rg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Notification setting days before" />
-
         <RadioButton
+            android:textColor="@color/text_color"
+            android:paddingLeft="24dp"
             android:id="@+id/rb_oneday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,6 +58,8 @@
             android:text="@string/one_day" />
 
         <RadioButton
+            android:textColor="@color/text_color"
+            android:paddingLeft="24dp"
             android:id="@+id/rb_three"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,6 +67,8 @@
             android:text="@string/three_day" />
 
         <RadioButton
+            android:textColor="@color/text_color"
+            android:paddingLeft="24dp"
             android:id="@+id/rb_week"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,6 +76,8 @@
             android:text="@string/one_week" />
 
         <RadioButton
+            android:textColor="@color/text_color"
+            android:paddingLeft="24dp"
             android:id="@+id/rb_month"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,6 +85,8 @@
             android:text="@string/one_month" />
 
         <RadioButton
+            android:textColor="@color/text_color"
+            android:paddingLeft="24dp"
             android:id="@+id/rb_custom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -25,6 +25,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.*
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
@@ -53,6 +55,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
+import kotlinx.android.synthetic.main.activity_all_in_one.*
 import me.leolin.shortcutbadger.ShortcutBadger
 import org.json.JSONObject
 import java.io.File
@@ -127,6 +130,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
             }
 
         })
+//        showProgress()
         edit_search?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
 
@@ -267,12 +271,18 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
         mBadgeView = BadgeView(this)
         mBadgeView!!.setTargetView(target)
         mBadgeView!!.badgeGravity = (Gravity.RIGHT)
-        mBadgeView!!.setTextSize(10f)
-        mBadgeView!!.setText(formatBadgeNumber(10))
+        mBadgeView!!.setTextSize(8f)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mBadgeView!!.setBackground(getDrawable(R.drawable.button_radius_red))
+            }
+        }
+        mBadgeView!!.setText(formatBadgeNumber(realm!!.countNotification()))
         return view
     }
     override fun onBadgeUpdate(value: Int) {
-        mBadgeView!!.text = formatBadgeNumber(value)
+
+        mBadgeView!!.text = formatBadgeNumber(realm!!.countNotification())
     }
     fun formatBadgeNumber(value: Int): String? {
         if (value <= 0) {
@@ -345,6 +355,8 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
 
         if (isConnected) {
             if(!session!!.isSync()) {
+                Mylog.d("yyyyyyyy chạy đồng bộ chưa:?? rồi")
+                refresh()
                 session!!.setIsSync(true)
                 listProduct = realm!!.getListProductNotSync()
                 user = realm!!.getUser()
@@ -355,7 +367,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
             }
 
         } else {
-            // k update
+            Mylog.d("yyyyyyyyyy chạy đồng bộ chưa:?? chưa")
         }
     }
 
@@ -375,9 +387,17 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
 
     fun syncNotification(){
         if (listNotification != null && !listNotification!!.isEmpty() && temp < listProduct!!.size) {
-            presenter!!.updateNotficationOnServer(listNotification!![indexNotification], user!!._id!!)
+            if(listNotification!![temp].delete) {
+                realm!!.deleteNotification(listNotification!![temp].id_product!!)
+                indexNotification++
+                syncNotification()
+            }else{
+                presenter!!.updateNotficationOnServer(listNotification!![indexNotification], user!!._id!!)
+            }
         }else{
+            completeRefresh()
             session!!.setIsSync(false)
+
         }
     }
 
@@ -435,6 +455,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
     }
 
     override fun onError(typeError: Int) {
+        completeRefresh()
         if(typeError == 111){
             // delete product fail
             session!!.setIsSync(false)
@@ -500,5 +521,30 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
             }
         }
         return data
+    }
+
+    //sync animation
+    fun completeRefresh() {
+        Mylog.d("yyyyy load xong")
+        sync.clearAnimation()
+        sync.setImageDrawable(resources.getDrawable(R.drawable.ic_sync_complete))
+       // refreshItem.setActionView(null)
+    }
+    fun refresh() {
+        /* Attach a rotating ImageView to the refresh item as an ActionView */
+
+        Mylog.d("yyyyyyyy load chưa")
+        val rotation = AnimationUtils.loadAnimation(this, R.anim.sync_animation)
+        rotation.repeatCount = Animation.INFINITE
+        sync.startAnimation(rotation)
+
+
+        //TODO trigger loading
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter!!.cancelRequest()
     }
 }

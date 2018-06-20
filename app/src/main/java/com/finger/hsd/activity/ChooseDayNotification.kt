@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
@@ -13,6 +12,7 @@ import android.view.Window
 import android.widget.Button
 import android.widget.NumberPicker
 import android.widget.RadioButton
+import com.finger.hsd.BaseActivity
 import com.finger.hsd.R
 import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Product_v
@@ -27,7 +27,7 @@ import org.json.JSONObject
 
 
 
-class ChooseDayNotification: AppCompatActivity(), IDetailProductPresenterView{
+class ChooseDayNotification: BaseActivity(), IDetailProductPresenterView{
     override fun onSucess(response: Product_v, type: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -113,6 +113,7 @@ class ChooseDayNotification: AppCompatActivity(), IDetailProductPresenterView{
         if (item.itemId == R.id.item_save) {
             if(days != dayIntent) {
                 if (ConnectivityChangeReceiver.isConnected()) {
+                    showProgress()
                     presenter.processDayBefore(idProduct, days)
                 } else {
                     updateToRealm()
@@ -138,7 +139,7 @@ class ChooseDayNotification: AppCompatActivity(), IDetailProductPresenterView{
         })
 
         Mylog.d("aaaaaaaaaa check: " + realm!!.getProduct(idProduct)!!.daybefore)
-
+        hideProgress()
         val intent = Intent()
         intent.putExtra(Constants.DATA_DAY_BEFORE, days)
         setResult(Constants.RESULT_DAY_BEFORE, intent)
@@ -187,6 +188,13 @@ class ChooseDayNotification: AppCompatActivity(), IDetailProductPresenterView{
     }
 
     override fun onSucess(response: JSONObject, type: Int) {
+        hideProgress()
+        var product = realm!!.getProduct(idProduct)
+        realm!!.realm.executeTransaction(Realm.Transaction {
+            product!!.daybefore = days
+            product.isSyn = true
+        })
+
         val intent = Intent()
         intent.putExtra(Constants.DATA_DAY_BEFORE, days)
         setResult(Constants.RESULT_DAY_BEFORE, intent)

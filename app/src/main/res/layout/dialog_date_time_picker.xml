@@ -93,7 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/grey"
+            android:background="@drawable/shape_dialog_cancel"
             android:onClick="cancel"
             android:text="cancel"
 
@@ -104,7 +104,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/orange"
+            android:background="@drawable/shape_dialog_ok"
             android:onClick="ok"
             android:text="Ok" />
 

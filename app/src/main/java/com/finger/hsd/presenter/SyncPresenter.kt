@@ -131,6 +131,9 @@ class SyncPresenter : getObservable {
 
     }
 
+    fun cancelRequest(){
+        disposable.clear()
+    }
 
     interface ISyncPresenter{
         fun onSucess(response: JSONObject,type: Int)

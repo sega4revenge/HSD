@@ -5,8 +5,10 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
@@ -37,6 +39,7 @@ class AlarmSetting : AppCompatActivity(), CompoundButton.OnCheckedChangeListener
     var realms : RealmAlarmController?= null
     lateinit var mCustomAdapter: CustomAdapter
     lateinit var sessionManager : SessionManager
+    private lateinit var mToolbar: Toolbar
 
     internal var timeAlarm : List<TimeAlarm> = ArrayList<TimeAlarm>()
 
@@ -44,6 +47,19 @@ class AlarmSetting : AppCompatActivity(), CompoundButton.OnCheckedChangeListener
         super.onCreate(savedInstanceState)
         setContentView(R.layout.alarm_setting)
 //        realms  = RealmAlarmController.with(this)
+
+        mToolbar = findViewById(R.id.toolbar)
+        this.setSupportActionBar(mToolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        mToolbar.setTitleTextColor(Color.WHITE)
+        mToolbar.setNavigationIcon(R.drawable.ic_back_arrow)
+        mToolbar.setNavigationOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                onBackPressed()
+            }
+        })
+
         sessionManager = SessionManager(applicationContext)
          realms = RealmAlarmController(this)
 
@@ -57,7 +73,7 @@ class AlarmSetting : AppCompatActivity(), CompoundButton.OnCheckedChangeListener
         switch_notification.setOnCheckedChangeListener(this)
 
         btn_save.setOnClickListener(this)
-        btn_settime.setOnClickListener(this)
+//        btn_settime.setOnClickListener(this)
 
         timeAlarm = realms!!.view_to_dataTimeAlarm()!!
         Log.d(Tag, "  sessionManager ......." + realms!!.view_to_dataTimeAlarm())
@@ -146,7 +162,7 @@ class AlarmSetting : AppCompatActivity(), CompoundButton.OnCheckedChangeListener
     }
 
     private fun setAlarmText(alarmText: String) {
-        btn_settime.text = alarmText
+//        btn_settime.text = alarmText
     }
 
     override fun isDestroyed(): Boolean {

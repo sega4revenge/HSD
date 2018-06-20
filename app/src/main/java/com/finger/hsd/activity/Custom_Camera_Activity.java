@@ -1,38 +1,20 @@
 package com.finger.hsd.activity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Surface;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.afollestad.materialdialogs.MaterialDialog;
+import com.finger.hsd.BaseActivity;
 import com.finger.hsd.R;
-import com.finger.hsd.model.ResultAPI;
-import com.finger.hsd.model.User;
-
-import com.finger.hsd.util.ApiUtils;
-import com.finger.hsd.util.CompressImage;
-import com.finger.hsd.util.RetrofitService;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,21 +24,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-public class Custom_Camera_Activity extends Activity {
+public class Custom_Camera_Activity extends BaseActivity {
     private Camera mCamera;
     private Camera_Preview mCameraPreview;
     private ImageView img,arrow_back;
     private int perID = 1001;
     private int type = 0;
     private String barcode  = "";
-    private MaterialDialog mDialogProgress;
+
     private String name="",detail="",ex="";
     private long exTime = 0;
     FrameLayout preview;
@@ -105,7 +80,7 @@ public class Custom_Camera_Activity extends Activity {
                         ActivityCompat.requestPermissions(Custom_Camera_Activity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, perID);
                         return ;
                     }
-                  showDialog();
+                  showProgress();
                   mCamera.takePicture(null, null, mPicture);
                 }catch (Exception e){
                     Log.d("error",e.getMessage());
@@ -191,11 +166,11 @@ public class Custom_Camera_Activity extends Activity {
                 check = true;
             } catch (FileNotFoundException e) {
                 Log.d("aaaaaaaaaaaaaaa",e.getMessage());
-                mDialogProgress.dismiss();
+             hideProgress();
 
             } catch (IOException e) {
                 Log.d("aaaaaaaaaaaaaaa222222",e.getMessage());
-                mDialogProgress.dismiss();
+             hideProgress();
             }
             if(check){
 //                mRetrofitService = ApiUtils.getAPI();
@@ -245,27 +220,28 @@ public class Custom_Camera_Activity extends Activity {
                 }else{
                     i.putExtra("type",0);
                 }
-                mDialogProgress.dismiss();
+             hideProgress();
                 startActivity(i);
             }
 
         }
     };
-    private void showDialog(){
-       MaterialDialog.Builder m = new MaterialDialog.Builder(this)
-                .content("Please wait...")
-                .cancelable(false)
-                .progress(true, 0);
-        mDialogProgress = m.show();
-    }
+//    private void showDialog(){
+//       MaterialDialog.Builder m = new MaterialDialog.Builder(this)
+//                .content("Please wait...")
+//                .cancelable(false)
+//                .progress(true, 0);
+//        mDialogProgress = m.show();
+//    }
     @Override
     protected void onResume() {
         super.onResume();
-        if(mDialogProgress != null) {
-            if (mDialogProgress.isShowing()) {
-                mDialogProgress.dismiss();
-            }
-        }
+        hideProgress();
+//        if(mDialogProgress != null) {
+//            if (mDialogProgress.isShowing()) {
+//                mDialogProgress.dismiss();
+//            }
+//        }
 
     }
 

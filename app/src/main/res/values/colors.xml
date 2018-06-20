@@ -4,14 +4,15 @@
     <color name="colorPrimaryDark">#9c9c9c</color>
     <color name="colorAccent">#ff4081</color>
     <color name="color_background_button">#009a9a</color>
-    <color name="input_register_bg">#979cb4</color>
+    <color name="input_register_bg">#9c9c9c</color>
     <color name="blue">#19a5f5</color>
     <color name="orange">#fc9a1b</color>
-    <color name="red">#FFE72715</color>
+    <color name="red">#ff2b2b</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="grey">#c9c5c5</color>
     <color name="grey_dim">#fcfafa</color>
+    <color name="green">#369c12</color>
 
     <!--image-->
     <color name="tedbottompicker_camera">#000</color>
@@ -42,5 +43,6 @@
     <color name="gg_color">#e74c3c</color>
 
     <color name="tab_checked">@color/colorPrimary</color>
-    <color name="tab_unchecked">#757575</color>
+    <color name="tab_unchecked">#9c9c9c</color>
+    <color name="bg_hint">#f2f2f2</color>
 </resources>

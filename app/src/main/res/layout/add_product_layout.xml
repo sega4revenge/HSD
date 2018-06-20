@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colordefault">
+    android:background="@color/bg_hint">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -88,16 +88,18 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/border_textview_barcode"
+
                 android:paddingBottom="3dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:paddingTop="3dp"
                 android:text="HSD-123435435"
-                android:textColor="#029e74"
-                android:textSize="9dp" />
+                android:textColor="@color/text_hint"
+                android:textSize="12dp" />
 
             <EditText
+                android:textColor="@color/text_color"
+                android:textCursorDrawable="@null"
                 android:id="@+id/edit_nameproduct"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -106,7 +108,7 @@
                 android:maxLines="1"
                 android:paddingLeft="5dp"
                 android:singleLine="true"
-                android:textSize="15dp" />
+                android:textSize="16dp" />
 
             <View
                 android:layout_width="match_parent"
@@ -219,7 +221,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:background="@color/black"
+        android:background="@drawable/shape_button_normal"
         android:text="POST"
         android:textColor="@color/white"/>
 </LinearLayout>

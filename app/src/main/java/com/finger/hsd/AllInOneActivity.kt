@@ -60,8 +60,6 @@ import java.io.IOException
 
 class AllInOneActivity : BaseActivity(), NotificationBadgeListener, ConnectivityChangeReceiver.ConnectivityReceiverListener, SyncPresenter.ISyncPresenter{
 
-
-
     override fun onResume() {
         super.onResume()
         MyApplication.getConnectivityListener(this)

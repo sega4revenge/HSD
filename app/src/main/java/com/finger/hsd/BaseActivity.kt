@@ -1,6 +1,7 @@
 package com.finger.hsd
 
 import android.app.ProgressDialog
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import java.net.InetAddress
@@ -9,6 +10,7 @@ import java.net.InetAddress
 open class BaseActivity : AppCompatActivity() {
 
     private var mToast: Toast? = null
+    private var mSnackbar: Snackbar? = null
     private var mLoadingProgressDialog: ProgressDialog? = null
     private val CALL_REQUEST_CODE = 232
     fun createProgressDialog(): ProgressDialog {
@@ -62,6 +64,30 @@ open class BaseActivity : AppCompatActivity() {
                 mLoadingProgressDialog!!.dismiss()
             }
         }
+    }
+
+     fun showSnackBarMessage(message: String?) {
+
+    }
+    fun showSnack(str: String, length: Int, idLayout: Int) {
+        if (mSnackbar == null) {
+            mSnackbar = Snackbar.make(findViewById(idLayout), str, length)
+        } else {
+            mSnackbar!!.setText(str)
+        }
+        mSnackbar!!.show()
+    }
+
+    fun showSnack(strResId: Int, idLayout: Int) {
+        this.showSnack(resources.getString(strResId),  Snackbar.LENGTH_SHORT, idLayout)
+    }
+
+    fun showSnack(strResId: Int, length: Int, idLayout: Int) {
+        this.showSnack( resources.getString(strResId),  Snackbar.LENGTH_SHORT, idLayout)
+    }
+
+    fun showSnack(str: String, idLayout : Int) {
+        this.showSnack( str,  Snackbar.LENGTH_SHORT, idLayout)
     }
 
 

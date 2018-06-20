@@ -133,17 +133,15 @@ class RealmController(application: Context) {
         realm.commitTransaction()
     }
 
+
     // find each element and change watched
-    fun setWatchedNotification(){
-        var listNotification: List<Notification> =realm.copyFromRealm(realm.where(Notification::class.java).findAll().
+    fun listNotWatch():ArrayList<Notification> {
+
+        return realm.copyFromRealm(realm.where(Notification::class.java).findAll().
                 sort("created_at", Sort.DESCENDING)) as ArrayList<Notification>
-        for(i in 0..listNotification.size){
-            realm.beginTransaction()
-            var notification = listNotification.get(i)
-            notification.watched = true
-            realm.commitTransaction()
-        }
+
     }
+
     //find all objects in the  table Notification
     fun getListNotification(): ArrayList<Notification>?{
 

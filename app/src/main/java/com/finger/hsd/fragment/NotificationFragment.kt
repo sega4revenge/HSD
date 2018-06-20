@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -94,6 +95,8 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
 
         }
     }
+    var temp: Int = 0
+    var listNotWatch = ArrayList<Notification>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -108,12 +111,41 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
         setRealmAdapter()
 
         mView!!.im_clear.setOnClickListener(View.OnClickListener {
-            showProgress()
-            realm!!.setWatchedNotification()
-            hideProgress()
+//            showProgress()
+             listNotWatch = realm!!.listNotWatch()
+            temp = 0
+            if(listNotWatch.size >=0 && !listNotWatch.isEmpty() && temp < listNotWatch.size) {
+                processWatchedNotification(listNotWatch[temp])
+            }else{
+//                sucess
+                showSnack("Sucess",R.id.ln_all_in_one)
+            }
+
+//            hideProgress()
 
         })
         return mView
+    }
+
+    fun processWatchedNotification(notification: Notification){
+
+            if (ConnectivityChangeReceiver.isConnected()) {
+                updateNotficationOnServer(notification, 2)
+            } else {
+
+                temp++
+                realm!!.realm.executeTransaction(Realm.Transaction {
+                    notification.isSync = false
+                    notification.watched = true
+
+                })
+                if(listNotWatch.size >=0 && !listNotWatch.isEmpty() && temp < listNotWatch.size) {
+                    processWatchedNotification(listNotWatch[temp])
+                }else{
+                    // sucess
+                }
+            }
+
     }
 
     fun setRealmAdapter() {
@@ -132,6 +164,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
 
         listitem = java.util.ArrayList<Notification>()
         layoutManager = LinearLayoutManager(activity, LinearLayout.VERTICAL, false)
+        mView.recycler_notification.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
         // mNotifiAdapter = NotificationAdapterKotlin(mContext!! ,listitem, realm!!, mNotificationBadgeListener!!, this )
 
         mView.recycler_notification.layoutManager = layoutManager
@@ -204,7 +237,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
         // startActivityForResult(intent, AppIntent.REQUEST_NOTIFICATION)
         var notification = realm!!.getOneNotification(product._id!!)
         if (ConnectivityChangeReceiver.isConnected()) {
-            updateNotficationOnServer(notification!!)
+            updateNotficationOnServer(notification!!, 1)
         } else {
 
             realm!!.realm.executeTransaction(Realm.Transaction {
@@ -306,7 +339,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
         }
     }
 
-    fun updateNotficationOnServer(notification: Notification) {
+    fun updateNotficationOnServer(notification: Notification, type : Int) {
         Mylog.d("ttttttttt idproduct: "+notification.id_product)
         var user = realm!!.getUser()
         var jsonObject = JSONObject()
@@ -338,19 +371,49 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
 
                     override fun onNext(t: Response?) {
                         Mylog.d("onsucess")
-                        realm!!.realm.executeTransaction(Realm.Transaction {
-                            notification.isSync = true
-                            notification.watched = false
-                        })
+                        if (type == 2){
+
+                            temp++
+                            realm!!.realm.executeTransaction(Realm.Transaction {
+                                notification.isSync = true
+                                notification.watched = true
+
+                            })
+                            if(listNotWatch.size >=0 && !listNotWatch.isEmpty() && temp < listNotWatch.size) {
+                                processWatchedNotification(listNotWatch[temp])
+                            }else{
+                                // success
+                            }
+                        }else {
+                            realm!!.realm.executeTransaction(Realm.Transaction {
+                                notification.isSync = true
+                                notification.watched = false
+                            })
+                        }
                     }
 
                     override fun onError(e: Throwable?) {
                         Mylog.d(e!!.printStackTrace().toString())
-                        realm!!.realm.executeTransaction(Realm.Transaction {
-                            notification!!.isSync = false
-                            notification.watched = true
+                        if (type==2){
 
-                        })
+                            temp++
+                            realm!!.realm.executeTransaction(Realm.Transaction {
+                                notification.isSync = false
+                                notification.watched = true
+
+                            })
+                            if(listNotWatch.size >=0 && !listNotWatch.isEmpty() && temp < listNotWatch.size) {
+                                processWatchedNotification(listNotWatch[temp])
+                            }else{
+                                //sucess
+                            }
+                        }else {
+                            realm!!.realm.executeTransaction(Realm.Transaction {
+                                notification!!.isSync = false
+                                notification.watched = true
+
+                            })
+                        }
 
 
 

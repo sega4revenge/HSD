@@ -2,6 +2,7 @@ package com.finger.hsd
 
 
 import android.app.ProgressDialog
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.widget.Toast
 
@@ -52,6 +53,19 @@ open class BaseFragment : Fragment(){
             }
         }
     }
+
+    fun showSnack(strResId: Int, idLayout: Int) {
+        this.showSnack(resources.getString(strResId), idLayout)
+    }
+
+    fun showSnack(str: String, idLayout: Int) {
+        if (activity is BaseActivity) {
+            (activity as BaseActivity).showSnack(str, idLayout)
+        } else {
+            Snackbar.make(activity!!.findViewById(idLayout), str, Toast.LENGTH_LONG).show()
+        }
+    }
+
 
     fun showToast(strResId: Int) {
         this.showToast(resources.getString(strResId))

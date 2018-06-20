@@ -12,7 +12,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.Snackbar
+import android.util.Base64
 import android.util.Log
 import android.view.View
 import com.bumptech.glide.Priority
@@ -25,7 +25,6 @@ import com.facebook.login.LoginResult
 import com.finger.hsd.AllInOneActivity
 import com.finger.hsd.BaseActivity
 import com.finger.hsd.R
-import com.finger.hsd.R.id.*
 import com.finger.hsd.common.GlideApp
 import com.finger.hsd.common.MyApplication
 import com.finger.hsd.manager.RealmController
@@ -188,7 +187,7 @@ fun getKeyHash(){
         for (signature in info.signatures) {
             val md = MessageDigest.getInstance("SHA")
             md.update(signature.toByteArray())
-          //  Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+            Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
         }
     } catch (e: PackageManager.NameNotFoundException) {
 
@@ -204,11 +203,11 @@ fun getKeyHash(){
         var err = 0
         if (!validatePhone(phone_number!!.text.toString())) {
             err++
-            phone_number!!.error = "loi"
+            phone_number!!.error = "Không được để trống trường này"
         } else {
             if (!validatePhone2(phone_number.text.toString())!!) {
                 err++
-                phone_number.error = "loi"
+                phone_number.error = "Số điện thoại không hợp lệ"
             }
         }
         if (err == 0) {
@@ -217,7 +216,7 @@ fun getKeyHash(){
             user.tokenfirebase = FirebaseInstanceId.getInstance().token
             mLoginPresenter!!.login(user)
         } else {
-            println("error")
+          showSnack("Thông tin chưa đúng", R.id.root_login)
 
         }
     }
@@ -244,14 +243,11 @@ fun getKeyHash(){
         } else {
             println("loi")
         }
-
     }
 
     override fun setErrorMessage(errorMessage: String) {
 
-
-        showSnackBarMessage(errorMessage)
-
+        showSnack(errorMessage, R.id.root_login)
 
     }
     override fun isProgressData(percent: Int) {
@@ -300,9 +296,7 @@ fun getKeyHash(){
     var percent = 0
     var current = 0
 
-
     fun onDownload( product: Product_v){
-
 
         GlideApp.with(this)
                 .asBitmap()
@@ -444,7 +438,7 @@ fun getKeyHash(){
         } else if (requestCode == Constants.FOTGOTPASSWORD) {
             Log.e("requestCode: ", "OK ne")
             if (resultCode == Activity.RESULT_OK) {
-                showSnackBarMessage("success")
+                showSnack("success", R.id.root_login)
 
             }
         }
@@ -474,9 +468,7 @@ fun getKeyHash(){
         Log.d(TAG, "onConnectionFailed:" + p0)
     }
 
-    private fun showSnackBarMessage(message: String?) {
-        Snackbar.make(findViewById(R.id.root_login), message!!, Snackbar.LENGTH_SHORT).show()
-    }
+
 
     override fun onDestroy() {
         super.onDestroy()

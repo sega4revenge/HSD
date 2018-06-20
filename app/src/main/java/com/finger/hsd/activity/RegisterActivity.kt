@@ -8,7 +8,6 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.util.Log
 import android.view.View
 import com.bumptech.glide.Priority
@@ -29,7 +28,6 @@ import com.finger.hsd.util.Validation.validatePassword
 import com.finger.hsd.util.Validation.validatePhone
 import com.finger.hsd.util.Validation.validatePhone2
 import com.google.firebase.iid.FirebaseInstanceId
-
 import kotlinx.android.synthetic.main.activity_register.*
 import java.io.File
 import java.io.FileOutputStream
@@ -100,24 +98,24 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
 
         if (!validatePhone(phone_number!!.text.toString())) {
             err++
-            phone_number!!.error = "loi"
+            phone_number!!.error = "Không được để trống trường này"
         } else {
             if (!validatePhone2(phone_number.text.toString())!!) {
                 err++
-                phone_number.error = "loi"
+                phone_number.error = "Số điện thoại không đúng"
             }
         }
 
         if (!validatePassword(txt_password!!.text.toString())) {
 
             err++
-            txt_password!!.error = "loi"
+            txt_password!!.error = "Không được để trống trường này"
         }
 
         if (txt_password!!.text.toString() != repass!!.text.toString() || repass!!.text.toString() == "") {
 
             err++
-            repass!!.error = "loi"
+            repass!!.error = "Mật khẩu không trùng khớp"
         }
 
 //        if (!validatePassword(password!!.text.toString())) {
@@ -147,8 +145,7 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
 
 
         } else {
-
-            showSnackBarMessage("loi")
+            showSnack("Nhập đầy đủ thông tin", R.id.root_register)
         }
     }
 
@@ -174,7 +171,8 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
 
     override fun setErrorMessage(errorMessage: String) {
 
-        showSnackBarMessage(errorMessage)
+
+        showSnack(errorMessage, R.id.root_register)
     }
     var listProduct : ArrayList<Product_v>? = null
     var temp = 0
@@ -319,12 +317,6 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
         }
     }
 
-    private fun showSnackBarMessage(message: String?) {
-
-
-        Snackbar.make(findViewById(R.id.root_register), message!!, Snackbar.LENGTH_SHORT).show()
-
-    }
 
 
     public override fun onDestroy() {

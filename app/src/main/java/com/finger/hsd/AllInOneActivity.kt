@@ -27,8 +27,10 @@ import android.util.Log
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.Toast
 import com.androidnetworking.error.ANError
 import com.finger.hsd.activity.ContinuousCaptureActivity
@@ -87,7 +89,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
     var session : SessionManager? = null
     var presenter: SyncPresenter? = null
     var realm: RealmController? = null
-
+    var lin:RelativeLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,6 +108,8 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
         presenter = SyncPresenter(this)
         realm = RealmController(this)
         session = SessionManager(this)
+        lin = findViewById<RelativeLayout>(R.id.actionbar)
+        lin?.requestFocus()
         viewPager = findViewById(R.id.viewpager)
         bottomNavigationView = findViewById(R.id.bottom_navigation)
         mImageview = findViewById<ImageView>(R.id.img_selete)
@@ -163,8 +167,19 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
             }
         })
         mImageview?.setOnClickListener(View.OnClickListener {
-            edit_search?.setText("")
-            searchkey = ""
+            if(edit_search?.text.toString() == ""){
+                mImageview?.setImageResource(R.drawable.search_icon_black_24dp)
+                lin?.requestFocus()
+                val view = this.currentFocus
+                if (view != null) {
+                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm!!.hideSoftInputFromWindow(view.windowToken, 0)
+                }
+            }else{
+                edit_search?.setText("")
+                searchkey = ""
+            }
+
         })
 
         viewPager!!.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))

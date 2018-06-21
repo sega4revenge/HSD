@@ -108,7 +108,7 @@
                             android:layout_centerVertical="true"
                             android:layout_gravity="center"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/img1" />
+                        />
 
                         <ImageView
                             android:id="@+id/im_change"

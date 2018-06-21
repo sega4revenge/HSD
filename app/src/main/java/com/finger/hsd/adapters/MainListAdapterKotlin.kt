@@ -142,7 +142,7 @@ class MainListAdapterKotlin:
                 for (i in position + 1 until mProducts.size) {
                     arrID.add(mProducts[i])
                     if (_idDelete === "") {
-                        _idDelete = mProducts[i]._id + ","
+                        _idDelete = mProducts[i]._id!! + ","
                     } else {
                         _idDelete = _idDelete + mProducts[i]._id + ","
                     }
@@ -157,6 +157,7 @@ class MainListAdapterKotlin:
 
                 }
                 if (_idDelete !== "") {
+                    Log.d("Adapter:", _idDelete+"////")
                     onproductClickListener.onproductClickedDelete(_idDelete, arrID)
                 }
             }

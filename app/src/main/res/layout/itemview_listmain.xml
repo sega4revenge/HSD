@@ -15,7 +15,6 @@
         android:background="@color/white">
         <ImageView
             android:layout_margin="16dp"
-            android:src="@drawable/img1"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:scaleType="fitXY"

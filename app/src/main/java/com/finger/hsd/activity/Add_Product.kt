@@ -76,7 +76,7 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
     var pathUri:Uri? = null
     private var haveImage = false
     var barcodeIn:String? = null
-//    private var mDialogProgress: MaterialDialog? = null
+
     val options = RequestOptions()
             .centerCrop()
             .dontAnimate()
@@ -100,6 +100,7 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
         }
 
     }
+
     override fun onupdateProduct(type: Int, product: Product_v) {
         if(type!=0){
             Toast.makeText(this@Add_Product,"Update Success!",Toast.LENGTH_SHORT).show()
@@ -286,6 +287,7 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
 //                                                onupdateProduct(1,mProduct)
 //                                            }
                                         }
+                                        hideProgress()
                                     }else{
                                        hideProgress()
                                         bt_post?.visibility = View.VISIBLE
@@ -494,6 +496,7 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
 
     public override fun onDestroy() {
         super.onDestroy()
+
         hideProgress()
 //        if (mDialogProgress != null) {
 //            if (mDialogProgress?.isShowing()!!) {
@@ -584,4 +587,5 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
         }
 
     }
+
 }

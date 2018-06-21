@@ -165,6 +165,7 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
         mDialogProgress = m.show()
     }
     fun showDialogDelete(listDelete: String?, arrID : List<Product_v>){
+        Log.d("Adapter:", listDelete+"////12321312")
         val dialogdelete = MaterialDialog.Builder(activity!!)
                 .title("Bạn muốn xóa toàn bộ sản phẩm này?")
                 .content("Nhấn OK để xóa toàn bộ sản phẩm này")
@@ -172,14 +173,16 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
                 .positiveText("OK")
                 .negativeText("Cancel")
                 .onPositive { dialog, which ->
-                    showProgress("Đang xóa sản phẩm...")
+                    showProgress("deleting...")
                     mRetrofitService = ApiUtils.getAPI()
                     mRetrofitService?.deleteGroup(listDelete!!)?.enqueue(object: Callback<Result_Product>{
                         override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
                             for(i in 0 until arrID.size){
                                 arrID.get(i).isSyn = false
+                                arrID.get(i).delete =true
                             }
                             myRealm?.deletelistproduct(arrID,this@Home_Fragment)
+                            hideProgress()
                         }
 
                         override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
@@ -194,10 +197,10 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
                         }
 
                     })
+                    mDialogProgress?.dismiss()
                 }
-
-
-        showProgress("deleting...")
+        mDialogProgress = dialogdelete.build()
+        mDialogProgress?.show()
     }
     fun showDialogNotFound(){
         Log.d("REALMCONTROLLER","//zzzzzzzzzzz//showDialogNotFound//")
@@ -445,6 +448,7 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
 
 
     override fun onproductClickedDelete(listDelete: String, arr: List<Product_v>) {
+        Log.d("Adapter:", listDelete+"////")
         showDialogDelete(listDelete, arr)
     }
 

@@ -13,6 +13,8 @@
         android:layout_height="55dp"
         android:background="@color/colorPrimary"
         android:layout_alignParentTop="true"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
         >
         <EditText
             android:textCursorDrawable="@null"
@@ -33,16 +35,16 @@
             android:paddingRight="55dp"
             android:singleLine="true"
             android:ellipsize="end"
-            android:focusable="auto"
             />
         <ImageView
             android:id="@+id/img_selete"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:src="@drawable/search_icon_black_24dp"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="28dp"/>
+            android:layout_marginLeft="28dp"
+            android:padding="2dp"/>
         <ImageView
             android:id="@+id/scan_barcode_img"
             android:layout_width="24dp"

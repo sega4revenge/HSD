@@ -50,8 +50,8 @@ class RealmController(application: Context) {
          var product = realm.where(Product_v::class.java).equalTo("_id", id).findFirst()
         if(product !=null) {
             product.deleteFromRealm()
-            realm.commitTransaction()
         }
+        realm.commitTransaction()
     }
 
     fun deleteNotification(id: String){
@@ -59,8 +59,8 @@ class RealmController(application: Context) {
         var notification = realm.where(Notification::class.java).equalTo("id_product", id).findFirst()
         if(notification !=null) {
             notification.deleteFromRealm()
-            realm.commitTransaction()
         }
+        realm.commitTransaction()
     }
 
 
@@ -107,6 +107,7 @@ class RealmController(application: Context) {
                 .equalTo("id_product", notification.id_product).findFirst()
 
         if(toEdit !=null){
+            realm.beginTransaction()
             toEdit.watched = false
             toEdit.create_at = notification.create_at
             realm.commitTransaction()

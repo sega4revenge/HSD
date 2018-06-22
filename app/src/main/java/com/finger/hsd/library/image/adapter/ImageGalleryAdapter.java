@@ -63,7 +63,7 @@ public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapte
             final String orderBy = MediaStore.Images.Media.DATE_ADDED + " DESC";
 
 
-            imageCursor = context.getApplicationContext().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy);
+            imageCursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy);
             //imageCursor = sContext.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy);
 
 
@@ -172,11 +172,11 @@ public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapte
 
             if(builder.selectedForegroundDrawable!=null){
                 foregroundDrawable = builder.selectedForegroundDrawable;
-            }else{
+            } else{
                 foregroundDrawable = ContextCompat.getDrawable(context,R.drawable.gallery_photo_selected);
             }
 
-            ((FrameLayout) holder.root).setForeground(isSelected ? foregroundDrawable : null);
+            ( holder.root).setForeground(isSelected ? foregroundDrawable : null);
         }
 
 
@@ -205,7 +205,7 @@ public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapte
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(View view, int position);
+        void onItemClick(View view, int position);
     }
 
 

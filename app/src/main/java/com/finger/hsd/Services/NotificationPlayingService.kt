@@ -353,6 +353,7 @@ class NotificationPlayingService : Service() {
             jsonObject.put("type", notification.type)
             jsonObject.put("watched", notification.watched)
             jsonObject.put("time", notification.create_at)
+            jsonObject.put("status_expired", notification.status_expiry)
         }catch (e:Exception){
             Mylog.d("Error "+e.message)
         }

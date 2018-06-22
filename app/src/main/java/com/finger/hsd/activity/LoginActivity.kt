@@ -120,6 +120,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
         //==============================================================
 
 
+        // login facebook
         LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
             override fun onSuccess(loginResult: LoginResult) {
                 val request = GraphRequest.newMeRequest(
@@ -207,7 +208,7 @@ fun getKeyHash(){
             user.tokenfirebase = FirebaseInstanceId.getInstance().token
             mLoginPresenter!!.login(user)
         } else {
-          showSnack("Thông tin chưa đúng", R.id.root_login)
+          showSnack("Số điện thoại hoặc mật khẩu không hợp lệ!", R.id.root_login)
 
         }
     }
@@ -237,12 +238,21 @@ fun getKeyHash(){
         }
     }
 
-    override fun setErrorMessage(errorMessage: String) {
+    override fun setErrorMessage( errorCode: Int, errorBody: Int) {
         hideProgress()
-        if (errorMessage.equals("0")) {
-            showSnack("Disconnect from server!", R.id.root_login)
-        }else if(errorMessage.equals("500")){
-            showSnack("Server disconnect!", R.id.root_login)
+        // errorCode: 500: 404: user chua dang ky
+        // 401: sai mat khau
+        // 500 loi server
+        if (errorCode == 500) {
+            if(errorBody == 404)
+            showSnack("User chưa được đăng ký!", R.id.root_login)
+            else if(errorBody == 401){
+                showSnack("Sai mật khẩu!", R.id.root_login)
+            }else if (errorBody == 500){
+                showSnack("Không có kết nối! vui lòng kiểm tra kết nối internet của bạn!", R.id.root_login)
+            }
+        }else{
+            showSnack("Không có kết nối! vui lòng thử lại!", R.id.root_login)
         }
 
     }
@@ -438,6 +448,7 @@ fun getKeyHash(){
         }
     }
 
+    // login as google
     private fun handleSignInResult(result: GoogleSignInResult) {
         Log.d(TAG, "handleSignInResult:" + result.status)
         if (result.isSuccess) {
@@ -449,7 +460,7 @@ fun getKeyHash(){
             user.phone = acct.id
             user.password = ""
             user.tokenfirebase = tokenfirebase
-            mLoginPresenter!!.register(user, 1)
+            mLoginPresenter!!.register(user, 2)
 
             Log.e(TAG, "Name: " + user.google + ", email: ")
         } else {

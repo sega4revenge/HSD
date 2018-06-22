@@ -1,37 +1,43 @@
 package com.finger.hsd.model
 
 
+import android.os.Parcel
+import android.os.Parcelable
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
-import java.io.Serializable
 
-open class Product_v : RealmObject, Serializable {
+open class Product_v : RealmObject, Parcelable {
 
-    //    public String getImagepassed() {
-    //        return imagepassed;
-    //    }
-    //
-    //    public void setImagepassed(String imagepassed) {
-    //        this.imagepassed = imagepassed;
-    //    }
+    override fun writeToParcel(p0: Parcel?, p1: Int) {
+        p0!!.writeString(_id)
+
+    }
+
+    override fun describeContents(): Int {
+        return 0;
+    }
+
+
 
     @PrimaryKey
-    var _id: String?= null
-    var namechanged: String?= null
-    var barcode: String? = null
-    var expiretime: Long = 0
-    var producttype_id: ProductType_v?= null
-    var description: String? = null
-    var imagechanged: String? = null
+   public  var _id: String?= null
+    public var namechanged: String?= null
+    public var barcode: String? = null
+    public var expiretime: Long = 0
+    public var producttype_id: ProductType_v?= null
+    public var description: String? = null
+    public  var imagechanged: String? = null
     //    private String imagepassed;
-    var delete: Boolean = false
-    var isNewImage = false
-    var daybefore: Int = 0
-    var isChecksync = true
-    var create_at: Long? = null
-    var isSyn = true
+    public  var delete: Boolean = false
+    public  var isNewImage = false
+    public  var daybefore: Int = 0
+    public var isChecksync = true
+    public var create_at: Long? = null
+    public var isSyn = true
 
-    constructor() {}
+    constructor() {
+
+    }
     constructor(namechanged: String, barcode: String, expiretime: Long, description: String, imagechanged: String) {
         this.namechanged = namechanged
         this.barcode = barcode
@@ -52,5 +58,37 @@ open class Product_v : RealmObject, Serializable {
 
     override fun toString(): String {
         return "nameproduct: $namechanged, barcode: $barcode, hsd_ex: $expiretime, detailproduct: $description"
+    }
+
+    constructor(p0: Parcel) {
+        readFromParcel(p0)
+    }
+
+//    val CREATOR: Parcelable.Creator<Product_v> = object : Parcelable.Creator<Product_v> {
+//        override fun createFromParcel(p0: Parcel?): Product_v {
+//            return Product_v(p0!!)
+//        }
+//
+//        override fun newArray(p0: Int): Array<Product_v?> {
+//            return arrayOfNulls<Product_v>(p0)
+//        }
+//
+//
+//    }
+
+    fun readFromParcel(p0: Parcel) {
+        this._id  = p0.readString()
+
+    }
+
+
+    companion object CREATOR : Parcelable.Creator<Product_v> {
+        override fun createFromParcel(parcel: Parcel): Product_v {
+            return Product_v(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Product_v?> {
+            return arrayOfNulls(size)
+        }
     }
 }

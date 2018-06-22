@@ -91,6 +91,7 @@ class SyncPresenter : getObservable {
             jsonObject.put("id_product", notification.id_product)
             jsonObject.put("idUser", iduser)
             jsonObject.put("type", notification.type)
+            jsonObject.put("status_expired", notification.status_expiry)
             jsonObject.put("watched", notification.watched)
             jsonObject.put("time", notification.create_at)
         } catch (e: Exception) {

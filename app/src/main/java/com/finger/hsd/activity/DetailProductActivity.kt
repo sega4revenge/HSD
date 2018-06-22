@@ -79,8 +79,8 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
     private lateinit var mLayoutDayBefore: RelativeLayout
 
     private lateinit var idProduct: String
-
     lateinit var presenter: DetailProductPresenter;
+
     private var strImProduct: String = ""
 
     private var name: String? = null
@@ -139,6 +139,12 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
             }
         })
 
+//        im_view_hieu.setOnClickListener {
+//            showImage()
+//        }
+
+
+
         rootFolder = File(filesDir.toString() + "/files")
         if (!rootFolder!!.exists()) {
             rootFolder!!.mkdirs()
@@ -164,7 +170,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         mBtSave.setOnClickListener {
             val noteChange: String? = mTvNote.text.toString()
             val nameChange: String? = mTvName.text.toString()
-
+            showProgress()
             if (ConnectivityChangeReceiver.isConnected()) {
                 if ((!noteChange.equals(note))
                         || (!name.equals(nameChange))
@@ -400,7 +406,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                 product!!.isSyn = isSync
             })
         }
-
+        hideProgress()
 
         val a = Intent()
         a.putExtra("updateItem", true)
@@ -429,8 +435,8 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                 val bottomSheetDialogFragment = TedBottomPicker.Builder(this@DetailProductActivity)
                         .setOnImageSelectedListener(object : TedBottomPicker.OnImageSelectedListener {
                             override fun onImageSelected(uri: Uri) {
-                                Log.d("ted", "uri: $uri")
-                                Log.d("ted", "uri.getPath(): " + uri.path)
+                                Log.d("selected ted: ", "uri: $uri")
+                                Log.d("selected path: ", "uri.getPath(): " + uri.path)
                                 selectedUri = uri
                                 val options = RequestOptions()
                                         .dontAnimate()
@@ -440,7 +446,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                                         .load(uri)
                                         .thumbnail(0.1f)
                                         .apply(options)
-                                        .into(mImProduct)
+                                        .into(findViewById(R.id.im_product))
 
                             }
                         })
@@ -456,7 +462,6 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                 Toast.makeText(this@DetailProductActivity, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show()
             }
 
-
         }
 
         TedPermission(this@DetailProductActivity)
@@ -464,6 +469,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                 .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions " +
                         "at [Setting] > [Permission]")
                 .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .setPermissions(Manifest.permission.CAMERA)
                 .check()
 
     }
@@ -669,7 +675,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
 
         } else
-        // xóa sản phẩm
+        // xóa sản phẩm khong thanh cong tu server
             if (typeError == 222) {
                 realm!!.realm.executeTransaction(Realm.Transaction {
                     product!!.delete = true
@@ -698,7 +704,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                 }
     }
 
-    //===========LẤY DỮ LIỆU OFFLINE----------------
+    //=========== LẤY DỮ LIỆU OFFLINE ----------------
     fun getDataFromRealm() {
 
         //  var product!!Type = product!!.product!!TypeId
@@ -1086,6 +1092,6 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
     override fun onDestroy() {
         super.onDestroy()
-        presenter.cancelRequest()
+
     }
 }

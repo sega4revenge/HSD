@@ -36,15 +36,15 @@ import java.util.*
 class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
 
 
-    var realm : RealmController? = null
-    var session : SessionManager? = null
+    var realm: RealmController? = null
+    var session: SessionManager? = null
     var rootFolder: File? = null
     private var pending_intent: PendingIntent? = null
     private val milDay = 86400000L
-    lateinit var alarmManager : AlarmManager
+    lateinit var alarmManager: AlarmManager
 
 
-    val options  = RequestOptions()
+    val options = RequestOptions()
             .centerCrop()
             .placeholder(R.drawable.ic_add_photo)
             .error(R.drawable.ic_back)
@@ -55,7 +55,8 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
 
     var v: View? = null
     override fun isRegisterSuccessful(isRegisterSuccessful: Boolean) {
-        if (isRegisterSuccessful) {   startActivity(Intent(this@RegisterActivity, HorizontalNtbActivity::class.java))
+        if (isRegisterSuccessful) {
+            startActivity(Intent(this@RegisterActivity, HorizontalNtbActivity::class.java))
             finish()
         }
 
@@ -86,8 +87,6 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
     }
 
 
-
-
     private fun register() {
 
         setError()
@@ -95,24 +94,24 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
 
         if (!validatePhone(phone_number!!.text.toString())) {
             err++
-            phone_number!!.error = "Không được để trống trường này"
+            phone_number!!.error = "Không được để trống trường này!"
         } else {
             if (!validatePhone2(phone_number.text.toString())!!) {
                 err++
-                phone_number.error = "Số điện thoại không đúng"
+                phone_number.error = "Số điện thoại không hợp lệ! Hãy thử nhập lại nhé!"
             }
         }
 
         if (!validatePassword(txt_password!!.text.toString())) {
 
             err++
-            txt_password!!.error = "Không được để trống trường này"
+            txt_password!!.error = "Không được để trống trường này!"
         }
 
         if (txt_password!!.text.toString() != repass!!.text.toString() || repass!!.text.toString() == "") {
 
             err++
-            repass!!.error = "Mật khẩu không trùng khớp"
+            repass!!.error = "Mật khẩu không trùng khớp! Vui lòng nhập lại mật khẩu!"
         }
 
 
@@ -121,14 +120,14 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
             showProgress()
             user.phone = phone_number.text.toString()
 
-            user.password = ""
+            user.password = txt_password.text.toString()
             user.tokenfirebase = FirebaseInstanceId.getInstance().token
 
             mRegisterPresenter!!.register(user, 0)
 
 
         } else {
-            showSnack("Nhập đầy đủ thông tin", R.id.root_register)
+            showSnack("Vui lòng nhập đầy đủ thông tin hợp lệ!", R.id.root_register)
         }
     }
 
@@ -151,34 +150,42 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
 
     }
 
-    override fun setErrorMessage(errorMessage: String) {
+    override fun setErrorMessage(errorCode: Int, errorBody: Int) {
 
         hideProgress()
-        if (errorMessage.equals("0")) {
-            showSnack("Disconnect from server!", R.id.root_register)
-        }else if(errorMessage.equals("500")){
-            showSnack("Server disconnect!", R.id.root_register)
+        if (errorCode == 500) {
+            if (errorBody == 401) {
+                showSnack("Số điện thoại đã được sử dụng!", R.id.root_register)
+            } else if (errorBody == 500) {
+                showSnack("Không có kết nối! vui lòng kiểm tra kết nối internet của bạn!", R.id.root_register)
+            }
+        } else if (errorCode == 404) {
+            showSnack("Dữ liệu nhập vào bị rỗng!", R.id.root_register)
+        } else {
+            showSnack("Không thể kết nối đến máy chủ, vui lòng kiểm tra lại!", R.id.root_register)
         }
 
+
     }
-    var listProduct : ArrayList<Product_v>? = null
+
+    var listProduct: ArrayList<Product_v>? = null
     var temp = 0
 
     override fun getUserDetail(user: User) {
-       // AppManager.saveAccountUser(this, user)
+        // AppManager.saveAccountUser(this, user)
         this.user = user
 
         realm!!.addUser(user)
 
-        listProduct  = realm!!.getlistProduct()
+        listProduct = realm!!.getlistProduct()
 
 
-        temp =0
+        temp = 0
         if (listProduct != null && !listProduct!!.isEmpty()) {
 
             onDownload(listProduct!!.get(temp))
 
-        }else{
+        } else {
             hideProgress()
             session!!.setLogin(true)
             startActivity(Intent(this@RegisterActivity, AllInOneActivity::class.java))
@@ -188,7 +195,7 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
     }
 
     var percent = 0
-    fun onDownload( product: Product_v){
+    fun onDownload(product: Product_v) {
 
 
         GlideApp.with(this)
@@ -199,11 +206,11 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
                     override fun onLoadFailed(errorDrawable: Drawable?) {
                         temp++
 
-                        if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
+                        if (listProduct != null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
                             percent = (temp.toFloat() / listProduct!!.size.toFloat() * 100f).toInt()
 
                             onDownload(listProduct!!.get(temp))
-                        }else{
+                        } else {
                             hideProgress()
                             session!!.setLogin(true)
                             startActivity(Intent(this@RegisterActivity, AllInOneActivity::class.java))
@@ -224,7 +231,7 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
                             val out3 = FileOutputStream(myDir)
 
                             resource?.compress(Bitmap.CompressFormat.JPEG, 90, out3)
-                            Mylog.d("aaaaaaaaaa my dir: "+ myDir)
+                            Mylog.d("aaaaaaaaaa my dir: " + myDir)
                             product.imagechanged = Uri.fromFile(myDir).toString()
                             realm!!.updateProduct(product)
 
@@ -232,30 +239,30 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
                             out3.flush()
                             out3.close()
 
-                            if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
+                            if (listProduct != null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
                                 percent = (temp.toFloat() / (listProduct!!.size.toFloat()) * 100f).toInt()
 
-                                showProgress("Sync... "+percent)
+                                showProgress("Sync... " + percent)
 
                                 onDownload(listProduct!!.get(temp))
-                            }else{
+                            } else {
                                 percent = (temp.toFloat() / (listProduct!!.size).toFloat() * 100f).toInt()
-                                showProgress("Sync... "+percent+"% complete")
+                                showProgress("Sync... " + percent + "% complete")
                                 session!!.setLogin(true)
 
-                                var list =  realm!!.getDataTimeAlarm()
+                                var list = realm!!.getDataTimeAlarm()
 
                                 for (index in list!!.indices) {
 
                                     val model = list.get(index)
                                     if (model.isSelected!!) {
                                         SettingAlarm(model.listtime!!.toInt(), true)
-                                    }else{
+                                    } else {
                                         SettingAlarm(model.listtime!!.toInt(), false)
                                     }
                                 }
                                 hideProgress()
-                                Log.d("isLoginSuccessful","isLoginSuccessful1    "   +"  list   " +list)
+                                Log.d("isLoginSuccessful", "isLoginSuccessful1    " + "  list   " + list)
                                 startActivity(Intent(this@RegisterActivity, AllInOneActivity::class.java))
                                 finish()
                             }
@@ -265,13 +272,13 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
 
                             println(e)
                             temp++
-                            Mylog.d("aaaaaaaaaa "+temp)
-                            if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
+                            Mylog.d("aaaaaaaaaa " + temp)
+                            if (listProduct != null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
                                 percent = (temp.toFloat() / listProduct!!.size.toFloat() * 100f).toInt()
 
-                                Mylog.d("aaaaaaaaaa chay tiep: "+temp)
+                                Mylog.d("aaaaaaaaaa chay tiep: " + temp)
                                 onDownload(listProduct!!.get(temp))
-                            }else{
+                            } else {
                                 hideProgress()
                                 session!!.setLogin(true)
                                 startActivity(Intent(this@RegisterActivity, AllInOneActivity::class.java))
@@ -293,8 +300,8 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
         calendars.set(Calendar.SECOND, 0)
         calendars.set(Calendar.HOUR_OF_DAY, hour)
 
-        if(calendars.timeInMillis < now.timeInMillis){
-            calendars.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH)+1)
+        if (calendars.timeInMillis < now.timeInMillis) {
+            calendars.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH) + 1)
         }
         if (boolean) {
             Log.d("LoginActivity", "boolean..true  ====>>>>    " + boolean + " =====  " + hour)
@@ -308,7 +315,6 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
 
         }
     }
-
 
 
     public override fun onDestroy() {

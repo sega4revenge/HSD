@@ -344,6 +344,23 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                     }
 
                 }
+
+ //========= hàm này để update lại thông báo khi xóa listProduct từ homeFragment
+                else if (bundle.getBoolean("deleteListProduct")){
+                    var listProduct = bundle.getParcelableArrayList<Product_v>("listProductDeleted")
+                    Mylog.d("aaaaaaaaaaaa "+listProduct.size)
+                    for (i in 0..listProduct.size){
+                        val item = mNotifiAdapter.listItem.iterator()
+
+                        while (item.hasNext()) {
+                            var value = item.next()
+                            if (value.id_product.equals(listProduct.get(i)._id)) {
+                                item.remove()
+                            }
+                        }
+                    }
+                    mNotifiAdapter.notifyDataSetChanged()
+                }
             }
         }
     }
@@ -357,6 +374,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
             jsonObject.put("idUser", user!!._id)
             jsonObject.put("type", notification.type)
             jsonObject.put("watched", true)
+            jsonObject.put("status_expired", notification.status_expiry)
             jsonObject.put("time", notification.create_at)
         } catch (e: Exception) {
             Mylog.d("Error " + e.message)

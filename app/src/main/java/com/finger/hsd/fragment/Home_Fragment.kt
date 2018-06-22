@@ -16,6 +16,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.finger.hsd.BaseFragment
@@ -83,7 +84,7 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
             var mSearch = arguments?.getString("searchkey")
             searchKey(mSearch.toString())
         }
-        mContext = activity
+        mContext = activity!!
 
         mView = inflater.inflate(R.layout.fragment_blank, container, false)
         return mView
@@ -165,7 +166,8 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
         mDialogProgress = m.show()
     }
     fun showDialogDelete(listDelete: String?, arrID : List<Product_v>){
-        Log.d("Adapter:", listDelete+"////12321312")
+        var user = myRealm!!.getUser()!!
+        Mylog.d(" iduser: ${user._id}" +"Adapter: $listDelete"+ "////12321312")
         val dialogdelete = MaterialDialog.Builder(activity!!)
                 .title("Bạn muốn xóa toàn bộ sản phẩm này?")
                 .content("Nhấn OK để xóa toàn bộ sản phẩm này")
@@ -175,23 +177,29 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
                 .onPositive { dialog, which ->
                     showProgress("deleting...")
                     mRetrofitService = ApiUtils.getAPI()
-                    mRetrofitService?.deleteGroup(listDelete!!)?.enqueue(object: Callback<Result_Product>{
+                    mRetrofitService?.deleteGroup(listDelete!!, user._id!!)?.enqueue(object: Callback<Result_Product>{
                         override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
                             for(i in 0 until arrID.size){
                                 arrID.get(i).isSyn = false
                                 arrID.get(i).delete =true
                             }
+                            //myRealm?.deletelistproductfromserversucess(arrID,this@Home_Fragment)
+
                             myRealm?.deletelistproduct(arrID,this@Home_Fragment)
+                            deleteProduct(false, arrID)
                             hideProgress()
                         }
 
                         override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
                             if(response?.isSuccessful!!){
-                                if(response?.code()==200){
-                                    myRealm?.deletelistproduct(arrID,this@Home_Fragment)
+                                if(response.code()==200){
+                                    // xóa thành công từ server -> xóa lun trong realm
+                                    myRealm?.deletelistproductfromserversucess(arrID,this@Home_Fragment)
+                                    // trả về true -> xóa toàn bộ dữ liệu liên quan dến id_product trong bảng notification
+                                    deleteProduct(true, arrID)
                                 }
                             }else{
-                                Toast.makeText(activity,"Error! \n message:"+response?.message(), Toast.LENGTH_SHORT).show()
+                                Toast.makeText(activity,"Error! \n message:"+response.message(), Toast.LENGTH_SHORT).show()
                             }
                             hideProgress()
                         }
@@ -202,6 +210,34 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
         mDialogProgress = dialogdelete.build()
         mDialogProgress?.show()
     }
+
+    fun deleteProduct(isSync: Boolean, arrDelete: List<Product_v> ) {
+
+        var arr: ArrayList<Product_v> = ArrayList(arrDelete)
+        if (!isSync){
+            // delete khong thanh cong from server update notifcation isSync = false
+
+            myRealm!!.deletelistnotificationfromserverFail(arr)
+        }else{
+            // delete thanh cong from server
+
+            myRealm!!.deletelistnotificationfromserversucess(arrDelete)
+        }
+
+        val a = Intent()
+
+        a.action = AppIntent.ACTION_UPDATE_ITEM
+
+        var bundle = Bundle()
+        bundle.putParcelableArrayList("listProductDeleted", arr)
+        bundle.putBoolean("deleteListProduct", true)
+        a.putExtras(bundle)
+
+        activity!!.sendBroadcast(a)
+
+
+    }
+
     fun showDialogNotFound(){
         Log.d("REALMCONTROLLER","//zzzzzzzzzzz//showDialogNotFound//")
         var mDialog: Dialog? = null
@@ -459,6 +495,7 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
         intent.putExtra("checkNotification", false)
         intent.putExtra("id_product", product._id)
         startActivity(intent)
+//        startActivity(Intent(activity, testImageActivity::class.java))
 
     }
 
@@ -495,6 +532,11 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
         super.onResume()
         if (mCount > 0) {
             mCount = 0
+        }
+        val view = activity!!.currentFocus
+        if (view != null) {
+            val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm!!.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
 

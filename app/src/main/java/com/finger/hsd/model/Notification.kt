@@ -9,9 +9,9 @@ open class Notification : RealmObject() , Serializable{
     var _id : String?=null
     var idinvite : Invite? = null
     var id_product    : String? = null
-    var status_expiry : String?  = null // trạng thái thông báo : warning !! expired
+    var status_expiry : String?  = "warning" // trạng thái thông báo : warning !! expired
     var idgeneral : General?=null
-    var type : Int?=null
+    var type : Int?= 0
     var create_at : String?=null
     var content : String?=null
     var watched : Boolean?=false

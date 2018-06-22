@@ -23,6 +23,7 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -47,6 +48,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.finger.hsd.R;
 import com.finger.hsd.library.image.adapter.ImageGalleryAdapter;
 import com.finger.hsd.library.image.util.RealPathUtil;
+import com.finger.hsd.util.Mylog;
 
 import java.io.File;
 import java.io.IOException;
@@ -89,8 +91,6 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
             if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                 dismissAllowingStateLoss();
             }
-
-
         }
 
         @Override
@@ -104,12 +104,10 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
         super.onCreate(savedInstanceState);
 
         setupSavedInstanceState(savedInstanceState);
-
         //  setRetainInstance(true);
     }
 
     private void setupSavedInstanceState(Bundle savedInstanceState) {
-
 
         if (savedInstanceState == null) {
             cameraImageUri = builder.selectedUri;
@@ -118,8 +116,6 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
             cameraImageUri = savedInstanceState.getParcelable(EXTRA_CAMERA_IMAGE_URI);
             tempUriList = savedInstanceState.getParcelableArrayList(EXTRA_CAMERA_SELECTED_IMAGE_URI);
         }
-
-
     }
 
 
@@ -166,6 +162,7 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
 
         }
 
+        // khởi tạo view
         initView(contentView);
 
         setTitle();
@@ -174,7 +171,7 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
 
         selectedUriList = new ArrayList<>();
 
-
+//        kiểm tra có ảnh nào được chọn chưa, add link ảnh vào vùng đã chọn
         if (builder.onImageSelectedListener != null && cameraImageUri != null) {
             addUri(cameraImageUri);
         } else if (builder.onMultiImageSelectedListener != null && tempUriList != null) {
@@ -297,17 +294,12 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
         Log.d(TAG, "selected uri: " + uri.toString());
         //uri = Uri.parse(uri.toString());
         if (isMultiSelect()) {
-
-
             if (selectedUriList.contains(uri)) {
                 removeImage(uri);
             } else {
                 addUri(uri);
             }
-
-
         } else {
-
             builder.onImageSelectedListener.onImageSelected(uri);
             dismissAllowingStateLoss();
         }
@@ -332,6 +324,7 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
 
         selectedUriList.add(uri);
 
+        // tạo một view chứa toàn bộ các path đã được chọn
         final View rootView = LayoutInflater.from(getActivity()).inflate(R.layout.tedbottompicker_selected_item, null);
         ImageView thumbnail = (ImageView) rootView.findViewById(R.id.selected_photo);
         ImageView iv_close = (ImageView) rootView.findViewById(R.id.iv_close);
@@ -412,22 +405,27 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
 
     }
 
+    // mở camera và chụp ảnh
     private void startCameraIntent() {
         Intent cameraInent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraInent.resolveActivity(getActivity().getPackageManager()) == null) {
             errorMessage("This Application do not have Camera Application");
+            Log.d("error","This Application do not have Camera Application");
             return;
         }
 
         File imageFile = getImageFile();
-        Uri photoURI = FileProvider.getUriForFile(getContext(), getContext().getApplicationContext().getPackageName() + ".provider", imageFile);
-
-        List<ResolveInfo> resolvedIntentActivities = getContext().getPackageManager().queryIntentActivities(cameraInent, PackageManager.MATCH_DEFAULT_ONLY);
+        Uri photoURI = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName() + ".provider", imageFile);
+        Log.d("selected ", photoURI.toString());
+        List<ResolveInfo> resolvedIntentActivities = getActivity().getPackageManager().queryIntentActivities(
+                cameraInent, PackageManager.MATCH_DEFAULT_ONLY);
         for (ResolveInfo resolvedIntentInfo : resolvedIntentActivities) {
             String packageName = resolvedIntentInfo.activityInfo.packageName;
-            getContext().grantUriPermission(packageName, photoURI, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            getActivity().grantUriPermission(packageName, photoURI, Intent.FLAG_GRANT_WRITE_URI_PERMISSION |
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
 
+        // chuyển qua màn hình camera với link ảnh đã được tạo sẵn. khi chụp xong là gán đừng dẫn vào cho ảnh.
         cameraInent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
         startActivityForResult(cameraInent, REQ_CODE_CAMERA);
 
@@ -450,11 +448,11 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
                     storageDir      /* directory */
             );
 
-
             // Save a file: path for use with ACTION_VIEW intents
             cameraImageUri = Uri.fromFile(imageFile);
         } catch (IOException e) {
             e.printStackTrace();
+            Log.d("selected: ","getImageFile: "+ e.getMessage());
             errorMessage("Could not create imageFile for camera");
         }
 
@@ -520,10 +518,11 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
 
 
             switch (requestCode) {
-                case REQ_CODE_GALLERY:
+                case REQ_CODE_GALLERY: // nhận link ảnh từ gallery: thư mục ảnh
                     onActivityResultGallery(data);
                     break;
-                case REQ_CODE_CAMERA:
+
+                case REQ_CODE_CAMERA: // nhận ảnh sau khi đã chụp xong
                     onActivityResultCamera(cameraImageUri);
                     break;
 
@@ -536,9 +535,11 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
 
     }
 
+// trả về uri ảnh từ camera
     private void onActivityResultCamera(final Uri cameraImageUri) {
 
-        MediaScannerConnection.scanFile(getContext(), new String[]{cameraImageUri.getPath()}, new String[]{"image/jpeg"}, new MediaScannerConnection.MediaScannerConnectionClient() {
+        MediaScannerConnection.scanFile(getContext(), new String[]{cameraImageUri.getPath()}, new String[]{"image/jpeg"},
+                new MediaScannerConnection.MediaScannerConnectionClient() {
             @Override
             public void onMediaScannerConnected() {
 
@@ -550,6 +551,8 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
                     @Override
                     public void run() {
                         updateAdapter();
+                        Log.d("selected: onthread: ", cameraImageUri.toString());
+
                         complete(cameraImageUri);
                     }
                 });
@@ -558,7 +561,7 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
         });
     }
 
-
+// trả về uri save in intent
     private void onActivityResultGallery(Intent data) {
         Uri temp = data.getData();
 

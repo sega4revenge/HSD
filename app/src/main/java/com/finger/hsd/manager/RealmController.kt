@@ -342,7 +342,7 @@ class RealmController(application: Context) {
     }
 
     //delete list product
-    fun deletelistproduct(arr: List<Product_v>,mupdateData2:updateData){
+    fun deletelistproduct(arr: List<Product_v>, mupdateData2:updateData){
 
         for(i in 0 until arr.size){
             try{
@@ -357,6 +357,95 @@ class RealmController(application: Context) {
         }
         mupdateData2.onupdateDelete()
     }
+
+
+    // delete listproduct from server result -> sucess
+    fun deletelistproductfromserversucess(arr: List<Product_v>, mupdateData2:updateData){
+
+        for(i in 0 until arr.size){
+            try{
+
+                if (arr.get(i).imagechanged !=null) {
+                    val fdelete = File(arr.get(i).imagechanged)
+                    if (fdelete.exists()) {
+                        if (fdelete.delete()) {
+                            System.out.println("file Deleted :")
+                        } else {
+                            System.out.println("file not Deleted :")
+                        }
+                    }
+                }
+
+                realm.beginTransaction()
+                var product = arr.get(i)
+                if(product !=null) {
+                    product.deleteFromRealm()
+                }
+                realm.commitTransaction()
+
+            }catch (err: Exception){
+                Log.d("RealmController","error delete :"+err.message)
+            }
+        }
+        mupdateData2.onupdateDelete()
+    }
+    // delete listnotifcation  when deletelistproductfromserversucess from server result -> success
+    fun deletelistnotificationfromserversucess(arr: List<Product_v>){
+
+        for(i in 0 until arr.size){
+            try{
+                realm.beginTransaction()
+                var notification = realm.where(Notification::class.java).equalTo("id_product", arr.get(i)._id).findFirst()
+                if(notification !=null) {
+                    notification!!.deleteFromRealm()
+                }
+                realm.commitTransaction()
+
+            }catch (err: Exception){
+                Log.d("RealmController","error delete :"+err.message)
+            }
+        }
+
+    }
+
+    //== delete listProduct from server result -> FAIL
+    fun deletelistproductfromserverFail(arr: List<Product_v>, mupdateData2:updateData){
+
+        for(i in 0 until arr.size){
+            try{
+                realm.beginTransaction()
+                var product = arr.get(i)
+                product.delete = true
+                product.isSyn = false
+                realm.commitTransaction()
+
+            }catch (err: Exception){
+                Log.d("RealmController","error delete :"+err.message)
+            }
+        }
+        mupdateData2.onupdateDelete()
+    }
+
+    //=== delete listNotification  when deletelistproductfromserversucess  from server result -> FAIL
+    fun deletelistnotificationfromserverFail(arr: List<Product_v>){
+
+        for(i in 0 until arr.size){
+            try{
+                realm.beginTransaction()
+                var notification = realm.where(Notification::class.java).equalTo("id_product", arr.get(i)._id).findFirst()
+                if(notification !=null) {
+                  notification.delete = true
+                    notification.isSync = false
+                }
+                realm.commitTransaction()
+
+            }catch (err: Exception){
+                Log.d("RealmController","error delete :"+err.message)
+            }
+        }
+
+    }
+
     //delete list product
     fun deleteProductFromDevice(product : Product_v,mupdateData2:updateData){
                 realm.beginTransaction()

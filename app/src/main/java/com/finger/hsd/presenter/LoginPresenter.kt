@@ -60,11 +60,8 @@ var a : String?=null
 
                 if (response!!.status == 200) {
                     Log.d(register, "onResponse isMainThread : " + (Looper.myLooper() == Looper.getMainLooper()).toString())
-
                     mLoginView.getUserDetail(response.user!!)
                   //  mLoginView.isRegisterSuccessful(true)
-                } else {
-                    mLoginView.setErrorMessage("201")
                 }
 
             }
@@ -75,10 +72,17 @@ var a : String?=null
                     Log.d(login, "onError errorCode : " + e.errorCode)
                     Log.d(login, "onError errorBody : " + e.errorBody)
                     Log.d(login, e.errorDetail + " : " + e.message)
-                    mLoginView.isLoginSuccessful(false)
-                    mLoginView.setErrorMessage(e.errorCode.toString())
+                    if(e.errorBody !=null) {
+//                    mLoginView.isLoginSuccessful(false)
+                        var jsonObject = JSONObject(e.errorBody)
+                        var errorStatus = jsonObject.getInt("status")
+                        mLoginView.setErrorMessage(e.errorCode, errorStatus)
+                    }
+                    else
+                        mLoginView.setErrorMessage(e.errorCode, 0)
 
                 } else {
+                    mLoginView.setErrorMessage(500,500)
                     Log.d(login, "onError errorMessage : " + e.message)
                     mLoginView.isLoginSuccessful(false)
                 }
@@ -107,7 +111,7 @@ var a : String?=null
     }
 
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////// REGISTER //////////////////////////////////////////////////////////////
     private fun getObservable_register(typesearch: String): Observable<Response> {
         return Rx2AndroidNetworking.post(typesearch)
                 .setTag(register)
@@ -124,6 +128,7 @@ var a : String?=null
                 .getObjectObservable(Response::class.java)
     }
 
+    // register
     private fun getDisposableObserver_register(): DisposableObserver<Response> {
 
         return object : DisposableObserver<Response>() {
@@ -135,26 +140,28 @@ var a : String?=null
 
                     mLoginView.getUserDetail(response.user!!)
                   //  mLoginView.isRegisterSuccessful(true)
-                } else {
-                    mLoginView.setErrorMessage("201")
                 }
 
             }
 
             override fun onError(e: Throwable) {
                 if (e is ANError) {
+
                     Log.d(register, "onError errorCode : " + e.errorCode)
                     Log.d(register, "onError errorBody : " + e.errorBody)
                     Log.d(register, e.errorDetail + " : " + e.message)
-                    if (e.errorCode == 409) {
-                        mLoginView.setErrorMessage(e.errorCode.toString())
-                    } else {
-                        mLoginView.setErrorMessage(e.errorCode.toString())
-                    }
-                    mLoginView.isLoginSuccessful(false)
+
+                   if (e.errorBody != null) {
+                       var jsonObject = JSONObject(e.errorBody)
+                       var errorStatus = jsonObject.getInt("status")
+                       mLoginView.setErrorMessage(e.errorCode, errorStatus)
+                   }else{
+                       mLoginView.setErrorMessage(e.errorCode, 0)
+                   }
+
                 } else {
                     Log.d(register, "onError errorMessage : " + e.message)
-                    mLoginView.setErrorMessage(e.message!!)
+                    mLoginView.setErrorMessage(500 , 500)
                 }
             }
 
@@ -192,7 +199,7 @@ var a : String?=null
 
         fun isLoginSuccessful(isLoginSuccessful: Boolean)
         fun isRegisterSuccessful(isRegisterSuccessful: Boolean)
-        fun setErrorMessage(errorMessage: String)
+        fun setErrorMessage(errorCode: Int, errorBody: Int)
         fun getUserDetail(user: User)
 
     }

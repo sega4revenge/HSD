@@ -27,6 +27,7 @@
             android:layout_width="65dp"
             android:layout_height="65dp"
             android:id="@+id/imageView1"
+
             android:scaleType="fitCenter"
             app:riv_corner_radius="30dip"
             app:riv_border_width="2dip"
@@ -78,29 +79,29 @@
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:layout_marginLeft="10dp" />
-        <LinearLayout
-            android:paddingLeft="12dp"
-            android:gravity="center|left"
-            android:background="@color/white"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            tools:ignore="UseCompoundDrawables">
-            <ImageView
-                android:background="@drawable/ic_product"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                tools:ignore="ContentDescription" />
-            <TextView
-                android:textColor="@color/text_color"
-                android:layout_marginLeft="12dp"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/change_password"
-                android:layout_marginStart="10dp" />
+        <!--<LinearLayout-->
+            <!--android:paddingLeft="12dp"-->
+            <!--android:gravity="center|left"-->
+            <!--android:background="@color/white"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="40dp"-->
+            <!--tools:ignore="UseCompoundDrawables">-->
+            <!--<ImageView-->
+                <!--android:background="@drawable/ic_product"-->
+                <!--android:layout_width="25dp"-->
+                <!--android:layout_height="25dp"-->
+                <!--tools:ignore="ContentDescription" />-->
+            <!--<TextView-->
+                <!--android:textColor="@color/text_color"-->
+                <!--android:layout_marginLeft="12dp"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/change_password"-->
+                <!--android:layout_marginStart="10dp" />-->
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
 
     <LinearLayout
         android:layout_marginTop="2dp"
@@ -148,9 +149,11 @@
             android:layout_marginLeft="10dp" />
 
     <FrameLayout
+
+        android:background="@drawable/back_ground_click"
+        android:id="@+id/txt_Expiry"
         android:paddingLeft="12dp"
         android:gravity="center|left"
-        android:background="@color/white"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="40dp">
@@ -164,7 +167,6 @@
 
         <TextView
             android:textColor="@color/text_color"
-            android:id="@+id/txt_Expiry"
             android:layout_gravity="center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -187,10 +189,12 @@
 
 
     <FrameLayout
+
+        android:background="@drawable/back_ground_click"
+        android:id="@+id/txt_sound"
         android:layout_marginTop="2dp"
         android:paddingLeft="12dp"
         android:gravity="center|left"
-        android:background="@color/white"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="40dp">
@@ -205,7 +209,6 @@
         <TextView
             android:textColor="@color/text_color"
             android:layout_marginLeft="40dp"
-            android:id="@+id/txt_sound"
             android:layout_gravity="center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -234,9 +237,10 @@
         android:layout_height="25dp"
         android:layout_marginLeft="10dp" />
         <LinearLayout
+            android:id="@+id/txt_FAQs"
+            android:background="@drawable/back_ground_click"
             android:paddingLeft="12dp"
             android:gravity="center|left"
-            android:background="@color/white"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -247,6 +251,7 @@
                 android:layout_height="25dp"
                 tools:ignore="ContentDescription" />
             <TextView
+
                 android:textColor="@color/text_color"
                 android:layout_marginLeft="10dp"
                 android:layout_gravity="center_vertical"
@@ -256,10 +261,11 @@
                 android:layout_marginStart="10dp" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/txt_share"
             android:layout_marginTop="2dp"
             android:paddingLeft="12dp"
             android:gravity="center|left"
-            android:background="@color/white"
+            android:background="@drawable/back_ground_click"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -271,7 +277,6 @@
                 tools:ignore="ContentDescription" />
             <TextView
                 android:textColor="@color/text_color"
-                android:id="@+id/txt_share"
                 android:layout_marginLeft="10dp"
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
@@ -284,7 +289,7 @@
             android:layout_marginTop="2dp"
             android:paddingLeft="12dp"
             android:gravity="center|left"
-            android:background="@color/white"
+            android:background="@drawable/back_ground_click"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -306,11 +311,12 @@
         </LinearLayout>
 
         <LinearLayout
+            android:background="@drawable/back_ground_click"
+            android:id="@+id/send_feedback"
             android:textColor="@color/text_color"
             android:layout_marginTop="2dp"
             android:paddingLeft="12dp"
             android:gravity="center|left"
-            android:background="@color/white"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -321,12 +327,37 @@
                 android:layout_height="25dp"
                 tools:ignore="ContentDescription" />
             <TextView
-                android:id="@+id/send_feedback"
                 android:layout_marginLeft="10dp"
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/send_feedback"
+                android:layout_marginStart="10dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rateApp"
+            android:background="@drawable/back_ground_click"
+            android:textColor="@color/text_color"
+            android:layout_marginTop="2dp"
+            android:paddingLeft="12dp"
+            android:gravity="center|left"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            tools:ignore="UseCompoundDrawables">
+            <ImageView
+                android:background="@drawable/ic_product"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                tools:ignore="ContentDescription" />
+            <TextView
+
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rateApp"
                 android:layout_marginStart="10dp" />
         </LinearLayout>
         <LinearLayout

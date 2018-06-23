@@ -42,7 +42,7 @@
 
 
 
-        <activity android:name=".activity.LoginActivity"
+        <activity android:name=".AllInOneActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -70,6 +70,9 @@
                 <!--android:resource="@xml/account_authenticator" />-->
         <!--</service>-->
 
+        <!--<activity android:name=".AllInOneActivity"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:windowSoftInputMode="stateHidden"/>-->
 
         <activity android:name=".activity.DetailProductActivity"
             android:screenOrientation="portrait"
@@ -113,9 +116,7 @@
         <activity android:name=".activity.Scanner_Barcode_Activity" />
         <activity android:name=".activity.Add_Product" />
         <activity android:name=".activity.show_PhotoProduct"></activity>
-        <activity android:name=".AllInOneActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+
 
         <activity android:name=".activity.AlarmSetting"
             android:label="Alarm Setting"/>

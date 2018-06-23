@@ -70,6 +70,9 @@ class NotificationAdapterKotlin(val mContext: Context, val listItem: ArrayList<N
               //  Log.d("aaaaaaa ", "NotificationFragment: " + product.getNamechanged())
 
                 val expiredTime = product!!.expiretime
+
+
+
                 val date = Date(expiredTime)
                 val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 val days = daysBetween(System.currentTimeMillis(), expiredTime)

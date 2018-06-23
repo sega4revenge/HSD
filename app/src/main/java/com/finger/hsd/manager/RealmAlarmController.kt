@@ -186,11 +186,11 @@ class RealmAlarmController (application: Context) {
         realm.beginTransaction()
         realm.copyToRealmOrUpdate(timeAlarms)
         realm.commitTransaction()
+
+
     }
 
     fun update_to_timeAlarm(timeAlarm : TimeAlarm){
-
-
         realm.beginTransaction()
         realm.copyToRealmOrUpdate(timeAlarm)
         realm.commitTransaction()

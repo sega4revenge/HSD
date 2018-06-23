@@ -18,6 +18,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.finger.hsd.BaseFragment
 import com.finger.hsd.R
+import com.finger.hsd.R.string.notification
 import com.finger.hsd.activity.DetailProductActivity
 import com.finger.hsd.adapters.NotificationAdapterKotlin
 import com.finger.hsd.common.Prefs
@@ -317,8 +318,21 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
 
                     notification = bundle.getSerializable("notificationModel") as Notification
                     Mylog.d("ttttttt " + notification.id_product)
+                    var checkNewOrOldNotification: Boolean = false
+                    var toEdit = realm!!.getOneNotification(notification.id_product!!)
 
-                    var checkNewOrOldNotification = realm!!.addNotification(notification)
+                    realm!!.realm.executeTransaction(Realm.Transaction {
+
+                        if(toEdit !=null){
+                            toEdit.watched = false
+                            toEdit.create_at = notification.create_at
+                           checkNewOrOldNotification = false
+                        }else{
+                           checkNewOrOldNotification =  realm!!.addNotification(notification)
+
+                        }
+                    })
+//                    var checkNewOrOldNotification = realm!!.addNotification(notification)
                     if (checkNewOrOldNotification) {
                         val item = mNotifiAdapter.listItem.iterator()
 

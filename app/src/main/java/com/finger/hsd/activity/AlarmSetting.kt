@@ -2,6 +2,7 @@ package com.finger.hsd.activity
 
 import android.app.Activity
 import android.app.AlarmManager
+import android.app.AlertDialog
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -14,6 +15,7 @@ import android.view.View
 import android.widget.CompoundButton
 import android.widget.Toast
 import com.finger.hsd.R
+import com.finger.hsd.R.id.*
 import com.finger.hsd.adapters.CustomAdapter
 import com.finger.hsd.manager.RealmAlarmController
 import com.finger.hsd.manager.SessionManager
@@ -26,7 +28,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-@Suppress("UNREACHABLE_CODE")
+@Suppress("UNREACHABLE_CODE", "TYPEALIAS_EXPANSION_DEPRECATION")
 class AlarmSetting : AppCompatActivity(), CompoundButton.OnCheckedChangeListener, View.OnClickListener {
 
     val Tag : String  = "AlarmSetting"
@@ -34,14 +36,16 @@ class AlarmSetting : AppCompatActivity(), CompoundButton.OnCheckedChangeListener
     private var mMinute : Int = 0
     private var mHour : Int = 0
     private var mTime: String? = null
-    internal lateinit var alarmManager: AlarmManager
-    private var pending_intent: PendingIntent? = null
-    var realms : RealmAlarmController?= null
-    lateinit var mCustomAdapter: CustomAdapter
-    lateinit var sessionManager : SessionManager
+    private var realms : RealmAlarmController?= null
+    private lateinit var mCustomAdapter: CustomAdapter
+    private lateinit var sessionManager : SessionManager
     private lateinit var mToolbar: Toolbar
 
-    internal var timeAlarm : List<TimeAlarm> = ArrayList<TimeAlarm>()
+    private var timeAlarm : List<TimeAlarm> = ArrayList<TimeAlarm>()
+    private  var oldList : List<String> = ArrayList<String>()
+
+    var checkChange  : Boolean = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,61 +58,85 @@ class AlarmSetting : AppCompatActivity(), CompoundButton.OnCheckedChangeListener
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         mToolbar.setTitleTextColor(Color.WHITE)
         mToolbar.setNavigationIcon(R.drawable.ic_back_arrow)
-        mToolbar.setNavigationOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View) {
-                onBackPressed()
-            }
-        })
-
         sessionManager = SessionManager(applicationContext)
-         realms = RealmAlarmController(this)
-
+        realms = RealmAlarmController(this)
         realms!!.DatabseLlistAlarm()
-
         switch_notification.isChecked = sessionManager.get_open_Alarm()
-        Log.d(Tag, "sessionManager.get_open_Alarm()..." + sessionManager.get_open_Alarm() )
-
-        alarmManager =  getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        switch_notification.setOnCheckedChangeListener(this)
-
-        btn_save.setOnClickListener(this)
-//        btn_settime.setOnClickListener(this)
 
         timeAlarm = realms!!.view_to_dataTimeAlarm()!!
-        Log.d(Tag, "  sessionManager ......." + realms!!.view_to_dataTimeAlarm())
+
+        if (timeAlarm.isNotEmpty()) {
+            for (index in timeAlarm.indices) {
+                val model = timeAlarm[index]
+                oldList.plus(model.listtime)
+            }
+        }
+
+//         timeAlarm = mCustomAdapter.getSelectedItem()
+
+
+
+
+        mToolbar.setNavigationOnClickListener {
+            if(checkChange){
+                DialogChange()
+            }else{
+                onBackPressed()
+            }
+
+
+        }
+
+
+
+
+        switch_notification.setOnCheckedChangeListener(this)
+        btn_save.setOnClickListener(this)
 
         mCustomAdapter = CustomAdapter(this, timeAlarm)
-        list_TimeSetting.setAdapter(mCustomAdapter)
+
+        list_TimeSetting.adapter = mCustomAdapter
 
         list_TimeSetting.setOnItemClickListener { adapterView, view, i, l ->
-            val model = timeAlarm.get(i)
+            val model = timeAlarm[i]
+            checkChange = true
+
             val alarmList = TimeAlarm()
             alarmList.listtime  = model.listtime
             alarmList.isSelected = !model.isSelected!!
             realms!!.update_to_timeAlarm(alarmList)
-//            timeAlarm.set(i, model)
+
+//            timeAlarm[i].isSelected = !model.isSelected!!
             //now update adapter
             mCustomAdapter.updateRecords(timeAlarm)
+//            mCustomAdapter.notifyDataSetChanged()
+
+//            mCustomAdapter.updatelist(i,model.isSelected!!)
+
         }
 
     }
-
 
     override fun onClick(view: View?) {
-        when (view!!.getId()) {
+        when (view!!.id) {
             R.id.btn_save -> {
-                val intent = Intent()
-                intent.putExtra("keyAlarm", mTime)
-                    saveDatabase()
-                    setResult(Activity.RESULT_OK, intent)
-                    finish()
-            }
-        // edit git
-            else -> {
+             save()
             }
         }
     }
+
+    fun save(){
+        val list = mCustomAdapter.getSelectedItem()
+        if(list.isNotEmpty()){
+            val intent = Intent()
+            intent.putExtra("keyAlarm", mTime)
+            setResult(Activity.RESULT_OK, intent)
+            finish()
+        }else{
+            showToast("Please select any time!")
+        }
+    }
+
 
     override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
         if (isChecked) {
@@ -121,49 +149,93 @@ class AlarmSetting : AppCompatActivity(), CompoundButton.OnCheckedChangeListener
     }
 
 
-    fun saveDatabase(){
-        val calendars = Calendar.getInstance()
-        calendars.set(Calendar.MINUTE, 0)
-        calendars.set(Calendar.SECOND, 0)
+//    fun saveDatabase(){
+////        val calendars = Calendar.getInstance()
+////        calendars.set(Calendar.MINUTE, 0)
+////        calendars.set(Calendar.SECOND, 0)
+////        val now = Calendar.getInstance()
+//        val list = mCustomAdapter.getSelectedItem()
+//        if (list.isNotEmpty()) {
+//            val sb = StringBuilder()
+//            for (index in list.indices) {
+//                val model = list[index]
+//                sb.append(model.listtime.toString() + "\n")
+//                realms!!.update_to_SetAlarm(model.listtime!!.toInt(), true)
+////                calendars.set(Calendar.HOUR_OF_DAY, model.listtime!!)
+//            }
+////            showToast(sb.toString())
+//        }
+//    }
 
-        val now = Calendar.getInstance()
-        val list = mCustomAdapter.getSelectedItem()
-
-        if (list.isNotEmpty()) {
-
-            val sb = StringBuilder()
-
-            for (index in list.indices) {
-                val model = list.get(index) as TimeAlarm
-                sb.append(model.listtime.toString() + "\n")
-                realms!!.update_to_SetAlarm(model.listtime!!.toInt() , true)
-
-                calendars.set(Calendar.HOUR_OF_DAY, model.listtime!!)
-//                calendars.set(Calendar.DAY_OF_WEEK)
-                Log.d(Tag, " curent_Timemili ... " + " ====   time choose model.listtime ==== " + calendars.timeInMillis  + "\n")
-//                Log.d(Tag, " curent_Timemili ... " + " ====   Calendar.DAY_OF_MONTH ==== " +Calendar.DAY_OF_MONTH  + "\n"  )
-//                Log.d(Tag, " curent_Timemili ... " + " ====   time choose model.listtime ==== " + Calendar.DAY_OF_WEEK  + "\n" )
-//                Log.d(Tag, " curent_Timemili ... " + " ====   time choose model.listtime ==== " + Calendar.DAY_OF_WEEK_IN_MONTH  + "\n")
-//                Log.d(Tag, " curent_Timemili ... " + " ====   time choose model.listtime ==== " + Calendar.DAY_OF_YEAR + "\n" )
-
-                Log.d(Tag, " curent_Timemili ... " + " ====   time choose 3600000L ==== " +(model.listtime!! * 3600000L)  + "\n")
-
-                Log.d(Tag, " curent_Timemili ... " + " ====   time choose (model.listtime!! * 3600000L)==== " + calendars.timeInMillis + (model.listtime!! * 3600000L) + "\n" )
-
-                Log.d(Tag, " curent_Timemili ... " + calendars.timeInMillis  + " ====   time now ==== " + now.timeInMillis  + "\n" )
-
-                Log.d(Tag, " curent_Timemili ... " + " ====   time now ==== " + (now.timeInMillis  - calendars.timeInMillis)  + "\n")
-
-            }
-            showToast(sb.toString())
-        } else {
-            showToast("Please select any time!")
+    private fun DialogChange() {
+        val mBuilder = AlertDialog.Builder(this)
+        mBuilder.setTitle("Bạn phải lưu lại thay đổi!")
+        mBuilder.setPositiveButton("OK") { dialog, which ->
+            // Do something when click the neutral button
+            save()
+            dialog.cancel()
         }
+
+        // Set the neutral/cancel button click listener
+
+//        mBuilder.setNeutralButton("Cancel") { dialog, which ->
+////            val newAlarm : ArrayList<TimeAlarm> = ArrayList<TimeAlarm>()
+////            newAlarm.add(TimeAlarm(0,false))
+////            newAlarm.add(TimeAlarm(1,false))
+////            newAlarm.add(TimeAlarm(2,false))
+////            newAlarm.add(TimeAlarm(3,false))
+////            newAlarm.add(TimeAlarm(4,false))
+////            newAlarm.add(TimeAlarm(5,false))
+////            newAlarm.add(TimeAlarm(6,false))
+////            newAlarm.add(TimeAlarm(7,false))
+////            newAlarm.add(TimeAlarm(8,false))
+////            newAlarm.add(TimeAlarm(9,false))
+////            newAlarm.add(TimeAlarm(10,false))
+////            newAlarm.add(TimeAlarm(11,false))
+////            newAlarm.add(TimeAlarm(12,false))
+////            newAlarm.add(TimeAlarm(13,false))
+////            newAlarm.add(TimeAlarm(14,false))
+////            newAlarm.add(TimeAlarm(15,false))
+////            newAlarm.add(TimeAlarm(16,false))
+////            newAlarm.add(TimeAlarm(17,false))
+////            newAlarm.add(TimeAlarm(18,false))
+////            newAlarm.add(TimeAlarm(19,false))
+////            newAlarm.add(TimeAlarm(20,false))
+////            newAlarm.add(TimeAlarm(21,false))
+////            newAlarm.add(TimeAlarm(22,false))
+////            newAlarm.add(TimeAlarm(23,false))
+////            Log.d("setNeutralButton " , " -------  " + timeAlarm)
+////            for ( i in timeAlarm.indices ){
+////                val modeltimeAlarm = timeAlarm[i]
+////                Log.d("setNeutralButton " , " modeltimeAlarm   " + modeltimeAlarm.listtime  + "  ==   ")
+////                for (j in oldList.indices){
+////
+////                    val modeloldList = oldList[j]
+////                    Log.d("setNeutralButton " , " " + timeAlarm[i].listtime  + "  ==   " + modeloldList[j].toInt())
+////
+////                    if(timeAlarm[i].listtime == modeloldList[j].toInt()){
+////                        realms!!.update_to_SetAlarm(timeAlarm[i].listtime!!.toInt(), true)
+////                        Log.d("setNeutralButton " , " true  " + timeAlarm[i].listtime  + "  ==   " + modeloldList[j].toInt())
+////
+////                    }else{
+////                        realms!!.update_to_SetAlarm(timeAlarm[i].listtime!!.toInt(), false)
+////                        Log.d("setNeutralButton " , " false " + timeAlarm[i].listtime  + "  ==   " + modeloldList[j].toInt())
+////                    }
+////                }
+////            }
+////            mCustomAdapter.updateRecords(timeAlarm)
+////            save()
+//            save()
+//
+//            dialog.cancel()
+//
+//        }
+
+
+        val mDialog = mBuilder.create()
+        mDialog.show()
     }
 
-    private fun setAlarmText(alarmText: String) {
-//        btn_settime.text = alarmText
-    }
 
     override fun isDestroyed(): Boolean {
         return super.isDestroyed()

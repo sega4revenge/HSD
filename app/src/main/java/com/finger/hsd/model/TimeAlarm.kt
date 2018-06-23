@@ -2,8 +2,9 @@ package com.finger.hsd.model
 
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
+import java.io.Serializable
 
-open class TimeAlarm : RealmObject {
+open class TimeAlarm : RealmObject  {
     @PrimaryKey
     var listtime : Int? = null
     var isSelected : Boolean? = null
@@ -14,4 +15,5 @@ open class TimeAlarm : RealmObject {
         this.listtime = listtime
         this.isSelected = isSelected
     }
+
 }

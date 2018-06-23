@@ -25,21 +25,27 @@ import com.finger.hsd.activity.AlarmSetting
 import com.finger.hsd.activity.LoginActivity
 import com.finger.hsd.manager.RealmAlarmController
 import com.finger.hsd.manager.SessionManager
+import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 import java.io.File
 import java.util.*
+import android.content.ActivityNotFoundException
+import android.os.Build
+import android.support.v4.content.ContextCompat.startActivity
+
+import com.finger.hsd.BaseFragment
+import com.finger.hsd.R.id.txt_Expiry
+import com.finger.hsd.R.id.txt_sound
+
+import kotlin.concurrent.fixedRateTimer
 
 
-class FragmentProfile : Fragment(), View.OnClickListener {
-
+class FragmentProfile : BaseFragment(), View.OnClickListener  {
 
     lateinit var sessionManager: SessionManager
-
-
-    private val SECOND_ACTIVITY_REQUEST_CODE = 0
+    private val SECOND_ACTIVITY_REQUEST_CODE = 99
     var realms: RealmAlarmController? = null
     // alarm
-
     private val milDay = 86400000L
     private var mMinute: Int = 0
     private var mHour: Int = 0
@@ -64,6 +70,7 @@ class FragmentProfile : Fragment(), View.OnClickListener {
         return fragment
     }
 
+
     private val listItems = arrayOf("off","suri_big_robot", "suri_chipmunk", "suri_creature", "suri_death",
             "suri_deep", "suri_grand", "suri_helium", "suri_robot", "suri_squirrel")
 
@@ -86,7 +93,7 @@ class FragmentProfile : Fragment(), View.OnClickListener {
 
         // get user
         var listUser =  realms!!.getUser()
-        for (index in listUser!!.indices) {
+        for (index in listUser.indices) {
             val model = listUser.get(index)
             v.phone_user.text = model.phone
         }
@@ -108,6 +115,8 @@ class FragmentProfile : Fragment(), View.OnClickListener {
         v.send_feedback.setOnClickListener(this)
         v.log_out.setOnClickListener(this)
 
+//        v.txt2_Expiry.setOnClickListener(this)
+        v.rateApp.setOnClickListener(this)
 
 //        v.export_file.setOnClickListener(this)
 
@@ -160,32 +169,75 @@ class FragmentProfile : Fragment(), View.OnClickListener {
                         cheked = i
                     }
                 }
-
                 showDialogSound(cheked!!)
             }
             R.id.txt_share -> {
-                    val message = ("\n" + "I want invite you to join me on HSD. Please click the link to download. "+" https://play.google.com/store/apps/details?id=com.finger.suri&hl=vi")
-                    shareAction(message)
-            }
+                val message = ("\n" + "I want invite you to with me on HSD. Please click the link to download. "+" https://play.google.com/store/apps/details?id=com.finger.suri&hl=vi")
+                shareAction(message)
+                }
             R.id.send_feedback -> {
-                sendEmail()
+                sendEmailFeedback()
             }
-
 //            R.id.export_file->{
 //
 //            }
-
             R.id.log_out ->{
-
                 DialogLogout()
-
-
-
+            }
+            R.id.txt_FAQs->{
+//                loadWebpage()
+            }
+            R.id.rateApp->{
+                    rate()
             }
 
         }
+    }
+
+
+    private fun rate(){
+//        showProgress()
+//        val fixedRateTimer = fixedRateTimer(name = "hello-timer",
+//                initialDelay = 100, period = 100) {
+//            println("hello world!")
+//        }
+//        try {
+//            Thread.sleep(10000)
+//        } finally {
+            val uri = Uri.parse("market://details?id=com.finger.suri")
+            Log.i("URI RATE APP", uri.toString())
+            val goToMarket = Intent(Intent.ACTION_VIEW, uri)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY or
+                        Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
+                        Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+            }
+            try {
+                startActivity(goToMarket)
+            } catch (e: ActivityNotFoundException) {
+                startActivity(Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/store/apps/details?id=com.finger.suri&hl=vi")))
+            }
+//            fixedRateTimer.cancel()
+//            println("finish!")
+//            hideProgress()
+//
+//        }
+
+
 
     }
+
+//    fun loadWebpage() {
+//        webview.loadUrl("")
+//        val uri: Uri
+//        try {
+//            uri = buildUri(uriText.text.toString())
+//            webview.loadUrl(uri.toString())
+//        } catch(e: UnsupportedOperationException) {
+//            e.printStackTrace()
+//        }
+//    }
 
 //    private fun ExportToExcel(){
 //
@@ -234,20 +286,38 @@ class FragmentProfile : Fragment(), View.OnClickListener {
 //        workbook.close()
 //    }
 
-    private fun sendEmail() {
+    private fun sendEmailFeedback() {
+        val subject = "Feedback for HanSuDung App"
+        val mailto = "mailto:conghuancse@gmail.com" +
+                "?subject=" + Uri.encode(subject) +
+                "&body=" + Uri.encode("")
+        val emailIntent = Intent(Intent.ACTION_SENDTO)
+        emailIntent.data = Uri.parse(mailto)
+        hideProgress()
+        try {
+            startActivity(emailIntent)
+        } catch (e: ActivityNotFoundException) {
+        }
+    }
+
+    private fun sendEmail(message : String) {
         val filename = "contacts_sid.vcf"
         val filelocation = File(Environment.getExternalStorageDirectory().getAbsolutePath(), filename)
         val path = Uri.fromFile(filelocation)
         val emailIntent = Intent(Intent.ACTION_SEND)
         // set the type to 'email'
-        emailIntent.type = "vnd.android.cursor.dir/email"
+//        emailIntent.type = "vnd.android.cursor.dir/email"
         val to = arrayOf("conghuancse@gmail.com")
         emailIntent.putExtra(Intent.EXTRA_EMAIL, to)
         // the attachment
         emailIntent.putExtra(Intent.EXTRA_STREAM, path)
         // the mail subject
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject")
-        startActivity(Intent.createChooser(emailIntent, "Send email..."))
+
+        emailIntent.putExtra(Intent.EXTRA_TEXT, message)
+//        startActivity(Intent.createChooser(emailIntent, "Send email..."))
+        emailIntent.data = Uri.parse("mailto:$to")
+        startActivity(emailIntent)
     }
 
 
@@ -303,22 +373,16 @@ class FragmentProfile : Fragment(), View.OnClickListener {
 
         val calendars = Calendar.getInstance()
         val now = Calendar.getInstance()
+
+        if(calendars.timeInMillis < now.timeInMillis){
+            calendars.set(Calendar.DAY_OF_MONTH,  calendars.get(Calendar.DAY_OF_MONTH)+1)
+        }
+
         val myIntent = Intent(context, AlarmReceiver::class.java)
         myIntent.putExtra("extra", "yes")
         calendars.set(Calendar.MINUTE, 0)
         calendars.set(Calendar.SECOND, 0)
         calendars.set(Calendar.HOUR_OF_DAY, hour)
-
-        Log.d("FragmentProfile", " 1 calendars.timeInMillis+milDay ====>>>>    " +   calendars.timeInMillis)
-
-        if(calendars.timeInMillis < now.timeInMillis){
-
-//            calendars.timeInMillis+milDay
-            calendars.set(Calendar.DAY_OF_YEAR, Calendar.DAY_OF_YEAR+1)
-            Log.d("FragmentProfile", " 2 DAY_OF_WEEK ====>>>>    " +   calendars.timeInMillis)
-        }
-
-        Log.d("FragmentProfile", "  calendars.timeInMillis+milDay ====>>>>    " +   calendars.timeInMillis+milDay + " =====  " + hour)
 
         if (boolean) {
             Log.d("FragmentProfile", "boolean..true  ====>>>>    " + boolean + " =====  " + hour)
@@ -329,7 +393,6 @@ class FragmentProfile : Fragment(), View.OnClickListener {
             Log.d("FragmentProfile", "boolean..false  ====>>>>>>    " + boolean + " =====  " + hour)
             pending_intent = PendingIntent.getBroadcast(activity, hour, myIntent, PendingIntent.FLAG_CANCEL_CURRENT)
             alarmManager.cancel(pending_intent)
-
 
         }
     }

@@ -17,18 +17,18 @@ class CustomAdapter : BaseAdapter {
 
 
     internal  var activity: Activity
-    private  var users: List<TimeAlarm>
+    private  var listAlarm: List<TimeAlarm>
     private  var inflater: LayoutInflater
 
-    constructor(activity: Activity, users: List<TimeAlarm>) : super() {
+    constructor(activity: Activity, listAlarm: List<TimeAlarm>) : super() {
         this.activity = activity
-        this.users = users
+        this.listAlarm = listAlarm
         this.inflater = activity.layoutInflater
     }
 
 
     override fun getCount(): Int {
-        return users.size
+        return listAlarm.size
     }
 
     override fun getItem(i: Int): Any {
@@ -47,14 +47,14 @@ class CustomAdapter : BaseAdapter {
             view = inflater.inflate(R.layout.list_view_item, parent, false)
             vh = ViewHolder(view)
             view.tag = vh
-            Log.i("JSA", "set Tag for ViewHolder, position: " + position)
+            Log.i("JSA", "set Tag for ViewHolder, position: $position")
         } else {
             view = convertView
             vh = view.tag as ViewHolder
         }
 
-        vh.tvUserName!!.text = users[position].listtime.toString()
-        if(users[position].isSelected!!){
+        vh.tvUserName!!.text = listAlarm[position].listtime.toString()
+        if(listAlarm[position].isSelected!!){
             vh.ivCheckBox!!.setBackgroundResource(R.drawable.checked)
         }else{
             vh.ivCheckBox!!.setBackgroundResource(R.drawable.check)
@@ -66,18 +66,23 @@ class CustomAdapter : BaseAdapter {
         return view
 
     }
+//    fun updatelist(i : Int, check : Boolean) {
+//
+//        listAlarm[i].isSelected
+//
+//        notifyDataSetChanged()
+//    }
 
-    fun updateRecords(users: List<TimeAlarm>) {
-
-        this.users = users
+    fun updateRecords(listAlarm : List<TimeAlarm>) {
+        this.listAlarm = listAlarm
         notifyDataSetChanged()
 
     }
 
     fun getSelectedItem(): List<TimeAlarm> {
         val itemModelList = ArrayList<TimeAlarm>()
-        for (i in users.indices) {
-            val itemModel = users[i]
+        for (i in listAlarm.indices) {
+            val itemModel = listAlarm[i]
             if (itemModel.isSelected!!) {
                 itemModelList.add(itemModel)
             }

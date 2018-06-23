@@ -100,6 +100,7 @@
     <string name="_1_am">1 AM</string>
     <string name="product">Product</string>
     <string name="ok">Ok</string>
+    <string name="rateApp">Rate app on PlayStore</string>
 
     <string name="sound_notification">Sound Notification</string>
     <string name="title_share">Complete action using</string>
@@ -118,7 +119,7 @@
     <string name="faqs">FAQs</string>
 
     // notification
-    <string name="notification_">Hạn Sử Dụng </string>
+    <string name="notification_">Thông báo Hạn Sử Dụng </string>
     <string name="notification_expiry">Thông báo hết hạn </string>
     <string name="warring_expiry">Cảnh báo hạn sử dụng</string>
 

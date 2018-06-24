@@ -249,7 +249,7 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
                                     if(response?.code()==200){
                                         response?.body().product.barcode = barcodeIn
                                         response?.body().product.isSyn = true
-                                        myRealm?.addProductWithNonImage(response?.body().product,this@Add_Product)
+                                        myRealm?.addProductWithNonImage(response?.body().product,this@Add_Product,this@Add_Product)
                                     }
                                 }else{
                                   hideProgress()

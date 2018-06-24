@@ -196,13 +196,13 @@ class RealmController(application: Context) {
         realm?.commitTransaction()
     }
 
-    fun addProductWithNonImage(product: Product_v,mupdateData: updateData){
+    fun addProductWithNonImage(product: Product_v,mupdateData: updateData,context: Context){
         this.mupdateData = mupdateData
-        val mediaStorageDir = getApplicationContext().getExternalFilesDir(null)
+        val mediaStorageDir = context.getExternalFilesDir(null)
         val timeStamp = System.currentTimeMillis()
         var path2 = File.separator+ "IMG_" + timeStamp +"_"+ product?.barcode + ".jpg"
 
-        AndroidNetworking.initialize(getApplicationContext(), MyApplication.okhttpclient())
+        AndroidNetworking.initialize(context, MyApplication.okhttpclient())
         AndroidNetworking.download(Constants.IMAGE_URL+product.imagechanged,mediaStorageDir.path,path2).build().startDownload(object: com.androidnetworking.interfaces.DownloadListener{
             override fun onDownloadComplete() {
                 Log.d("REALMCONTROLLER","UPDATE SUCCESS")

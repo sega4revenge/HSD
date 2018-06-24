@@ -301,7 +301,7 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
             mPositionWaring = -1
             loadData()
         }else  if(type==0){
-            myRealm?.addProductWithNonImage(product,this)
+            myRealm?.addProductWithNonImage(product,this,activity!!.applicationContext)
         }
 
     }
@@ -352,7 +352,7 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
                // loadData()
             }else{
                 Log.d("REALMCONTROLLER","ConnectivityChangeReceiver ")
-                getDataFromServer()
+             //   getDataFromServer()
             }
         }else{
             if(myRealm?.getlistProduct()!!.size==0){

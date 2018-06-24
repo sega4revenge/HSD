@@ -13,6 +13,7 @@ import android.hardware.Camera
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
@@ -120,7 +121,7 @@ class ContinuousCaptureActivity : Activity() {
         mRetrofitService = ApiUtils.getAPI()
         mRetrofitService?.checkBarcode(barcode)?.enqueue(object: Callback<Result_Product> {
             override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
-                Log.d("ContinuousCapt", "FAILLLLLL//123/"+barcode+"//"+t?.message)
+                Log.d("ContinuousCapt", "FAILLLLLL//"+barcode+"//"+t?.message)
                 var product =  mRealm?.getProductWithBarcode(barcode)
                 if(product != null){
                     val i = Intent(this@ContinuousCaptureActivity,Add_Product::class.java)
@@ -128,9 +129,19 @@ class ContinuousCaptureActivity : Activity() {
                     i.putExtra("barcode",product.barcode.toString())
                     i.putExtra("name",product.namechanged.toString())
                     i.putExtra("path",product.imagechanged.toString())
+                    i.putExtra("checkProduct",product.producttype_id?.check_product)
                     startActivity(i)
                 }else{
-                    showDialogNotFound(barcode)
+                   val mcoutdowntime = object : CountDownTimer(2000, 2000) {
+                        override fun onTick(millisUntilFinished: Long) {
+                        }
+                        override fun onFinish() {
+                            lastText = ""
+                        }
+                    }.start()
+
+                    Toast.makeText(this@ContinuousCaptureActivity, "Không thể kết nối mạng", Toast.LENGTH_SHORT).show()
+                  //  showDialogNotFound(barcode)
                 }
             }
 
@@ -144,6 +155,7 @@ class ContinuousCaptureActivity : Activity() {
                         i.putExtra("barcode",mProduct.barcode.toString())
                         i.putExtra("name",mProduct.name.toString())
                         i.putExtra("image", Constants.IMAGE_URL+mProduct.image.toString())
+                        i.putExtra("checkProduct",mProduct.check_product)
                         startActivity(i)
                     }
                 }else{
@@ -292,6 +304,37 @@ class ContinuousCaptureActivity : Activity() {
 
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            111 -> {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        return
+                    }
+                    try {
+                        dispatchTakePictureIntent(111)
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+
+                }
+            }
+            222 -> {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        return
+                    }
+                    try {
+                        dispatchTakePictureIntent(222)
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+
+                }
+            }
+        }
+    }
 
     val REQUEST_TAKE_PHOTO = 1
     var mCurrentPhotoPath: String? = null
@@ -300,7 +343,7 @@ class ContinuousCaptureActivity : Activity() {
         var permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1001)
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), mType)
         }else{
             val cameraInent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             if (cameraInent.resolveActivity(this.getPackageManager()) == null) {

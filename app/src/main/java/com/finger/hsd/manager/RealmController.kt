@@ -15,6 +15,7 @@ import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.TimeAlarm
 import com.finger.hsd.model.User
 import com.finger.hsd.util.Constants
+import com.finger.hsd.util.Mylog
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
@@ -22,6 +23,9 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+
+
+
 
 
 
@@ -211,6 +215,12 @@ class RealmController(application: Context) {
                 mupdateData.onupdateProduct(1, product)
             }
             override fun onError(anError: ANError?) {
+              //  product.isSyn = false
+                product.imagechanged = ""
+                product.barcode = product.producttype_id!!.barcode
+                realm?.beginTransaction()
+                realm?.copyToRealmOrUpdate(product)
+                realm?.commitTransaction()
                 mupdateData.onupdateProduct(0,product)
                 Log.d("REALMCONTROLLER",anError?.errorDetail+"//ERROR"+anError?.errorBody+"//"+product.imagechanged)
             }
@@ -367,24 +377,33 @@ class RealmController(application: Context) {
 
                 if (arr.get(i).imagechanged !=null) {
                     val fdelete = File(arr.get(i).imagechanged)
+                    Log.d("zzzzzzzzzzzzz",arr.get(i).imagechanged+"///")
                     if (fdelete.exists()) {
                         if (fdelete.delete()) {
+                            Log.d("zzzzzzzzzzzzz","file Deleted")
                             System.out.println("file Deleted :")
                         } else {
+                            Log.d("zzzzzzzzzzzzz","file not Deleted")
                             System.out.println("file not Deleted :")
                         }
+                    }else{
+                        Mylog.d("Don't Find File!! "+fdelete.absoluteFile+"//"+fdelete.exists())
                     }
                 }
 
                 realm.beginTransaction()
-                var product = arr.get(i)
+                var product = realm.where(Product_v::class.java).equalTo("_id", arr.get(i)._id).findFirst()
                 if(product !=null) {
                     product.deleteFromRealm()
                 }
                 realm.commitTransaction()
 
+//                if(arr.get(i) !=null) {
+//                    Log.d("zzzzzzzzzzzzz","Deleted success")
+//                    arr.get(i).deleteFromRealm()
+//                }
             }catch (err: Exception){
-                Log.d("RealmController","error delete :"+err.message)
+                Log.d("RealmController","error delete DEEEEEEEEE :"+err.message)
             }
         }
         mupdateData2.onupdateDelete()
@@ -402,7 +421,7 @@ class RealmController(application: Context) {
                 realm.commitTransaction()
 
             }catch (err: Exception){
-                Log.d("RealmController","error delete :"+err.message)
+                Log.d("RealmController","error delete notification:"+err.message)
             }
         }
 
@@ -453,10 +472,11 @@ class RealmController(application: Context) {
                 realm.commitTransaction()
     //   mupdateData2.onupdateDelete()
     }
-    //find all objects in the Champion.class
+
     fun getlistProduct(): ArrayList<Product_v> {
         return realm.copyFromRealm(realm.where(Product_v::class.java).equalTo("delete",false).findAll()) as ArrayList<Product_v>
     }
+
     fun getlistProductLike(search: String): ArrayList<Product_v> {
         return realm.copyFromRealm(realm.where(Product_v::class.java).equalTo("delete",false).and().contains("namechanged", search).or().contains("barcode",search).findAll()) as ArrayList<Product_v>
     }

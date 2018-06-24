@@ -27,27 +27,28 @@ public class show_PhotoProduct extends AppCompatActivity  {
         Intent i = getIntent();
         int type = i.getIntExtra("type",1);
         String path = i.getStringExtra("path");
-        if(type!=0){
+      //  if(type!=0){
             RequestOptions options = new RequestOptions()
                     .centerCrop()
                     .dontAnimate()
                     .placeholder(R.mipmap.ic_launcher)
                     .priority(Priority.HIGH);
             Glide.with(this)
-                        .load(path)
+                     .load(path)
                     .thumbnail(0.1f)
                     .apply(options)
                     .into(img);
 
-        }else{
-            img.setImageBitmap(BitmapFactory.decodeFile(path));
-            img_back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
-        }
+//        }else{
+//            img.setImageBitmap(BitmapFactory.decodeFile(path));
+//
+//        }
+        img_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
 
     }

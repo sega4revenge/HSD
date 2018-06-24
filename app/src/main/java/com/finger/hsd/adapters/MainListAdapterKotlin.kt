@@ -142,13 +142,15 @@ class MainListAdapterKotlin:
                 for (i in position + 1 until mProducts.size) {
                     arrID.add(mProducts[i])
                     if (_idDelete === "") {
-                        _idDelete = mProducts[i]._id!! + ","
+                        _idDelete = mProducts[i]._id!!
                     } else {
-                        _idDelete = _idDelete + mProducts[i]._id + ","
+                        _idDelete = _idDelete + mProducts[i]._id
                     }
                     try {
                         if (mProducts[i + 1]._id === "1") {
                             break
+                        }else{
+                            _idDelete = _idDelete + ","
                         }
                     } catch (err: Exception) {
                         Log.d("Adapter:", err.message)
@@ -188,7 +190,18 @@ class MainListAdapterKotlin:
                     holder.txt_warring.setTextColor(mContext.resources.getColor(R.color.white))
                     holder.txt_warring.setBackgroundResource(R.drawable.text_warring_item_at)
                 }
-
+                if (dis > 10) {
+                    holder.txt_warring.setBackgroundResource(R.drawable.text_warring_item_cb)
+                } else  if (dis < 10 && dis > 0){
+                    holder.txt_warring.setBackgroundResource(R.drawable.text_warring_item_at)
+                }
+                if(dis == 0L){
+                    if (holder.txt_warring.text !== "HẾT HẠN") {
+                        holder.txt_warring.text = "HẾT HẠN"
+                        holder.txt_warring.setTextColor(mContext.resources.getColor(R.color.white))
+                        holder.txt_warring.setBackgroundResource(R.drawable.text_warring_itemview)
+                    }
+                }
             }
 
         }

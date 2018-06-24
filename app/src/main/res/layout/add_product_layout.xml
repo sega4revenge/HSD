@@ -75,48 +75,60 @@
             </LinearLayout>
 
         </RelativeLayout>
-
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/txt_barcode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
-
-                android:paddingBottom="3dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="3dp"
-                android:text="HSD-123435435"
-                android:textColor="@color/text_hint"
-                android:textSize="12dp" />
-
-            <EditText
-                android:textColor="@color/text_color"
-                android:textCursorDrawable="@null"
-                android:id="@+id/edit_nameproduct"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@color/white"
-                android:hint="Enter product name"
-                android:maxLines="1"
-                android:paddingLeft="5dp"
-                android:singleLine="true"
-                android:textSize="16dp" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.1dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="@color/input_register_bg"></View>
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/txt_barcode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:paddingBottom="3dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="3dp"
+                    android:text="HSD-123435435"
+                    android:textColor="@color/text_hint"
+                    android:textSize="12dp" />
+
+                <EditText
+                    android:textColor="@color/text_color"
+                    android:textCursorDrawable="@null"
+                    android:id="@+id/edit_nameproduct"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@color/white"
+                    android:hint="Enter product name"
+                    android:maxLines="1"
+                    android:paddingLeft="5dp"
+                    android:singleLine="true"
+                    android:textSize="16dp" />
+
+                <View
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@color/input_register_bg"></View>
+            </LinearLayout>
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/img_check_product"
+                android:layout_width="25dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/badge"
+               />
+        </RelativeLayout>
+
 
 
     </LinearLayout>
@@ -181,6 +193,7 @@
 
         </RelativeLayout>
         <View
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="0.1dp"
             android:background="@color/input_register_bg"

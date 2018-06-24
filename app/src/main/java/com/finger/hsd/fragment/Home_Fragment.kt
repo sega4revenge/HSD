@@ -1,14 +1,17 @@
 package com.finger.hsd.fragment
 
+import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -36,6 +39,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -146,7 +150,7 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
         mLayoutManager =  LinearLayoutManager(activity)
         mRec?.layoutManager = mLayoutManager
         mRec?.setHasFixedSize(true)
-        myRealm = RealmController(activity?.application!!)
+        myRealm = RealmController.with(this)
 //        mRefresh?.setOnRefreshListener {
 //            if(!checkRefresh)
 //            {
@@ -193,6 +197,7 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
                         override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
                             if(response?.isSuccessful!!){
                                 if(response.code()==200){
+                                    Log.d("zzzzzzzzzzzzz",response.code().toString()+"///")
                                     // xóa thành công từ server -> xóa lun trong realm
                                     myRealm?.deletelistproductfromserversucess(arrID,this@Home_Fragment)
                                     // trả về true -> xóa toàn bộ dữ liệu liên quan dến id_product trong bảng notification
@@ -224,19 +229,20 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
             myRealm!!.deletelistnotificationfromserversucess(arrDelete)
         }
 
-        val a = Intent()
-
-        a.action = AppIntent.ACTION_UPDATE_ITEM
-
-        var bundle = Bundle()
-        bundle.putParcelableArrayList("listProductDeleted", arr)
-        bundle.putBoolean("deleteListProduct", true)
-        a.putExtras(bundle)
-
-        activity!!.sendBroadcast(a)
+//        val a = Intent()
+//
+//        a.action = AppIntent.ACTION_UPDATE_ITEM
+//
+//        var bundle = Bundle()
+//        bundle.putParcelableArrayList("listProductDeleted", arr)
+//        bundle.putBoolean("deleteListProduct", true)
+//        a.putExtras(bundle)
+//
+//        activity!!.sendBroadcast(a)
 
 
     }
+    private val perID = 1001
 
     fun showDialogNotFound(){
         Log.d("REALMCONTROLLER","//zzzzzzzzzzz//showDialogNotFound//")
@@ -248,8 +254,16 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
        // dialog.setCancelable(false)
         create.setOnClickListener(object: View.OnClickListener{
             override fun onClick(v: View?) {
-                val i = Intent(activity,ContinuousCaptureActivity::class.java)
-                startActivity(i)
+                if (ActivityCompat.checkSelfPermission(activity!!.applicationContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.CAMERA), perID)
+                }else{
+                    if (ConnectivityChangeReceiver.isConnected()) {
+                        val i = Intent(activity,ContinuousCaptureActivity::class.java)
+                        startActivity(i)
+                    } else {
+                        Toast.makeText(activity, "Không thể kết nối mạng", Toast.LENGTH_SHORT).show()
+                    }
+                }
                 mDialog?.dismiss()
             }
         })
@@ -292,6 +306,29 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
 
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            perID -> {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(activity!!, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        return
+                    }
+                    try {
+                        if (ConnectivityChangeReceiver.isConnected()) {
+                            val i = Intent(activity,ContinuousCaptureActivity::class.java)
+                            startActivity(i)
+                        } else {
+                            Toast.makeText(activity, "Không thể kết nối mạng", Toast.LENGTH_SHORT).show()
+                        }
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+
+                }
+            }
+        }
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
    //   Toast.makeText(activity,requestCode.toString()+"///"+resultCode,Toast.LENGTH_LONG).show()

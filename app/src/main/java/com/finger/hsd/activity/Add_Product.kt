@@ -18,6 +18,7 @@ import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.FileProvider
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
@@ -54,6 +55,7 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
     private var arrow_back: ImageView? = null
     private var select_img: LinearLayout? = null
     private var scanner_ex: ImageView? = null
+    private var img_check_product: ImageView? = null
     private var edit_nameproduct: EditText? = null
     private var edit_numbarcode: EditText? = null
     private var edit_ex: EditText? = null
@@ -108,6 +110,10 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
             i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(i)
         }else{
+            Toast.makeText(this@Add_Product,"Update Faile With Photo Product not Syn!",Toast.LENGTH_SHORT).show()
+            var i = Intent(this@Add_Product,AllInOneActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(i)
            // Toast.makeText(this@Add_Product,"Error Update Image",Toast.LENGTH_SHORT).show()
         }
 
@@ -152,6 +158,12 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
             edit_nameproduct?.setText(mData.getStringExtra("name"))
             if(type==3)
             {
+                if(mData.getBooleanExtra("checkProduct",false)){
+                    edit_nameproduct?.isEnabled = false
+                    select_img?.visibility = View.GONE
+                    img_check_product?.visibility = View.VISIBLE
+                }
+
                 path = mData.getStringExtra("image")
 
                 Glide.with(this@Add_Product)
@@ -320,6 +332,11 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
                     }
 
 
+                }
+                val view = this.currentFocus
+                if (view != null) {
+                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm!!.hideSoftInputFromWindow(view.windowToken, 0)
                 }
             }
         }
@@ -530,6 +547,7 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
         }
     }
     private fun initView() {
+        img_check_product =  findViewById<ImageView>(R.id.img_check_product)
         img_product = findViewById<ImageView>(R.id.img_product)
         select_img = findViewById<LinearLayout>(R.id.select_img)
         scanner_ex = findViewById<ImageView>(R.id.scanner_ex)

@@ -68,6 +68,11 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
     override fun onResume() {
         super.onResume()
         MyApplication.getConnectivityListener(this)
+        val view = this.currentFocus
+        if (view != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm!!.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 
     internal var bottomNavigationView: BottomNavigationView? = null
@@ -90,7 +95,8 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
     var presenter: SyncPresenter? = null
     var realm: RealmController? = null
     var lin:RelativeLayout? = null
-
+    var sync: ImageView? = null
+    var clicked = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_in_one)
@@ -115,6 +121,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
         mImageview = findViewById<ImageView>(R.id.img_selete)
         edit_search = findViewById<View>(R.id.edit_search) as EditText
         scan_barcode_img = findViewById<ImageView>(R.id.scan_barcode_img)
+        sync= findViewById<ImageView>(R.id.sync)
         scan_barcode_img?.setOnClickListener(View.OnClickListener {
             try {
                 if (ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -542,8 +549,8 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
     //sync animation
     fun completeRefresh() {
         Mylog.d("yyyyy load xong")
-        sync.clearAnimation()
-        sync.setImageDrawable(resources.getDrawable(R.drawable.ic_sync_complete))
+        sync?.clearAnimation()
+        sync?.setImageDrawable(resources.getDrawable(R.drawable.ic_sync_complete))
        // refreshItem.setActionView(null)
     }
     fun refresh() {
@@ -552,7 +559,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
         Mylog.d("yyyyyyyy load chưa")
         val rotation = AnimationUtils.loadAnimation(this, R.anim.sync_animation)
         rotation.repeatCount = Animation.INFINITE
-        sync.startAnimation(rotation)
+        sync?.startAnimation(rotation)
 
 
         //TODO trigger loading

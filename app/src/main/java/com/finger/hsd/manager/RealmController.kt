@@ -197,35 +197,42 @@ class RealmController(application: Context) {
     }
 
     fun addProductWithNonImage(product: Product_v,mupdateData: updateData,context: Context){
-        this.mupdateData = mupdateData
-        val mediaStorageDir = context.getExternalFilesDir(null)
-        val timeStamp = System.currentTimeMillis()
-        var path2 = File.separator+ "IMG_" + timeStamp +"_"+ product?.barcode + ".jpg"
+        var productOld =  getProductWithBarcode(product?.barcode!!)
+        if(productOld != null){
+            product.imagechanged = productOld.imagechanged
+            realm?.beginTransaction()
+            realm?.copyToRealmOrUpdate(product)
+            realm?.commitTransaction()
+            mupdateData.onupdateProduct(1, product)
 
-        AndroidNetworking.initialize(context, MyApplication.okhttpclient())
-        AndroidNetworking.download(Constants.IMAGE_URL+product.imagechanged,mediaStorageDir.path,path2).build().startDownload(object: com.androidnetworking.interfaces.DownloadListener{
-            override fun onDownloadComplete() {
-                Log.d("REALMCONTROLLER","UPDATE SUCCESS")
-                product.imagechanged = mediaStorageDir.path+path2
-                product.barcode = product.producttype_id!!.barcode
-                realm?.beginTransaction()
-                realm?.copyToRealmOrUpdate(product)
-                realm?.commitTransaction()
-                Log.d("REALMCONTROLLER2",product._id)
-                mupdateData.onupdateProduct(1, product)
-            }
-            override fun onError(anError: ANError?) {
-              //  product.isSyn = false
-                product.imagechanged = ""
-                product.barcode = product.producttype_id!!.barcode
-                realm?.beginTransaction()
-                realm?.copyToRealmOrUpdate(product)
-                realm?.commitTransaction()
-                mupdateData.onupdateProduct(0,product)
-                Log.d("REALMCONTROLLER",anError?.errorDetail+"//ERROR"+anError?.errorBody+"//"+product.imagechanged)
-            }
-        })
+        }else{
+            this.mupdateData = mupdateData
+            val mediaStorageDir = context.getExternalFilesDir(null)
+            val timeStamp = System.currentTimeMillis()
+            var path2 = File.separator+ "IMG_" + timeStamp +"_"+ product?.barcode + ".jpg"
 
+            AndroidNetworking.initialize(context, MyApplication.okhttpclient())
+            AndroidNetworking.download(Constants.IMAGE_URL+product.imagechanged,mediaStorageDir.path,path2).build().startDownload(object: com.androidnetworking.interfaces.DownloadListener{
+                override fun onDownloadComplete() {
+                    product.imagechanged = mediaStorageDir.path+path2
+                    product.barcode = product.producttype_id!!.barcode
+                    realm?.beginTransaction()
+                    realm?.copyToRealmOrUpdate(product)
+                    realm?.commitTransaction()
+                    mupdateData.onupdateProduct(1, product)
+                }
+                override fun onError(anError: ANError?) {
+                    //  product.isSyn = false
+                    //  product.imagechanged = ""
+                    product.barcode = product.producttype_id!!.barcode
+                    realm?.beginTransaction()
+                    realm?.copyToRealmOrUpdate(product)
+                    realm?.commitTransaction()
+                    mupdateData.onupdateProduct(0,product)
+                    Log.d("REALMCONTROLLER",anError?.errorDetail+"//ERROR"+anError?.errorBody+"//"+product.imagechanged)
+                }
+            })
+        }
     }
     //clear all objects from Champion.class
     fun updateorCreateListProduct(product: ArrayList<Product_v>, mupdateData2:updateData){
@@ -356,7 +363,6 @@ class RealmController(application: Context) {
 
         for(i in 0 until arr.size){
             try{
-                Log.d("RealmController","error delete :"+arr.get(i))
                 arr.get(i).delete = true
                 realm.beginTransaction()
                 realm.copyToRealmOrUpdate(arr)
@@ -376,18 +382,19 @@ class RealmController(application: Context) {
             try{
 
                 if (arr.get(i).imagechanged !=null) {
-                    val fdelete = File(arr.get(i).imagechanged)
-                    Log.d("zzzzzzzzzzzzz",arr.get(i).imagechanged+"///")
-                    if (fdelete.exists()) {
-                        if (fdelete.delete()) {
-                            Log.d("zzzzzzzzzzzzz","file Deleted")
-                            System.out.println("file Deleted :")
-                        } else {
-                            Log.d("zzzzzzzzzzzzz","file not Deleted")
-                            System.out.println("file not Deleted :")
+
+                    if(realm.where(Product_v::class.java).equalTo("imagechanged", arr.get(i).imagechanged).count()>1)
+                    {
+                        val fdelete = File(arr.get(i).imagechanged)
+                        if (fdelete.exists()) {
+                            if (fdelete.delete()) {
+                                System.out.println("file Deleted :")
+                            } else {
+                                System.out.println("file not Deleted :")
+                            }
+                        }else{
+                            Mylog.d("Don't Find File!! "+fdelete.absoluteFile+"//"+fdelete.exists())
                         }
-                    }else{
-                        Mylog.d("Don't Find File!! "+fdelete.absoluteFile+"//"+fdelete.exists())
                     }
                 }
 
@@ -511,7 +518,7 @@ class RealmController(application: Context) {
     }
 
     fun getProductWithBarcode(barcode: String): Product_v? {
-        return realm.copyFromRealm(realm.where(Product_v::class.java).equalTo("barcode", barcode).findFirst()) as Product_v
+        return realm.where(Product_v::class.java).equalTo("barcode", barcode).findFirst()
     }
     fun checkaddsuccess(id: String): Long? {
         return realm.where(Product_v::class.java).equalTo("_id", id).count()

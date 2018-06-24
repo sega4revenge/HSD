@@ -121,28 +121,29 @@ class ContinuousCaptureActivity : Activity() {
         mRetrofitService = ApiUtils.getAPI()
         mRetrofitService?.checkBarcode(barcode)?.enqueue(object: Callback<Result_Product> {
             override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
-                Log.d("ContinuousCapt", "FAILLLLLL//"+barcode+"//"+t?.message)
-                var product =  mRealm?.getProductWithBarcode(barcode)
-                if(product != null){
-                    val i = Intent(this@ContinuousCaptureActivity,Add_Product::class.java)
-                    i.putExtra("type",2)
-                    i.putExtra("barcode",product.barcode.toString())
-                    i.putExtra("name",product.namechanged.toString())
-                    i.putExtra("path",product.imagechanged.toString())
-                    i.putExtra("checkProduct",product.producttype_id?.check_product)
-                    startActivity(i)
-                }else{
-                   val mcoutdowntime = object : CountDownTimer(2000, 2000) {
-                        override fun onTick(millisUntilFinished: Long) {
-                        }
-                        override fun onFinish() {
-                            lastText = ""
-                        }
-                    }.start()
-
-                    Toast.makeText(this@ContinuousCaptureActivity, "Không thể kết nối mạng", Toast.LENGTH_SHORT).show()
-                  //  showDialogNotFound(barcode)
-                }
+//                Log.d("ContinuousCapt", "FAILLLLLL//"+barcode+"//"+t?.message)
+//               var product =  mRealm?.getProductWithBarcode(barcode)
+//                if(product != null){
+//                    val i = Intent(this@ContinuousCaptureActivity,Add_Product::class.java)
+//                    i.putExtra("type",2)
+//                    i.putExtra("barcode",product.barcode.toString())
+//                    i.putExtra("name",product.namechanged.toString())
+//                    i.putExtra("path",product.imagechanged.toString())
+//                    i.putExtra("checkProduct",product.producttype_id?.check_product)
+//                    startActivity(i)
+//                }else{
+//                   val mcoutdowntime = object : CountDownTimer(2000, 2000) {
+//                        override fun onTick(millisUntilFinished: Long) {
+//                        }
+//                        override fun onFinish() {
+//                            lastText = ""
+//                        }
+//                    }.start()
+//
+//                    Toast.makeText(this@ContinuousCaptureActivity, "Không thể kết nối mạng", Toast.LENGTH_SHORT).show()
+//                  //  showDialogNotFound(barcode)
+//                }
+                Toast.makeText(this@ContinuousCaptureActivity, "Không thể kết nối mạng", Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {

@@ -41,7 +41,7 @@ class SessionManager {
 
 
     fun get_Sound(): String {
-        return mSharedPreferences!!.getString(KEY_SOUND_SETTING, "suri_chipmunk")
+        return mSharedPreferences!!.getString(KEY_SOUND_SETTING, "plucky")
     }
 
 

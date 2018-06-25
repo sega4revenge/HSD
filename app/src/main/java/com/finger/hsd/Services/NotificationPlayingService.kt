@@ -15,6 +15,7 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.finger.hsd.AllInOneActivity
 import com.finger.hsd.R
+import com.finger.hsd.R.string.product_expiry
 import com.finger.hsd.activity.HorizontalNtbActivity
 import com.finger.hsd.manager.RealmAlarmController
 import com.finger.hsd.manager.SessionManager
@@ -78,10 +79,11 @@ class NotificationPlayingService : Service() {
                 if (!product_expiry.equals("")) {
                     product_expiry += ", "
                 }
+                // lay name san pham
                 product_expiry += product_v[index].namechanged.toString()
-
+                // check san pham da từng thông báo
                 for (dex in notification_v.indices){
-                    if(product_v[index]._id == notification_v[dex].id_product){
+                    if(product_v[index]._id === notification_v[dex].id_product){
                         countAddNotification=0
                         id_notification = notification_v[dex]._id // neu da ton tai thong bao truoc do - > lay _id notification update
 
@@ -91,9 +93,10 @@ class NotificationPlayingService : Service() {
                         id_notification = product_v[index]._id //create _id notification new
                     }
                 }
-                Log.d("NoPlayingService" ," Expiry id_notification "+id_notification)
 
-                if(countAddNotification > 0 ){
+                Log.d("NoPlayingService" ," Expiry id_notification "+id_notification)
+                // sản phẩm chưa được add
+//                if(countAddNotification > 0 ){
                     var notification_new = Notification()
                     notification_new._id = id_notification
                     notification_new.idinvite = null
@@ -112,6 +115,14 @@ class NotificationPlayingService : Service() {
                     bundle.putBoolean("addnotification", true)
                     intent.putExtras(bundle)
                     sendBroadcast(intent)
+//                }
+                // the second update notification to server
+                if (ConnectivityChangeReceiver.isConnected()) {
+                    updateNotficationOnServer(notification_new)
+                }else{
+                    notification_new.isSync = false
+                    realms!!.addInTableNotification(notification_new)
+//                    }
                 }
 
 
@@ -134,7 +145,8 @@ class NotificationPlayingService : Service() {
                 }
                 Log.d("NoPlayingService" ," warring id_notification "+id_notification)
 
-                if(countAddNotification > 0){
+//                if(countAddNotification > 0){
+
                     var notification_new = Notification()
                     notification_new._id = id_notification
                     notification_new.idinvite = null
@@ -147,6 +159,7 @@ class NotificationPlayingService : Service() {
                     notification_new.isSync = true
 //                        realms!!.addInTableNotification(notification_new)
 //                        realms!!.view_to_dataNotification()
+
                     var intent = Intent()
                     var bundle = Bundle()
                     intent.action = AppIntent.ACTION_UPDATE_ITEM
@@ -156,15 +169,18 @@ class NotificationPlayingService : Service() {
                     sendBroadcast(intent)
 
                     // the second update notification to server
-                    if (ConnectivityChangeReceiver.isConnected()) {
-                        updateNotficationOnServer(notification_new)
-                    }else{
-                        notification_new.isSync = false
-                        realms!!.addInTableNotification(notification_new)
-                    }
+                if (ConnectivityChangeReceiver.isConnected()) {
+                    updateNotficationOnServer(notification_new)
+                }else{
+                    notification_new.isSync = false
+                    realms!!.addInTableNotification(notification_new)
+//                    }
                 }
 
             }
+            // ============= end else =====================
+
+
 
         }
         var count = sessionManager.getCountNotification() + countExpiry + countWarnings

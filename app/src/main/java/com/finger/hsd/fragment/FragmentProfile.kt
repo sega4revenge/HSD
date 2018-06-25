@@ -71,8 +71,9 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
     }
 
 
-    private val listItems = arrayOf("off","suri_big_robot", "suri_chipmunk", "suri_creature", "suri_death",
-            "suri_deep", "suri_grand", "suri_helium", "suri_robot", "suri_squirrel")
+    private val listItems = arrayOf("off", "dingdong", "kakaotalk","triangle", "waterdrop","arp", "consequence", "filling",
+            "good", "whistle", "oringz", "plucky","impressed", "spring", "successful", "tethys", "calling",
+             "wish", "informed")
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -184,9 +185,9 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
             R.id.log_out ->{
                 DialogLogout()
             }
-            R.id.txt_FAQs->{
-//                loadWebpage()
-            }
+//            R.id.txt_FAQs->{
+////                loadWebpage()
+//            }
             R.id.rateApp->{
                     rate()
             }

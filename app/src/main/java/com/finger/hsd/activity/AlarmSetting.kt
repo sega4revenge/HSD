@@ -42,7 +42,7 @@ class AlarmSetting : AppCompatActivity(), CompoundButton.OnCheckedChangeListener
     private lateinit var mToolbar: Toolbar
 
     private var timeAlarm : List<TimeAlarm> = ArrayList<TimeAlarm>()
-    private  var oldList : List<String> = ArrayList<String>()
+    private  var oldList : ArrayList<String> = ArrayList<String>()
 
     var checkChange  : Boolean = false
 
@@ -68,7 +68,9 @@ class AlarmSetting : AppCompatActivity(), CompoundButton.OnCheckedChangeListener
         if (timeAlarm.isNotEmpty()) {
             for (index in timeAlarm.indices) {
                 val model = timeAlarm[index]
-                oldList.plus(model.listtime)
+                if(model.isSelected == true){
+                    oldList.add(model.listtime.toString())
+                }
             }
         }
 
@@ -178,58 +180,68 @@ class AlarmSetting : AppCompatActivity(), CompoundButton.OnCheckedChangeListener
 
         // Set the neutral/cancel button click listener
 
-//        mBuilder.setNeutralButton("Cancel") { dialog, which ->
-////            val newAlarm : ArrayList<TimeAlarm> = ArrayList<TimeAlarm>()
-////            newAlarm.add(TimeAlarm(0,false))
-////            newAlarm.add(TimeAlarm(1,false))
-////            newAlarm.add(TimeAlarm(2,false))
-////            newAlarm.add(TimeAlarm(3,false))
-////            newAlarm.add(TimeAlarm(4,false))
-////            newAlarm.add(TimeAlarm(5,false))
-////            newAlarm.add(TimeAlarm(6,false))
-////            newAlarm.add(TimeAlarm(7,false))
-////            newAlarm.add(TimeAlarm(8,false))
-////            newAlarm.add(TimeAlarm(9,false))
-////            newAlarm.add(TimeAlarm(10,false))
-////            newAlarm.add(TimeAlarm(11,false))
-////            newAlarm.add(TimeAlarm(12,false))
-////            newAlarm.add(TimeAlarm(13,false))
-////            newAlarm.add(TimeAlarm(14,false))
-////            newAlarm.add(TimeAlarm(15,false))
-////            newAlarm.add(TimeAlarm(16,false))
-////            newAlarm.add(TimeAlarm(17,false))
-////            newAlarm.add(TimeAlarm(18,false))
-////            newAlarm.add(TimeAlarm(19,false))
-////            newAlarm.add(TimeAlarm(20,false))
-////            newAlarm.add(TimeAlarm(21,false))
-////            newAlarm.add(TimeAlarm(22,false))
-////            newAlarm.add(TimeAlarm(23,false))
-////            Log.d("setNeutralButton " , " -------  " + timeAlarm)
-////            for ( i in timeAlarm.indices ){
-////                val modeltimeAlarm = timeAlarm[i]
-////                Log.d("setNeutralButton " , " modeltimeAlarm   " + modeltimeAlarm.listtime  + "  ==   ")
-////                for (j in oldList.indices){
-////
-////                    val modeloldList = oldList[j]
-////                    Log.d("setNeutralButton " , " " + timeAlarm[i].listtime  + "  ==   " + modeloldList[j].toInt())
-////
-////                    if(timeAlarm[i].listtime == modeloldList[j].toInt()){
-////                        realms!!.update_to_SetAlarm(timeAlarm[i].listtime!!.toInt(), true)
-////                        Log.d("setNeutralButton " , " true  " + timeAlarm[i].listtime  + "  ==   " + modeloldList[j].toInt())
-////
-////                    }else{
-////                        realms!!.update_to_SetAlarm(timeAlarm[i].listtime!!.toInt(), false)
-////                        Log.d("setNeutralButton " , " false " + timeAlarm[i].listtime  + "  ==   " + modeloldList[j].toInt())
-////                    }
-////                }
-////            }
-////            mCustomAdapter.updateRecords(timeAlarm)
-////            save()
-//            save()
+        mBuilder.setNeutralButton("Cancel") { dialog, which ->
+            val newAlarm : ArrayList<TimeAlarm> = ArrayList<TimeAlarm>()
+            newAlarm.add(TimeAlarm(0,false))
+            newAlarm.add(TimeAlarm(1,false))
+            newAlarm.add(TimeAlarm(2,false))
+            newAlarm.add(TimeAlarm(3,false))
+            newAlarm.add(TimeAlarm(4,false))
+            newAlarm.add(TimeAlarm(5,false))
+            newAlarm.add(TimeAlarm(6,false))
+            newAlarm.add(TimeAlarm(7,false))
+            newAlarm.add(TimeAlarm(8,false))
+            newAlarm.add(TimeAlarm(9,false))
+            newAlarm.add(TimeAlarm(10,false))
+            newAlarm.add(TimeAlarm(11,false))
+            newAlarm.add(TimeAlarm(12,false))
+            newAlarm.add(TimeAlarm(13,false))
+            newAlarm.add(TimeAlarm(14,false))
+            newAlarm.add(TimeAlarm(15,false))
+            newAlarm.add(TimeAlarm(16,false))
+            newAlarm.add(TimeAlarm(17,false))
+            newAlarm.add(TimeAlarm(18,false))
+            newAlarm.add(TimeAlarm(19,false))
+            newAlarm.add(TimeAlarm(20,false))
+            newAlarm.add(TimeAlarm(21,false))
+            newAlarm.add(TimeAlarm(22,false))
+            newAlarm.add(TimeAlarm(23,false))
+
+            realms!!.storeListToRealm(newAlarm)
+
+            for (j in oldList.indices){
+                Log.d("for....  " , " j " + j)
+                val model_oldList = oldList[j]
+                    realms!!.update_to_SetAlarm(model_oldList.toInt(), true)
+            }
+
+//            Log.d("setNeutralButton " , " -------  " + timeAlarm)
+//            Log.d("setNeutralButton " , " timeAlarm :  " + timeAlarm  + " \n ========  "  + oldList)
+//            for ( i in timeAlarm.indices ){
+//                val model_timeAlarm = timeAlarm[i]
+//                Log.d("for....  " , " i " + i )
+//                //Log.d("setNeutralButton " , " modeltimeAlarm   " + model_timeAlarm.listtime  + "  ========  " )
 //
-//            dialog.cancel()
+//                for (j in oldList.indices){
+//                    Log.d("for....  " , " j " + j)
+//                    val model_oldList = oldList[j]
+//                    Log.d("setNeutralButton " , " " + model_timeAlarm.listtime  + "  ==   " + model_oldList)
 //
-//        }
+//                    if(model_timeAlarm.listtime == model_oldList.toInt()){
+//                        realms!!.update_to_SetAlarm(model_timeAlarm.listtime!!.toInt(), true)
+//                        Log.d("setNeutralButton " , " true  " + model_timeAlarm.listtime  + "  ==   " + model_oldList.toInt())
+//
+//                    }else{
+//                        realms!!.update_to_SetAlarm(model_timeAlarm.listtime!!.toInt(), false)
+//                        Log.d("setNeutralButton " , " false " + model_timeAlarm.listtime  + "  ==   " + model_oldList.toInt())
+//                    }
+//                }
+//            }
+            mCustomAdapter.updateRecords(timeAlarm)
+            dialog.cancel()
+            finish()
+
+        }
 
 
         val mDialog = mBuilder.create()

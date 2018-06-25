@@ -236,30 +236,30 @@
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:layout_marginLeft="10dp" />
-        <LinearLayout
-            android:id="@+id/txt_FAQs"
-            android:background="@drawable/back_ground_click"
-            android:paddingLeft="12dp"
-            android:gravity="center|left"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            tools:ignore="UseCompoundDrawables">
-            <ImageView
-                android:background="@drawable/ic_product"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                tools:ignore="ContentDescription" />
-            <TextView
+        <!--<LinearLayout-->
+            <!--android:id="@+id/txt_FAQs"-->
+            <!--android:background="@drawable/back_ground_click"-->
+            <!--android:paddingLeft="12dp"-->
+            <!--android:gravity="center|left"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="40dp"-->
+            <!--tools:ignore="UseCompoundDrawables">-->
+            <!--<ImageView-->
+                <!--android:background="@drawable/ic_product"-->
+                <!--android:layout_width="25dp"-->
+                <!--android:layout_height="25dp"-->
+                <!--tools:ignore="ContentDescription" />-->
+            <!--<TextView-->
 
-                android:textColor="@color/text_color"
-                android:layout_marginLeft="10dp"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/faqs"
-                android:layout_marginStart="10dp" />
-        </LinearLayout>
+                <!--android:textColor="@color/text_color"-->
+                <!--android:layout_marginLeft="10dp"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/faqs"-->
+                <!--android:layout_marginStart="10dp" />-->
+        <!--</LinearLayout>-->
         <LinearLayout
             android:id="@+id/txt_share"
             android:layout_marginTop="2dp"
@@ -285,30 +285,30 @@
                 android:layout_marginStart="10dp" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_marginTop="2dp"
-            android:paddingLeft="12dp"
-            android:gravity="center|left"
-            android:background="@drawable/back_ground_click"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            tools:ignore="UseCompoundDrawables">
-            <ImageView
-                android:background="@drawable/ic_product"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                tools:ignore="ContentDescription" />
+        <!--<LinearLayout-->
+            <!--android:layout_marginTop="2dp"-->
+            <!--android:paddingLeft="12dp"-->
+            <!--android:gravity="center|left"-->
+            <!--android:background="@drawable/back_ground_click"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="40dp"-->
+            <!--tools:ignore="UseCompoundDrawables">-->
+            <!--<ImageView-->
+                <!--android:background="@drawable/ic_product"-->
+                <!--android:layout_width="25dp"-->
+                <!--android:layout_height="25dp"-->
+                <!--tools:ignore="ContentDescription" />-->
 
-            <TextView
-                android:textColor="@color/text_color"
-                android:layout_marginLeft="10dp"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/privacy_policy"
-                android:layout_marginStart="10dp" />
-        </LinearLayout>
+            <!--<TextView-->
+                <!--android:textColor="@color/text_color"-->
+                <!--android:layout_marginLeft="10dp"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/privacy_policy"-->
+                <!--android:layout_marginStart="10dp" />-->
+        <!--</LinearLayout>-->
 
         <LinearLayout
             android:background="@drawable/back_ground_click"

@@ -164,7 +164,7 @@ class MainListAdapterKotlin:
                 }
             }
         } else if (holder is ItemViewHolder) { //Constants.INSTANCE.getIMAGE_URL()+
-
+            Log.d("IMAGEGGGGGGGGGG", mObject.imagechanged!! + "//")
             Glide.with(mContext)
                     .load(mObject.imagechanged)
                     .apply(optionsGlide)

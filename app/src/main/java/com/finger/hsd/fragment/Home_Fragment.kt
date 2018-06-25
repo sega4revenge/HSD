@@ -20,6 +20,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.LinearLayout
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.finger.hsd.BaseFragment
@@ -60,6 +61,8 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
     private var mLayoutManager:LinearLayoutManager? =null
     private var myRealm: RealmController? = null
     private var numLoading = 0
+    private var lin_notfound:LinearLayout? = null
+    private var lin_create:LinearLayout? = null
     private var mRefresh:SwipeRefreshLayout? = null
     private var mPositionEX = -1
     private var mPositionWaring = -1
@@ -146,7 +149,8 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
     }
     private fun initView() {
         mRec = mView?.findViewById(R.id.rec)
-     //   mRefresh = mView?.findViewById(R.id.refresh)
+        lin_notfound= mView?.findViewById(R.id.lin_notfound)
+        lin_create= mView?.findViewById(R.id.lin_create)
         mLayoutManager =  LinearLayoutManager(activity)
         mRec?.layoutManager = mLayoutManager
         mRec?.setHasFixedSize(true)
@@ -158,7 +162,21 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
 //                getData()
 //            }
 //        }
+        lin_create?.setOnClickListener(object: View.OnClickListener{
+            override fun onClick(v: View?) {
+                if (ActivityCompat.checkSelfPermission(activity!!.applicationContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.CAMERA), perID)
+                }else{
+                    if (ConnectivityChangeReceiver.isConnected()) {
+                        val i = Intent(activity,ContinuousCaptureActivity::class.java)
+                        startActivity(i)
+                    } else {
+                        Toast.makeText(activity, "Không thể kết nối mạng", Toast.LENGTH_SHORT).show()
+                    }
+                }
 
+            }
+        })
     }
 
 
@@ -244,33 +262,6 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
     }
     private val perID = 1001
 
-    fun showDialogNotFound(){
-        Log.d("REALMCONTROLLER","//zzzzzzzzzzz//showDialogNotFound//")
-        var mDialog: Dialog? = null
-        var dialog = AlertDialog.Builder(activity)
-        val mView:View = View.inflate(activity,R.layout.not_found_product,null)
-        dialog.setView(mView)
-        var create = mView.lin_create
-       // dialog.setCancelable(false)
-        create.setOnClickListener(object: View.OnClickListener{
-            override fun onClick(v: View?) {
-                if (ActivityCompat.checkSelfPermission(activity!!.applicationContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.CAMERA), perID)
-                }else{
-                    if (ConnectivityChangeReceiver.isConnected()) {
-                        val i = Intent(activity,ContinuousCaptureActivity::class.java)
-                        startActivity(i)
-                    } else {
-                        Toast.makeText(activity, "Không thể kết nối mạng", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                mDialog?.dismiss()
-            }
-        })
-        mDialog = dialog.create()
-        mDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        mDialog.show()
-    }
     override fun onupdate() {
         Log.d("REALMCONTROLLER","update")
         listheader?.clear()
@@ -356,7 +347,10 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
             }
         }else{
             if(myRealm?.getlistProduct()!!.size==0){
-                showDialogNotFound()
+                if(mRec?.visibility != View.GONE) {mRec?.visibility = View.GONE}
+                if(lin_notfound?.visibility != View.VISIBLE){
+                    lin_notfound?.visibility = View.VISIBLE
+                }
             }else{
                 loadData()
             }
@@ -369,7 +363,9 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
         mRetrofitService?.getAllProductInGroup("5b21d1f9fe313f03da828118")?.enqueue(object: Callback<Result_Product>{
             override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
                 if(myRealm?.getlistProduct()!!.size==0){
-                    showDialogNotFound()
+                    if(lin_notfound?.visibility != View.VISIBLE){
+                        lin_notfound?.visibility = View.VISIBLE
+                    }
                 }else{
                     loadData()
                 }
@@ -384,7 +380,10 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
                             myRealm?.updateorCreateListProduct(response.body().listProduct,this@Home_Fragment)
                         }else if(myRealm?.getlistProduct()!!.size==0){
 
-                            showDialogNotFound()
+                                    if(mRec?.visibility != View.GONE) {mRec?.visibility = View.GONE}
+                                    if(lin_notfound?.visibility != View.VISIBLE){
+                                        lin_notfound?.visibility = View.VISIBLE
+                                    }
                         }
                     }
                 }else{
@@ -448,6 +447,9 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
         listProduct = myRealm?.getlistProduct()
         if(listProduct != null && listProduct?.size!! > 0) {
             if(mRec?.visibility != View.VISIBLE) {mRec?.visibility = View.VISIBLE}
+            if(lin_notfound?.visibility != View.GONE){
+                lin_notfound?.visibility = View.GONE
+            }
             val sdf = SimpleDateFormat("dd/MM/yyyy")
             val stringToday = sdf.format(Date())
             val exToday = sdf.parse(stringToday)
@@ -503,7 +505,9 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
             mDialogProgress?.dismiss()
         }else{
             if(mRec?.visibility != View.GONE) {mRec?.visibility = View.GONE}
-            showDialogNotFound()
+            if(lin_notfound?.visibility != View.VISIBLE){
+                lin_notfound?.visibility = View.VISIBLE
+            }
         }
     }
 

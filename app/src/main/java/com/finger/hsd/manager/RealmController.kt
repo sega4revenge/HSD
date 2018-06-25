@@ -4,6 +4,7 @@ package com.finger.hsd.manager
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.net.Uri
 import android.support.v4.app.Fragment
 import android.util.Log
 import com.androidnetworking.AndroidNetworking
@@ -382,11 +383,12 @@ class RealmController(application: Context) {
             try{
 
                 if (arr.get(i).imagechanged !=null) {
-
-                    if(realm.where(Product_v::class.java).equalTo("imagechanged", arr.get(i).imagechanged).count()>1)
+                    var numCount = realm.where(Product_v::class.java).equalTo("imagechanged", arr.get(i).imagechanged).count()
+                    if(numCount == 1L)
                     {
-                        val fdelete = File(arr.get(i).imagechanged)
+                        val fdelete = File(Uri.parse(arr.get(i).imagechanged).path)
                         if (fdelete.exists()) {
+                            System.out.println(arr.get(i).imagechanged+"exists()")
                             if (fdelete.delete()) {
                                 System.out.println("file Deleted :")
                             } else {

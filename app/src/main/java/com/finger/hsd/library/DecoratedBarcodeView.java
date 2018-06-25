@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import me.dm7.barcodescanner.core.CameraWrapper;
+
 
 /**
  * Encapsulates BarcodeView, ViewfinderView and status text.

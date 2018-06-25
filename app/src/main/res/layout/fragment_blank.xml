@@ -2,21 +2,63 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/input_register_bg"
     android:layout_height="match_parent"
-    tools:context=".fragment.BlankFragment">
+    tools:context=".fragment.BlankFragment"
+    android:background="@color/colordefault">
 
     <!--<android.support.v4.widget.SwipeRefreshLayout-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
         <!--android:id="@+id/refresh">-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <android.support.v7.widget.RecyclerView
             android:scrollbars="none"
+            android:visibility="gone"
             android:overScrollMode="never"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/rec"
-            android:background="@color/colordefault"
             ></android.support.v7.widget.RecyclerView>
+        <LinearLayout
+            android:id="@+id/lin_notfound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_margin="40dp"
+            android:background="@drawable/border_dialog"
+            android:layout_centerInParent="true"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="25dp"
+                android:text="Chào mừng bạn đến với HSD. Hãy tạo ngay một danh sách quản lý hạn sử dụng của tất cả sản phẩm bạn có!!"
+                android:gravity="center"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:textSize="16dp" />
+            <LinearLayout
+                android:id="@+id/lin_create"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@drawable/shape_button_login"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="CREATE PRODUCT"
+                    android:textSize="20dp"
+                    android:textColor="@color/white"/>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
     <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 </FrameLayout>

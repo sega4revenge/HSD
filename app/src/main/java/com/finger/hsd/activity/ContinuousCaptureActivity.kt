@@ -47,7 +47,7 @@ import kotlinx.android.synthetic.main.dialog_put_barcode.view.*
 import kotlinx.android.synthetic.main.dialog_scanner_barcode_.view.*
 import kotlinx.android.synthetic.main.dialog_timepicker.view.*
 
-import me.dm7.barcodescanner.zxing.ZXingScannerView
+
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -216,6 +216,7 @@ class ContinuousCaptureActivity : Activity() {
         mDialog_scan?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         mDialog_scan?.show()
     }
+
     fun showDialogInputBarcoe(){
         var mBarcode = ""
         var datedialog = AlertDialog.Builder(this@ContinuousCaptureActivity)
@@ -258,6 +259,9 @@ class ContinuousCaptureActivity : Activity() {
         super.onResume()
         lastText = ""
         barcodeView!!.resume()
+        if(mDialog_scan!= null &&mDialog_scan!!.isShowing){
+            mDialog_scan?.dismiss()
+        }
     }
 
     override fun onPause() {

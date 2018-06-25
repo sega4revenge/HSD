@@ -15,7 +15,6 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.finger.hsd.AllInOneActivity
 import com.finger.hsd.R
-import com.finger.hsd.R.string.product_expiry
 import com.finger.hsd.activity.HorizontalNtbActivity
 import com.finger.hsd.manager.RealmAlarmController
 import com.finger.hsd.manager.SessionManager
@@ -71,7 +70,7 @@ class NotificationPlayingService : Service() {
             now.set(Calendar.SECOND, 0)
             var countAddNotification  = 0
             day = ((product_v[index].expiretime - now.timeInMillis  )/milDay).toInt()
-            Log.d("NoPlayingService" ," day " + day)
+            Log.d("qqqqqqqqqqqqq" ," day " + day)
             var id_notification : String?= null
 
             if(day <= 0 && day > -3){
@@ -94,7 +93,7 @@ class NotificationPlayingService : Service() {
                     }
                 }
 
-                Log.d("NoPlayingService" ," Expiry id_notification "+id_notification)
+                Log.d("rrrrrrrrrrrrrrr" ," Expiry id_notification "+id_notification)
                 // sản phẩm chưa được add
 //                if(countAddNotification > 0 ){
                     var notification_new = Notification()
@@ -111,7 +110,7 @@ class NotificationPlayingService : Service() {
                     var intent = Intent()
                     var bundle = Bundle()
                     intent.action = AppIntent.ACTION_UPDATE_ITEM
-                    bundle.putSerializable("notificationModel", notification_new)
+//                    bundle.putSerializable("notificationModel", notification_new)
                     bundle.putBoolean("addnotification", true)
                     intent.putExtras(bundle)
                     sendBroadcast(intent)
@@ -120,6 +119,7 @@ class NotificationPlayingService : Service() {
                 if (ConnectivityChangeReceiver.isConnected()) {
                     updateNotficationOnServer(notification_new)
                 }else{
+                    Mylog.d("aaaaaaaaaaaaa "+notification_new)
                     notification_new.isSync = false
                     realms!!.addInTableNotification(notification_new)
 //                    }
@@ -143,7 +143,7 @@ class NotificationPlayingService : Service() {
                         countAddNotification++
                     }
                 }
-                Log.d("NoPlayingService" ," warring id_notification "+id_notification)
+                Log.d("rrrrrrrr" ," warring id_notification "+id_notification)
 
 //                if(countAddNotification > 0){
 
@@ -156,14 +156,14 @@ class NotificationPlayingService : Service() {
                     notification_new.type = 0
                     notification_new.create_at = now.timeInMillis.toString()
                     notification_new.watched = false
-                    notification_new.isSync = true
-//                        realms!!.addInTableNotification(notification_new)
-//                        realms!!.view_to_dataNotification()
+                    notification_new.isSync = false
+                        realms!!.addInTableNotification(notification_new)
+                        realms!!.view_to_dataNotification()
 
                     var intent = Intent()
                     var bundle = Bundle()
                     intent.action = AppIntent.ACTION_UPDATE_ITEM
-                    bundle.putSerializable("notificationModel", notification_new)
+//                    bundle.putSerializable("notificationModel", notification_new)
                     bundle.putBoolean("addnotification", true)
                     intent.putExtras(bundle)
                     sendBroadcast(intent)
@@ -174,7 +174,7 @@ class NotificationPlayingService : Service() {
                 }else{
                     notification_new.isSync = false
                     realms!!.addInTableNotification(notification_new)
-//                    }
+
                 }
 
             }
@@ -185,9 +185,11 @@ class NotificationPlayingService : Service() {
         }
         var count = sessionManager.getCountNotification() + countExpiry + countWarnings
         //count notification
-        sessionManager.setCountNotification(count)
-        badgeIconScreen()
-        Log.d("NoPlayingService" ," 333 " +"countExpiry == " + countExpiry + "countWarnings == " + countWarnings )
+        sessionManager.setCountNotification(10)
+
+
+
+        Log.d("ppppppppppppppppp" ," 333 " +"countExpiry == " + countExpiry + "countWarnings == " + countWarnings )
         // chi co san pham het han
         if(countExpiry > 0 && countWarnings== 0){
             var strTitle : String = resources.getString(R.string.notification_expiry)
@@ -227,6 +229,7 @@ class NotificationPlayingService : Service() {
             } catch (e: NumberFormatException) {
                 Mylog.d("badge Count screen: ", e.message!!)
             }
+
             ShortcutBadger.applyCount(applicationContext, badgeCount)
         } else {
             ShortcutBadger.removeCount(applicationContext)
@@ -235,11 +238,12 @@ class NotificationPlayingService : Service() {
     }
     // group of notification
     fun Group_Notification( title:String,  content : String){
-
+        realms!!.view_notification()
+        Mylog.d("Group_Notification: ", "  content  "+title +"  content  " + content )
         val intent = Intent(this, AllInOneActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
-        intent.putExtra("InNotificationFragment","InNotificationFragment")
+        intent.putExtra("InNotificaitonFragment","InNotificationFragment")
 
 
         val pIntent = PendingIntent.getActivity(this, 99 , intent, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -280,6 +284,8 @@ class NotificationPlayingService : Service() {
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(99, builder.build())
+
+        ShortcutBadger.applyNotification(applicationContext, builder.notification, sessionManager.getCountNotification())
     }
 
     fun Notification_Expiry( title:String, content : String ,  int: Int , day : Int ){
@@ -392,12 +398,14 @@ class NotificationPlayingService : Service() {
 
                     override fun onNext(t: Response?) {
                         realms!!.addInTableNotification(notification)
+                        Mylog.d("aaaaaaaaaaaaa "+notification)
                     }
 
                     override fun onError(e: Throwable?) {
                         Mylog.d(e!!.printStackTrace().toString())
                         notification.isSync = false
                         realms!!.addInTableNotification(notification)
+                        Mylog.d("aaaaaaaaaaaaa "+notification)
 
                     }
 

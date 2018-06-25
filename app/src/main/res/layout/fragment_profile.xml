@@ -51,11 +51,13 @@
                 android:text="@string/ca_si_chipici"
                 tools:ignore="SpUsage" />
             <TextView
+                android:id="@+id/tv_type"
                 android:textSize="14dp"
                 android:textColor="@color/text_hint"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/_012234567987" />
+
         </LinearLayout>
         <LinearLayout
             android:gravity="center"

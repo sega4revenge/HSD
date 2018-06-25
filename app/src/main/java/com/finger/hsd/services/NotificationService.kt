@@ -12,7 +12,7 @@ class NotificationService: Service() {
     var session : SessionManager? = null
     override fun onCreate() {
         session = SessionManager(applicationContext)
-        badgeIconScreen()
+//        badgeIconScreen()
     }
 
     override fun onBind(p0: Intent?): IBinder {

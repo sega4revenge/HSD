@@ -18,11 +18,11 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.finger.hsd.BaseFragment
 import com.finger.hsd.R
-import com.finger.hsd.R.string.notification
 import com.finger.hsd.activity.DetailProductActivity
 import com.finger.hsd.adapters.NotificationAdapterKotlin
 import com.finger.hsd.common.Prefs
 import com.finger.hsd.manager.RealmController
+import com.finger.hsd.manager.SessionManager
 import com.finger.hsd.model.Notification
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.Response
@@ -68,6 +68,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
     private var prefs: Prefs? = null
     var mNotificationBadgeListener: NotificationBadgeListener? = null
     var mContext: Context? = null
+    var session : SessionManager? = null
 
     fun newInstance(info: String): NotificationFragment {
         val args = Bundle()
@@ -110,6 +111,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
         mContext = activity
 
         initViews(mView!!)
+        session = SessionManager(activity!!)
         setRealmAdapter()
 
         mView!!.count_notification.text = realm!!.countNotification().toString() +  " thông báo"
@@ -147,6 +149,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                     processWatchedNotification(listNotWatch[temp])
                 }else{
                     // sucess
+                    showSnack(R.string.watched_all, R.id.notification_root)
                 }
             }
 
@@ -159,7 +162,11 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
         mView!!.recycler_notification.adapter = mNotifiAdapter
         mNotifiAdapter.notifyDataSetChanged()
 
-
+        if (listitem.size<1){
+            (mView!!.findViewById(R.id.ln_not_data) as LinearLayout).visibility = View.VISIBLE
+        }else{
+            (mView!!.findViewById(R.id.ln_not_data) as LinearLayout).visibility = View.GONE
+        }
         //activity!!.startService(Intent(activity, NotificationService::class.java))
     }
 
@@ -239,6 +246,8 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
         intent.putExtra("position", position)
         intent.putExtra("id_product", product._id)
 
+        Mylog.d("aaaaaaaaaa "+product._id)
+
         // startActivityForResult(intent, AppIntent.REQUEST_NOTIFICATION)
         var notification = realm!!.getOneNotification(product._id!!)
         if (ConnectivityChangeReceiver.isConnected()) {
@@ -313,49 +322,54 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
 //============hàm này để khi có  thông báo là nó sẽ add vào list notification = alarm thông báo
                 } else if (bundle.getBoolean("addnotification")) {
 
-                    var notification = Notification()
-
-
-                    notification = bundle.getSerializable("notificationModel") as Notification
-                    Mylog.d("ttttttt " + notification.id_product)
-                    var checkNewOrOldNotification: Boolean = false
-                    var toEdit = realm!!.getOneNotification(notification.id_product!!)
-
-                    realm!!.realm.executeTransaction(Realm.Transaction {
-
-                        if(toEdit !=null){
-                            toEdit.watched = false
-                            toEdit.create_at = notification.create_at
-                           checkNewOrOldNotification = false
-                        }else{
-                           checkNewOrOldNotification =  realm!!.addNotification(notification)
-
-                        }
-                    })
-//                    var checkNewOrOldNotification = realm!!.addNotification(notification)
-                    if (checkNewOrOldNotification) {
-                        val item = mNotifiAdapter.listItem.iterator()
-
-                        while (item.hasNext()) {
-                            var value = item.next()
-                            if (value.id_product.equals(notification.id_product)) {
-                                item.remove()
-                            }
-                        }
-                        listitem.add(0, notification)
-                        mView!!.recycler_notification.adapter = mNotifiAdapter
-                        mView!!.recycler_notification.scrollToPosition(0)
-                        mNotifiAdapter.notifyDataSetChanged()
-                        mView!!.count_notification.text = realm!!.countNotification().toString() +  " thông báo"
-                        mNotificationBadgeListener!!.onBadgeUpdate(realm!!.countNotification())
-                    } else {
-                        listitem.add(0, notification)
-                        mView!!.recycler_notification.adapter = mNotifiAdapter
-                        mView!!.recycler_notification.scrollToPosition(0)
-                        mNotifiAdapter.notifyDataSetChanged()
-                        mView!!.count_notification.text = realm!!.countNotification().toString() +  " thông báo"
-                        mNotificationBadgeListener!!.onBadgeUpdate(realm!!.countNotification())
-                    }
+                    Mylog.d("aaaaaaaaaa da chay broadcash")
+                    listitem.clear()
+                    listitem = realm!!.getListNotification()!!
+                    mNotifiAdapter = NotificationAdapterKotlin(mContext!!, listitem, realm!!, mNotificationBadgeListener!!, this@NotificationFragment)
+                    mView!!.recycler_notification.adapter = mNotifiAdapter
+                    mNotifiAdapter.notifyDataSetChanged()
+//                    var notification = Notification()
+//
+//                    notification = bundle.getSerializable("notificationModel") as Notification
+//                    Mylog.d("ttttttt " + notification.id_product)
+//                    var checkNewOrOldNotification: Boolean = false
+//                    var toEdit = realm!!.getOneNotification(notification.id_product!!)
+//
+//                    realm!!.realm.executeTransaction(Realm.Transaction {
+//
+//                        if(toEdit !=null){
+//                            toEdit.watched = false
+//                            toEdit.create_at = notification.create_at
+//                           checkNewOrOldNotification = false
+//                        }else{
+//                           checkNewOrOldNotification =  realm!!.addNotification(notification)
+//
+//                        }
+//                    })
+////                    var checkNewOrOldNotification = realm!!.addNotification(notification)
+//                    if (checkNewOrOldNotification) {
+//                        val item = mNotifiAdapter.listItem.iterator()
+//
+//                        while (item.hasNext()) {
+//                            var value = item.next()
+//                            if (value.id_product.equals(notification.id_product)) {
+//                                item.remove()
+//                            }
+//                        }
+//                        listitem.add(0, notification)
+//                        mView!!.recycler_notification.adapter = mNotifiAdapter
+//                        mView!!.recycler_notification.scrollToPosition(0)
+//                        mNotifiAdapter.notifyDataSetChanged()
+//                        mView!!.count_notification.text = realm!!.countNotification().toString() +  " thông báo"
+//                        mNotificationBadgeListener!!.onBadgeUpdate(realm!!.countNotification())
+//                    } else {
+//                        listitem.add(0, notification)
+//                        mView!!.recycler_notification.adapter = mNotifiAdapter
+//                        mView!!.recycler_notification.scrollToPosition(0)
+//                        mNotifiAdapter.notifyDataSetChanged()
+//                        mView!!.count_notification.text = realm!!.countNotification().toString() +  " thông báo"
+//                        mNotificationBadgeListener!!.onBadgeUpdate(session!!.getCountNotification())
+//                    }
 
                 }
 

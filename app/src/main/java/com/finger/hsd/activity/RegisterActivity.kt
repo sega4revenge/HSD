@@ -173,6 +173,19 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
 
     override fun getUserDetail(user: User) {
         // AppManager.saveAccountUser(this, user)
+        var list =  realm!!.getDataTimeAlarm()
+
+        for (index in list!!.indices) {
+
+            val model = list.get(index)
+            if (model.isSelected!!) {
+                SettingAlarm(model.listtime!!.toInt(), true)
+            }else{
+                SettingAlarm(model.listtime!!.toInt(), false)
+            }
+        }
+        Log.d("isLoginSuccessful","isLoginSuccessful1    "   +"  list   " +list)
+
         this.user = user
 
         realm!!.addUser(user)
@@ -250,19 +263,8 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
                                 showProgress("Sync... " + percent + "% complete")
                                 session!!.setLogin(true)
 
-                                var list = realm!!.getDataTimeAlarm()
-
-                                for (index in list!!.indices) {
-
-                                    val model = list.get(index)
-                                    if (model.isSelected!!) {
-                                        SettingAlarm(model.listtime!!.toInt(), true)
-                                    } else {
-                                        SettingAlarm(model.listtime!!.toInt(), false)
-                                    }
-                                }
                                 hideProgress()
-                                Log.d("isLoginSuccessful", "isLoginSuccessful1    " + "  list   " + list)
+
                                 startActivity(Intent(this@RegisterActivity, AllInOneActivity::class.java))
                                 finish()
                             }

@@ -50,7 +50,7 @@ class MainListAdapterKotlin:
 
         optionsGlide = RequestOptions()
                 .centerCrop()
-                .placeholder(R.drawable.ic_add_photo)
+                .placeholder(R.drawable.photo_unvailable)
                 .error(R.drawable.ic_back)
     }
 
@@ -164,7 +164,7 @@ class MainListAdapterKotlin:
                 }
             }
         } else if (holder is ItemViewHolder) { //Constants.INSTANCE.getIMAGE_URL()+
-            Log.d("IMAGEGGGGGGGGGG", mObject.imagechanged!! + "//")
+
             Glide.with(mContext)
                     .load(mObject.imagechanged)
                     .apply(optionsGlide)

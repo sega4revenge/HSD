@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.BlankFragment"
-    android:background="@color/colordefault">
+    android:background="@color/bg_hint"
+   >
 
     <!--<android.support.v4.widget.SwipeRefreshLayout-->
         <!--android:layout_width="match_parent"-->
@@ -20,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/rec"
+            android:background="@color/colordefault"
             ></android.support.v7.widget.RecyclerView>
         <LinearLayout
             android:id="@+id/lin_notfound"
@@ -58,7 +59,7 @@
                     android:textColor="@color/white"/>
             </LinearLayout>
         </LinearLayout>
-    </RelativeLayout>
 
+</RelativeLayout>
     <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 </FrameLayout>

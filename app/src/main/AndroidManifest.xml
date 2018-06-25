@@ -21,6 +21,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE" />
 
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -70,9 +71,7 @@
                 <!--android:resource="@xml/account_authenticator" />-->
         <!--</service>-->
 
-        <!--<activity android:name=".AllInOneActivity"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:windowSoftInputMode="stateHidden"/>-->
+        <activity android:name=".activity.testImageActivity"/>
 
         <activity android:name=".activity.DetailProductActivity"
             android:screenOrientation="portrait"
@@ -117,7 +116,9 @@
         <activity android:name=".activity.Scanner_Barcode_Activity" />
         <activity android:name=".activity.Add_Product" />
         <activity android:name=".activity.show_PhotoProduct"></activity>
-
+        <activity android:name=".AllInOneActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
 
         <activity android:name=".activity.AlarmSetting"
             android:label="Alarm Setting"/>

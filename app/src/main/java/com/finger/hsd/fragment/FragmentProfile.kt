@@ -4,40 +4,32 @@ import android.app.Activity
 import android.app.AlarmManager
 import android.app.AlertDialog
 import android.app.PendingIntent
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.media.MediaPlayer
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.finger.hsd.AllInOneActivity
+import com.finger.hsd.BaseFragment
 import com.finger.hsd.R
-import com.finger.hsd.R.string.sound
 import com.finger.hsd.activity.AlarmReceiver
 import com.finger.hsd.activity.AlarmSetting
 import com.finger.hsd.activity.LoginActivity
 import com.finger.hsd.manager.RealmAlarmController
 import com.finger.hsd.manager.SessionManager
-import kotlinx.android.synthetic.main.fragment_profile.*
+import com.finger.hsd.model.User
+import com.finger.hsd.util.Mylog
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 import java.io.File
 import java.util.*
-import android.content.ActivityNotFoundException
-import android.os.Build
-import android.support.v4.content.ContextCompat.startActivity
-
-import com.finger.hsd.BaseFragment
-import com.finger.hsd.R.id.txt_Expiry
-import com.finger.hsd.R.id.txt_sound
-
-import kotlin.concurrent.fixedRateTimer
 
 
 class FragmentProfile : BaseFragment(), View.OnClickListener  {
@@ -92,6 +84,14 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
         realms = RealmAlarmController.with(this)
         realms!!.DatabseLlistAlarm()
 
+        var user: User? = realms!!.getSingleUser()
+        if(user!!.type_login == 1) {
+            v.tv_type.text = "Facebook"
+        }else if(user!!.type_login == 2){
+            v.tv_type.text = "Google"
+        }else{
+            v.tv_type.text = "HSD Account"
+        }
         // get user
         var listUser =  realms!!.getUser()
         for (index in listUser.indices) {
@@ -125,23 +125,26 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
         Log.d("FragmentProfile", "sessionManager... " + sessionManager.get_open_Alarm())
 
         if (sessionManager.get_open_Alarm()) {
+
             val list = realms!!.view_to_dataTimeAlarm()
             var output: String? = ""
-            for (index in list!!.indices) {
-                val model = list.get(index)
-                if (model.isSelected!!) {
-//                    SettingAlarm(model.listtime!!.toInt(), true)
-                    if (!output.equals("")) {
-                        output += ", "
-                    }
-                    output += model.listtime.toString() + "h"
 
-                }
+                for (index in list!!.indices) {
+                    val model = list.get(index)
+                    if (model.isSelected!!) {
+//                    SettingAlarm(model.listtime!!.toInt(), true)
+                        if (!output.equals("")) {
+                            output += ", "
+                        }
+                        output += model.listtime.toString() + "h"
+
+                    }
 //                else{
 //
 //                    SettingAlarm(model.listtime!!.toInt(), false)
 //                }
-            }
+                }
+
             setAlarmText(output!!)
 
         } else {
@@ -421,7 +424,27 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
         mBuilder.setTitle("Do you want logout?")
         mBuilder.setPositiveButton("OK") { dialog, which ->
             // Do something when click the neutral button
-            realms!!.deleteAllData()
+
+            val product = realms!!.getDataProduct()
+            if(product!=null && !product.isEmpty()) {
+                for (i in 0..product!!.size - 1) {
+                    val namePassive = Uri.parse(product[i].imagechanged)
+//                                        val namePassive = product!!.imagechanged
+                    var myDir = File(namePassive.path)
+
+                    if (myDir.exists()) {
+                        Mylog.d("aaaaaaaaaa deleted")
+                        myDir.delete()
+                    } else {
+                        Mylog.d("aaaaaaaaaa deleted" + namePassive)
+                    }
+                }
+                realms!!.deleteAllData()
+            }else{
+                realms!!.deleteAllData()
+            }
+
+
             if(realms!=null){
                 sessionManager.setLogin(false)
                 startActivity(Intent(activity, LoginActivity::class.java))
@@ -464,10 +487,6 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
                 sound = "off"
                 soundOff = false
             }
-
-
-
-
 
         }
         mBuilder.setPositiveButton("OK") { dialog, which ->

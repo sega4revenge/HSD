@@ -196,7 +196,16 @@ class RealmAlarmController (application: Context) {
         realm.commitTransaction()
     }
 
-
+    fun view_notification(): List<Notification>? {
+        val result = realm.where(Notification::class.java).findAllAsync()
+        result.load()
+        var output = ""
+        for (alarm in result) {
+            output += alarm.toString()
+            Log.d("view_notification ", "data Realm  ===========  " + output + " \n ")
+        }
+        return result
+    }
 
     fun view_to_dataTimeAlarm(): List<TimeAlarm>? {
         val result = realm.where(TimeAlarm::class.java).findAllAsync()

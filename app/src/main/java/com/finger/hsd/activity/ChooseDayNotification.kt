@@ -59,9 +59,10 @@ class ChooseDayNotification: BaseActivity(), IDetailProductPresenterView{
         this.setSupportActionBar(mToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
-        mToolbar.setTitleTextColor(Color.GRAY)
+        mToolbar.setTitleTextColor(Color.WHITE)
+        mToolbar.setTitle(resources.getString(R.string.detail_product))
         mToolbar.setSubtitleTextColor(Color.GRAY)
-        mToolbar.setNavigationIcon(R.drawable.ic_move_through)
+        mToolbar.setNavigationIcon(R.drawable.ic_back_arrow)
         mToolbar.setNavigationOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
                 onBackPressed()
@@ -135,7 +136,7 @@ class ChooseDayNotification: BaseActivity(), IDetailProductPresenterView{
         var product = realm!!.getProduct(idProduct)
         realm!!.realm.executeTransaction(Realm.Transaction {
             product!!.daybefore = days
-            product!!.isSyn = false
+            product.isSyn = false
         })
 
         Mylog.d("aaaaaaaaaa check: " + realm!!.getProduct(idProduct)!!.daybefore)

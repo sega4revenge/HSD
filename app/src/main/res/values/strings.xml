@@ -22,12 +22,19 @@
     <string name="days_left">DAYS LEFT</string>
     <string name="status_count_product_1">You have </string>
     <string name="status_count_product_2"> product(s) about to expire. Please check you inventory</string>
+    <string name="wellcome_hsd">Chào mừng bạn đến với ứng dụng HSD! </string>
+    <string name="noti_create">Hãy tạo sản phẩm để nhận thông báo về sản phẩm nhé!</string>
+
+
     <!-- Detail Product -->
     <string name="detail_product_text_expiry_date">Remaining term of use </string>
     <string name="detail_product_text_day"> day(s)</string>
     <string name="no_name"> No Name</string>
     <string name="note">Note...</string>
     <string name="shelf_life">Shelf life is </string> <!-- thời hạn sử dụng còn lại là 5 ngày -->
+    <string name="today">to day</string>
+    <string name="detail_product">Detail product</string>
+    <string name="choose_time">Notification setting</string>
 
     <string name="descrip_delete">Would you like to delete product?</string>
 
@@ -58,6 +65,7 @@
     <string name="choose_image">Choose image</string>
     <string name="edit">Edit</string>
     <string name="delete_sucess"> Delete sucess!</string>
+    <string name="watched_all">watched all!</string>  <!--đã xem tất cả-->
     <string name="cancel">Cancel</string>
     <!--***************************** -->
 
@@ -80,7 +88,7 @@
     <string name="information">Information</string>
     <string name="share_app">Share app</string>
     <string name="ca_si_chipici">Ca si Chipici</string>
-    <string name="_012234567987">012234567987</string>
+    <string name="_012234567987">HSD Account</string>
     <string name="sound">Sound</string>
     <string name="account_setting">Account Setting</string>
     <string name="support">Support</string>

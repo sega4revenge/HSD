@@ -262,19 +262,34 @@ fun getKeyHash(){
     override fun getUserDetail(user: User) {
 
         Mylog.d("aaaaaaaaaa "+" chay ngay di ngay di ngay di ngay di ngay di ngay di"+user)
-        realm!!.addUser(user)
 
+        var list =  realm!!.getDataTimeAlarm()
+
+        for (index in list!!.indices) {
+
+            val model = list.get(index)
+            if (model.isSelected!!) {
+                SettingAlarm(model.listtime!!.toInt(), true)
+            }else{
+                SettingAlarm(model.listtime!!.toInt(), false)
+            }
+        }
+        Log.d("isLoginSuccessful","isLoginSuccessful1    "   +"  list   " +list)
+
+        realm!!.addUser(user)
          listProduct  = realm!!.getlistProduct()
 
 
         temp =0
         if (listProduct != null && !listProduct!!.isEmpty()) {
             Mylog.d("aaaaaaaaa temp at least:  "+temp)
+            // get image
             onDownload(listProduct!!.get(temp))
 
         }else{
+            // khong co du lieu
             hideProgress()
-            session!!.setLogin(true)
+            session.setLogin(true)
             startActivity(Intent(this@LoginActivity, AllInOneActivity::class.java))
             finish()
         }
@@ -349,25 +364,13 @@ fun getKeyHash(){
                                 percent = (temp.toFloat() / (listProduct!!.size.toFloat()) * 100f).toInt()
 
                                 showProgress("Sync data.. "+percent+ "%")
-
                                 onDownload(listProduct!!.get(temp))
                             }else{
                                 percent = (temp.toFloat() / (listProduct!!.size).toFloat() * 100f).toInt()
                                 showProgress("Sync data.. "+percent+ " completed!")
-                                session!!.setLogin(true)
+                                session.setLogin(true)
+                                hideProgress()
 
-                                var list =  realm!!.getDataTimeAlarm()
-
-                                for (index in list!!.indices) {
-
-                                    val model = list.get(index)
-                                    if (model.isSelected!!) {
-                                        SettingAlarm(model.listtime!!.toInt(), true)
-                                    }else{
-                                        SettingAlarm(model.listtime!!.toInt(), false)
-                                    }
-                                }
-                                Log.d("isLoginSuccessful","isLoginSuccessful1    "   +"  list   " +list)
                                 startActivity(Intent(this@LoginActivity, AllInOneActivity::class.java))
                                 finish()
                             }

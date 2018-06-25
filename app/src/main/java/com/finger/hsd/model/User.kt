@@ -15,6 +15,7 @@ open class User() : Parcelable, RealmObject() {
     var tokenfirebase: String? = null
     var setting : Setting?=Setting()
     var created_at: String? = null
+    var type_login : Int? = 0
     var facebook : String? = null
     var google : String? = null
     var listgroup : RealmList<Group>?=null

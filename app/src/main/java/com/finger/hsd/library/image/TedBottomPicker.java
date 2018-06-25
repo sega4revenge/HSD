@@ -514,6 +514,8 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d("aaaaaaaaa ", " resultCode: "+resultCode + " activity.Result: "
+                +Activity.RESULT_OK+" requestCode: "+requestCode);
         if (resultCode == Activity.RESULT_OK) {
 
 
@@ -567,6 +569,7 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
 
         if (temp == null) {
             errorMessage();
+            Log.d("select error", " temp uri = null" );
         }
 
         String realPath = RealPathUtil.getRealPath(getActivity(), temp);

@@ -57,7 +57,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
-import kotlinx.android.synthetic.main.activity_all_in_one.*
 import me.leolin.shortcutbadger.ShortcutBadger
 import org.json.JSONObject
 import java.io.File
@@ -141,7 +140,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
             }
 
         })
-        refresh()
+//        refresh()
 //        showProgress()
         edit_search?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -218,7 +217,9 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
                 BottomNavigationView.OnNavigationItemSelectedListener { item ->
                     when (item.itemId) {
                         R.id.item_home -> viewPager!!.setCurrentItem(0)
-                        R.id.item_notification -> viewPager!!.setCurrentItem(1)
+                        R.id.item_notification ->{
+                            viewPager!!.setCurrentItem(1)
+                        }
                         R.id.item_profile -> viewPager!!.setCurrentItem(2)
 
 
@@ -251,7 +252,10 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
         })
 
         setupViewPager(viewPager!!)
+        badgeIconScreen()
     }
+
+
 
     private fun setupViewPager(viewPager: ViewPager) {
         adapter = object : FragmentPagerAdapter(supportFragmentManager) {
@@ -327,24 +331,25 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
             1 ->{
                 session!!.setCountNotification(0)
                 badgeIconScreen()
+                formatBadgeNumber(session!!.getCountNotification())
             }
 
 
         }
   }
     fun badgeIconScreen() {
-        var badgeCount = 0
-
-        if (session!!.getCountNotification() > 0) {
-            try {
-                badgeCount = session!!.getCountNotification()
-            } catch (e: NumberFormatException) {
-                Mylog.d("badge Count screen: ", e.message!!)
-            }
-            ShortcutBadger.applyCount(applicationContext, badgeCount)
-        } else {
-            ShortcutBadger.removeCount(applicationContext)
-        }
+        var badgeCount = 10
+        ShortcutBadger.applyCount(applicationContext, badgeCount)
+//        if (session!!.getCountNotification() > 0) {
+//            try {
+////                badgeCount = session!!.getCountNotification()
+//            } catch (e: NumberFormatException) {
+//                Mylog.d("badge Count screen: ", e.message!!)
+//            }
+//            ShortcutBadger.applyCount(applicationContext, badgeCount)
+//        } else {
+//            ShortcutBadger.removeCount(applicationContext)
+//        }
 
     }
 

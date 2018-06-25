@@ -1,15 +1,12 @@
 package com.finger.hsd.fragment
 
 import android.Manifest
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.widget.SwipeRefreshLayout
@@ -32,7 +29,6 @@ import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.Result_Product
 import com.finger.hsd.util.*
-import kotlinx.android.synthetic.main.not_found_product.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -93,7 +89,7 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
         }
         mContext = activity!!
 
-        mView = inflater.inflate(R.layout.fragment_blank, container, false)
+        mView = inflater.inflate(R.layout.fragment_home, container, false)
         return mView
     }
      fun searchKey(key :String){
@@ -247,16 +243,16 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
             myRealm!!.deletelistnotificationfromserversucess(arrDelete)
         }
 
-//        val a = Intent()
-//
-//        a.action = AppIntent.ACTION_UPDATE_ITEM
-//
-//        var bundle = Bundle()
+        val a = Intent()
+
+        a.action = AppIntent.ACTION_UPDATE_ITEM
+
+        var bundle = Bundle()
 //        bundle.putParcelableArrayList("listProductDeleted", arr)
-//        bundle.putBoolean("deleteListProduct", true)
-//        a.putExtras(bundle)
-//
-//        activity!!.sendBroadcast(a)
+        bundle.putBoolean("addnotification", true)
+        a.putExtras(bundle)
+
+        activity!!.sendBroadcast(a)
 
 
     }
@@ -532,11 +528,12 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
 
     override fun onClickItem(product: Product_v, pos: Int) {
         val intent = Intent(activity, DetailProductActivity::class.java)
+//        val intent = Intent(activity, testImageActivity::class.java)
         intent.putExtra("position", pos)
         intent.putExtra("checkNotification", false)
         intent.putExtra("id_product", product._id)
         startActivity(intent)
-//        startActivity(Intent(activity, testImageActivity::class.java))
+
 
     }
 

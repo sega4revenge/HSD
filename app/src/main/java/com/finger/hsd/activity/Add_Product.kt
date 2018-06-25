@@ -228,7 +228,8 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
             }
             bt_post?.id ->{
                 bt_post?.visibility = View.GONE
-                showDialog()
+//                showDialog()
+                showProgress("Please wait...")
                 if(path.isNullOrEmpty() || edit_nameproduct?.text.isNullOrEmpty() || edit_ex?.text.isNullOrEmpty() || txtEX?.text.isNullOrEmpty() || barcodeIn?.isNullOrEmpty()!! || miliexDate == 0L){
                     Toast.makeText(this,"Nhập đầy đủ thông tin",Toast.LENGTH_LONG).show()
                     hideProgress()
@@ -329,6 +330,7 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
                      //   if(myRealm?.checkaddsuccess(mProduct._id)!!>0){
                      //        onupdateProduct(1)
                      //  }
+                     hideProgress()
                     }
 
 
@@ -408,9 +410,9 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
                     override fun onResourceReady(resource: Bitmap, transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {
 
                         try {
-                            val namePassive = product!!._id + "passive" + ".jpg"
-                            var rootFolder = File(filesDir.toString() + "/files")
-                            var myDir = File(rootFolder, namePassive)
+                            val namePassive = product._id + "passive" + ".jpg"
+                            val rootFolder = File(filesDir.toString() + "/files")
+                            val myDir = File(rootFolder, namePassive)
 
 
                             if (myDir.exists())
@@ -420,7 +422,7 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
 
                             resource.compress(Bitmap.CompressFormat.JPEG, 90, out3)
 
-                            product!!.imagechanged = Uri.fromFile(myDir).toString()
+                            product.imagechanged = Uri.fromFile(myDir).toString()
                             product.barcode = barcodeIn
                             product.isSyn = true
                             myRealm?.addProduct(product)

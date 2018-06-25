@@ -88,7 +88,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
     implementation 'com.facebook.android:facebook-android-sdk:4.5.0'
     implementation 'com.google.android.gms:play-services-auth:10.2.1'
-    implementation 'me.leolin:ShortcutBadger:1.1.21'
+    implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
     //implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
    // implementation 'me.dm7.barcodescanner:zxing:1.9.8'
     implementation 'com.android.support:multidex:1.0.3'

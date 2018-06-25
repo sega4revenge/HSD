@@ -14,6 +14,7 @@ import com.finger.hsd.fragment.NotificationFragment
 import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Notification
 import com.finger.hsd.model.Product_v
+import com.finger.hsd.util.Mylog
 import com.finger.hsd.util.TimeAgo
 import kotlinx.android.synthetic.main.item_notification.view.*
 import java.lang.Long
@@ -59,91 +60,113 @@ class NotificationAdapterKotlin(val mContext: Context, val listItem: ArrayList<N
             } else {
                 view.ln_item.setBackgroundColor(mContext.getResources().getColor(R.color.grey_dim))
             }
-            val product = realm.getProduct(items.id_product!!)
+            Mylog.d("aaaaaaa "+ " type: "+items.type)
             if (items.type == 0) {
-
-                view.tv_hsd.setVisibility(View.VISIBLE)
-                view.im_product_noti.setVisibility(View.VISIBLE)
-                view.tv_warning.setVisibility(View.VISIBLE)
-
-                Log.d("aaaaaaa ", "NotificationFragment: " + items.id_product!!)
-              //  Log.d("aaaaaaa ", "NotificationFragment: " + product.getNamechanged())
-
-                val expiredTime = product!!.expiretime
-
-
-
-                val date = Date(expiredTime)
-                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                val days = daysBetween(System.currentTimeMillis(), expiredTime)
-                val txtDaystatus = " " + days + " " + mContext.resources.getString(R.string.days_left)
-                if(items.status_expiry.equals("expired")){
-                    view.tv_warning.setBackgroundResource(R.drawable.roundedtext_red)
-                    view.tv_status.setBackgroundResource(R.drawable.roundedtext_red)
-                }else{
-                    view.tv_warning.setBackgroundResource(R.drawable.roundedtext_orange)
-                    view.tv_status.setBackgroundResource(R.drawable.roundedtext_orange)
-                }
-                view.tv_status.text = txtDaystatus
-                val txtExpiredTime = mContext.resources.getString(R.string.expiredtime_notifi) + dateFormat.format(date)
-                view.tv_hsd.setText(txtExpiredTime)
-                view.tv_name.text = product.namechanged!!.toString()
-                Log.d("aaaaaaa ", "NotificationFragment: " + product.imagechanged)
-                val options = RequestOptions()
-                        .centerCrop()
-                        .placeholder(R.mipmap.ic_launcher_round)
-                        .error(R.mipmap.ic_launcher_round)
-                        .priority(Priority.LOW)
-                Glide.with(mContext)
-                        .load(product.imagechanged)
-                        .apply(options)
-                        //                        .listener(new RequestListener<Drawable>() {
-                        //                            @Override
-                        //                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        //                               view.progressbarImage.setVisibility(View.GONE);
-                        //                                return false;
-                        //                            }
-                        //
-                        //                            @Override
-                        //                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        //                                view.progressbarImage.setVisibility(View.GONE);
-                        //                                return false;
-                        //                            }
-                        //                        })
-                        .into(view.im_product_noti)
-
-            } else if (items.type == 1) {
-//                view.tv_hsd.setVisibility(View.GONE)
-//                view.im_product_noti.setVisibility(View.GONE)
+                val product = realm.getProduct(items.id_product!!)
+                if(product !=null){
+                    view.tv_hsd.setVisibility(View.VISIBLE)
+                    view.im_product_noti.setVisibility(View.VISIBLE)
 //                view.tv_warning.setVisibility(View.GONE)
-//                //  view.progressbarImage.setVisibility(View.GONE);
-//                val txtDaystatus = mContext.resources.getString(R.string.status_count_product_1) + " " + items.countProductExprited + " " +
+                    view.progress_notification.visibility = View.VISIBLE
+                    view.img.visibility = View.VISIBLE
+
+
+                    Log.d("aaaaaaa ", "NotificationFragment: " + items.id_product!!)
+                    //  Log.d("aaaaaaa ", "NotificationFragment: " + product.getNamechanged())
+
+                    val expiredTime = product!!.expiretime
+
+
+                    val date = Date(expiredTime)
+                    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
+                    val days = daysBetween(System.currentTimeMillis(), expiredTime)
+
+
+                    val txtDaystatus = " " + days + " " + mContext.resources.getString(R.string.days_left)
+                    if (items.status_expiry.equals("expired")) {
+//                    view.tv_warning.setBackgroundResource(R.drawable.roundedtext_red)
+                        view.tv_status.setBackgroundResource(R.drawable.roundedtext_red)
+                    } else {
+//                    view.tv_warning.setBackgroundResource(R.drawable.roundedtext_orange)
+                        view.tv_status.setBackgroundResource(R.drawable.roundedtext_orange)
+                    }
+                    view.tv_status.text = txtDaystatus
+                    val txtExpiredTime = mContext.resources.getString(R.string.expiredtime_notifi) + dateFormat.format(date)
+                    view.tv_hsd.setText(txtExpiredTime)
+                    view.tv_name.text = product.namechanged!!.toString()
+                    Mylog.d("aaaaaaa " + " type: " + items.type + "NotificationFragment: " + product.imagechanged)
+                    val options = RequestOptions()
+                            .centerCrop()
+                            .placeholder(R.drawable.photo_unvailable)
+                            .error(R.drawable.photo_unvailable)
+                            .priority(Priority.LOW)
+                    Glide.with(mContext)
+                            .load(product.imagechanged)
+                            .apply(options)
+                            //                        .listener(new RequestListener<Drawable>() {
+                            //                            @Override
+                            //                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            //                               view.progressbarImage.setVisibility(View.GONE);
+                            //                                return false;
+                            //                            }
+                            //
+                            //                            @Override
+                            //                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            //                                view.progressbarImage.setVisibility(View.GONE);
+                            //                                return false;
+                            //                            }
+                            //                        })
+                            .into(view.im_product_noti)
+                    view.ln_item.setOnClickListener(View.OnClickListener {
+                        mNotificationListener.onBadgeUpdate(realm.countNotification() - 1)
+
+                        view.ln_item.setBackgroundColor(mContext.resources.getColor(R.color.white))
+
+                        itemClick.onItemClick(position, product)
+                    })
+                }else{
+                    Mylog.d("aaaaaaaaaa type = 0")
+                    view.tv_hsd.setVisibility(View.GONE)
+                    view.im_product_noti.setVisibility(View.GONE)
+                    view.tv_warning.setVisibility(View.GONE)
+                    view.tv_status.text = "Sản phẩm đã bị xóa"
+                    view.progress_notification.visibility = View.GONE
+                    view.img.visibility = View.GONE
+                }
+
+            } else if (items.type == 3) {
+                Mylog.d("aaaaaaaaaa type = 3")
+                view.tv_hsd.setVisibility(View.GONE)
+                view.im_product_noti.setVisibility(View.GONE)
+                view.tv_warning.setVisibility(View.GONE)
+                view.tv_status.text = mContext.resources.getString(R.string.wellcome_hsd)
+                view.progress_notification.visibility = View.GONE
+                view.img.visibility = View.VISIBLE
+
+                //  view.progressbarImage.setVisibility(View.GONE);
+//                val txtDaystatus = mContext.resources.getString(R.string.status_count_product_1) +
 //                        mContext.resources.getString(R.string.status_count_product_2)
 //                view.tv_status.setText(txtDaystatus)
             }
 
-            view.ln_item.setOnClickListener(View.OnClickListener {
-                mNotificationListener.onBadgeUpdate(realm.countNotification() - 1)
-
-                view.ln_item.setBackgroundColor(mContext.resources.getColor(R.color.white))
-
-                itemClick.onItemClick(position, product!!)
-            })
 
             view.tv_time.setText(timeAgo.getTimeAgo(Date(Long.parseLong(items.create_at)), mContext))
 
         }
 
-        fun daysBetween(startDate: kotlin.Long, endDate: kotlin.Long): Int {
+        fun daysBetween(currentDay: kotlin.Long, expiredTime: kotlin.Long): Int {
 
+            // ngayf hien tai
             val calendarStart = Calendar.getInstance()
-            calendarStart.timeInMillis = startDate
+            calendarStart.timeInMillis = currentDay
             calendarStart.set(Calendar.HOUR_OF_DAY, 0)
             calendarStart.set(Calendar.MINUTE, 0)
             calendarStart.set(Calendar.SECOND, 0)
             calendarStart.set(Calendar.MILLISECOND, 0)
+            // ngay han su dung
             val calendarEnd = Calendar.getInstance()
-            calendarStart.timeInMillis = endDate
+            calendarEnd.timeInMillis = expiredTime
             calendarEnd.set(Calendar.HOUR_OF_DAY, 0)
             calendarEnd.set(Calendar.MINUTE, 0)
             calendarEnd.set(Calendar.SECOND, 0)

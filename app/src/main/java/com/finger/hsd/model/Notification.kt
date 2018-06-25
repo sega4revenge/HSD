@@ -6,9 +6,10 @@ import java.io.Serializable
 
 open class Notification : RealmObject() , Serializable{
     @PrimaryKey
-    var _id : String?=null
-    var idinvite : Invite? = null
     var id_product    : String? = null
+//    var _id : String?=null
+    var idinvite : Invite? = null
+
     var status_expiry : String?  = "warning" // trạng thái thông báo : warning !! expired
     var idgeneral : General?=null
     var type : Int?= 0

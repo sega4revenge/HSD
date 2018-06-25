@@ -201,7 +201,7 @@ class RealmAlarmController (application: Context) {
         result.load()
         var output = ""
         for (alarm in result) {
-            output += alarm.toString()
+            output += alarm.toString() + " \n "
             Log.d("view_notification ", "data Realm  ===========  " + output + " \n ")
         }
         return result

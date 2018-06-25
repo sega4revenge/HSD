@@ -194,7 +194,7 @@ public class NotificationAdapter extends RecyclerView.Adapter {
                 public void onClick(View v) {
                     mNotificationListener.onBadgeUpdate(realm.countNotification());
                     information.setWatched(true);
-                    realm.updateNotification(information.get_id());
+                    realm.updateNotification(information.getId_product());
                     myHolder.clickitemlayout.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 
                 }

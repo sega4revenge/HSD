@@ -15,6 +15,7 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.finger.hsd.AllInOneActivity
 import com.finger.hsd.R
+import com.finger.hsd.R.string.product_expiry
 import com.finger.hsd.activity.HorizontalNtbActivity
 import com.finger.hsd.manager.RealmAlarmController
 import com.finger.hsd.manager.SessionManager
@@ -61,7 +62,8 @@ class NotificationPlayingService : Service() {
         var product_expiry : String? = ""
         var product_warring : String? = ""
 
-        Log.d("NoPlayingService " ," 000 " + "countExpiry == " + countExpiry + "  countWarnings == " + countWarnings )
+        Log.d("NotificationService " ," 000 " + "countExpiry == " + countExpiry + "  countWarnings == " + countWarnings)
+
 
         for (index in  product_v.indices){
             val now = Calendar.getInstance()
@@ -70,7 +72,9 @@ class NotificationPlayingService : Service() {
             now.set(Calendar.SECOND, 0)
             var countAddNotification  = 0
             day = ((product_v[index].expiretime - now.timeInMillis  )/milDay).toInt()
-            Log.d("qqqqqqqqqqqqq" ," day " + day)
+            Log.d("NotificationService" ," day ======  " + day)
+            Log.d("NotificationService " ," product  == " +(product_v[index]._id ))
+
             var id_notification : String?= null
 
             if(day <= 0 && day > -3){
@@ -81,23 +85,33 @@ class NotificationPlayingService : Service() {
                 // lay name san pham
                 product_expiry += product_v[index].namechanged.toString()
                 // check san pham da từng thông báo
-                for (dex in notification_v.indices){
-                    if(product_v[index]._id === notification_v[dex].id_product){
-                        countAddNotification=0
-                        id_notification = notification_v[dex]._id // neu da ton tai thong bao truoc do - > lay _id notification update
 
-                    } else{
+                Log.d("NotificationService " ,"warring notification_v.size -===  == " +notification_v.size)
+                id_notification = product_v[index]._id
+//                for (dex in notification_v.indices){
+//
+//                    Log.d("NotificationService " ," for-===  == " +(product_v[index]._id ) + "  <  --------- > "+ notification_v[dex]._id)
+//                    if(product_v[index]._id === notification_v[dex].id_product){
+//
+//                        countAddNotification=0
+//                        id_notification = notification_v[dex]._id // neu da ton tai thong bao truoc do - > lay _id notification update
+//                        Log.d("NotificationService " ," check id product == id notification da ton tai  == " +(product_v[index]._id ) + "  <  --------- > "+ notification_v[dex]._id)
+//                    } else{
+//
+//                        Log.d("NotificationService " ," check id product != id notification khong ton tai  == " +(product_v[index]._id ) + "  <  --------- > "+ notification_v[dex]._id)
+//
+//                        countAddNotification ++
+//                        id_notification = product_v[index]._id //create _id notification new
+//
+//                    }
+//
+//                }
 
-                        countAddNotification ++
-                        id_notification = product_v[index]._id //create _id notification new
-                    }
-                }
-
-                Log.d("rrrrrrrrrrrrrrr" ," Expiry id_notification "+id_notification)
+                Log.d("NotificationService" ," Expiry id_notification " + id_notification)
                 // sản phẩm chưa được add
 //                if(countAddNotification > 0 ){
                     var notification_new = Notification()
-                    notification_new._id = id_notification
+//                    notification_new._id = id_notification
                     notification_new.idinvite = null
                     notification_new.id_product = product_v[index]._id
                     notification_new.status_expiry = "expired"
@@ -122,60 +136,69 @@ class NotificationPlayingService : Service() {
                     Mylog.d("aaaaaaaaaaaaa "+notification_new)
                     notification_new.isSync = false
                     realms!!.addInTableNotification(notification_new)
-//                    }
-                }
+                    }
+//                }
 
 
-            }else if(day <= product_v[index].daybefore && day > 0){
+            }else if(day <= product_v[index].daybefore && day > 0) {
+
                 countWarnings++
                 if (!product_warring.equals("")) {
                     product_warring += ", "
                 }
 
                 product_warring += product_v[index].namechanged.toString()
+                Log.d("NotificationService " ," notification_v.size -===  == " +notification_v.size)
+                id_notification = product_v[index]._id
+//                for (dex in notification_v.indices) {
+////                    Log.d("NotificationService " ," for-===  == " +(product_v[index]._id ) + "  <  --------- > "+ notification_v[dex]._id)
+//
+//                    if (product_v[index]._id == notification_v[dex].id_product) {
+//                        countAddNotification = 0
+////                        id_notification = notification_v[dex]._id
+//                        Log.d("NotificationService ", " check id product == id notification da ton tai  warring== " + (product_v[index]._id) + "  <  --------- > " + notification_v[dex]._id)
+//                    } else {
+//                        id_notification = product_v[index]._id
+//                        countAddNotification++
+//                        Log.d("NotificationService ", " check id product != id notification khong ton tai warring == " + (product_v[index]._id) + "  <  --------- > " + notification_v[dex]._id)
+//                    }
+//
+//
+//                }
 
-                for (dex in notification_v.indices){
-                    if(product_v[index]._id == notification_v[dex].id_product){
-                        countAddNotification = 0
-                        id_notification = notification_v[dex]._id
-                    }else{
-                        id_notification = product_v[index]._id
-                        countAddNotification++
-                    }
-                }
-                Log.d("rrrrrrrr" ," warring id_notification "+id_notification)
+                Log.d("NotificationService", " warring id_notification " + id_notification)
 
 //                if(countAddNotification > 0){
-
-                    var notification_new = Notification()
-                    notification_new._id = id_notification
-                    notification_new.idinvite = null
+                var notification_new = Notification()
                     notification_new.id_product = product_v[index]._id
-                    notification_new.status_expiry = "warning"
-                    notification_new.idgeneral = null
-                    notification_new.type = 0
-                    notification_new.create_at = now.timeInMillis.toString()
-                    notification_new.watched = false
-                    notification_new.isSync = false
-                        realms!!.addInTableNotification(notification_new)
-                        realms!!.view_to_dataNotification()
+//                notification_new._id = id_notification
+                notification_new.idinvite = null
+                notification_new.status_expiry = "warning"
+                notification_new.idgeneral = null
+                notification_new.type = 0
+                notification_new.create_at = now.timeInMillis.toString()
+                notification_new.watched = false
+                notification_new.isSync = false
+                realms!!.addInTableNotification(notification_new)
+                realms!!.view_to_dataNotification()
 
-                    var intent = Intent()
-                    var bundle = Bundle()
-                    intent.action = AppIntent.ACTION_UPDATE_ITEM
+                var intent = Intent()
+                var bundle = Bundle()
+                intent.action = AppIntent.ACTION_UPDATE_ITEM
 //                    bundle.putSerializable("notificationModel", notification_new)
-                    bundle.putBoolean("addnotification", true)
-                    intent.putExtras(bundle)
-                    sendBroadcast(intent)
+                bundle.putBoolean("addnotification", true)
+                intent.putExtras(bundle)
+                sendBroadcast(intent)
 
-                    // the second update notification to server
+                // the second update notification to server
                 if (ConnectivityChangeReceiver.isConnected()) {
                     updateNotficationOnServer(notification_new)
-                }else{
+                } else {
                     notification_new.isSync = false
                     realms!!.addInTableNotification(notification_new)
 
-                }
+//                }
+            }
 
             }
             // ============= end else =====================

@@ -200,7 +200,6 @@ class RealmController(application: Context) {
     fun addProductWithNonImage(product: Product_v,mupdateData: updateData,context: Context){
         var productOld =  getProductWithBarcode(product?.barcode!!)
         if(productOld != null){
-            product.imagechanged = productOld.imagechanged
             realm?.beginTransaction()
             realm?.copyToRealmOrUpdate(product)
             realm?.commitTransaction()
@@ -213,7 +212,7 @@ class RealmController(application: Context) {
             var path2 = File.separator+ "IMG_" + timeStamp +"_"+ product?.barcode + ".jpg"
 
             AndroidNetworking.initialize(context, MyApplication.okhttpclient())
-            AndroidNetworking.download(Constants.IMAGE_URL+product.imagechanged,mediaStorageDir.path,path2).build().startDownload(object: com.androidnetworking.interfaces.DownloadListener{
+            AndroidNetworking.download(product.imagechanged,mediaStorageDir.path,path2).build().startDownload(object: com.androidnetworking.interfaces.DownloadListener{
                 override fun onDownloadComplete() {
                     product.imagechanged = mediaStorageDir.path+path2
                     product.barcode = product.producttype_id!!.barcode
@@ -223,14 +222,12 @@ class RealmController(application: Context) {
                     mupdateData.onupdateProduct(1, product)
                 }
                 override fun onError(anError: ANError?) {
-                    //  product.isSyn = false
-                    //  product.imagechanged = ""
                     product.barcode = product.producttype_id!!.barcode
                     realm?.beginTransaction()
                     realm?.copyToRealmOrUpdate(product)
                     realm?.commitTransaction()
                     mupdateData.onupdateProduct(0,product)
-                    Log.d("REALMCONTROLLER",anError?.errorDetail+"//ERROR"+anError?.errorBody+"//"+product.imagechanged)
+                    Log.d("REALMCONTROLLER",anError?.message+"//ERROR"+anError?.errorBody+"//"+product.imagechanged)
                 }
             })
         }
@@ -518,7 +515,7 @@ class RealmController(application: Context) {
     fun getProduct(id: String): Product_v? {
         return realm.where(Product_v::class.java).equalTo("_id", id).findFirst()
     }
-
+//  sort("create_at", Sort.DESCENDING)
     fun getProductWithBarcode(barcode: String): Product_v? {
         return realm.where(Product_v::class.java).equalTo("barcode", barcode).findFirst()
     }

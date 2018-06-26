@@ -450,23 +450,7 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
             val stringToday = sdf.format(Date())
             val exToday = sdf.parse(stringToday)
             var miliexToday: Long = exToday.getTime()
-//            var check_hethan = false
-//
-//            for (i in listProduct!!) {
-//                if (st.indexOf(getDate(i.expiretime, "dd/MM/yyyy")) > 0) {
-//                } else {
-//                    if (miliexToday < i.expiretime) {
-//                        st = st + " " + getDate(i.expiretime, "dd/MM/yyyy")
-//                        mCount++
-//                    } else {
-//                        if (!check_hethan) {
-//                            st = st + " " + getDate(i.expiretime, "dd/MM/yyyy")
-//                            check_hethan = true
-//                            mCount++
-//                        }
-//                    }
-//                }
-//            }
+
             listProduct?.sortWith(Comparator(fun(a: Product_v, b: Product_v): Int {
                 if (a.expiretime < b.expiretime)
                     return -1

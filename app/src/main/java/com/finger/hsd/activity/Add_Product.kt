@@ -248,12 +248,14 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
                             override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
                                 if(response?.isSuccessful!!){
                                     if(response?.code()==200){
+                                        hideProgress()
+                                        response?.body().product.imagechanged = path
                                         response?.body().product.barcode = barcodeIn
                                         response?.body().product.isSyn = true
                                         myRealm?.addProductWithNonImage(response?.body().product,this@Add_Product,this@Add_Product)
                                     }
                                 }else{
-                                  hideProgress()
+                                    hideProgress()
                                     bt_post?.visibility = View.VISIBLE
                                     Toast.makeText(this@Add_Product,"Error! Code:"+response?.code()+"\n message:"+response?.message(),Toast.LENGTH_SHORT).show()
                                 }

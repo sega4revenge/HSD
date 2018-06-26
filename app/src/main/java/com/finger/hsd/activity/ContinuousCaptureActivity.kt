@@ -148,14 +148,18 @@ class ContinuousCaptureActivity : Activity() {
 
             override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
                 if(response?.isSuccessful!!){
-                    Log.d("ContinuousCapt", "FAILLLLLL"+response?.code())
                     if(response?.code()==200){
+                        var dataOffline = mRealm?.getProductWithBarcode(barcode)
                         val mProduct = response.body().productType
                         val i = Intent(this@ContinuousCaptureActivity,Add_Product::class.java)
                         i.putExtra("type",3)
                         i.putExtra("barcode",mProduct.barcode.toString())
                         i.putExtra("name",mProduct.name.toString())
-                        i.putExtra("image", Constants.IMAGE_URL+mProduct.image.toString())
+                        if(dataOffline!=null){
+                            i.putExtra("image",dataOffline.imagechanged.toString())
+                        }else{
+                            i.putExtra("image", Constants.IMAGE_URL+mProduct.image.toString())
+                        }
                         i.putExtra("checkProduct",mProduct.check_product)
                         startActivity(i)
                     }

@@ -8,17 +8,6 @@ import io.realm.annotations.PrimaryKey
 
 open class Product_v : RealmObject, Parcelable {
 
-    override fun writeToParcel(p0: Parcel?, p1: Int) {
-        p0!!.writeString(_id)
-
-    }
-
-    override fun describeContents(): Int {
-        return 0;
-    }
-
-
-
     @PrimaryKey
    public  var _id: String?= null
     public var namechanged: String?= null
@@ -27,12 +16,10 @@ open class Product_v : RealmObject, Parcelable {
     public var producttype_id: ProductType_v?= null
     public var description: String? = null
     public  var imagechanged: String? = null
-    //    private String imagepassed;
     public  var delete: Boolean = false
     public  var isNewImage = false
     public  var daybefore: Int = 0
-    public var isChecksync = true
-    public var create_at: Long? = null
+    public var createtime: Long? = null // ngày tạo product
     public var isSyn = true
 
     constructor() {
@@ -64,17 +51,14 @@ open class Product_v : RealmObject, Parcelable {
         readFromParcel(p0)
     }
 
-//    val CREATOR: Parcelable.Creator<Product_v> = object : Parcelable.Creator<Product_v> {
-//        override fun createFromParcel(p0: Parcel?): Product_v {
-//            return Product_v(p0!!)
-//        }
-//
-//        override fun newArray(p0: Int): Array<Product_v?> {
-//            return arrayOfNulls<Product_v>(p0)
-//        }
-//
-//
-//    }
+    override fun writeToParcel(p0: Parcel?, p1: Int) {
+        p0!!.writeString(_id)
+
+    }
+
+    override fun describeContents(): Int {
+        return 0;
+    }
 
     fun readFromParcel(p0: Parcel) {
         this._id  = p0.readString()

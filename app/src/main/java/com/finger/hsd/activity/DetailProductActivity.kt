@@ -179,23 +179,9 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
                 } else if (selectedUri != null) {
                     Mylog.d("ttttttttt updateImage sau if(name!,name!..so on): "+selectedUri)
-                    var file = File(getRealFilePath(this, selectedUri!!))
-//                    realm!!.realm.executeTransaction(Realm.Transaction {
-//                        product!!.imagechanged = selectedUri.toString()
-//                    })
+                    val file = File(getRealFilePath(this, selectedUri!!))
 
                     showProgress()
-//                    val imageConvertToUri = Uri.parse(product!!.imagechanged)
-//                    val fdelete = File(imageConvertToUri.path)
-//                    if (fdelete.exists()) {
-//                        if (fdelete.delete()) {
-//                           Mylog.d("aaaaaaa file Deleted :")
-//                        } else {
-//                           Mylog.d("aaaaaaa file not Deleted :")
-//                        }
-//                    }else{
-//                        Mylog.d("aaaaaaaa Don't Find File!! "+fdelete.absoluteFile+"//"+fdelete.exists())
-//                    }
 
                     GlideApp.with(this)
                             .asBitmap()
@@ -215,7 +201,6 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                                     try {
 
                                         val namePassive = Uri.parse(product!!.imagechanged)
-//                                        val namePassive = product!!.imagechanged
 
                                         var myDir = File(namePassive.path)
 
@@ -238,6 +223,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                                         //changeProduct!!.imagechanged = Uri.fromFile(myDir).toString()
                                         realm!!.realm.executeTransaction(Realm.Transaction {
                                             product!!.imagechanged = Uri.fromFile(myD).toString()
+                                            product!!.isNewImage = true
                                             Mylog.d("aaaaaaaaaa image after: " + Uri.fromFile(myD).toString())
 
                                         })
@@ -284,9 +270,11 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         /*
           * update to realm*/
         // val changeProduct = product
-        if (( !note.equals(noteChange)) || (!name.equals(nameChange))
+        Mylog.d("iiiiiiiii notechange: "+noteChange +" description: "+note )
+        if ((!note.equals(noteChange)) || (!name.equals(nameChange))
                 || (expiredTimeChange != null && !expiredTime.equals(expiredTimeChange))) {
 
+            Mylog.d("iiiiiiiii trong if: " )
             if (expiredTimeChange != null && !expiredTime.equals(expiredTimeChange)) {
                 //  changeProduct!!.expiretime = expiredTimeChange!!.toLong()
                 realm!!.realm.executeTransaction(Realm.Transaction {
@@ -304,6 +292,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
             }
             if ( !name.equals(nameChange)) {
+                Mylog.d("iiiiiiiii nameChange: "+nameChange )
                 //changeProduct!!.namechanged = nameChange
                 realm!!.realm.executeTransaction(Realm.Transaction {
                     product!!.namechanged = nameChange
@@ -312,6 +301,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
             }
             if (!noteChange.equals(note)) {
+                Mylog.d("iiiiiiiii noteChange: "+noteChange )
                 //changeProduct!!.description = noteChange
                 realm!!.realm.executeTransaction(Realm.Transaction {
                     product!!.description = noteChange
@@ -320,6 +310,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
             }
 
             if (expiredTimeChange != null && !expiredTime.equals(expiredTimeChange)) {
+                Mylog.d("iiiiiiiii expiredTimeChange: "+expiredTimeChange )
                 realm!!.realm.executeTransaction(Realm.Transaction {
                     product!!.expiretime = expiredTimeChange!!.toLong()
                 })
@@ -363,6 +354,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                                     //changeProduct!!.imagechanged = Uri.fromFile(myDir).toString()
                                     realm!!.realm.executeTransaction(Realm.Transaction {
                                         product!!.imagechanged = Uri.fromFile(myD).toString()
+                                        product!!.isNewImage = true
                                         Mylog.d("aaaaaaaaaa image after: " + Uri.fromFile(myD).toString())
 
                                     })
@@ -421,6 +413,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                                 //changeProduct!!.imagechanged = Uri.fromFile(myDir).toString()
                                 realm!!.realm.executeTransaction(Realm.Transaction {
                                     product!!.imagechanged = Uri.fromFile(myD).toString()
+                                    product!!.isNewImage = true
                                     Mylog.d("aaaaaaaaaa image after: " + Uri.fromFile(myD).toString())
 
                                 })
@@ -458,6 +451,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                 product!!.namechanged = nameChanged
                 product!!.description = description
                 product!!.expiretime = dateChange!!
+                product!!.isNewImage = false
                 product!!.isSyn = isSync
             })
 
@@ -527,6 +521,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                 .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions " +
                         "at [Setting] > [Permission]")
                 .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+
                 .check()
 
     }
@@ -1119,6 +1114,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                     override fun onError(e: Throwable) {
                         if (e is ANError) {
                             Mylog.d(e.message!!)
+
                         }
                     }
 
@@ -1132,6 +1128,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
                     override fun onNext(response: Response) {
                         var productImage = response.product
+
 
 
                         putIntenDataBack(true, productImage!!.namechanged, productImage.description, productImage.expiretime)

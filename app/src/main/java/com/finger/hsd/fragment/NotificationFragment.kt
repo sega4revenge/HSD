@@ -251,7 +251,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
         // startActivityForResult(intent, AppIntent.REQUEST_NOTIFICATION)
         var notification = realm!!.getOneNotification(product._id!!)
         if (ConnectivityChangeReceiver.isConnected()) {
-            updateNotficationOnServer(notification!!, 1)
+            updateNotficationOnServer(notification!!, 2)
         } else {
             realm!!.realm.executeTransaction(Realm.Transaction {
                 notification!!.isSync = false

@@ -88,6 +88,7 @@ class DetailProductPresenter : getObservable{
 
     // update sản phẩm
     fun processInfomationUpdate(idProduct : String, name: String?, expiredtime : String?, description: String?){
+        Mylog.d("iiiiiiiii "+description)
         try {
             jsonObject.put("id_product", idProduct)
             jsonObject.put("nameproduct", name)

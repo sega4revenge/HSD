@@ -259,9 +259,9 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
 
     private fun setupViewPager(viewPager: ViewPager) {
         adapter = object : FragmentPagerAdapter(supportFragmentManager) {
-            override fun getItemPosition(`object`: Any): Int {
-                if (`object` is Home_Fragment) {
-                    `object`.searchKey(searchkey)
+            override fun getItemPosition(item: Any): Int {
+                if (item is Home_Fragment) {
+                    item.searchKey(searchkey)
                 }
                 return PagerAdapter.POSITION_UNCHANGED
             }
@@ -312,14 +312,15 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
         mBadgeView!!.text = formatBadgeNumber(realm!!.countNotification())
     }
     fun formatBadgeNumber(value: Int): String? {
+        Mylog.d("aaaaaaaaaaa formatbadgeNumber: "+value)
+
         if (value <= 0) {
             return null
         }
-
-        return if (value < 100) {
+        if (value < 100) {
             // equivalent to String#valueOf(int);
-            Integer.toString(value)
-        } else "99+"
+            return Integer.toString(value)
+        } else return "99+"
 
         // my own policy
     }
@@ -329,6 +330,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
         when (postion) {
 
             1 ->{
+                Mylog.d("aaaaaaaaaaa da chay menuvisible: ")
                 session!!.setCountNotification(0)
                 badgeIconScreen()
                 formatBadgeNumber(session!!.getCountNotification())
@@ -338,18 +340,18 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
         }
   }
     fun badgeIconScreen() {
-        var badgeCount = 10
-        ShortcutBadger.applyCount(applicationContext, badgeCount)
-//        if (session!!.getCountNotification() > 0) {
-//            try {
-////                badgeCount = session!!.getCountNotification()
-//            } catch (e: NumberFormatException) {
-//                Mylog.d("badge Count screen: ", e.message!!)
-//            }
-//            ShortcutBadger.applyCount(applicationContext, badgeCount)
-//        } else {
-//            ShortcutBadger.removeCount(applicationContext)
-//        }
+        var badgeCount = session!!.getCountNotification()
+//        ShortcutBadger.applyCount(applicationContext, badgeCount)
+        if (session!!.getCountNotification() > 0) {
+            try {
+//                badgeCount = session!!.getCountNotification()
+            } catch (e: NumberFormatException) {
+                Mylog.d("badge Count screen: ", e.message!!)
+            }
+            ShortcutBadger.applyCount(applicationContext, badgeCount)
+        } else {
+            ShortcutBadger.removeCount(applicationContext)
+        }
 
     }
 
@@ -458,8 +460,8 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
             // update product success
             var idProduct = listProduct!![temp]._id!!
             if (listProduct!![temp].isNewImage){
-
-                var file = File( listProduct!![temp].imagechanged!!)
+                var uri = Uri.parse(listProduct!![temp].imagechanged!!)
+                var file = File(uri.path)
                 UploadImage(idProduct, file)
 
             }else{
@@ -523,6 +525,11 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
                     }
 
                     override fun onNext(response: Response) {
+                        var product = realm!!.getProduct(idProduct)
+                        realm!!.realm.executeTransaction(Realm.Transaction {
+                            product!!.isSyn = true
+                            product!!.isNewImage = false
+                        })
                         temp++
                         syncProduct()
                     }
@@ -560,8 +567,8 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
     }
     fun refresh() {
         /* Attach a rotating ImageView to the refresh item as an ActionView */
-
         Mylog.d("yyyyyyyy load chưa")
+        sync?.setImageDrawable(resources.getDrawable(R.drawable.ic_sync_ing))
         val rotation = AnimationUtils.loadAnimation(this, R.anim.sync_animation)
         rotation.repeatCount = Animation.INFINITE
         sync?.startAnimation(rotation)

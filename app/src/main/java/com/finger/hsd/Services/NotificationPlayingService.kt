@@ -15,7 +15,6 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.finger.hsd.AllInOneActivity
 import com.finger.hsd.R
-import com.finger.hsd.R.string.product_expiry
 import com.finger.hsd.activity.HorizontalNtbActivity
 import com.finger.hsd.manager.RealmAlarmController
 import com.finger.hsd.manager.SessionManager
@@ -272,7 +271,7 @@ class NotificationPlayingService : Service() {
         val pIntent = PendingIntent.getActivity(this, 99 , intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val builder = NotificationCompat.Builder(this)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             builder
                     .setAutoCancel(true)
                     .setContentTitle(title)
@@ -281,6 +280,7 @@ class NotificationPlayingService : Service() {
                             .setBigContentTitle(title)
                             .setSummaryText("Han Su Dung")
                             .bigText(content))
+
                     .setColor(resources.getColor(R.color.colorPrimary))
                     .setSmallIcon(R.drawable.ic_notification)
                     .setContentIntent(pIntent)

@@ -1,7 +1,6 @@
 package com.finger.hsd
 
 import android.Manifest
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -9,7 +8,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.provider.MediaStore
 import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
@@ -384,17 +382,15 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
     override fun onNetworkConnectionChanged(isConnected: Boolean) {
 
         if (isConnected) {
-            if(!session!!.isSync()) {
                 Mylog.d("yyyyyyyy chạy đồng bộ chưa:?? rồi")
                 refresh()
-                session!!.setIsSync(true)
+
                 listProduct = realm!!.getListProductNotSync()
                 user = realm!!.getUser()
                 temp = 0
                 indexNotification = 0
                 syncProduct()
 
-            }
 
         } else {
             Mylog.d("yyyyyyyyyy chạy đồng bộ chưa:?? chưa")
@@ -426,7 +422,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
             }
         }else{
             completeRefresh()
-            session!!.setIsSync(false)
+
 
         }
     }
@@ -434,38 +430,36 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
     override fun onSucess(response: JSONObject, type: Int) {
         if(type == 111){
             // delete product success
-            var idProduct = listProduct!![temp]._id!!
-            var item = realm!!.getProduct(idProduct)
-            if (item!!.imagechanged !=null) {
-                val fdelete = File(item.imagechanged)
-                if (fdelete.exists()) {
-                    if (fdelete.delete()) {
-                        System.out.println("file Deleted :")
-                    } else {
-                        System.out.println("file not Deleted :")
+            if(temp < listProduct!!.size) {
+                val idProduct = listProduct!![temp]._id!!
+                val item = realm!!.getProduct(idProduct)
+                if (item!!.imagechanged != null) {
+                    val fdelete = File(item.imagechanged)
+                    if (fdelete.exists()) {
+                        if (fdelete.delete()) {
+                            System.out.println("file Deleted :")
+                        } else {
+                            System.out.println("file not Deleted :")
+                        }
                     }
                 }
-            }
-            realm!!.deleteProduct(idProduct)
-            realm!!.deleteNotification(idProduct)
-            var product = realm!!.getProduct(idProduct)
-            realm!!.realm.executeTransaction(Realm.Transaction {
-                product!!.isSyn = true
-            })
+                realm!!.deleteProduct(idProduct)
+                realm!!.deleteNotification(idProduct)
 
+            }
             temp++
             syncProduct()
 
         }else if(type == 222){
             // update product success
-            var idProduct = listProduct!![temp]._id!!
+            val idProduct = listProduct!![temp]._id!!
             if (listProduct!![temp].isNewImage){
-                var uri = Uri.parse(listProduct!![temp].imagechanged!!)
-                var file = File(uri.path)
+                val uri = Uri.parse(listProduct!![temp].imagechanged!!)
+                val file = File(uri.path)
                 UploadImage(idProduct, file)
 
             }else{
-                var product = realm!!.getProduct(idProduct)
+                val product = realm!!.getProduct(idProduct)
                 realm!!.realm.executeTransaction(Realm.Transaction {
                     product!!.isSyn = true
                 })
@@ -473,7 +467,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
                 syncProduct()
             }
         }else if (type == 333){
-            var  notification = listNotification!![indexNotification]
+            val  notification = listNotification!![indexNotification]
             realm!!.realm.executeTransaction(Realm.Transaction {
                 notification.isSync = true
                 notification.watched = false
@@ -485,20 +479,23 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
     }
 
     override fun onError(typeError: Int) {
+        Mylog.d("tttttttt lỗi rồi" +typeError)
         completeRefresh()
         if(typeError == 111){
             // delete product fail
-            session!!.setIsSync(false)
+
         }else if(typeError == 222){
             // update product fail
-            session!!.setIsSync(false)
+
         }else if(typeError== 333){
             // update notification fail
-           session!!.setIsSync(false)
+
         }
     }
 
     fun UploadImage(idProduct: String, file: File?) {
+
+
 
         Rx2AndroidNetworking.upload(Constants.URL_UPDATE_IMAGE)
                 .addMultipartParameter("id_product", idProduct)
@@ -512,7 +509,14 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
 
                     override fun onError(e: Throwable) {
                         if (e is ANError) {
-                            Mylog.d(e.message!!)
+                            Mylog.d("yyyyyyy uploadimageErr "+e.message!!)
+                            val product = realm!!.getProduct(idProduct)
+                            realm!!.realm.executeTransaction(Realm.Transaction {
+                                product!!.isSyn = false
+                                product.isNewImage = true
+                            })
+                            temp++
+                            syncProduct()
                         }
                     }
 
@@ -525,37 +529,16 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
                     }
 
                     override fun onNext(response: Response) {
-                        var product = realm!!.getProduct(idProduct)
+                        Mylog.d("yyyyyyy uploadimageSuccess ")
+                        val product = realm!!.getProduct(idProduct)
                         realm!!.realm.executeTransaction(Realm.Transaction {
                             product!!.isSyn = true
-                            product!!.isNewImage = false
+                            product.isNewImage = false
                         })
                         temp++
                         syncProduct()
                     }
                 })
-    }
-    fun getRealFilePath(context: Context, uri: Uri): String? {
-        if (null == uri) return null
-        val scheme: String = uri.scheme
-        var data: String? = null
-        if (scheme == null) {
-            data = uri.path
-        } else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
-            data = uri.path
-        } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
-            val cursor = context.getContentResolver().query(uri, arrayOf(MediaStore.Images.ImageColumns.DATA), null, null, null)
-            if (null != cursor) {
-                if (cursor.moveToFirst()) {
-                    val index: Int = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
-                    if (index > -1) {
-                        data = cursor.getString(index)
-                    }
-                }
-                cursor.close()
-            }
-        }
-        return data
     }
 
     //sync animation

@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.finger.hsd.R
 import com.finger.hsd.model.Product_v
@@ -20,7 +21,7 @@ class MainListAdapterKotlin:
         RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private val mContext: Context
     private var mProducts = ArrayList<Product_v>()
-    private val TAG = Main_list_Adapter::class.java.simpleName
+
     private val  TYPE_HEADER = 0
     private val TYPE_ITEM = 1
     private var miliexToday: Long = 0
@@ -50,14 +51,11 @@ class MainListAdapterKotlin:
 
         optionsGlide = RequestOptions()
                 .centerCrop()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .placeholder(R.drawable.photo_unvailable)
                 .error(R.drawable.ic_back)
     }
-
-
-
-
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == TYPE_HEADER) {
@@ -86,17 +84,17 @@ class MainListAdapterKotlin:
         if (holder is HeaderViewHolder) run {
             val mObjectHeader = mProducts[position + 1]
             if (miliexToday > mObjectHeader.expiretime) {
-                holder.mTypeProduct.text = "Expired"
+                holder.mTypeProduct.text = mContext.resources.getString(R.string.home_expired)
                 holder.mTypeProduct.setTextColor(mContext.resources.getColor(R.color.red))
             } else {
 
                 val dis = mProducts[position + 1].expiretime / 86400000 - miliexToday / 86400000
                 if (dis < 10 && dis > 0) {
-                    holder.mTypeProduct.text = "Warring Eat Now!!"
-                    holder.mTypeProduct.setTextColor(mContext.resources.getColor(R.color.viewfinder_border))
-                } else if (dis > 10) {
-                    holder.mTypeProduct.text = "Protected!!"
+                    holder.mTypeProduct.text =  mContext.resources.getString(R.string.home_warning)
                     holder.mTypeProduct.setTextColor(mContext.resources.getColor(R.color.colorPrimary))
+                } else if (dis > 10) {
+                    holder.mTypeProduct.text = mContext.resources.getString(R.string.home_protected)
+                    holder.mTypeProduct.setTextColor(mContext.resources.getColor(R.color.viewfinder_border))
                 }
 
             }
@@ -178,26 +176,26 @@ class MainListAdapterKotlin:
             holder.lnItem.setOnClickListener { onproductClickListener.onClickItem(mObject, position) }
 
             if (miliexToday > mObject.expiretime) {
-                if (holder.txt_warring.text !== "HẾT HẠN") {
-                    holder.txt_warring.text = "HẾT HẠN"
+                if (holder.txt_warring.text !=="HẾT HẠN") {
+                    holder.txt_warring.text =  mContext.resources.getString(R.string.border_expired)
                     holder.txt_warring.setTextColor(mContext.resources.getColor(R.color.white))
                     holder.txt_warring.setBackgroundResource(R.drawable.text_warring_itemview)
                 }
             } else {
                 val dis = mObject.expiretime / 86400000 - miliexToday / 86400000
                 if (holder.txt_warring.text !== dis.toString() + " DAYS LEFT") {
-                    holder.txt_warring.text = dis.toString() + " DAYS LEFT"
+                    holder.txt_warring.text = dis.toString() + " "+ mContext.resources.getString(R.string.border_protected)
                     holder.txt_warring.setTextColor(mContext.resources.getColor(R.color.white))
                     holder.txt_warring.setBackgroundResource(R.drawable.text_warring_item_at)
                 }
                 if (dis > 10) {
-                    holder.txt_warring.setBackgroundResource(R.drawable.text_warring_item_cb)
-                } else  if (dis < 10 && dis > 0){
                     holder.txt_warring.setBackgroundResource(R.drawable.text_warring_item_at)
+                } else  if (dis < 10 && dis > 0){
+                    holder.txt_warring.setBackgroundResource(R.drawable.text_warring_item_cb)
                 }
                 if(dis == 0L){
                     if (holder.txt_warring.text !== "HẾT HẠN") {
-                        holder.txt_warring.text = "HẾT HẠN"
+                        holder.txt_warring.text =  mContext.resources.getString(R.string.border_expired)
                         holder.txt_warring.setTextColor(mContext.resources.getColor(R.color.white))
                         holder.txt_warring.setBackgroundResource(R.drawable.text_warring_itemview)
                     }

@@ -8,6 +8,7 @@ import com.finger.hsd.model.Response
 import com.finger.hsd.util.Constants
 import com.finger.hsd.util.Mylog
 import com.rx2androidnetworking.Rx2AndroidNetworking
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
@@ -26,6 +27,9 @@ class SyncPresenter : getObservable {
         this.Ipresenter = IpresenterView
 
     }
+
+
+
 
     fun processDeleteProduct(idProduct : String, iduser: String){
         try {
@@ -97,16 +101,8 @@ class SyncPresenter : getObservable {
         } catch (e: Exception) {
             Mylog.d("Error " + e.message)
         }
-        Rx2AndroidNetworking.post(Constants.URL_UPDATE_NOTIFICATION)
-                .addJSONObjectBody(jsonObject)
-                .build()
-                .setAnalyticsListener { timeTakenInMillis, bytesSent, bytesReceived, isFromCache ->
-                    Log.d("", " timeTakenInMillis : $timeTakenInMillis")
-                    Log.d("", " bytesSent : $bytesSent")
-                    Log.d("", " bytesReceived : $bytesReceived")
-                    Log.d("", " isFromCache : $isFromCache")
-                }
-                .getObjectObservable(Response::class.java)
+        disposable.add(
+                getObservableUploadImage(Constants.URL_UPDATE_NOTIFICATION)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableObserver<Response>() {
@@ -128,8 +124,24 @@ class SyncPresenter : getObservable {
 
                     }
 
-                })
+                }))
 
+    }
+
+    private fun getObservableUploadImage(typesearch: String): Observable<Response> {
+        return Rx2AndroidNetworking.post(typesearch)
+                .setTag("UPDLOADIMAGE")
+                .addJSONObjectBody(jsonObject)
+                .build()
+
+                .setAnalyticsListener { timeTakenInMillis, bytesSent, bytesReceived, isFromCache ->
+                    Log.d("", " timeTakenInMillis : $timeTakenInMillis")
+                    Log.d("", " bytesSent : $bytesSent")
+                    Log.d("", " bytesReceived : $bytesReceived")
+                    Log.d("", " isFromCache : $isFromCache")
+                }
+
+                .getObjectObservable(Response::class.java)
     }
 
     fun cancelRequest(){

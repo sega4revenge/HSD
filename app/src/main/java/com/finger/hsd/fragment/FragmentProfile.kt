@@ -425,9 +425,10 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
         mBuilder.setPositiveButton("OK") { dialog, which ->
             // Do something when click the neutral button
 
+
             val product = realms!!.getDataProduct()
             if(product!=null && !product.isEmpty()) {
-                for (i in 0..product!!.size - 1) {
+                for (i in 0..product.size - 1) {
                     val namePassive = Uri.parse(product[i].imagechanged)
 //                                        val namePassive = product!!.imagechanged
                     var myDir = File(namePassive.path)
@@ -436,20 +437,30 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
                         Mylog.d("aaaaaaaaaa deleted")
                         myDir.delete()
                     } else {
-                        Mylog.d("aaaaaaaaaa deleted" + namePassive)
+                        Mylog.d("aaaaaaaaaa not deleted" + namePassive)
                     }
                 }
+
                 realms!!.deleteAllData()
+                if(realms!=null){
+                    sessionManager.setLogin(false)
+                    startActivity(Intent(activity, LoginActivity::class.java))
+                    activity!!.finish()
+                }
+
             }else{
                 realms!!.deleteAllData()
+                if(realms!=null){
+                    sessionManager.setLogin(false)
+                    startActivity(Intent(activity, LoginActivity::class.java))
+                    activity!!.finish()
+                }
+
             }
 
 
-            if(realms!=null){
-                sessionManager.setLogin(false)
-                startActivity(Intent(activity, LoginActivity::class.java))
-                activity!!.finish()
-            }
+
+
             dialog.cancel()
         }
 

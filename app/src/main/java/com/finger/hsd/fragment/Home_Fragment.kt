@@ -167,7 +167,7 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
                         val i = Intent(activity,ContinuousCaptureActivity::class.java)
                         startActivity(i)
                     } else {
-                        Toast.makeText(activity, "Không thể kết nối mạng", Toast.LENGTH_SHORT).show()
+                        showToast(R.string.not_connect_to_network)
                     }
                 }
 
@@ -187,13 +187,13 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
         var user = myRealm!!.getUser()!!
         Mylog.d(" iduser: ${user._id}" +"Adapter: $listDelete"+ "////12321312")
         val dialogdelete = MaterialDialog.Builder(activity!!)
-                .title("Bạn muốn xóa toàn bộ sản phẩm này?")
-                .content("Nhấn OK để xóa toàn bộ sản phẩm này")
+                .title(activity!!.resources.getString(R.string.title_dialog_delete))
+                .content(activity!!.resources.getString(R.string.content_dialog_delete))
                 .cancelable(false)
-                .positiveText("OK")
-                .negativeText("Cancel")
+                .positiveText(activity!!.resources.getString(R.string.accepte_delete))
+                .negativeText(activity!!.resources.getString(R.string.cancel_delete))
                 .onPositive { dialog, which ->
-                    showProgress("deleting...")
+                    showProgress(activity!!.resources.getString(R.string.deleting))
                     mRetrofitService = ApiUtils.getAPI()
                     mRetrofitService?.deleteGroup(listDelete!!, user._id!!)?.enqueue(object: Callback<Result_Product>{
                         override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
@@ -218,7 +218,8 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
                                     deleteProduct(true, arrID)
                                 }
                             }else{
-                                Toast.makeText(activity,"Error! \n message:"+response.message(), Toast.LENGTH_SHORT).show()
+                                Mylog.d("Error! \n message:"+response.message())
+//                                Toast.makeText(activity,"Error! \n message:"+response.message(), Toast.LENGTH_SHORT).show()
                             }
                             hideProgress()
                         }
@@ -306,7 +307,7 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
                             val i = Intent(activity,ContinuousCaptureActivity::class.java)
                             startActivity(i)
                         } else {
-                            Toast.makeText(activity, "Không thể kết nối mạng", Toast.LENGTH_SHORT).show()
+                            showToast(R.string.not_connect_to_network)
                         }
                     } catch (e: IOException) {
                         e.printStackTrace()
@@ -372,7 +373,7 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
                             if(response.code()==200){
                                 if(response.body().listProduct.size>0){
                             Log.d("REALMCONTROLLER",response.body().listProduct.size.toString()+"//listProduct")
-                            showDialog("Đang đồng bộ dữ liệu...")
+                            showDialog(activity!!.resources.getString(R.string.sync))
                             myRealm?.updateorCreateListProduct(response.body().listProduct,this@Home_Fragment)
                         }else if(myRealm?.getlistProduct()!!.size==0){
 
@@ -383,7 +384,8 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
                         }
                     }
                 }else{
-                    Toast.makeText(activity,"Error! \n message:"+response.message(), Toast.LENGTH_SHORT).show()
+                    Mylog.d("Error! \n message:"+response.message())
+//                    Toast.makeText(activity,"Error! \n message:"+response.message(), Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -413,18 +415,19 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
         mRetrofitService?.addProduct(nameproduct,barcodenum,hsd_ex,detail,iduser,photoproduct)?.enqueue(object: Callback<Result_Product>{
             override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
                 numLoading--
-                Toast.makeText(activity,"Error! \n message:"+t?.message,Toast.LENGTH_SHORT).show()
+                Mylog.d("Error! \n message: "+t?.message)
+//                Toast.makeText(activity,"Error! \n message:"+t?.message,Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
                 if(response?.isSuccessful!!){
-                    if(response?.code()==200){
-                        response?.body().product.imagechanged = mProduct_v.imagechanged
-                        response?.body().product.delete = false
-                        response?.body().product.isSyn = true
-                        response?.body().product.barcode = response?.body().product.producttype_id!!.barcode
+                    if(response.code()==200){
+                        response.body().product.imagechanged = mProduct_v.imagechanged
+                        response.body().product.delete = false
+                        response.body().product.isSyn = true
+                        response.body().product.barcode = response.body().product.producttype_id!!.barcode
                         myRealm?.deleteProductFromDevice(mProduct_v,this@Home_Fragment)
-                        myRealm?.addProduct(response?.body().product)
+                        myRealm?.addProduct(response.body().product)
                         mDialogProgress?.dismiss()
                         numLoading--
                         if(numLoading==0){
@@ -433,7 +436,8 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
                     }
                 }else{
                     numLoading--
-                    Toast.makeText(activity,"Error! Code:"+response?.code()+"\n message:"+response?.message(),Toast.LENGTH_SHORT).show()
+                    Mylog.d("Error! \n message:"+response.message())
+//                    Toast.makeText(activity,"Error! Code:"+response?.code()+"\n message:"+response?.message(),Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -558,7 +562,7 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
         val view = activity!!.currentFocus
         if (view != null) {
             val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm!!.hideSoftInputFromWindow(view.windowToken, 0)
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
 

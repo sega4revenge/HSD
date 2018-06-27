@@ -317,6 +317,7 @@ fun getKeyHash(){
 
     fun onDownload( product: Product_v){
 
+        Mylog.d("aaaa link anh: "+ product.imagechanged)
         GlideApp.with(this)
                 .asBitmap()
                 .load(Constants.IMAGE_URL + product.imagechanged)
@@ -325,7 +326,7 @@ fun getKeyHash(){
                     override fun onLoadFailed(errorDrawable: Drawable?) {
                         temp++
 
-                       // Mylog.d("aaaaaaaaaa "+temp+" sizelistproduct: " + listProduct!!.size)
+                        Mylog.d("aaaaaaaaaa error "+temp+" sizelistproduct: " + listProduct!!.size)
                         if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
                             percent = (temp.toFloat() / listProduct!!.size.toFloat() * 100f).toInt()
 
@@ -333,7 +334,7 @@ fun getKeyHash(){
                             onDownload(listProduct!!.get(temp))
                         }else{
                             hideProgress()
-                            session!!.setLogin(true)
+                            session.setLogin(true)
                             startActivity(Intent(this@LoginActivity, AllInOneActivity::class.java))
                             finish()
                         }

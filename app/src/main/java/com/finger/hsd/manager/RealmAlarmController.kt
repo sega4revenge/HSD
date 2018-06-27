@@ -6,6 +6,7 @@ import android.content.Context
 import android.support.v4.app.Fragment
 import android.util.Log
 import com.finger.hsd.model.*
+import com.finger.hsd.util.Mylog
 import io.realm.Realm
 import java.util.*
 
@@ -213,7 +214,7 @@ class RealmAlarmController (application: Context) {
         var output = ""
         for (alarm in result) {
             output += alarm.toString()
-            Log.d("view_to_dataTimeAlarm ", "data Realm  ===========  " + output + " \n ")
+            Mylog.d("ooooooooo ", "delete datetimeAlarm ===========  "  + output+" \n ")
         }
         return result
     }
@@ -253,7 +254,7 @@ class RealmAlarmController (application: Context) {
         var output = ""
         for (alarm in result) {
             output += alarm.toString()
-            Log.d("NoPlayingService ", "getUser  ===========  " + output + " \n ")
+            Mylog.d("ooooooooo ", "delete alarm from user ===========  "  + output+" \n ")
         }
 
         return result
@@ -303,7 +304,7 @@ class RealmAlarmController (application: Context) {
             realm.deleteAll()
             realm.commitTransaction()
 
-            Log.d("deleteAllData ", "delete data realm  ===========  "  + " \n ")
+            Mylog.d("ooooooooo ", "delete data realm  ===========  "  + " \n ")
 
             view_to_dataTimeAlarm()
             getUser()

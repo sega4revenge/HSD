@@ -1,6 +1,7 @@
 package com.finger.hsd.adapters
 
 import android.content.Context
+import android.os.Build
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -30,6 +31,11 @@ class NotificationAdapterKotlin(val mContext: Context, val listItem: ArrayList<N
 //    fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View {
 //        return LayoutInflater.from(mContext).inflate(layoutRes, this, attachToRoot)
 //    }
+    val options = RequestOptions()
+        .centerCrop()
+        .placeholder(R.drawable.photo_unvailable)
+        .error(R.drawable.photo_unvailable)
+        .priority(Priority.LOW)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
@@ -67,14 +73,14 @@ class NotificationAdapterKotlin(val mContext: Context, val listItem: ArrayList<N
                     view.tv_hsd.setVisibility(View.VISIBLE)
                     view.im_product_noti.setVisibility(View.VISIBLE)
 //                view.tv_warning.setVisibility(View.GONE)
-                    view.progress_notification.visibility = View.VISIBLE
-                    view.img.visibility = View.VISIBLE
+//                    view.progress_notification.visibility = View.VISIBLE
+//                    view.img.visibility = View.VISIBLE
 
 
                     Log.d("aaaaaaa ", "NotificationFragment: " + items.id_product!!)
                     //  Log.d("aaaaaaa ", "NotificationFragment: " + product.getNamechanged())
 
-                    val expiredTime = product!!.expiretime
+                    val expiredTime = product.expiretime
 
 
                     val date = Date(expiredTime)
@@ -83,40 +89,38 @@ class NotificationAdapterKotlin(val mContext: Context, val listItem: ArrayList<N
                     val days = daysBetween(System.currentTimeMillis(), expiredTime)
 
 
-                    val txtDaystatus = " " + days + " " + mContext.resources.getString(R.string.days_left)
+                   // val txtDaystatus = " " + days + " " + mContext.resources.getString(R.string.days_left)
                     if (items.status_expiry.equals("expired")) {
-//                    view.tv_warning.setBackgroundResource(R.drawable.roundedtext_red)
-                        view.tv_status.setBackgroundResource(R.drawable.roundedtext_red)
+                        view.tv_name_status.setTextColor(R.drawable.roundedtext_red)
+                        if(days == 0) {
+                            view.tv_name_status.text = "Sản phẩm " + product.namechanged!!.toString() + " đã hết hạn " + "hôm nay" + " ngày"
+                        }else{
+                            view.tv_name_status.text = "Sản phẩm " + product.namechanged!!.toString() + " đã hết hạn " + Math.abs(days) + " ngày"
+
+                        }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            view.tv_name_status.setTextColor(mContext.resources.getColor(R.color.red, null))
+                        }else{
+                            view.tv_name_status.setTextColor(mContext.resources.getColor(R.color.red))
+                        }
                     } else {
-//                    view.tv_warning.setBackgroundResource(R.drawable.roundedtext_orange)
-                        view.tv_status.setBackgroundResource(R.drawable.roundedtext_orange)
+
+                        view.tv_name_status.text = "Sản phẩm "+product.namechanged!!.toString() + "sắp sẽ hết hạn trong "+ Math.abs(days)+" ngày"
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            view.tv_name_status.setTextColor(mContext.resources.getColor(R.color.orange, null))
+                        }else{
+                            view.tv_name_status.setTextColor(mContext.resources.getColor(R.color.orange))
+                        }
                     }
-                    view.tv_status.text = txtDaystatus
+//                    view.tv_status.text = txtDaystatus
                     val txtExpiredTime = mContext.resources.getString(R.string.expiredtime_notifi) + dateFormat.format(date)
                     view.tv_hsd.setText(txtExpiredTime)
-                    view.tv_name.text = product.namechanged!!.toString()
+
                     Mylog.d("aaaaaaa " + " type: " + items.type + "NotificationFragment: " + product.imagechanged)
-                    val options = RequestOptions()
-                            .centerCrop()
-                            .placeholder(R.drawable.photo_unvailable)
-                            .error(R.drawable.photo_unvailable)
-                            .priority(Priority.LOW)
+
                     Glide.with(mContext)
                             .load(product.imagechanged)
                             .apply(options)
-                            //                        .listener(new RequestListener<Drawable>() {
-                            //                            @Override
-                            //                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            //                               view.progressbarImage.setVisibility(View.GONE);
-                            //                                return false;
-                            //                            }
-                            //
-                            //                            @Override
-                            //                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            //                                view.progressbarImage.setVisibility(View.GONE);
-                            //                                return false;
-                            //                            }
-                            //                        })
                             .into(view.im_product_noti)
                     view.ln_item.setOnClickListener(View.OnClickListener {
                         mNotificationListener.onBadgeUpdate(realm.countNotification() - 1)
@@ -129,20 +133,31 @@ class NotificationAdapterKotlin(val mContext: Context, val listItem: ArrayList<N
                     Mylog.d("aaaaaaaaaa type = 0")
                     view.tv_hsd.setVisibility(View.GONE)
                     view.im_product_noti.setVisibility(View.GONE)
-                    view.tv_warning.setVisibility(View.GONE)
-                    view.tv_status.text = "Sản phẩm đã bị xóa"
-                    view.progress_notification.visibility = View.GONE
-                    view.img.visibility = View.GONE
+                    view.tv_name_status.text = mContext.resources.getString(R.string.product_was_deleted)
+//                    view.progress_notification.visibility = View.GONE
+//                    view.img.visibility = View.GONE
                 }
 
             } else if (items.type == 3) {
                 Mylog.d("aaaaaaaaaa type = 3")
                 view.tv_hsd.setVisibility(View.GONE)
                 view.im_product_noti.setVisibility(View.GONE)
-                view.tv_warning.setVisibility(View.GONE)
-                view.tv_status.text = mContext.resources.getString(R.string.wellcome_hsd)
-                view.progress_notification.visibility = View.GONE
-                view.img.visibility = View.VISIBLE
+                view.tv_name_status.text = mContext.resources.getString(R.string.wellcome_hsd)
+//                view.progress_notification.visibility = View.GONE
+//                view.img.visibility = View.VISIBLE
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Glide.with(mContext)
+                            .load(mContext.resources.getDrawable(R.drawable.ic_launcher_hsd, null))
+                            .apply(options)
+                            .into(view.im_product_noti)
+                }else{
+                    Glide.with(mContext)
+                            .load(mContext.resources.getDrawable(R.drawable.ic_launcher_hsd))
+                            .apply(options)
+                            .into(view.im_product_noti)
+                }
 
                 //  view.progressbarImage.setVisibility(View.GONE);
 //                val txtDaystatus = mContext.resources.getString(R.string.status_count_product_1) +

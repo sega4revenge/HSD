@@ -114,7 +114,8 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
         session = SessionManager(activity!!)
         setRealmAdapter()
 
-        mView!!.count_notification.text = realm!!.countNotification().toString() +  " thông báo"
+        val strNotiCount = realm!!.countNotification().toString() +  activity!!.resources.getString(R.string.notification_not_see)
+        mView!!.count_notification.text = strNotiCount
 
         mView!!.im_clear.setOnClickListener(View.OnClickListener {
 //            showProgress()
@@ -124,7 +125,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                 processWatchedNotification(listNotWatch[temp])
             }else{
 //                sucess
-                showSnack("Sucess",R.id.ln_all_in_one)
+                showSnack(R.string.clear_sucess,R.id.notification_root)
             }
 
 //            hideProgress()
@@ -228,9 +229,9 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == AppIntent.REQUEST_NOTIFICATION) {
             if (resultCode == AppIntent.RESULT_DETAIL_PRODUCT) {
-                var extras = data!!.extras
+                val extras = data!!.extras
 
-                var position = data.getIntExtra("position", -1)
+                val position = data.getIntExtra("position", -1)
                 if (extras != null) {
                     Mylog.d("aaaaaaaaa " + position)
                     mNotifiAdapter.notifyItemChanged(position)
@@ -315,8 +316,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                             }
                         }
                         listitem.clear()
-                        listitem = realm!!.getListNotification()!!
-                        mNotifiAdapter.notifyDataSetChanged()
+                        setRealmAdapter()
 
                     }
 //============hàm này để khi có  thông báo là nó sẽ add vào list notification = alarm thông báo
@@ -324,10 +324,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
 
                     Mylog.d("aaaaaaaaaa da chay broadcash")
                     listitem.clear()
-                    listitem = realm!!.getListNotification()!!
-                    mNotifiAdapter = NotificationAdapterKotlin(mContext!!, listitem, realm!!, mNotificationBadgeListener!!, this@NotificationFragment)
-                    mView!!.recycler_notification.adapter = mNotifiAdapter
-                    mNotifiAdapter.notifyDataSetChanged()
+                    setRealmAdapter()
 //                    var notification = Notification()
 //
 //                    notification = bundle.getSerializable("notificationModel") as Notification

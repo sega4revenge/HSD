@@ -26,6 +26,7 @@ import android.widget.*
 import com.androidnetworking.error.ANError
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
 import com.finger.hsd.BaseActivity
@@ -102,7 +103,9 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
     val options = RequestOptions()
             .centerCrop()
-            .placeholder(R.drawable.ic_add_photo)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .skipMemoryCache(true)
+            .placeholder(R.drawable.photo_unvailable)
             .error(R.drawable.ic_back)
             .priority(Priority.LOW)
 
@@ -256,7 +259,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
         }
         mLayoutDayBefore.setOnClickListener {
-            var intent = Intent(this, ChooseDayNotification::class.java)
+            val intent = Intent(this, ChooseDayNotification::class.java)
             intent.putExtra("id_product", idProduct)
             intent.putExtra("day_before", realm!!.getProduct(idProduct)!!.daybefore)
             startActivityForResult(intent, Constants.REQUEST_DAY_BEFORE)
@@ -315,8 +318,6 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                     product!!.expiretime = expiredTimeChange!!.toLong()
                 })
             }
-//fasdf
-
 
             if (selectedUri != null) {
 //********* UPDATE image NEEUS NHU co thay đổi  *************
@@ -493,7 +494,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                                 Log.d("selected path: ", "uri.getPath(): " + uri.path)
                                 selectedUri = uri
 
-                                GlideApp
+                                Glide
                                 .with(this@DetailProductActivity)
                                         .load(uri)
                                         .thumbnail(0.1f)
@@ -786,12 +787,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         if (TextUtils.isEmpty(product!!.imagechanged))     Mylog.d("tttttttt image before khong có image")
         else {
             strImProduct = product!!.imagechanged.toString()
-            Mylog.d("tttttttt image before: " + strImProduct)
-            val options = RequestOptions()
-                    .centerCrop()
-                    .dontAnimate()
-                    .placeholder(R.drawable.photo_unvailable)
-                    .priority(Priority.HIGH)
+
             Glide.with(this@DetailProductActivity)
                     .load(strImProduct)
                     .thumbnail(0.1f)
@@ -839,7 +835,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
             txt = "<font color ='#FF4081'> " + Math.abs(days )+ "</font>"
             setColorForLeverWarning(R.drawable.roundedtext_grey, R.drawable.roundedtext_grey, R.drawable.roundedtext_red)
             mImStatus.setBackgroundColor(resources.getColor(R.color.red))
-            val strDayCountDown = resources.getString(R.string.shelf_life) + " " + days + " " + resources.getString(R.string.detail_product_text_day)
+            val strDayCountDown = resources.getString(R.string.shelf_life) + " " + Math.abs(days ) + " " + resources.getString(R.string.detail_product_text_day)
             mTvDayCountDown.text = strDayCountDown
             mTvDayCountDown.setTextColor(resources.getColor(R.color.red))
             mTvStatus.text = fromHtml(resources.getString(R.string.detail_product_text_expiry_date) + " " + txt + " " +
@@ -858,12 +854,15 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         }
         else if (days >= 10) {
             // safe: an toan
-            txt = "<font color ='#19a5f5' size = '50'> " + days + "</font>"
+            txt = "<font color ='#ffafed44' size = '50'> " + days + "</font>"
             setColorForLeverWarning(R.drawable.roundedtext_blue, R.drawable.roundedtext_grey, R.drawable.roundedtext_grey)
-            mImStatus.setBackgroundColor(resources.getColor(R.color.blue))
+            mImStatus.setBackgroundColor(resources.getColor(R.color.viewfinder_border))
             val strDayCountDown = resources.getString(R.string.shelf_life) + " " + days + " " + resources.getString(R.string.detail_product_text_day)
             mTvDayCountDown.text = strDayCountDown
-            mTvDayCountDown.setTextColor(resources.getColor(R.color.blue))
+            mTvDayCountDown.setTextColor(resources.getColor(R.color.viewfinder_border))
+            mTvStatus.text = fromHtml(resources.getString(R.string.detail_product_text_expiry_date) + " " + resources.getString(R.string.today) + " " +
+                    resources.getString(R.string.detail_product_text_day)
+            )
 
         }
 

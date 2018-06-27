@@ -13,7 +13,7 @@ import com.finger.hsd.model.Sound
 import com.finger.hsd.model.TimeAlarm
 import java.util.ArrayList
 import java.nio.file.Files.size
-import com.finger.hsd.adapters.Main_list_Adapter.ItemViewHolder
+
 import java.nio.file.Files.size
 import android.support.v7.widget.RecyclerView
 

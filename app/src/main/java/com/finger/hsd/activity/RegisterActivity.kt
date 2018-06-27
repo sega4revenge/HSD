@@ -46,7 +46,7 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
 
     val options = RequestOptions()
             .centerCrop()
-            .placeholder(R.drawable.ic_add_photo)
+            .placeholder(R.drawable.photo_unvailable)
             .error(R.drawable.ic_back)
             .priority(Priority.LOW)
 

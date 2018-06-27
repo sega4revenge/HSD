@@ -126,28 +126,43 @@
     <string name="share">Share</string>
     <string name="faqs">FAQs</string>
 
-    // notification
+    <!--// notification-->
     <string name="notification_">Thông báo Hạn Sử Dụng </string>
     <string name="notification_expiry">Thông báo hết hạn </string>
     <string name="warring_expiry">Cảnh báo hạn sử dụng</string>
-
     <string name="You_have">Bạn có </string>
     <string name="Warring_You_have">Cảnh báo bạn có </string>
-
     <string name="expiry"> hết hạn sử dụng. </string>
     <string name="expiry_and"> hết hạn và </string>
     <string name="expiry_"> sắp hết hạn sử dụng. </string>
-
     <string name="please_check_product"> Vui lòng kiểm tra sản phẩm của bạn! </string>
-
-
     <string name="product_expiry">sản phẩm :</string>
     <string name="con">còn </string>
     <string name="expired">của bạn đã hết hạn </string>
     <string name="expiring">ngày hết hạn sử dụng! </string>
+    <string name="notification_not_see"> thông báo chưa xem</string>
+    <string name="clear_sucess">Sucess</string>
+    <string name="product_was_deleted">Sản phẩm đã bị xóa</string>
+
     <string name="day">ngày.</string>
     <string name="_5">5</string>
     <string name="export_to_excel">Export to Excel</string>
+
+
+    <!--HOME-->
+    <string name="home_expired">Expired</string>
+    <string name="home_warning">Warning Using It Now</string>
+    <string name="home_protected">Protected</string>
+    <string name="border_expired">EXPIRED</string>
+    <string name="border_protected">DAYS LEFT</string>
+    <string name="not_connect_to_network">Không thể kết nối mạng</string>
+    <string name="title_dialog_delete">Bạn muốn xóa toàn bộ sản phẩm này?</string>
+    <string name="content_dialog_delete">Nhấn OK để xóa toàn bộ sản phẩm này</string>
+    <string name="accepte_delete">OK</string>
+    <string name="cancel_delete">Cancel</string>
+    <string name="deleting">deleting...</string>
+    <string name="sync">Đang đồng bộ dữ liệu...</string>
+    <!--/home-->
 
 
     <string-array name="choose_days_before">

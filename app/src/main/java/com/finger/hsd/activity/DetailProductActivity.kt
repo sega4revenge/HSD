@@ -1113,8 +1113,13 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                     override fun onError(e: Throwable) {
                         if (e is ANError) {
                             Mylog.d(e.message!!)
-
                         }
+                        realm!!.realm.executeTransaction(Realm.Transaction {
+
+                            product!!.isNewImage = true
+
+                        })
+                        putIntenDataBack(false, null, null, null)
                     }
 
                     override fun onComplete() {

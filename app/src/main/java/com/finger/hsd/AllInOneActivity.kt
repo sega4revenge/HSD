@@ -189,7 +189,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
 
         viewPager!!.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
 
-        fabCreate = findViewById(R.id.fab_fixer)
+        fabCreate = findViewById<FloatingActionButton>(R.id.fab_fixer)
 
         fabCreate!!.setOnClickListener(View.OnClickListener {
             if (ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -251,6 +251,8 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
 
         setupViewPager(viewPager!!)
         badgeIconScreen()
+
+        onNetworkConnectionChanged(ConnectivityChangeReceiver.isConnected())
     }
 
 

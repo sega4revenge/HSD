@@ -31,10 +31,7 @@ import com.finger.hsd.common.GlideApp
 import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.Result_Product
-import com.finger.hsd.util.ApiUtils
-import com.finger.hsd.util.CompressImage
-import com.finger.hsd.util.ConnectivityChangeReceiver
-import com.finger.hsd.util.RetrofitService
+import com.finger.hsd.util.*
 import kotlinx.android.synthetic.main.dialog_timepicker.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -314,21 +311,22 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
                         }
 
                     }else{
+                     Toast.makeText(this@Add_Product,"Không thể kết nối máy chủ!",Toast.LENGTH_SHORT).show()
 
-                        val stringToday = sdf.format(Date())
-                        val exToday = sdf.parse(stringToday)
-                        var r =  Random()
-                        var ran = r.nextInt(2000)
-                        if(myRealm?.checkaddsuccess(exToday.time.toString())!!<=0){
-                            var mProduct = Product_v((exToday.time +ran).toString(),edit_nameproduct?.text.toString(),
-                                    barcodeIn!!,miliexDate!!,edit_chitiet?.text.toString(),path!!)
-                            mProduct.delete = false
-                            mProduct.isSyn = false
-                            myRealm?.addProduct(mProduct)
-                            if(myRealm?.checkaddsuccess(mProduct._id!!)!!>0){
-                                onupdateProduct(1,mProduct)
-                            }
-                        }
+//                        val stringToday = sdf.format(Date())
+//                        val exToday = sdf.parse(stringToday)
+//                        var r =  Random()
+//                        var ran = r.nextInt(2000)
+//                        if(myRealm?.checkaddsuccess(exToday.time.toString())!!<=0){
+//                            var mProduct = Product_v((exToday.time +ran).toString(),edit_nameproduct?.text.toString(),
+//                                    barcodeIn!!,miliexDate!!,edit_chitiet?.text.toString(),path!!)
+//                            mProduct.delete = false
+//                            mProduct.isSyn = false
+//                            myRealm?.addProduct(mProduct)
+//                            if(myRealm?.checkaddsuccess(mProduct._id!!)!!>0){
+//                                onupdateProduct(1,mProduct)
+//                            }
+            //            }
                      //   if(myRealm?.checkaddsuccess(mProduct._id)!!>0){
                      //        onupdateProduct(1)
                      //  }
@@ -412,7 +410,23 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
                     override fun onResourceReady(resource: Bitmap, transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {
 
                         try {
-                            val namePassive = product._id + "passive" + ".jpg"
+
+                            var dataOffline = myRealm?.getProductWithBarcode(product?.producttype_id?.barcode!!)
+                            if(dataOffline!= null)
+                            {
+                                val nameOldImage = Uri.parse(dataOffline.imagechanged)
+
+                                var myDirOld = File(nameOldImage.path)
+
+                                if (myDirOld.exists()) {
+                                    Mylog.d("aaaaaaaaaa deleted")
+                                    myDirOld.delete()
+                                }else{
+                                    Mylog.d("aaaaaaaaaa deleted"+nameOldImage)
+                                }
+                            }
+
+                            val namePassive = product!!._id + "passive"+System.currentTimeMillis() + ".jpg"
                             val rootFolder = File(filesDir.toString() + "/files")
                             val myDir = File(rootFolder, namePassive)
 
@@ -430,6 +444,9 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
                             myRealm?.addProduct(product)
                             if(myRealm?.checkaddsuccess(product._id!!)!!>0){
                                 onupdateProduct(1,product)
+                            }else{
+                                // saveimageinMyApp(product,uri)
+                                Toast.makeText(this@Add_Product,"Update Error",Toast.LENGTH_SHORT).show()
                             }
 
                             out3.flush()

@@ -387,7 +387,7 @@ class RealmController(application: Context) {
                         if (fdelete.exists()) {
                             System.out.println(arr.get(i).imagechanged+"exists()")
                             if (fdelete.delete()) {
-                                System.out.println("file Deleted :")
+                                System.out.println("file Del`eted :")
                             } else {
                                 System.out.println("file not Deleted :")
                             }

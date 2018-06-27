@@ -143,6 +143,7 @@ class ContinuousCaptureActivity : Activity() {
 //                    Toast.makeText(this@ContinuousCaptureActivity, "Không thể kết nối mạng", Toast.LENGTH_SHORT).show()
 //                  //  showDialogNotFound(barcode)
 //                }
+                lastText = ""
                 Toast.makeText(this@ContinuousCaptureActivity, "Không thể kết nối mạng", Toast.LENGTH_SHORT).show()
             }
 
@@ -168,6 +169,7 @@ class ContinuousCaptureActivity : Activity() {
                         showDialogNotFound(barcode)
                     }
                 }
+
             }
         })
     }
@@ -244,7 +246,7 @@ class ContinuousCaptureActivity : Activity() {
                     if(mEdit.text.toString().length<6){
                         Toast.makeText(applicationContext,"Barcode not true", Toast.LENGTH_LONG).show()
                     }else{
-                        arrBarcode = mEdit.text.toString();
+                        arrBarcode = mEdit.text.toString()
                         checkBarcode(mEdit.text.toString())
                     }
                 }else{

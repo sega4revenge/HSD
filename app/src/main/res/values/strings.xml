@@ -12,7 +12,7 @@
     <string name="txt_or">Or</string>
     <string name="facebook_app_id">171986543489907</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
     <!--progress dialog-->
     <string name="loading">Loading</string>
@@ -22,8 +22,6 @@
     <string name="days_left">DAYS LEFT</string>
     <string name="status_count_product_1">You have </string>
     <string name="status_count_product_2"> product(s) about to expire. Please check you inventory</string>
-    <string name="wellcome_hsd">Chào mừng bạn đến với ứng dụng HSD! </string>
-    <string name="noti_create">Hãy tạo sản phẩm để nhận thông báo về sản phẩm nhé!</string>
 
 
     <!-- Detail Product -->
@@ -127,24 +125,14 @@
     <string name="faqs">FAQs</string>
 
     <!--// notification-->
-    <string name="notification_">Thông báo Hạn Sử Dụng </string>
-    <string name="notification_expiry">Thông báo hết hạn </string>
-    <string name="warring_expiry">Cảnh báo hạn sử dụng</string>
-    <string name="You_have">Bạn có </string>
-    <string name="Warring_You_have">Cảnh báo bạn có </string>
-    <string name="expiry"> hết hạn sử dụng. </string>
-    <string name="expiry_and"> hết hạn và </string>
-    <string name="expiry_"> sắp hết hạn sử dụng. </string>
-    <string name="please_check_product"> Vui lòng kiểm tra sản phẩm của bạn! </string>
-    <string name="product_expiry">sản phẩm :</string>
-    <string name="con">còn </string>
-    <string name="expired">của bạn đã hết hạn </string>
-    <string name="expiring">ngày hết hạn sử dụng! </string>
-    <string name="notification_not_see"> thông báo chưa xem</string>
+    <string name="notification_expiry">" expired notification"</string>
+    <string name="expiry_and">" expired and "</string>
+    <string name="product_expiry">product :</string>
+    <string name="con">" "</string>
     <string name="clear_sucess">Sucess</string>
-    <string name="product_was_deleted">Sản phẩm đã bị xóa</string>
+    <string name="product_was_deleted">Product was deleted</string>
 
-    <string name="day">ngày.</string>
+    <string name="day">day.</string>
     <string name="_5">5</string>
     <string name="export_to_excel">Export to Excel</string>
 
@@ -152,16 +140,12 @@
     <!--HOME-->
     <string name="home_expired">Expired</string>
     <string name="home_warning">Warning Using It Now</string>
-    <string name="home_protected">Protected</string>
+    <string name="home_protected">Safe</string>
     <string name="border_expired">EXPIRED</string>
     <string name="border_protected">DAYS LEFT</string>
-    <string name="not_connect_to_network">Không thể kết nối mạng</string>
-    <string name="title_dialog_delete">Bạn muốn xóa toàn bộ sản phẩm này?</string>
-    <string name="content_dialog_delete">Nhấn OK để xóa toàn bộ sản phẩm này</string>
     <string name="accepte_delete">OK</string>
     <string name="cancel_delete">Cancel</string>
     <string name="deleting">deleting...</string>
-    <string name="sync">Đang đồng bộ dữ liệu...</string>
     <!--/home-->
 
 
@@ -534,6 +518,22 @@
     </string-array>
     <string name="title_activity_test_scanner">test_scanner</string>
     <string name="copyright_finger_company">\@Copyright Finger company</string>
+    <string name="wellcome_hsd">Welcome to app HSD</string>
+    <string name="noti_create">Create products to receive notification!</string>
+    <string name="notification_">expiry notification</string>
+    <string name="warring_expiry">expired warning</string>
+    <string name="You_have">you have</string>
+    <string name="Warring_You_have">warning - you have</string>
+    <string name="expiry">"expired time "</string>
+    <string name="expiry_">"expired day is close "</string>
+    <string name="please_check_product">please check your products !</string>
+    <string name="expired">"expired "</string>
+    <string name="expiring">expired day</string>
+    <string name="notification_not_see">unread notification</string>
+    <string name="not_connect_to_network">"not connect with network "</string>
+    <string name="title_dialog_delete">"do you want to delete all products? "</string>
+    <string name="content_dialog_delete">"Click \"Ok\" to delete all products "</string>
+    <string name="sync">data sync...</string>
 
 
 </resources>

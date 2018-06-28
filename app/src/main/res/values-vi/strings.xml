@@ -1,4 +1,509 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string-array name="choose_days_before">
+        <item>1 ngày trước</item>
+        <item>2 ngày trước</item>
+        <item>3 ngày trước</item>
+        <item>4 ngày trước</item>
+        <item>5 ngày trước</item>
+        <item>6 ngày trước</item>
+        <item>7 ngày trước</item>
+        <item>8 ngày trước</item>
+        <item>9 ngày trước</item>
+        <item>10 ngày trước</item>
+        <item>11 ngày trước</item>
+        <item>12 ngày trước</item>
+        <item>13 ngày trước</item>
+        <item>14 ngày trước</item>
+        <item>15 ngày trước</item>
+        <item>16 ngày trước</item>
+        <item>17 ngày trước</item>
+        <item>18 ngày trước</item>
+        <item>19 ngày trước</item>
+        <item>20 ngày trước</item>
+        <item>21 ngày trước</item>
+        <item>22 ngày trước</item>
+        <item>23 ngày trước</item>
+        <item>24 ngày trước</item>
+        <item>25 ngày trước</item>
+        <item>26 ngày trước</item>
+        <item>27 ngày trước</item>
+        <item>28 ngày trước</item>
+        <item>29 ngày trước</item>
+        <item>30 ngày trước</item>
+        <item>31 ngày trước</item>
+        <item>32 ngày trước</item>
+        <item>33 ngày trước</item>
+        <item>34 ngày trước</item>
+        <item>35 ngày trước</item>
+        <item>36 ngày trước</item>
+        <item>37 ngày trước</item>
+        <item>38 ngày trước</item>
+        <item>39 ngày trước</item>
+        <item>40 ngày trước</item>
+        <item>41 ngày trước</item>
+        <item>42 ngày trước</item>
+        <item>43 ngày trước</item>
+        <item>44 ngày trước</item>
+        <item>45 ngày trước</item>
+        <item>46 ngày trước</item>
+        <item>47 ngày trước</item>
+        <item>48 ngày trước</item>
+        <item>49 ngày trước</item>
+        <item>50 ngày trước</item>
+        <item>51 ngày trước</item>
+        <item>52 ngày trước</item>
+        <item>53 ngày trước</item>
+        <item>54 ngày trước</item>
+        <item>55 ngày trước</item>
+        <item>56 ngày trước</item>
+        <item>57 ngày trước</item>
+        <item>58 ngày trước</item>
+        <item>59 ngày trước</item>
+        <item>60 ngày trước</item>
+        <item>61 ngày trước</item>
+        <item>62 ngày trước</item>
+        <item>63 ngày trước</item>
+        <item>64 ngày trước</item>
+        <item>65 ngày trước</item>
+        <item>66 ngày trước</item>
+        <item>67 ngày trước</item>
+        <item>68 ngày trước</item>
+        <item>69 ngày trước</item>
+        <item>70 ngày trước</item>
+        <item>71 ngày trước</item>
+        <item>72 ngày trước</item>
+        <item>73 ngày trước</item>
+        <item>74 ngày trước</item>
+        <item>75 ngày trước</item>
+        <item>76 ngày trước</item>
+        <item>77 ngày trước</item>
+        <item>78 ngày trước</item>
+        <item>79 ngày trước</item>
+        <item>80 ngày trước</item>
+        <item>81 ngày trước</item>
+        <item>82 ngày trước</item>
+        <item>83 ngày trước</item>
+        <item>84 ngày trước</item>
+        <item>85 ngày trước</item>
+        <item>86 ngày trước</item>
+        <item>87 ngày trước</item>
+        <item>88 ngày trước</item>
+        <item>89 ngày trước</item>
+        <item>90 ngày trước</item>
+        <item>91 ngày trước</item>
+        <item>92 ngày trước</item>
+        <item>93 ngày trước</item>
+        <item>94 ngày trước</item>
+        <item>95 ngày trước</item>
+        <item>96 ngày trước</item>
+        <item>97 ngày trước</item>
+        <item>98 ngày trước</item>
+        <item>99 ngày trước</item>
+        <item>100 ngày trước</item>
+        <item>101 ngày trước</item>
+        <item>102 ngày trước</item>
+        <item>103 ngày trước</item>
+        <item>104 ngày trước</item>
+        <item>105 ngày trước</item>
+        <item>106 ngày trước</item>
+        <item>107 ngày trước</item>
+        <item>108 ngày trước</item>
+        <item>109 ngày trước</item>
+        <item>110 ngày trước</item>
+        <item>111 ngày trước</item>
+        <item>112 ngày trước</item>
+        <item>113 ngày trước</item>
+        <item>114 ngày trước</item>
+        <item>115 ngày trước</item>
+        <item>116 ngày trước</item>
+        <item>117 ngày trước</item>
+        <item>118 ngày trước</item>
+        <item>119 ngày trước</item>
+        <item>120 ngày trước</item>
+        <item>121 ngày trước</item>
+        <item>122 ngày trước</item>
+        <item>123 ngày trước</item>
+        <item>124 ngày trước</item>
+        <item>125 ngày trước</item>
+        <item>126 ngày trước</item>
+        <item>127 ngày trước</item>
+        <item>128 ngày trước</item>
+        <item>129 ngày trước</item>
+        <item>130 ngày trước</item>
+        <item>131 ngày trước</item>
+        <item>132 ngày trước</item>
+        <item>133 ngày trước</item>
+        <item>134 ngày trước</item>
+        <item>135 ngày trước</item>
+        <item>136 ngày trước</item>
+        <item>137 ngày trước</item>
+        <item>138 ngày trước</item>
+        <item>139 ngày trước</item>
+        <item>140 ngày trước</item>
+        <item>141 ngày trước</item>
+        <item>142 ngày trước</item>
+        <item>143 ngày trước</item>
+        <item>144 ngày trước</item>
+        <item>145 ngày trước</item>
+        <item>146 ngày trước</item>
+        <item>147 ngày trước</item>
+        <item>148 ngày trước</item>
+        <item>149 ngày trước</item>
+        <item>150 ngày trước</item>
+        <item>151 ngày trước</item>
+        <item>152 ngày trước</item>
+        <item>153 ngày trước</item>
+        <item>154 ngày trước</item>
+        <item>155 ngày trước</item>
+        <item>156 ngày trước</item>
+        <item>157 ngày trước</item>
+        <item>158 ngày trước</item>
+        <item>159 ngày trước</item>
+        <item>160 ngày trước</item>
+        <item>161 ngày trước</item>
+        <item>162 ngày trước</item>
+        <item>163 ngày trước</item>
+        <item>164 ngày trước</item>
+        <item>165 ngày trước</item>
+        <item>166 ngày trước</item>
+        <item>167 ngày trước</item>
+        <item>168 ngày trước</item>
+        <item>169 ngày trước</item>
+        <item>170 ngày trước</item>
+        <item>171 ngày trước</item>
+        <item>172 ngày trước</item>
+        <item>173 ngày trước</item>
+        <item>174 ngày trước</item>
+        <item>175 ngày trước</item>
+        <item>176 ngày trước</item>
+        <item>177 ngày trước</item>
+        <item>178 ngày trước</item>
+        <item>179 ngày trước</item>
+        <item>180 ngày trước</item>
+        <item>181 ngày trước</item>
+        <item>182 ngày trước</item>
+        <item>183 ngày trước</item>
+        <item>184 ngày trước</item>
+        <item>185 ngày trước</item>
+        <item>186 ngày trước</item>
+        <item>187 ngày trước</item>
+        <item>188 ngày trước</item>
+        <item>189 ngày trước</item>
+        <item>190 ngày trước</item>
+        <item>191 ngày trước</item>
+        <item>192 ngày trước</item>
+        <item>193 ngày trước</item>
+        <item>194 ngày trước</item>
+        <item>195 ngày trước</item>
+        <item>196 ngày trước</item>
+        <item>197 ngày trước</item>
+        <item>198 ngày trước</item>
+        <item>199 ngày trước</item>
+        <item>200 ngày trước</item>
+        <item>201 ngày trước</item>
+        <item>202 ngày trước</item>
+        <item>203 ngày trước</item>
+        <item>204 ngày trước</item>
+        <item>205 ngày trước</item>
+        <item>206 ngày trước</item>
+        <item>207 ngày trước</item>
+        <item>208 ngày trước</item>
+        <item>209 ngày trước</item>
+        <item>210 ngày trước</item>
+        <item>211 ngày trước</item>
+        <item>212 ngày trước</item>
+        <item>213 ngày trước</item>
+        <item>214 ngày trước</item>
+        <item>215 ngày trước</item>
+        <item>216 ngày trước</item>
+        <item>217 ngày trước</item>
+        <item>218 ngày trước</item>
+        <item>219 ngày trước</item>
+        <item>220 ngày trước</item>
+        <item>221 ngày trước</item>
+        <item>222 ngày trước</item>
+        <item>223 ngày trước</item>
+        <item>224 ngày trước</item>
+        <item>225 ngày trước</item>
+        <item>226 ngày trước</item>
+        <item>227 ngày trước</item>
+        <item>228 ngày trước</item>
+        <item>229 ngày trước</item>
+        <item>230 ngày trước</item>
+        <item>231 ngày trước</item>
+        <item>232 ngày trước</item>
+        <item>233 ngày trước</item>
+        <item>234 ngày trước</item>
+        <item>235 ngày trước</item>
+        <item>236 ngày trước</item>
+        <item>237 ngày trước</item>
+        <item>238 ngày trước</item>
+        <item>239 ngày trước</item>
+        <item>240 ngày trước</item>
+        <item>241 ngày trước</item>
+        <item>242 ngày trước</item>
+        <item>243 ngày trước</item>
+        <item>244 ngày trước</item>
+        <item>245 ngày trước</item>
+        <item>246 ngày trước</item>
+        <item>247 ngày trước</item>
+        <item>248 ngày trước</item>
+        <item>249 ngày trước</item>
+        <item>250 ngày trước</item>
+        <item>251 ngày trước</item>
+        <item>252 ngày trước</item>
+        <item>253 ngày trước</item>
+        <item>254 ngày trước</item>
+        <item>255 ngày trước</item>
+        <item>256 ngày trước</item>
+        <item>257 ngày trước</item>
+        <item>258 ngày trước</item>
+        <item>259 ngày trước</item>
+        <item>260 ngày trước</item>
+        <item>261 ngày trước</item>
+        <item>262 ngày trước</item>
+        <item>263 ngày trước</item>
+        <item>264 ngày trước</item>
+        <item>265 ngày trước</item>
+        <item>266 ngày trước</item>
+        <item>267 ngày trước</item>
+        <item>268 ngày trước</item>
+        <item>269 ngày trước</item>
+        <item>270 ngày trước</item>
+        <item>271 ngày trước</item>
+        <item>272 ngày trước</item>
+        <item>273 ngày trước</item>
+        <item>274 ngày trước</item>
+        <item>275 ngày trước</item>
+        <item>276 ngày trước</item>
+        <item>277 ngày trước</item>
+        <item>278 ngày trước</item>
+        <item>279 ngày trước</item>
+        <item>280 ngày trước</item>
+        <item>281 ngày trước</item>
+        <item>282 ngày trước</item>
+        <item>283 ngày trước</item>
+        <item>284 ngày trước</item>
+        <item>285 ngày trước</item>
+        <item>286 ngày trước</item>
+        <item>287 ngày trước</item>
+        <item>288 ngày trước</item>
+        <item>289 ngày trước</item>
+        <item>290 ngày trước</item>
+        <item>291 ngày trước</item>
+        <item>292 ngày trước</item>
+        <item>293 ngày trước</item>
+        <item>294 ngày trước</item>
+        <item>295 ngày trước</item>
+        <item>296 ngày trước</item>
+        <item>297 ngày trước</item>
+        <item>298 ngày trước</item>
+        <item>299 ngày trước</item>
+        <item>300 ngày trước</item>
+        <item>301 ngày trước</item>
+        <item>302 ngày trước</item>
+        <item>303 ngày trước</item>
+        <item>304 ngày trước</item>
+        <item>305 ngày trước</item>
+        <item>306 ngày trước</item>
+        <item>307 ngày trước</item>
+        <item>308 ngày trước</item>
+        <item>309 ngày trước</item>
+        <item>310 ngày trước</item>
+        <item>311 ngày trước</item>
+        <item>312 ngày trước</item>
+        <item>313 ngày trước</item>
+        <item>314 ngày trước</item>
+        <item>315 ngày trước</item>
+        <item>316 ngày trước</item>
+        <item>317 ngày trước</item>
+        <item>318 ngày trước</item>
+        <item>319 ngày trước</item>
+        <item>320 ngày trước</item>
+        <item>321 ngày trước</item>
+        <item>322 ngày trước</item>
+        <item>323 ngày trước</item>
+        <item>324 ngày trước</item>
+        <item>325 ngày trước</item>
+        <item>326 ngày trước</item>
+        <item>327 ngày trước</item>
+        <item>328 ngày trước</item>
+        <item>329 ngày trước</item>
+        <item>330 ngày trước</item>
+        <item>331 ngày trước</item>
+        <item>332 ngày trước</item>
+        <item>333 ngày trước</item>
+        <item>334 ngày trước</item>
+        <item>335 ngày trước</item>
+        <item>336 ngày trước</item>
+        <item>337 ngày trước</item>
+        <item>338 ngày trước</item>
+        <item>339 ngày trước</item>
+        <item>340 ngày trước</item>
+        <item>341 ngày trước</item>
+        <item>342 ngày trước</item>
+        <item>343 ngày trước</item>
+        <item>344 ngày trước</item>
+        <item>345 ngày trước</item>
+        <item>346 ngày trước</item>
+        <item>347 ngày trước</item>
+        <item>348 ngày trước</item>
+        <item>349 ngày trước</item>
+        <item>350 ngày trước</item>
+        <item>351 ngày trước</item>
+        <item>352 ngày trước</item>
+        <item>353 ngày trước</item>
+        <item>354 ngày trước</item>
+        <item>355 ngày trước</item>
+        <item>356 ngày trước</item>
+        <item>357 ngày trước</item>
+        <item>358 ngày trước</item>
+        <item>359 ngày trước</item>
+        <item>360 ngày trước</item>
+        <item>361 ngày trước</item>
+        <item>362 ngày trước</item>
+        <item>363 ngày trước</item>
+        <item>364 ngày trước</item>
+        <item>365 ngày trước</item>
+    </string-array>
+    <string name="title_activity_test_scanner">test_scanner</string>
+    <string name="app_name">HSD</string>
+    <string name="btn_signin">ĐĂNG NHẬP</string>
+    <string name="btn_join">ĐĂNG KÝ</string>
+    <string name="btn_forgot">QUÊN MẬT KHẨU</string>
+    <string name="btn_signup">Bạn chưa có tài khoản ? NHẤN VÀO ĐÂY</string>
+    <string name="btn_haveaccount">Đã có tài khoản?</string>
+    <string name="txt_phone">SỐ ĐIỆN THOẠI</string>
+    <string name="txt_password">MẬT KHẨU</string>
+    <string name="txt_repassword">NHẬP LẠI MẬT KHẨU</string>
+    <string name="txt_or">Hoặc</string>
+    <string name="facebook_app_id">171986543489907</string>
+    <string name="loading">Đang tải</string>
+    <string name="expiredtime_notifi">Ngày hết hạn:</string>
+    <string name="days_left">NGÀY CÒN LẠI</string>
+    <string name="status_count_product_1">Bạn có</string>
+    <string name="status_count_product_2">sản phẩm sắp hết hạn. Vui lòng kiểm tra lại</string>
+    <string name="detail_product_text_expiry_date">Thời hạn sử dụng còn lại</string>
+    <string name="detail_product_text_day">ngày</string>
+    <string name="no_name">Không tên</string>
+    <string name="note">Chú thích...</string>
+    <string name="shelf_life">Thời hạn sử dụng là</string>
+    <string name="today">hôm nay</string>
+    <string name="detail_product">Chi tiết sản phẩm</string>
+    <string name="choose_time">Cài đặt thông báo</string>
+    <string name="descrip_delete">Bạn muốn xóa sản phẩm này?</string>
+    <string name="title_delete">Xóa sản phẩm</string>
+    <string name="title_choose_days_before">Chọn số ngày trước khi hết hạn</string>
+    <string name="descrip_choose_days">Nhận một thông báo trước ngày hết hạn</string>
+    <string name="days">ngày</string>
+    <string name="one_day">1 ngày</string>
+    <string name="three_day">3 ngày</string>
+    <string name="one_week">1 tuần</string>
+    <string name="one_month">1 tháng</string>
+    <string name="custome_day">Ngày tùy chỉnh</string>
+    <string name="day_advance_notice">thông báo trước</string>
+    <string name="recieve_one_notification">Nhận thông báo trước 1 ngày hết hạn</string>
+    <string name="change_avatar">Thay đổi ảnh...</string>
+    <string name="uploading">Đang tải lên...</string>
+    <string name="remain_time_minute">Số phút còn lại</string>
+    <string name="remain_time_second">Số giây còn lại</string>
+    <string name="upload_sucessfully">Tải lên thành công</string>
+    <string name="no_image">Không có hình ảnh</string>
+    <string name="not_create_image">Không tạo hình ảnh</string>
+    <string name="not_gallery">Không có thư viện</string>
+    <string name="no_camera">KHông có camera</string>
+    <string name="select_max_count">Có %1$d ảnh được chọn</string>
+    <string name="select_min_count">Bạn đã chọn %1$d ảnh</string>
+    <string name="done">Xong</string>
+    <string name="choose_image">Chọn ảnh</string>
+    <string name="edit">Sửa</string>
+    <string name="delete_sucess">Xóa thành công!</string>
+    <string name="watched_all">Đã xem tất cả!</string>
+    <string name="cancel">Hủy</string>
+    <string name="just_now">Ngay bây giờ</string>
+    <string name="a_min_ago">phút trước</string>
+    <string name="mins_ago">phút trước</string>
+    <string name="a_hour_ago">1 giờ trước</string>
+    <string name="hour_ago">giờ trước</string>
+    <string name="yesterday">hôm qua</string>
+    <string name="days_ago">ngày trước</string>
+    <string name="week_ago">tuần trước</string>
+    <string name="weeks_ago">tuần trước</string>
+    <string name="_0_50">/50</string>
+    <string name="change_password">Đổi mật khẩu</string>
+    <string name="version">Phiên bản</string>
+    <string name="_1_0_0">1.0.0</string>
+    <string name="information">Thông tin</string>
+    <string name="share_app">Chia sẻ ứng dụng</string>
+    <string name="ca_si_chipici">Ca si Chipici</string>
+    <string name="_012234567987">Tài khoản HSD</string>
+    <string name="sound">Âm thanh</string>
+    <string name="account_setting">Cài đặt tài khoản</string>
+    <string name="support">Hỗ trợ</string>
+    <string name="other_setting">Cài đặt khác</string>
+    <string name="title_activity_settings">Cài đặt</string>
+    <string name="pref_title_vibrate">Rung</string>
+    <string name="not_in_use">Không sử dụng</string>
+    <string name="action_settings">Cài đặt</string>
+    <string name="set_alarm">Cài đặt hẹn giờ báo!</string>
+    <string name="off_alarm">Tắt báo hết hạn</string>
+    <string name="title_activity_alarm_setting">Cài đặt báo hết hạn</string>
+    <string name="notification">Thông báo</string>
+    <string name="save">LƯU</string>
+    <string name="time_setting">Cài đặt giờ</string>
+    <string name="expiry_date_notification">Thông báo ngày hết hạn</string>
+    <string name="_1_am">1 AM</string>
+    <string name="product">Sản phẩm</string>
+    <string name="ok">Ok</string>
+    <string name="title_share">Hoàn thành thao tác</string>
+    <string name="sound_notification">Âm báo</string>
+    <string name="person_share">Người chia sẻ:</string>
+    <string name="name_share">Người đăng:</string>
+    <string name="status">Tiêu đề:</string>
+    <string name="description">Mô tả:</string>
+    <string name="date_share">Thời gian:</string>
+    <string name="where_share">Địa điểm:</string>
+    <string name="not_data_found">Không tim thấy dữ liệu</string>
+    <string name="link">Xem thêm tại:</string>
+    <string name="send_feedback">Giử phản hồi</string>
+    <string name="privacy_policy">Chính sách bảo mật</string>
+    <string name="share">Chia sẻ</string>
+    <string name="faqs">FAQs</string>
+    <string name="product_expiry">sản phẩm:</string>
+    <string name="clear_sucess">Thành công</string>
+    <string name="day">ngày</string>
+    <string name="_5">5</string>
+    <string name="accepte_delete">OK</string>
+    <string name="cancel_delete">Hủy</string>
+    <string name="deleting">đang xóa...</string>
+    <string name="export_to_excel">Xuất sang Excel</string>
+    <string name="home_expired">Đã hết hạn</string>
+    <string name="home_warning">Cảnh báo nên sử dụng ngay</string>
+    <string name="wellcome_hsd">"Chào mừng bạn đến với ứng dụng HSD! "</string>
+    <string name="noti_create">Hãy tạo sản phẩm để nhận thông báo về sản phẩm nhé!</string>
+    <string name="notification_">"Thông báo Hạn Sử Dụng "</string>
+    <string name="notification_expiry">Thông báo hết hạn</string>
+    <string name="warring_expiry">Cảnh báo hạn sử dụng</string>
+    <string name="You_have">"Bạn có "</string>
+    <string name="Warring_You_have">"Cảnh báo bạn có "</string>
+    <string name="expiry">" hết hạn sử dụng. "</string>
+    <string name="expiry_and">" hết hạn và"</string>
+    <string name="expiry_">" sắp hết hạn sử dụng. "</string>
+    <string name="please_check_product">" Vui lòng kiểm tra sản phẩm của bạn! "</string>
+    <string name="con">còn</string>
+    <string name="expired">"của bạn đã hết hạn "</string>
+    <string name="expiring">"ngày hết hạn sử dụng! "</string>
+    <string name="notification_not_see">" thông báo chưa xem"</string>
+    <string name="not_connect_to_network">Không thể kết nối mạng</string>
+    <string name="title_dialog_delete">Bạn muốn xóa toàn bộ sản phẩm này?</string>
+    <string name="content_dialog_delete">Nhấn OK để xóa toàn bộ sản phẩm này</string>
+    <string name="sync">Đang đồng bộ dữ liệu...</string>
+    <string name="copyright_finger_company">\@Copyright Finger company</string>
+    <string name="product_was_deleted">Sản phẩm đã xóa</string>
+    <string name="home_protected">An toàn</string>
+    <string name="border_expired">Hết hạn</string>
+    <string name="border_protected">Thời gian còn lại</string>
+    <string name="rateApp">Đánh giá app trên PlayStore</string>
 </resources>

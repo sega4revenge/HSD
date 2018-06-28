@@ -1,11 +1,15 @@
 package com.finger.hsd.services
 
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -31,12 +35,15 @@ import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 import me.leolin.shortcutbadger.ShortcutBadger
 import org.json.JSONObject
+import java.io.InputStream
+import java.net.HttpURLConnection
 import java.util.*
 
 @Suppress("DEPRECATION")
 @SuppressLint("Registered")
 class NotificationPlayingService : Service() {
     var realms : RealmAlarmController?= null
+    private  val CHANNEL_APP_STATUS = "CHANNEL_APP_STATUS"
     internal var product_v : List<Product_v> = ArrayList<Product_v>()
     internal var notification_v : List<Notification> = ArrayList<Notification>()
     private val milDay = 86400000L
@@ -45,7 +52,7 @@ class NotificationPlayingService : Service() {
         return null
     }
 
-    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
+
     override fun onStartCommand(intent : Intent, flags : Int, startId : Int): Int {
         realms = RealmAlarmController(this)
         val now = Calendar.getInstance()
@@ -74,7 +81,7 @@ class NotificationPlayingService : Service() {
             Log.d("NotificationService" ," day ======  " + day)
             Log.d("NotificationService " ," product  == " +(product_v[index]._id ))
 
-            var id_notification : String?= null
+            var id_notification : String?
 
             if(day <= 0 && day > -3){
                 countExpiry++
@@ -238,7 +245,7 @@ class NotificationPlayingService : Service() {
         }
 
 
-        return Service.START_NOT_STICKY
+        return Service.START_STICKY
     }
 
     // count notification on home screen
@@ -258,8 +265,30 @@ class NotificationPlayingService : Service() {
         }
 
     }
+
+    fun createNotificationChannel(context: Context) {
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationChannel = notificationManager.getNotificationChannel(CHANNEL_APP_STATUS)
+            if (notificationChannel == null) {
+                val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                val description = "......."
+                val importance = NotificationManager.IMPORTANCE_HIGH
+                val mChannel = NotificationChannel(CHANNEL_APP_STATUS, "Foreground Service", importance)
+                mChannel.description = description
+                mChannel.enableLights(true)
+                mChannel.lightColor = Color.RED
+                mChannel.enableVibration(true)
+                mChannel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
+                mNotificationManager.createNotificationChannel(mChannel)
+            }
+        }
+
+    }
     // group of notification
     fun Group_Notification( title:String,  content : String){
+
         realms!!.view_notification()
         Mylog.d("Group_Notification: ", "  content  "+title +"  content  " + content )
         val intent = Intent(this, AllInOneActivity::class.java)
@@ -270,32 +299,34 @@ class NotificationPlayingService : Service() {
 
         val pIntent = PendingIntent.getActivity(this, 99 , intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val builder = NotificationCompat.Builder(this)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        val builder = NotificationCompat.Builder(this,CHANNEL_APP_STATUS)
+
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+             createNotificationChannel(applicationContext)
             builder
                     .setAutoCancel(true)
                     .setContentTitle(title)
-//                    .setContentText(content)
+                    .setContentText(content)
                     .setStyle(NotificationCompat.BigTextStyle()
-                            .setBigContentTitle(title)
-                            .setSummaryText("Han Su Dung")
+                            .setSummaryText("HanSuDung")
                             .bigText(content))
-
-                    .setColor(resources.getColor(R.color.colorPrimary))
-                    .setSmallIcon(R.drawable.ic_notification)
+//                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_hsd))
+                    .setColor(resources.getColor(R.color.orange))
+                    .setSmallIcon(R.drawable.ic_notificationclolor)
                     .setContentIntent(pIntent)
-                    .setLights(5,5,5)
+//                    .setLights(5,5,5)
 
         } else {
 
             builder.setAutoCancel(true)
                     .setContentTitle(title)
-//                    .setContentText(content)
+                    .setContentText(content)
                     .setStyle(NotificationCompat.BigTextStyle()
                             .setBigContentTitle(title)
                             .bigText(content))
-                    .setColor(resources.getColor(R.color.colorPrimary))
-                    .setSmallIcon(R.drawable.ic_notification)
+//                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_hsd))
+                    .setColor(resources.getColor(R.color.orange))
+                    .setSmallIcon(R.drawable.ic_notificationclolor)
                     .setContentIntent(pIntent)
         }
 
@@ -437,42 +468,5 @@ class NotificationPlayingService : Service() {
     }
 
 
-//    @SuppressLint("NewApi")
-//    fun ShowNotification( title:String, content : String ,  int: Int ){
-//        val mNM = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//        // request_code
-//        val intent1 = Intent(this, HorizontalNtbActivity::class.java)
-//        //        int request_code = intent.getExtras().getInt("request_code");
-//
-//        val pIntent = PendingIntent.getActivity(this, int, intent1, PendingIntent.FLAG_UPDATE_CURRENT)
-//
-//        val mNotify = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-//            Notification.Builder(this)
-//                    .setContentTitle(title)
-//                    .setContentText(content)
-//                    .setSmallIcon(R.drawable.ic_notification)
-//                    .setContentIntent(pIntent)
-//                    .setAutoCancel(true)
-//                    .build()
-//
-////            val soundId = resources.getIdentifier(session.getSoundSuri(), "raw", packageName)
-////
-////
-////            mNM.setSound(Uri.parse("android.resource://"
-////                    + this.packageName + "/" + soundId))
-//
-//        } else {
-//
-//            Notification.Builder(this)
-//                    .setContentTitle(title)
-//                    .setContentText(content)
-//                    .setSmallIcon(R.drawable.ic_notification)
-//                    .setContentIntent(pIntent)
-//                    .setAutoCancel(true)
-//                    .build()
-//        }
-//        mNM.notify(int, mNotify)
-//
-//    }
 }
 

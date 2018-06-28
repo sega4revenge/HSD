@@ -22,6 +22,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -40,8 +41,6 @@
         <meta-data
             android:name="com.finger.hsd.common.MyGlideModule"
             android:value="GlideApp" />
-
-
 
         <activity android:name=".activity.LoginActivity"
             android:screenOrientation="portrait">

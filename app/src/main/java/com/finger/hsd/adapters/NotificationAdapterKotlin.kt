@@ -62,7 +62,12 @@ class NotificationAdapterKotlin(val mContext: Context, val listItem: ArrayList<N
 
             //đã xem
             if (items.watched!!) {
-                view.ln_item.setBackgroundColor(mContext.getResources().getColor(R.color.white))
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    view.ln_item.setBackgroundColor(mContext.getResources().getColor(R.color.white, null))
+
+                }else{
+                    view.ln_item.setBackgroundColor(mContext.getResources().getColor(R.color.white))
+                }
             } else {
                 view.ln_item.setBackgroundColor(mContext.getResources().getColor(R.color.grey_dim))
             }
@@ -72,9 +77,6 @@ class NotificationAdapterKotlin(val mContext: Context, val listItem: ArrayList<N
                 if(product !=null){
                     view.tv_hsd.setVisibility(View.VISIBLE)
                     view.im_product_noti.setVisibility(View.VISIBLE)
-//                view.tv_warning.setVisibility(View.GONE)
-//                    view.progress_notification.visibility = View.VISIBLE
-//                    view.img.visibility = View.VISIBLE
 
 
                     Log.d("aaaaaaa ", "NotificationFragment: " + items.id_product!!)
@@ -93,28 +95,50 @@ class NotificationAdapterKotlin(val mContext: Context, val listItem: ArrayList<N
                     if (items.status_expiry.equals("expired")) {
                         view.tv_name_status.setTextColor(R.drawable.roundedtext_red)
                         if(days == 0) {
-                            view.tv_name_status.text = "Sản phẩm " + product.namechanged!!.toString() + " đã hết hạn " + "hôm nay" + " ngày"
+                            val strStatus = mContext.resources.getString(R.string.product)+" " + product.namechanged!!.toString() + " "+
+                                    mContext.resources.getString(R.string.expired_time)+" " + mContext.resources.getString(R.string.today)
+                            view.tv_name_status.text =  strStatus
                         }else{
-                            view.tv_name_status.text = "Sản phẩm " + product.namechanged!!.toString() + " đã hết hạn " + Math.abs(days) + " ngày"
+                            val strStatus = mContext.resources.getString(R.string.product) +" " + product.namechanged!!.toString() + " "+
+                                    mContext.resources.getString(R.string.expired_time)+" " + Math.abs(days) + mContext.resources.getString(R.string.day)
+                            view.tv_name_status.text = strStatus
 
                         }
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            view.tv_hsd.setTextColor(mContext.resources.getColor(R.color.red, null))
                             view.tv_name_status.setTextColor(mContext.resources.getColor(R.color.red, null))
                         }else{
                             view.tv_name_status.setTextColor(mContext.resources.getColor(R.color.red))
+                            view.tv_hsd.setTextColor(mContext.resources.getColor(R.color.red))
                         }
                     } else {
-
-                        view.tv_name_status.text = "Sản phẩm "+product.namechanged!!.toString() + "sắp sẽ hết hạn trong "+ Math.abs(days)+" ngày"
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            view.tv_name_status.setTextColor(mContext.resources.getColor(R.color.orange, null))
-                        }else{
-                            view.tv_name_status.setTextColor(mContext.resources.getColor(R.color.orange))
+                        if(days == 0) {
+                            val strStatus = mContext.resources.getString(R.string.product) +" " +
+                                    product.namechanged!!.toString() + " "+mContext.resources.getString(R.string.will_epritedtime) + " "+mContext.resources.getString(R.string.today)
+                            view.tv_name_status.text = strStatus
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                view.tv_name_status.setTextColor(mContext.resources.getColor(R.color.orange, null))
+                                view.tv_hsd.setTextColor(mContext.resources.getColor(R.color.orange, null))
+                            } else {
+                                view.tv_name_status.setTextColor(mContext.resources.getColor(R.color.orange))
+                                view.tv_hsd.setTextColor(mContext.resources.getColor(R.color.orange))
+                            }
+                        }else {
+                            val strStatus = mContext.resources.getString(R.string.product) +" " + product.namechanged!!.toString() + " "+
+                                    mContext.resources.getString(R.string.will_epritedtime) +" "+ Math.abs(days) + " " +mContext.resources.getString(R.string.day)
+                            view.tv_name_status.text = strStatus
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                view.tv_name_status.setTextColor(mContext.resources.getColor(R.color.orange, null))
+                                view.tv_hsd.setTextColor(mContext.resources.getColor(R.color.orange, null))
+                            } else {
+                                view.tv_name_status.setTextColor(mContext.resources.getColor(R.color.orange))
+                                view.tv_hsd.setTextColor(mContext.resources.getColor(R.color.orange))
+                            }
                         }
                     }
 //                    view.tv_status.text = txtDaystatus
                     val txtExpiredTime = mContext.resources.getString(R.string.expiredtime_notifi) + dateFormat.format(date)
-                    view.tv_hsd.setText(txtExpiredTime)
+                    view.tv_hsd.text = txtExpiredTime
 
                     Mylog.d("aaaaaaa " + " type: " + items.type + "NotificationFragment: " + product.imagechanged)
 
@@ -122,7 +146,7 @@ class NotificationAdapterKotlin(val mContext: Context, val listItem: ArrayList<N
                             .load(product.imagechanged)
                             .apply(options)
                             .into(view.im_product_noti)
-                    view.ln_item.setOnClickListener(View.OnClickListener {
+                    view.ln_item.setOnClickListener({
                         mNotificationListener.onBadgeUpdate(realm.countNotification() - 1)
 
                         view.ln_item.setBackgroundColor(mContext.resources.getColor(R.color.white))
@@ -140,8 +164,8 @@ class NotificationAdapterKotlin(val mContext: Context, val listItem: ArrayList<N
 
             } else if (items.type == 3) {
                 Mylog.d("aaaaaaaaaa type = 3")
-                view.tv_hsd.setVisibility(View.GONE)
-                view.im_product_noti.setVisibility(View.GONE)
+                view.tv_hsd.text = mContext.resources.getString(R.string.wellcome)
+                view.im_product_noti.setVisibility(View.VISIBLE)
                 view.tv_name_status.text = mContext.resources.getString(R.string.wellcome_hsd)
 //                view.progress_notification.visibility = View.GONE
 //                view.img.visibility = View.VISIBLE
@@ -152,7 +176,7 @@ class NotificationAdapterKotlin(val mContext: Context, val listItem: ArrayList<N
                             .load(mContext.resources.getDrawable(R.drawable.ic_launcher_hsd, null))
                             .apply(options)
                             .into(view.im_product_noti)
-                }else{
+                } else{
                     Glide.with(mContext)
                             .load(mContext.resources.getDrawable(R.drawable.ic_launcher_hsd))
                             .apply(options)

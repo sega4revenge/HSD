@@ -22,19 +22,14 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.makeramen.roundedimageview.RoundedImageView
+        <ImageView
             android:layout_margin="16dp"
             android:layout_width="65dp"
             android:layout_height="65dp"
             android:id="@+id/imageView1"
             android:scaleType="fitCenter"
-            app:riv_corner_radius="30dip"
-            app:riv_border_width="2dip"
-            app:riv_border_color="#ffedb7"
-            app:riv_mutate_background="true"
-            app:riv_tile_mode="repeat"
-            android:background="@drawable/ic_avatar"
-            app:riv_oval="true" />
+            android:src="@drawable/ic_avatar"
+            />
 
         <LinearLayout
             android:layout_gravity="center_vertical"

@@ -134,10 +134,9 @@ var a : String?=null
         return object : DisposableObserver<Response>() {
 
             override fun onNext(response: Response) {
-                println(response.status)
+                Mylog.d("ppppp " +response.user)
                 if (response.status == 200) {
                     Log.d(register, "onResponse isMainThread : " + (Looper.myLooper() == Looper.getMainLooper()).toString())
-
                     mLoginView.getUserDetail(response.user!!)
                   //  mLoginView.isRegisterSuccessful(true)
                 }
@@ -145,6 +144,7 @@ var a : String?=null
             }
 
             override fun onError(e: Throwable) {
+                Mylog.d("ppppp " +e.message)
                 if (e is ANError) {
 
                     Log.d(register, "onError errorCode : " + e.errorCode)
@@ -172,7 +172,8 @@ var a : String?=null
     }
 
     fun register(user: User, type: Int) {
-        Mylog.d("aaaaaa types: "+type)
+
+        Mylog.d("ppppp types: "+type)
         try {
                 jsonObject.put("phone", user.phone)
                 jsonObject.put("password", user.password)
@@ -182,6 +183,7 @@ var a : String?=null
         } catch (e: JSONException) {
             e.printStackTrace()
         }
+
         disposables.add(getObservable_register(Constants.URL_REGISTER_USER)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

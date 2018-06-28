@@ -29,7 +29,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RelativeLayout
-import android.widget.Toast
 import com.androidnetworking.error.ANError
 import com.finger.hsd.activity.ContinuousCaptureActivity
 import com.finger.hsd.common.MyApplication
@@ -65,10 +64,11 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
     override fun onResume() {
         super.onResume()
         MyApplication.getConnectivityListener(this)
+        onBadgeUpdate(session!!.getCountNotification())
         val view = this.currentFocus
         if (view != null) {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm!!.hideSoftInputFromWindow(view.windowToken, 0)
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
 
@@ -76,7 +76,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
     internal var viewPager: ViewPager? = null
      var   mBadgeView: BadgeView? = null
     internal var prevMenuItem: MenuItem? = null;
-    internal var menuItem:MenuItem? = null
+
     internal var edit_search: EditText? = null
     internal var mcoutdowntime: CountDownTimer? = null
     internal var searchkey = ""
@@ -93,9 +93,10 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
     var realm: RealmController? = null
     var lin:RelativeLayout? = null
     var sync: ImageView? = null
-    var clicked = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_all_in_one)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -111,15 +112,15 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
         presenter = SyncPresenter(this)
         realm = RealmController(this)
         session = SessionManager(this)
-        lin = findViewById<RelativeLayout>(R.id.actionbar)
+        lin = findViewById(R.id.actionbar)
         lin?.requestFocus()
         viewPager = findViewById(R.id.viewpager)
         bottomNavigationView = findViewById(R.id.bottom_navigation)
-        mImageview = findViewById<ImageView>(R.id.img_selete)
+        mImageview = findViewById(R.id.img_selete)
         edit_search = findViewById<View>(R.id.edit_search) as EditText
-        scan_barcode_img = findViewById<ImageView>(R.id.scan_barcode_img)
-        sync= findViewById<ImageView>(R.id.sync)
-        scan_barcode_img?.setOnClickListener(View.OnClickListener {
+        scan_barcode_img = findViewById(R.id.scan_barcode_img)
+        sync= findViewById(R.id.sync)
+        scan_barcode_img?.setOnClickListener( {
             try {
                 if (ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), perID)
@@ -129,8 +130,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
                         val i = Intent(this@AllInOneActivity, ContinuousCaptureActivity::class.java)
                         startActivity(i)
                     } else {
-                        Toast.makeText(this@AllInOneActivity, "Không thể kết nối mạng", Toast.LENGTH_SHORT).show()
-                    }
+                        showToast(R.string.not_connect_to_network)                    }
                 }
 
             } catch (ie: IOException) {
@@ -178,7 +178,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
                 val view = this.currentFocus
                 if (view != null) {
                     val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm!!.hideSoftInputFromWindow(view.windowToken, 0)
+                    imm.hideSoftInputFromWindow(view.windowToken, 0)
                 }
             }else{
                 edit_search?.setText("")
@@ -189,7 +189,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
 
         viewPager!!.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
 
-        fabCreate = findViewById<FloatingActionButton>(R.id.fab_fixer)
+        fabCreate = findViewById(R.id.fab_fixer)
 
         fabCreate!!.setOnClickListener(View.OnClickListener {
             if (ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -200,7 +200,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
                     val i = Intent(this@AllInOneActivity, ContinuousCaptureActivity::class.java)
                     startActivity(i)
                 } else {
-                    Toast.makeText(this@AllInOneActivity, "Không thể kết nối mạng", Toast.LENGTH_SHORT).show()
+                 showToast(R.string.not_connect_to_network)
                 }
             }
 
@@ -211,21 +211,14 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
         val itemView = v as BottomNavigationItemView
         itemView.addView(getTabItemView())
 
-        bottomNavigationView!!.setOnNavigationItemSelectedListener(
-                BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        bottomNavigationView!!.setOnNavigationItemSelectedListener({ item ->
                     when (item.itemId) {
                         R.id.item_home -> viewPager!!.setCurrentItem(0)
                         R.id.item_notification ->{
                             viewPager!!.setCurrentItem(1)
                         }
                         R.id.item_profile -> viewPager!!.setCurrentItem(2)
-
-
-
                     }
-                    //                                    viewPager.setCurrentItem(3);
-                    //                                    mBadgeView.setText(formatBadgeNumber(0));
-                    //                                    ShortcutBadger.removeCount(MainActivity.this);
 
                     false
                 })
@@ -250,7 +243,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
         })
 
         setupViewPager(viewPager!!)
-        badgeIconScreen()
+
 
         onNetworkConnectionChanged(ConnectivityChangeReceiver.isConnected())
     }
@@ -304,12 +297,13 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
                 mBadgeView!!.setBackground(getDrawable(R.drawable.button_radius_red))
             }
         }
-        mBadgeView!!.setText(formatBadgeNumber(realm!!.countNotification()))
+        mBadgeView!!.setText(formatBadgeNumber(session!!.getCountNotification()))
         return view
     }
     override fun onBadgeUpdate(value: Int) {
 
-        mBadgeView!!.text = formatBadgeNumber(realm!!.countNotification())
+        mBadgeView!!.text = formatBadgeNumber(session!!.getCountNotification())
+
     }
     fun formatBadgeNumber(value: Int): String? {
         Mylog.d("aaaaaaaaaaa formatbadgeNumber: "+value)
@@ -333,14 +327,14 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
                 Mylog.d("aaaaaaaaaaa da chay menuvisible: ")
                 session!!.setCountNotification(0)
                 badgeIconScreen()
-                formatBadgeNumber(session!!.getCountNotification())
+              onBadgeUpdate(session!!.getCountNotification())
             }
 
 
         }
   }
     fun badgeIconScreen() {
-        var badgeCount = session!!.getCountNotification()
+        val badgeCount = session!!.getCountNotification()
 //        ShortcutBadger.applyCount(applicationContext, badgeCount)
         if (session!!.getCountNotification() > 0) {
             try {
@@ -462,7 +456,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
 
             }else{
                 val product = realm!!.getProduct(idProduct)
-                realm!!.realm.executeTransaction(Realm.Transaction {
+                realm!!.realm.executeTransaction( {
                     product!!.isSyn = true
                 })
                 temp++
@@ -470,7 +464,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
             }
         }else if (type == 333){
             val  notification = listNotification!![indexNotification]
-            realm!!.realm.executeTransaction(Realm.Transaction {
+            realm!!.realm.executeTransaction({
                 notification.isSync = true
                 notification.watched = false
             })

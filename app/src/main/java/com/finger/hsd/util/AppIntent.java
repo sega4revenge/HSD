@@ -14,7 +14,7 @@ public class AppIntent {
 
     // broachcase
     public static String ACTION_UPDATE_ITEM = "updateitemHome";
-    public static String ACTION_UPDATE_NOTIFICATION = "updateItemNotification";
+    public static String ACTION_LOGIN = "actionLogin";
     public static String ACTION_DELETE_PRODUCT_HOME = "deletItemHome";
     public static String ACTION_DELETE_PRODUCT_NOTIFICATION = "deleteItemNotification";
 }

@@ -64,6 +64,7 @@ class SyncPresenter : getObservable {
             jsonObject.put("nameproduct", product.namechanged)
             jsonObject.put("hsd_ex", product.expiretime)
             jsonObject.put("description", product.description)
+            jsonObject.put("daybefore", product.daybefore)
         }catch (e: JSONException){
             e.printStackTrace()
         }

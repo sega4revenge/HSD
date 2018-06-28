@@ -519,8 +519,8 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
         TedPermission(this@DetailProductActivity)
                 .setPermissionListener(permissionlistener)
-                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions " +
-                        "at [Setting] > [Permission]")
+                .setDeniedMessage( resources.getString(R.string.not_allow_permission)
+                       )
                 .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
 
                 .check()
@@ -743,6 +743,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
             } else
             // update thông tin: image, name, note, expiredtime
                 if (typeError == 333) {
+                    hideProgress()
                     note = mTvNote.text.toString()
                     name = mTvName.text.toString()
                     var days = 0

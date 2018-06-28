@@ -1,17 +1,19 @@
 package com.finger.hsd.activity
 
 import android.accounts.Account
-import android.accounts.AccountManager
-import android.app.Activity
-import android.app.AlarmManager
-import android.app.PendingIntent
+import android.app.*
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.NotificationCompat
 import android.util.Base64
 import android.util.Log
 import android.view.View
@@ -32,6 +34,7 @@ import com.finger.hsd.manager.SessionManager
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.User
 import com.finger.hsd.presenter.LoginPresenter
+import com.finger.hsd.util.AppIntent
 import com.finger.hsd.util.Constants
 import com.finger.hsd.util.Mylog
 import com.finger.hsd.util.Validation.validatePhone
@@ -54,8 +57,6 @@ import java.util.*
 class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.OnConnectionFailedListener {
 
 
-
-    var mAccountManager: AccountManager? = null
     var account: Account? = null
     var user = User()
     var TAG = "Login Activity"
@@ -82,6 +83,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FacebookSdk.sdkInitialize(applicationContext)
+        registerReceiver(this.broadcastLogin, IntentFilter(AppIntent.ACTION_LOGIN))
 
         callbackManager = CallbackManager.Factory.create()
         setContentView(R.layout.activity_login)
@@ -93,7 +95,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
             rootFolder!!.mkdirs()
         }
         session = SessionManager(this)
-        if(session!!.isLogin()){
+        if(session.isLogin()){
             val intent = Intent(this, AllInOneActivity::class.java)
             startActivity(intent)
             finish()
@@ -165,6 +167,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
 
 
         btn_google.setOnClickListener {
+//            showProgress()
             val signInIntent = Auth.GoogleSignInApi.getSignInIntent(MyApplication.getGoogleApiHelper()!!.googleApiClient)
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
@@ -194,21 +197,21 @@ fun getKeyHash(){
         var err = 0
         if (!validatePhone(phone_number!!.text.toString())) {
             err++
-            phone_number!!.error = "Không được để trống trường này"
+            phone_number!!.error = resources.getString(R.string.not_null_case)
         } else {
             if (!validatePhone2(phone_number.text.toString())!!) {
                 err++
-                phone_number.error = "Số điện thoại không hợp lệ"
+                phone_number.error = resources.getString(R.string.phone_unvailable)
             }
         }
         if (err == 0) {
-            showProgress("processing...")
+            showProgress(resources.getString(R.string.processing))
             user.phone = phone_number.text.toString()
             user.password = password.text.toString()
             user.tokenfirebase = FirebaseInstanceId.getInstance().token
             mLoginPresenter!!.login(user)
         } else {
-          showSnack("Số điện thoại hoặc mật khẩu không hợp lệ!", R.id.root_login)
+          showSnack(R.string.phone_or_pass_not_avali, R.id.root_login)
 
         }
     }
@@ -245,14 +248,14 @@ fun getKeyHash(){
         // 500 loi server
         if (errorCode == 500) {
             if(errorBody == 404)
-            showSnack("User chưa được đăng ký!", R.id.root_login)
+            showSnack(R.string.user_not_register, R.id.root_login)
             else if(errorBody == 401){
-                showSnack("Sai mật khẩu!", R.id.root_login)
+                showSnack(R.string.pass_wrong, R.id.root_login)
             }else if (errorBody == 500){
-                showSnack("Không có kết nối! vui lòng kiểm tra kết nối internet của bạn!", R.id.root_login)
+                showSnack(R.string.not_connect_check, R.id.root_login)
             }
         }else{
-            showSnack("Không có kết nối! vui lòng thử lại!", R.id.root_login)
+            showSnack(R.string.not_connect_to_network, R.id.root_login)
         }
 
     }
@@ -288,6 +291,7 @@ fun getKeyHash(){
 
         }else{
             // khong co du lieu
+            showNotificationWelcome()
             hideProgress()
             session.setLogin(true)
             startActivity(Intent(this@LoginActivity, AllInOneActivity::class.java))
@@ -296,24 +300,83 @@ fun getKeyHash(){
 
 
 
-//        startActivity(Intent(this@LoginActivity, HorizontalNtbActivity::class.java))
-//        val backgroundRealm = Realm.getDefaultInstance()
-////        realm!!.addUser(user)
-//        object : Runnable {
-//            override fun run() {
-//                backgroundRealm.executeTransactionAsync(Realm.Transaction { realm ->
-//                    // val mData = realm.createObject(Data::class.java)
-//                    backgroundRealm.copyToRealm(user)
-//                }, Realm.Transaction.OnSuccess {
-//                    Mylog.d("aaaaaaaa sucess " + "chay ngay di chay ngay di")
-//                    dataSync.execute()
-//                })
-//            }
-//        }
+    }
+    private  val CHANNEL_APP_STATUS = "CHANNEL_APP_STATUS"
+    fun showNotificationWelcome(){
+        session.setCountNotification(1)
+
+        val intent = Intent(this, AllInOneActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+
+        intent.putExtra("InNotificaitonFragment","InNotificationFragment")
+
+
+        val pIntent = PendingIntent.getActivity(this, 99 , intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val builder = NotificationCompat.Builder(this,CHANNEL_APP_STATUS)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            createNotificationChannel(applicationContext)
+            builder
+                    .setAutoCancel(true)
+                    .setContentTitle(resources.getString(R.string.wellcome_hsd))
+                    .setContentText(resources.getString(R.string.wellcome_hsd))
+                    .setStyle(NotificationCompat.BigTextStyle()
+                            .setSummaryText("HanSuDung")
+                            .bigText(resources.getString(R.string.wellcome_hsd)))
+//                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_hsd))
+                    .setColor(resources.getColor(R.color.orange))
+                    .setSmallIcon(R.drawable.ic_notificationclolor)
+                    .setContentIntent(pIntent)
+//                    .setLights(5,5,5)
+
+        } else {
+
+            builder.setAutoCancel(true)
+                    .setContentTitle(resources.getString(R.string.wellcome_hsd))
+                    .setContentText(resources.getString(R.string.wellcome_hsd))
+                    .setStyle(NotificationCompat.BigTextStyle()
+                            .setBigContentTitle(title)
+                            .bigText(resources.getString(R.string.wellcome)))
+//                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_hsd))
+                    .setColor(resources.getColor(R.color.orange))
+                    .setSmallIcon(R.drawable.ic_notificationclolor)
+                    .setContentIntent(pIntent)
+        }
+
+        if(!session.get_open_Alarm().equals("off")){
+            val soundId = resources.getIdentifier(session.get_Sound(), "raw", packageName)
+            builder.setSound(Uri.parse("android.resource://"
+                    + this.packageName + "/" + soundId))
+        }
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(99, builder.build())
+    }
+
+    fun createNotificationChannel(context: Context) {
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationChannel = notificationManager.getNotificationChannel(CHANNEL_APP_STATUS)
+            if (notificationChannel == null) {
+                val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                val description = "......."
+                val importance = NotificationManager.IMPORTANCE_HIGH
+                val mChannel = NotificationChannel(CHANNEL_APP_STATUS, "Foreground Service", importance)
+                mChannel.description = description
+                mChannel.enableLights(true)
+                mChannel.lightColor = Color.RED
+                mChannel.enableVibration(true)
+                mChannel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
+                mNotificationManager.createNotificationChannel(mChannel)
+            }
+        }
 
     }
+
+
     var percent = 0
-    var current = 0
 
     fun onDownload( product: Product_v){
 
@@ -352,7 +415,7 @@ fun getKeyHash(){
 
                             val out3 = FileOutputStream(myDir)
 
-                            resource?.compress(Bitmap.CompressFormat.JPEG, 90, out3)
+                            resource.compress(Bitmap.CompressFormat.JPEG, 90, out3)
                             Mylog.d("aaaaaaaaaa my dir: "+ myDir)
                             product.imagechanged = Uri.fromFile(myDir).toString()
                             realm!!.updateProduct(product)
@@ -368,7 +431,7 @@ fun getKeyHash(){
                                 onDownload(listProduct!!.get(temp))
                             }else{
                                 percent = (temp.toFloat() / (listProduct!!.size).toFloat() * 100f).toInt()
-                                showProgress("Sync data.. "+percent+ " completed!")
+                                showProgress(resources.getString(R.string.sync)+percent+ " "+resources.getString(R.string.complete))
                                 session.setLogin(true)
                                 hideProgress()
 
@@ -428,6 +491,7 @@ fun getKeyHash(){
         startActivity(intent)
 
 
+
     }
 
 //    private fun gotoforgot() {
@@ -438,15 +502,17 @@ fun getKeyHash(){
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
+        hideProgress()
         callbackManager!!.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_SIGN_IN) {
             val result: GoogleSignInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
 
             handleSignInResult(result)
         } else if (requestCode == Constants.FOTGOTPASSWORD) {
+
             Log.e("requestCode: ", "OK ne")
             if (resultCode == Activity.RESULT_OK) {
-                showSnack("success", R.id.root_login)
+                showSnack(R.string.clear_sucess, R.id.root_login)
 
             }
         }
@@ -478,12 +544,32 @@ fun getKeyHash(){
         hideProgress()
     }
 
+    //=========== broad case
+    internal var broadcastLogin: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val bundle = intent.extras
+            if (bundle != null) {
+                if (bundle.getBoolean("isfinishLogin")) {
+                   this@LoginActivity.finish()
 
-
+                }
+            }
+        }
+    }
     override fun onDestroy() {
         super.onDestroy()
+        if(broadcastLogin!=null)
+        unregisterReceiver(this.broadcastLogin)
         mLoginPresenter?.cancelRequest()
+
     }
+
+    override fun onResume() {
+        super.onResume()
+        registerReceiver(this.broadcastLogin, IntentFilter(AppIntent.ACTION_LOGIN))
+
+    }
+
 }
 
 

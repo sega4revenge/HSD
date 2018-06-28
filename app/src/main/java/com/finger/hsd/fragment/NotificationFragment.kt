@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -20,7 +19,6 @@ import com.finger.hsd.BaseFragment
 import com.finger.hsd.R
 import com.finger.hsd.activity.DetailProductActivity
 import com.finger.hsd.adapters.NotificationAdapterKotlin
-import com.finger.hsd.common.Prefs
 import com.finger.hsd.manager.RealmController
 import com.finger.hsd.manager.SessionManager
 import com.finger.hsd.model.Notification
@@ -34,25 +32,15 @@ import com.rx2androidnetworking.Rx2AndroidNetworking
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
-import io.realm.Realm
 import kotlinx.android.synthetic.main.fragment_notification.view.*
 import org.json.JSONObject
 
 
 // TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [BlankFragment2.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [BlankFragment2.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
+
+
+
 
 class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClickListener {
 
@@ -63,20 +51,20 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
     private lateinit var mNotifiAdapter: NotificationAdapterKotlin
     private lateinit var listitem: ArrayList<Notification>
     private lateinit var layoutManager: RecyclerView.LayoutManager
-    private val pageToDownload: Int = 0
+
     private var realm: RealmController? = null
-    private var prefs: Prefs? = null
+
     var mNotificationBadgeListener: NotificationBadgeListener? = null
     var mContext: Context? = null
     var session : SessionManager? = null
 
-    fun newInstance(info: String): NotificationFragment {
-        val args = Bundle()
-        val fragment = NotificationFragment()
-        args.putString("info", info)
-        fragment.setArguments(args)
-        return fragment
-    }
+//    fun newInstance(info: String): NotificationFragment {
+//        val args = Bundle()
+//        val fragment = NotificationFragment()
+//        args.putString("info", info)
+//        fragment.setArguments(args)
+//        return fragment
+//    }
 
     override fun onAttach(context: Activity) {
         super.onAttach(context)
@@ -107,17 +95,17 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
         mView = inflater.inflate(R.layout.fragment_notification, container, false)
 
         realm = RealmController(activity?.application!!)
-        prefs = Prefs(activity);
+
         mContext = activity
 
         initViews(mView!!)
         session = SessionManager(activity!!)
         setRealmAdapter()
 
-        val strNotiCount = realm!!.countNotification().toString() +  activity!!.resources.getString(R.string.notification_not_see)
+        val strNotiCount = realm!!.countNotification().toString() + " " +activity!!.resources.getString(R.string.notification_not_see)
         mView!!.count_notification.text = strNotiCount
 
-        mView!!.im_clear.setOnClickListener(View.OnClickListener {
+        mView!!.im_clear.setOnClickListener({
 //            showProgress()
              listNotWatch = realm!!.listNotWatch()
             temp = 0
@@ -141,7 +129,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
             } else {
 
                 temp++
-                realm!!.realm.executeTransaction(Realm.Transaction {
+                realm!!.realm.executeTransaction({
                     notification.isSync = false
                     notification.watched = true
 
@@ -250,17 +238,17 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
         Mylog.d("aaaaaaaaaa "+product._id)
 
         // startActivityForResult(intent, AppIntent.REQUEST_NOTIFICATION)
-        var notification = realm!!.getOneNotification(product._id!!)
+        val notification = realm!!.getOneNotification(product._id!!)
         if (ConnectivityChangeReceiver.isConnected()) {
             updateNotficationOnServer(notification!!, 2)
         } else {
-            realm!!.realm.executeTransaction(Realm.Transaction {
+            realm!!.realm.executeTransaction( {
                 notification!!.isSync = false
                 notification.watched = true
 
             })
-            mView!!.count_notification.text = realm!!.countNotification().toString() +  " thông báo"
-
+            val strCountNoti =  realm!!.countNotification().toString() +  activity!!.resources.getString(R.string.notification_not_see)
+            mView!!.count_notification.text = strCountNoti
         }
         startActivity(intent)
     }
@@ -270,6 +258,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
         override fun onReceive(context: Context, intent: Intent) {
             val bundle = intent.extras
             Mylog.d("communition  BroadcastReceiver chay ngay di")
+
             if (bundle != null) {
                 if (bundle.getBoolean("updateItem")) {
                     //======= hàm này để load lại item vs position đã có
@@ -286,7 +275,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
 //                        listitem = realm!!.getListNotification()!
                         val idProduct = bundle.getString("id_product")
                         for (i in 0..listitem.size - 1) {
-                            var item = listitem[i]
+                            val item = listitem[i]
                             if (item.id_product.equals(idProduct)) {
                                 mNotifiAdapter.notifyItemChanged(i)
                                 break
@@ -296,95 +285,43 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                         Mylog.d("communition  BroadcastReceiver  chay chua chau")
 
                     }
+                    val strCountNoti =  realm!!.countNotification().toString() +  activity!!.resources.getString(R.string.notification_not_see)
+                    mView!!.count_notification.text = strCountNoti
                 } else if (bundle.getBoolean("deleteItem")) {
                     if (!bundle.getBoolean("reloadItem")) {
                         Mylog.d("communition  BroadcastReceiver  chay chua chau")
                         val position = bundle.getInt("position")
-                        var item = listitem.get(position)
+                        val item = listitem.get(position)
                         listitem.remove(item)
                         mNotifiAdapter.notifyDataSetChanged()
 
                     } else {
-                        val idProduct = bundle.getInt("id_product")
-                        val item = mNotifiAdapter.listItem.iterator()
 
-                        while (item.hasNext()) {
-                            var value = item.next()
-                            if (value.id_product!!.equals(idProduct)) {
-                                item.remove()
-
-                            }
-                        }
                         listitem.clear()
                         setRealmAdapter()
 
                     }
+                    val strCountNoti =  realm!!.countNotification().toString() +  activity!!.resources.getString(R.string.notification_not_see)
+                    mView!!.count_notification.text = strCountNoti
 //============hàm này để khi có  thông báo là nó sẽ add vào list notification = alarm thông báo
                 } else if (bundle.getBoolean("addnotification")) {
 
                     Mylog.d("aaaaaaaaaa da chay broadcash")
                     listitem.clear()
                     setRealmAdapter()
-//                    var notification = Notification()
-//
-//                    notification = bundle.getSerializable("notificationModel") as Notification
-//                    Mylog.d("ttttttt " + notification.id_product)
-//                    var checkNewOrOldNotification: Boolean = false
-//                    var toEdit = realm!!.getOneNotification(notification.id_product!!)
-//
-//                    realm!!.realm.executeTransaction(Realm.Transaction {
-//
-//                        if(toEdit !=null){
-//                            toEdit.watched = false
-//                            toEdit.create_at = notification.create_at
-//                           checkNewOrOldNotification = false
-//                        }else{
-//                           checkNewOrOldNotification =  realm!!.addNotification(notification)
-//
-//                        }
-//                    })
-////                    var checkNewOrOldNotification = realm!!.addNotification(notification)
-//                    if (checkNewOrOldNotification) {
-//                        val item = mNotifiAdapter.listItem.iterator()
-//
-//                        while (item.hasNext()) {
-//                            var value = item.next()
-//                            if (value.id_product.equals(notification.id_product)) {
-//                                item.remove()
-//                            }
-//                        }
-//                        listitem.add(0, notification)
-//                        mView!!.recycler_notification.adapter = mNotifiAdapter
-//                        mView!!.recycler_notification.scrollToPosition(0)
-//                        mNotifiAdapter.notifyDataSetChanged()
-//                        mView!!.count_notification.text = realm!!.countNotification().toString() +  " thông báo"
-//                        mNotificationBadgeListener!!.onBadgeUpdate(realm!!.countNotification())
-//                    } else {
-//                        listitem.add(0, notification)
-//                        mView!!.recycler_notification.adapter = mNotifiAdapter
-//                        mView!!.recycler_notification.scrollToPosition(0)
-//                        mNotifiAdapter.notifyDataSetChanged()
-//                        mView!!.count_notification.text = realm!!.countNotification().toString() +  " thông báo"
-//                        mNotificationBadgeListener!!.onBadgeUpdate(session!!.getCountNotification())
-//                    }
+                    val strCountNoti =  realm!!.countNotification().toString() +  activity!!.resources.getString(R.string.notification_not_see)
+                    mView!!.count_notification.text = strCountNoti
+
+                    mNotificationBadgeListener!!.onBadgeUpdate(session!!.getCountNotification())
 
                 }
 
  //========= hàm này để update lại thông báo khi xóa listProduct từ homeFragment
                 else if (bundle.getBoolean("deleteListProduct")){
-                    var listProduct = bundle.getParcelableArrayList<Product_v>("listProductDeleted")
-                    Mylog.d("aaaaaaaaaaaa "+listProduct.size)
-                    for (i in 0..listProduct.size){
-                        val item = mNotifiAdapter.listItem.iterator()
-
-                        while (item.hasNext()) {
-                            var value = item.next()
-                            if (value.id_product.equals(listProduct.get(i)._id)) {
-                                item.remove()
-                            }
-                        }
-                    }
-                    mNotifiAdapter.notifyDataSetChanged()
+                    listitem.clear()
+                    setRealmAdapter()
+                    val strCountNoti =  realm!!.countNotification().toString() +  activity!!.resources.getString(R.string.notification_not_see)
+                    mView!!.count_notification.text = strCountNoti
                 }
             }
         }
@@ -392,8 +329,8 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
 
     fun updateNotficationOnServer(notification: Notification, type : Int) {
         Mylog.d("ttttttttt idproduct: "+notification.id_product)
-        var user = realm!!.getUser()
-        var jsonObject = JSONObject()
+        val user = realm!!.getUser()
+        val jsonObject = JSONObject()
         try {
             jsonObject.put("id_product", notification.id_product)
             jsonObject.put("idUser", user!!._id)
@@ -426,7 +363,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                         if (type == 2){
 
                             temp++
-                            realm!!.realm.executeTransaction(Realm.Transaction {
+                            realm!!.realm.executeTransaction( {
                                 notification.isSync = true
                                 notification.watched = true
 
@@ -437,7 +374,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                                 // success
                             }
                         }else {
-                            realm!!.realm.executeTransaction(Realm.Transaction {
+                            realm!!.realm.executeTransaction( {
                                 notification.isSync = true
                                 notification.watched = false
                             })
@@ -449,7 +386,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                         if (type==2){
 
                             temp++
-                            realm!!.realm.executeTransaction(Realm.Transaction {
+                            realm!!.realm.executeTransaction({
                                 notification.isSync = false
                                 notification.watched = true
 
@@ -460,8 +397,8 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                                 //sucess
                             }
                         }else {
-                            realm!!.realm.executeTransaction(Realm.Transaction {
-                                notification!!.isSync = false
+                            realm!!.realm.executeTransaction( {
+                                notification.isSync = false
                                 notification.watched = true
 
                             })

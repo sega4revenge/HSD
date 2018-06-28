@@ -1,13 +1,18 @@
 package com.finger.hsd.activity
 
 import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.NotificationCompat
 import android.util.Log
 import android.view.View
 import com.bumptech.glide.Priority
@@ -22,6 +27,7 @@ import com.finger.hsd.manager.SessionManager
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.User
 import com.finger.hsd.presenter.LoginPresenter
+import com.finger.hsd.util.AppIntent
 import com.finger.hsd.util.Constants
 import com.finger.hsd.util.Mylog
 import com.finger.hsd.util.Validation.validatePassword
@@ -42,6 +48,8 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
     private var pending_intent: PendingIntent? = null
     private val milDay = 86400000L
     lateinit var alarmManager: AlarmManager
+
+
 
 
     val options = RequestOptions()
@@ -94,24 +102,24 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
 
         if (!validatePhone(phone_number!!.text.toString())) {
             err++
-            phone_number!!.error = "Không được để trống trường này!"
+            phone_number!!.error = resources.getString(R.string.not_null_case)
         } else {
             if (!validatePhone2(phone_number.text.toString())!!) {
                 err++
-                phone_number.error = "Số điện thoại không hợp lệ! Hãy thử nhập lại nhé!"
+                phone_number.error = resources.getString(R.string.phone_unvailable)
             }
         }
 
         if (!validatePassword(txt_password!!.text.toString())) {
 
             err++
-            txt_password!!.error = "Không được để trống trường này!"
+            txt_password!!.error = resources.getString(R.string.not_null_case)
         }
 
         if (txt_password!!.text.toString() != repass!!.text.toString() || repass!!.text.toString() == "") {
 
             err++
-            repass!!.error = "Mật khẩu không trùng khớp! Vui lòng nhập lại mật khẩu!"
+            repass!!.error = resources.getString(R.string.repass_not_like)
         }
 
 
@@ -127,15 +135,13 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
 
 
         } else {
-            showSnack("Vui lòng nhập đầy đủ thông tin hợp lệ!", R.id.root_register)
+            showSnack(R.string.input_infomation_valid, R.id.root_register)
         }
     }
 
     private fun gotologin() {
-        val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
-        startActivity(intent)
+
         finish()
-        overridePendingTransition(0, 0)
     }
 
     private fun setError() {
@@ -144,8 +150,79 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
         repass.error = null
         txt_password.error = null
     }
+    private  val CHANNEL_APP_STATUS = "CHANNEL_APP_STATUS"
+
+    fun showNotificationWelcome(){
+        session!!.setCountNotification(1)
+        val intent = Intent(this, AllInOneActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+
+        intent.putExtra("InNotificaitonFragment","InNotificationFragment")
 
 
+        val pIntent = PendingIntent.getActivity(this, 99 , intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val builder = NotificationCompat.Builder(this,CHANNEL_APP_STATUS)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            createNotificationChannel(applicationContext)
+            builder
+                    .setAutoCancel(true)
+                    .setContentTitle(resources.getString(R.string.wellcome_hsd))
+                    .setContentText(resources.getString(R.string.wellcome_hsd))
+                    .setStyle(NotificationCompat.BigTextStyle()
+                            .setSummaryText("HanSuDung")
+                            .bigText(resources.getString(R.string.wellcome)))
+//                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_hsd))
+                    .setColor(resources.getColor(R.color.orange))
+                    .setSmallIcon(R.drawable.ic_notificationclolor)
+                    .setContentIntent(pIntent)
+//                    .setLights(5,5,5)
+
+        } else {
+
+            builder.setAutoCancel(true)
+                    .setContentTitle(resources.getString(R.string.wellcome_hsd))
+                    .setContentText(resources.getString(R.string.wellcome_hsd))
+                    .setStyle(NotificationCompat.BigTextStyle()
+                            .setBigContentTitle(title)
+                            .bigText(resources.getString(R.string.wellcome)))
+//                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_hsd))
+                    .setColor(resources.getColor(R.color.orange))
+                    .setSmallIcon(R.drawable.ic_notificationclolor)
+                    .setContentIntent(pIntent)
+        }
+
+        if(!session!!.get_open_Alarm().equals("off")){
+            val soundId = resources.getIdentifier(session!!.get_Sound(), "raw", packageName)
+            builder.setSound(Uri.parse("android.resource://"
+                    + this.packageName + "/" + soundId))
+        }
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(99, builder.build())
+    }
+
+    fun createNotificationChannel(context: Context) {
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationChannel = notificationManager.getNotificationChannel(CHANNEL_APP_STATUS)
+            if (notificationChannel == null) {
+                val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                val description = "......."
+                val importance = NotificationManager.IMPORTANCE_HIGH
+                val mChannel = NotificationChannel(CHANNEL_APP_STATUS, "Foreground Service", importance)
+                mChannel.description = description
+                mChannel.enableLights(true)
+                mChannel.lightColor = Color.RED
+                mChannel.enableVibration(true)
+                mChannel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
+                mNotificationManager.createNotificationChannel(mChannel)
+            }
+        }
+
+    }
     override fun isLoginSuccessful(isLoginSuccessful: Boolean) {
 
     }
@@ -155,14 +232,14 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
         hideProgress()
         if (errorCode == 500) {
             if (errorBody == 401) {
-                showSnack("Số điện thoại đã được sử dụng!", R.id.root_register)
+                showSnack(R.string.phone_number_used, R.id.root_register)
             } else if (errorBody == 500) {
-                showSnack("Không có kết nối! vui lòng kiểm tra kết nối internet của bạn!", R.id.root_register)
+                showSnack(R.string.not_connect_check, R.id.root_register)
             }
         } else if (errorCode == 404) {
-            showSnack("Dữ liệu nhập vào bị rỗng!", R.id.root_register)
+            showSnack(R.string.data_input_empty, R.id.root_register)
         } else {
-            showSnack("Không thể kết nối đến máy chủ, vui lòng kiểm tra lại!", R.id.root_register)
+            showSnack(R.string.not_connect_to_server, R.id.root_register)
         }
 
 
@@ -184,14 +261,14 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
                 SettingAlarm(model.listtime!!.toInt(), false)
             }
         }
-        Log.d("isLoginSuccessful","isLoginSuccessful1    "   +"  list   " +list)
+        Log.d("isLoginSuccessful","isLoginSuccessful1    "   +"  list   " +user)
 
         this.user = user
 
         realm!!.addUser(user)
 
         listProduct = realm!!.getlistProduct()
-
+        showNotificationWelcome()
 
         temp = 0
         if (listProduct != null && !listProduct!!.isEmpty()) {
@@ -202,6 +279,10 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
             hideProgress()
             session!!.setLogin(true)
             startActivity(Intent(this@RegisterActivity, AllInOneActivity::class.java))
+            val intent = Intent()
+            intent.putExtra("isfinishLogin", true)
+            intent.action = AppIntent.ACTION_LOGIN
+            sendBroadcast(intent)
             finish()
         }
 
@@ -227,6 +308,10 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
                             hideProgress()
                             session!!.setLogin(true)
                             startActivity(Intent(this@RegisterActivity, AllInOneActivity::class.java))
+                            val intent = Intent()
+                            intent.putExtra("isfinishLogin", true)
+                            intent.action = AppIntent.ACTION_LOGIN
+                            sendBroadcast(intent)
                             finish()
                         }
                     }
@@ -255,16 +340,19 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
                             if (listProduct != null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
                                 percent = (temp.toFloat() / (listProduct!!.size.toFloat()) * 100f).toInt()
 
-                                showProgress("Sync... " + percent)
+                                showProgress(resources.getString(R.string.sync)+ percent)
 
                                 onDownload(listProduct!!.get(temp))
                             } else {
                                 percent = (temp.toFloat() / (listProduct!!.size).toFloat() * 100f).toInt()
-                                showProgress("Sync... " + percent + "% complete")
+                                showProgress(resources.getString(R.string.sync) + percent + " "+ resources.getString(R.string.complete))
                                 session!!.setLogin(true)
 
                                 hideProgress()
-
+                                val intent = Intent()
+                                intent.putExtra("isfinishLogin", true)
+                                intent.action = AppIntent.ACTION_LOGIN
+                                sendBroadcast(intent)
                                 startActivity(Intent(this@RegisterActivity, AllInOneActivity::class.java))
                                 finish()
                             }

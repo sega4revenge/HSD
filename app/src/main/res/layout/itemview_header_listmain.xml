@@ -30,7 +30,7 @@
             />
         <TextView
             android:textColor="@color/colorPrimary"
-            android:text="Clear"
+            android:text="@string/clear"
             android:layout_width="40dp"
             android:layout_height="22dp"
             android:id="@+id/txt_delete_list"

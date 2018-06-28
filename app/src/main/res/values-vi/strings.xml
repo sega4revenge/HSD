@@ -1,373 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="choose_days_before">
-        <item>1 ngày trước</item>
-        <item>2 ngày trước</item>
-        <item>3 ngày trước</item>
-        <item>4 ngày trước</item>
-        <item>5 ngày trước</item>
-        <item>6 ngày trước</item>
-        <item>7 ngày trước</item>
-        <item>8 ngày trước</item>
-        <item>9 ngày trước</item>
-        <item>10 ngày trước</item>
-        <item>11 ngày trước</item>
-        <item>12 ngày trước</item>
-        <item>13 ngày trước</item>
-        <item>14 ngày trước</item>
-        <item>15 ngày trước</item>
-        <item>16 ngày trước</item>
-        <item>17 ngày trước</item>
-        <item>18 ngày trước</item>
-        <item>19 ngày trước</item>
-        <item>20 ngày trước</item>
-        <item>21 ngày trước</item>
-        <item>22 ngày trước</item>
-        <item>23 ngày trước</item>
-        <item>24 ngày trước</item>
-        <item>25 ngày trước</item>
-        <item>26 ngày trước</item>
-        <item>27 ngày trước</item>
-        <item>28 ngày trước</item>
-        <item>29 ngày trước</item>
-        <item>30 ngày trước</item>
-        <item>31 ngày trước</item>
-        <item>32 ngày trước</item>
-        <item>33 ngày trước</item>
-        <item>34 ngày trước</item>
-        <item>35 ngày trước</item>
-        <item>36 ngày trước</item>
-        <item>37 ngày trước</item>
-        <item>38 ngày trước</item>
-        <item>39 ngày trước</item>
-        <item>40 ngày trước</item>
-        <item>41 ngày trước</item>
-        <item>42 ngày trước</item>
-        <item>43 ngày trước</item>
-        <item>44 ngày trước</item>
-        <item>45 ngày trước</item>
-        <item>46 ngày trước</item>
-        <item>47 ngày trước</item>
-        <item>48 ngày trước</item>
-        <item>49 ngày trước</item>
-        <item>50 ngày trước</item>
-        <item>51 ngày trước</item>
-        <item>52 ngày trước</item>
-        <item>53 ngày trước</item>
-        <item>54 ngày trước</item>
-        <item>55 ngày trước</item>
-        <item>56 ngày trước</item>
-        <item>57 ngày trước</item>
-        <item>58 ngày trước</item>
-        <item>59 ngày trước</item>
-        <item>60 ngày trước</item>
-        <item>61 ngày trước</item>
-        <item>62 ngày trước</item>
-        <item>63 ngày trước</item>
-        <item>64 ngày trước</item>
-        <item>65 ngày trước</item>
-        <item>66 ngày trước</item>
-        <item>67 ngày trước</item>
-        <item>68 ngày trước</item>
-        <item>69 ngày trước</item>
-        <item>70 ngày trước</item>
-        <item>71 ngày trước</item>
-        <item>72 ngày trước</item>
-        <item>73 ngày trước</item>
-        <item>74 ngày trước</item>
-        <item>75 ngày trước</item>
-        <item>76 ngày trước</item>
-        <item>77 ngày trước</item>
-        <item>78 ngày trước</item>
-        <item>79 ngày trước</item>
-        <item>80 ngày trước</item>
-        <item>81 ngày trước</item>
-        <item>82 ngày trước</item>
-        <item>83 ngày trước</item>
-        <item>84 ngày trước</item>
-        <item>85 ngày trước</item>
-        <item>86 ngày trước</item>
-        <item>87 ngày trước</item>
-        <item>88 ngày trước</item>
-        <item>89 ngày trước</item>
-        <item>90 ngày trước</item>
-        <item>91 ngày trước</item>
-        <item>92 ngày trước</item>
-        <item>93 ngày trước</item>
-        <item>94 ngày trước</item>
-        <item>95 ngày trước</item>
-        <item>96 ngày trước</item>
-        <item>97 ngày trước</item>
-        <item>98 ngày trước</item>
-        <item>99 ngày trước</item>
-        <item>100 ngày trước</item>
-        <item>101 ngày trước</item>
-        <item>102 ngày trước</item>
-        <item>103 ngày trước</item>
-        <item>104 ngày trước</item>
-        <item>105 ngày trước</item>
-        <item>106 ngày trước</item>
-        <item>107 ngày trước</item>
-        <item>108 ngày trước</item>
-        <item>109 ngày trước</item>
-        <item>110 ngày trước</item>
-        <item>111 ngày trước</item>
-        <item>112 ngày trước</item>
-        <item>113 ngày trước</item>
-        <item>114 ngày trước</item>
-        <item>115 ngày trước</item>
-        <item>116 ngày trước</item>
-        <item>117 ngày trước</item>
-        <item>118 ngày trước</item>
-        <item>119 ngày trước</item>
-        <item>120 ngày trước</item>
-        <item>121 ngày trước</item>
-        <item>122 ngày trước</item>
-        <item>123 ngày trước</item>
-        <item>124 ngày trước</item>
-        <item>125 ngày trước</item>
-        <item>126 ngày trước</item>
-        <item>127 ngày trước</item>
-        <item>128 ngày trước</item>
-        <item>129 ngày trước</item>
-        <item>130 ngày trước</item>
-        <item>131 ngày trước</item>
-        <item>132 ngày trước</item>
-        <item>133 ngày trước</item>
-        <item>134 ngày trước</item>
-        <item>135 ngày trước</item>
-        <item>136 ngày trước</item>
-        <item>137 ngày trước</item>
-        <item>138 ngày trước</item>
-        <item>139 ngày trước</item>
-        <item>140 ngày trước</item>
-        <item>141 ngày trước</item>
-        <item>142 ngày trước</item>
-        <item>143 ngày trước</item>
-        <item>144 ngày trước</item>
-        <item>145 ngày trước</item>
-        <item>146 ngày trước</item>
-        <item>147 ngày trước</item>
-        <item>148 ngày trước</item>
-        <item>149 ngày trước</item>
-        <item>150 ngày trước</item>
-        <item>151 ngày trước</item>
-        <item>152 ngày trước</item>
-        <item>153 ngày trước</item>
-        <item>154 ngày trước</item>
-        <item>155 ngày trước</item>
-        <item>156 ngày trước</item>
-        <item>157 ngày trước</item>
-        <item>158 ngày trước</item>
-        <item>159 ngày trước</item>
-        <item>160 ngày trước</item>
-        <item>161 ngày trước</item>
-        <item>162 ngày trước</item>
-        <item>163 ngày trước</item>
-        <item>164 ngày trước</item>
-        <item>165 ngày trước</item>
-        <item>166 ngày trước</item>
-        <item>167 ngày trước</item>
-        <item>168 ngày trước</item>
-        <item>169 ngày trước</item>
-        <item>170 ngày trước</item>
-        <item>171 ngày trước</item>
-        <item>172 ngày trước</item>
-        <item>173 ngày trước</item>
-        <item>174 ngày trước</item>
-        <item>175 ngày trước</item>
-        <item>176 ngày trước</item>
-        <item>177 ngày trước</item>
-        <item>178 ngày trước</item>
-        <item>179 ngày trước</item>
-        <item>180 ngày trước</item>
-        <item>181 ngày trước</item>
-        <item>182 ngày trước</item>
-        <item>183 ngày trước</item>
-        <item>184 ngày trước</item>
-        <item>185 ngày trước</item>
-        <item>186 ngày trước</item>
-        <item>187 ngày trước</item>
-        <item>188 ngày trước</item>
-        <item>189 ngày trước</item>
-        <item>190 ngày trước</item>
-        <item>191 ngày trước</item>
-        <item>192 ngày trước</item>
-        <item>193 ngày trước</item>
-        <item>194 ngày trước</item>
-        <item>195 ngày trước</item>
-        <item>196 ngày trước</item>
-        <item>197 ngày trước</item>
-        <item>198 ngày trước</item>
-        <item>199 ngày trước</item>
-        <item>200 ngày trước</item>
-        <item>201 ngày trước</item>
-        <item>202 ngày trước</item>
-        <item>203 ngày trước</item>
-        <item>204 ngày trước</item>
-        <item>205 ngày trước</item>
-        <item>206 ngày trước</item>
-        <item>207 ngày trước</item>
-        <item>208 ngày trước</item>
-        <item>209 ngày trước</item>
-        <item>210 ngày trước</item>
-        <item>211 ngày trước</item>
-        <item>212 ngày trước</item>
-        <item>213 ngày trước</item>
-        <item>214 ngày trước</item>
-        <item>215 ngày trước</item>
-        <item>216 ngày trước</item>
-        <item>217 ngày trước</item>
-        <item>218 ngày trước</item>
-        <item>219 ngày trước</item>
-        <item>220 ngày trước</item>
-        <item>221 ngày trước</item>
-        <item>222 ngày trước</item>
-        <item>223 ngày trước</item>
-        <item>224 ngày trước</item>
-        <item>225 ngày trước</item>
-        <item>226 ngày trước</item>
-        <item>227 ngày trước</item>
-        <item>228 ngày trước</item>
-        <item>229 ngày trước</item>
-        <item>230 ngày trước</item>
-        <item>231 ngày trước</item>
-        <item>232 ngày trước</item>
-        <item>233 ngày trước</item>
-        <item>234 ngày trước</item>
-        <item>235 ngày trước</item>
-        <item>236 ngày trước</item>
-        <item>237 ngày trước</item>
-        <item>238 ngày trước</item>
-        <item>239 ngày trước</item>
-        <item>240 ngày trước</item>
-        <item>241 ngày trước</item>
-        <item>242 ngày trước</item>
-        <item>243 ngày trước</item>
-        <item>244 ngày trước</item>
-        <item>245 ngày trước</item>
-        <item>246 ngày trước</item>
-        <item>247 ngày trước</item>
-        <item>248 ngày trước</item>
-        <item>249 ngày trước</item>
-        <item>250 ngày trước</item>
-        <item>251 ngày trước</item>
-        <item>252 ngày trước</item>
-        <item>253 ngày trước</item>
-        <item>254 ngày trước</item>
-        <item>255 ngày trước</item>
-        <item>256 ngày trước</item>
-        <item>257 ngày trước</item>
-        <item>258 ngày trước</item>
-        <item>259 ngày trước</item>
-        <item>260 ngày trước</item>
-        <item>261 ngày trước</item>
-        <item>262 ngày trước</item>
-        <item>263 ngày trước</item>
-        <item>264 ngày trước</item>
-        <item>265 ngày trước</item>
-        <item>266 ngày trước</item>
-        <item>267 ngày trước</item>
-        <item>268 ngày trước</item>
-        <item>269 ngày trước</item>
-        <item>270 ngày trước</item>
-        <item>271 ngày trước</item>
-        <item>272 ngày trước</item>
-        <item>273 ngày trước</item>
-        <item>274 ngày trước</item>
-        <item>275 ngày trước</item>
-        <item>276 ngày trước</item>
-        <item>277 ngày trước</item>
-        <item>278 ngày trước</item>
-        <item>279 ngày trước</item>
-        <item>280 ngày trước</item>
-        <item>281 ngày trước</item>
-        <item>282 ngày trước</item>
-        <item>283 ngày trước</item>
-        <item>284 ngày trước</item>
-        <item>285 ngày trước</item>
-        <item>286 ngày trước</item>
-        <item>287 ngày trước</item>
-        <item>288 ngày trước</item>
-        <item>289 ngày trước</item>
-        <item>290 ngày trước</item>
-        <item>291 ngày trước</item>
-        <item>292 ngày trước</item>
-        <item>293 ngày trước</item>
-        <item>294 ngày trước</item>
-        <item>295 ngày trước</item>
-        <item>296 ngày trước</item>
-        <item>297 ngày trước</item>
-        <item>298 ngày trước</item>
-        <item>299 ngày trước</item>
-        <item>300 ngày trước</item>
-        <item>301 ngày trước</item>
-        <item>302 ngày trước</item>
-        <item>303 ngày trước</item>
-        <item>304 ngày trước</item>
-        <item>305 ngày trước</item>
-        <item>306 ngày trước</item>
-        <item>307 ngày trước</item>
-        <item>308 ngày trước</item>
-        <item>309 ngày trước</item>
-        <item>310 ngày trước</item>
-        <item>311 ngày trước</item>
-        <item>312 ngày trước</item>
-        <item>313 ngày trước</item>
-        <item>314 ngày trước</item>
-        <item>315 ngày trước</item>
-        <item>316 ngày trước</item>
-        <item>317 ngày trước</item>
-        <item>318 ngày trước</item>
-        <item>319 ngày trước</item>
-        <item>320 ngày trước</item>
-        <item>321 ngày trước</item>
-        <item>322 ngày trước</item>
-        <item>323 ngày trước</item>
-        <item>324 ngày trước</item>
-        <item>325 ngày trước</item>
-        <item>326 ngày trước</item>
-        <item>327 ngày trước</item>
-        <item>328 ngày trước</item>
-        <item>329 ngày trước</item>
-        <item>330 ngày trước</item>
-        <item>331 ngày trước</item>
-        <item>332 ngày trước</item>
-        <item>333 ngày trước</item>
-        <item>334 ngày trước</item>
-        <item>335 ngày trước</item>
-        <item>336 ngày trước</item>
-        <item>337 ngày trước</item>
-        <item>338 ngày trước</item>
-        <item>339 ngày trước</item>
-        <item>340 ngày trước</item>
-        <item>341 ngày trước</item>
-        <item>342 ngày trước</item>
-        <item>343 ngày trước</item>
-        <item>344 ngày trước</item>
-        <item>345 ngày trước</item>
-        <item>346 ngày trước</item>
-        <item>347 ngày trước</item>
-        <item>348 ngày trước</item>
-        <item>349 ngày trước</item>
-        <item>350 ngày trước</item>
-        <item>351 ngày trước</item>
-        <item>352 ngày trước</item>
-        <item>353 ngày trước</item>
-        <item>354 ngày trước</item>
-        <item>355 ngày trước</item>
-        <item>356 ngày trước</item>
-        <item>357 ngày trước</item>
-        <item>358 ngày trước</item>
-        <item>359 ngày trước</item>
-        <item>360 ngày trước</item>
-        <item>361 ngày trước</item>
-        <item>362 ngày trước</item>
-        <item>363 ngày trước</item>
-        <item>364 ngày trước</item>
-        <item>365 ngày trước</item>
-    </string-array>
+    <string name="menu_home">Trang chủ</string>
+    <string name="menu_notification">Thông báo</string>
+    <string name="menu_profile">Trang cá nhân</string>
+
     <string name="title_activity_test_scanner">test_scanner</string>
     <string name="app_name">HSD</string>
     <string name="btn_signin">ĐĂNG NHẬP</string>
@@ -506,4 +143,372 @@
     <string name="border_expired">Hết hạn</string>
     <string name="border_protected">Thời gian còn lại</string>
     <string name="rateApp">Đánh giá app trên PlayStore</string>
+
+    <string-array name="choose_days_before">
+        <item> Trước 1 ngày </item>
+        <item> Trước 2 ngày </item>
+        <item> Trước 3 ngày </item>
+        <item> Trước 4 ngày </item>
+        <item> Trước 5 ngày </item>
+        <item> Trước 6 ngày </item>
+        <item> Trước 7 ngày </item>
+        <item> Trước 8 ngày </item>
+        <item> Trước 9 ngày </item>
+        <item> Trước 10 ngày </item>
+        <item> Trước 11 ngày </item>
+        <item> Trước 12 ngày </item>
+        <item> Trước 13 ngày </item>
+        <item> Trước 14 ngày </item>
+        <item> Trước 15 ngày </item>
+        <item> Trước 16 ngày </item>
+        <item> Trước 17 ngày </item>
+        <item> Trước 18 ngày </item>
+        <item> Trước 19 ngày </item>
+        <item> Trước 20 ngày </item>
+        <item> Trước 21 ngày </item>
+        <item> Trước 22 ngày </item>
+        <item> Trước 23 ngày </item>
+        <item> Trước 24 ngày </item>
+        <item> Trước 25 ngày </item>
+        <item> Trước 26 ngày </item>
+        <item> Trước 27 ngày </item>
+        <item> Trước 28 ngày </item>
+        <item> Trước 29 ngày </item>
+        <item> Trước 30 ngày </item>
+        <item> Trước 31 ngày </item>
+        <item> Trước 32 ngày </item>
+        <item> Trước 33 ngày </item>
+        <item> Trước 34 ngày </item>
+        <item> Trước 35 ngày </item>
+        <item> Trước 36 ngày </item>
+        <item> Trước 37 ngày </item>
+        <item> Trước 38 ngày </item>
+        <item> Trước 39 ngày </item>
+        <item> Trước 40 ngày </item>
+        <item> Trước 41 ngày </item>
+        <item> Trước 42 ngày </item>
+        <item> Trước 43 ngày </item>
+        <item> Trước 44 ngày </item>
+        <item> Trước 45 ngày </item>
+        <item> Trước 46 ngày </item>
+        <item> Trước 47 ngày </item>
+        <item> Trước 48 ngày </item>
+        <item> Trước 49 ngày </item>
+        <item> Trước 50 ngày </item>
+        <item> Trước 51 ngày </item>
+        <item> Trước 52 ngày </item>
+        <item> Trước 53 ngày </item>
+        <item> Trước 54 ngày </item>
+        <item> Trước 55 ngày </item>
+        <item> Trước 56 ngày </item>
+        <item> Trước 57 ngày </item>
+        <item> Trước 58 ngày </item>
+        <item> Trước 59 ngày </item>
+        <item> Trước 60 ngày </item>
+        <item> Trước 61 ngày </item>
+        <item> Trước 62 ngày </item>
+        <item> Trước 63 ngày </item>
+        <item> Trước 64 ngày </item>
+        <item> Trước 65 ngày </item>
+        <item> Trước 66 ngày </item>
+        <item> Trước 67 ngày </item>
+        <item> Trước 68 ngày </item>
+        <item> Trước 69 ngày </item>
+        <item> Trước 70 ngày </item>
+        <item> Trước 71 ngày </item>
+        <item> Trước 72 ngày </item>
+        <item> Trước 73 ngày </item>
+        <item> Trước 74 ngày </item>
+        <item> Trước 75 ngày </item>
+        <item> Trước 76 ngày </item>
+        <item> Trước 77 ngày </item>
+        <item> Trước 78 ngày </item>
+        <item> Trước 79 ngày </item>
+        <item> Trước 80 ngày </item>
+        <item> Trước 81 ngày </item>
+        <item> Trước 82 ngày </item>
+        <item> Trước 83 ngày </item>
+        <item> Trước 84 ngày </item>
+        <item> Trước 85 ngày </item>
+        <item> Trước 86 ngày </item>
+        <item> Trước 87 ngày </item>
+        <item> Trước 88 ngày </item>
+        <item> Trước 89 ngày </item>
+        <item> Trước 90 ngày </item>
+        <item> Trước 91 ngày </item>
+        <item> Trước 92 ngày </item>
+        <item> Trước 93 ngày </item>
+        <item> Trước 94 ngày </item>
+        <item> Trước 95 ngày </item>
+        <item> Trước 96 ngày </item>
+        <item> Trước 97 ngày </item>
+        <item> Trước 98 ngày </item>
+        <item> Trước 99 ngày </item>
+        <item> Trước 100 ngày </item>
+        <item> Trước 101 ngày </item>
+        <item> Trước 102 ngày </item>
+        <item> Trước 103 ngày </item>
+        <item> Trước 104 ngày </item>
+        <item> Trước 105 ngày </item>
+        <item> Trước 106 ngày </item>
+        <item> Trước 107 ngày </item>
+        <item> Trước 108 ngày </item>
+        <item> Trước 109 ngày </item>
+        <item> Trước 110 ngày </item>
+        <item> Trước 111 ngày </item>
+        <item> Trước 112 ngày </item>
+        <item> Trước 113 ngày </item>
+        <item> Trước 114 ngày </item>
+        <item> Trước 115 ngày </item>
+        <item> Trước 116 ngày </item>
+        <item> Trước 117 ngày </item>
+        <item> Trước 118 ngày </item>
+        <item> Trước 119 ngày </item>
+        <item> Trước 120 ngày </item>
+        <item> Trước 121 ngày </item>
+        <item> Trước 122 ngày </item>
+        <item> Trước 123 ngày </item>
+        <item> Trước 124 ngày </item>
+        <item> Trước 125 ngày </item>
+        <item> Trước 126 ngày </item>
+        <item> Trước 127 ngày </item>
+        <item> Trước 128 ngày </item>
+        <item> Trước 129 ngày </item>
+        <item> Trước 130 ngày </item>
+        <item> Trước 131 ngày </item>
+        <item> Trước 132 ngày </item>
+        <item> Trước 133 ngày </item>
+        <item> Trước 134 ngày </item>
+        <item> Trước 135 ngày </item>
+        <item> Trước 136 ngày </item>
+        <item> Trước 137 ngày </item>
+        <item> Trước 138 ngày </item>
+        <item> Trước 139 ngày </item>
+        <item> Trước 140 ngày </item>
+        <item> Trước 141 ngày </item>
+        <item> Trước 142 ngày </item>
+        <item> Trước 143 ngày </item>
+        <item> Trước 144 ngày </item>
+        <item> Trước 145 ngày </item>
+        <item> Trước 146 ngày </item>
+        <item> Trước 147 ngày </item>
+        <item> Trước 148 ngày </item>
+        <item> Trước 149 ngày </item>
+        <item> Trước 150 ngày </item>
+        <item> Trước 151 ngày </item>
+        <item> Trước 152 ngày </item>
+        <item> Trước 153 ngày </item>
+        <item> Trước 154 ngày </item>
+        <item> Trước 155 ngày </item>
+        <item> Trước 156 ngày </item>
+        <item> Trước 157 ngày </item>
+        <item> Trước 158 ngày </item>
+        <item> Trước 159 ngày </item>
+        <item> Trước 160 ngày </item>
+        <item> Trước 161 ngày </item>
+        <item> Trước 162 ngày </item>
+        <item> Trước 163 ngày </item>
+        <item> Trước 164 ngày </item>
+        <item> Trước 165 ngày </item>
+        <item> Trước 166 ngày </item>
+        <item> Trước 167 ngày </item>
+        <item> Trước 168 ngày </item>
+        <item> Trước 169 ngày </item>
+        <item> Trước 170 ngày </item>
+        <item> Trước 171 ngày </item>
+        <item> Trước 172 ngày </item>
+        <item> Trước 173 ngày </item>
+        <item> Trước 174 ngày </item>
+        <item> Trước 175 ngày </item>
+        <item> Trước 176 ngày </item>
+        <item> Trước 177 ngày </item>
+        <item> Trước 178 ngày </item>
+        <item> Trước 179 ngày </item>
+        <item> Trước 180 ngày </item>
+        <item> Trước 181 ngày </item>
+        <item> Trước 182 ngày </item>
+        <item> Trước 183 ngày </item>
+        <item> Trước 184 ngày </item>
+        <item> Trước 185 ngày </item>
+        <item> Trước 186 ngày </item>
+        <item> Trước 187 ngày </item>
+        <item> Trước 188 ngày </item>
+        <item> Trước 189 ngày </item>
+        <item> Trước 190 ngày </item>
+        <item> Trước 191 ngày </item>
+        <item> Trước 192 ngày </item>
+        <item> Trước 193 ngày </item>
+        <item> Trước 194 ngày </item>
+        <item> Trước 195 ngày </item>
+        <item> Trước 196 ngày </item>
+        <item> Trước 197 ngày </item>
+        <item> Trước 198 ngày </item>
+        <item> Trước 199 ngày </item>
+        <item> Trước 200 ngày </item>
+        <item> Trước 201 ngày </item>
+        <item> Trước 202 ngày </item>
+        <item> Trước 203 ngày </item>
+        <item> Trước 204 ngày </item>
+        <item> Trước 205 ngày </item>
+        <item> Trước 206 ngày </item>
+        <item> Trước 207 ngày </item>
+        <item> Trước 208 ngày </item>
+        <item> Trước 209 ngày </item>
+        <item> Trước 210 ngày </item>
+        <item> Trước 211 ngày </item>
+        <item> Trước 212 ngày </item>
+        <item> Trước 213 ngày </item>
+        <item> Trước 214 ngày </item>
+        <item> Trước 215 ngày </item>
+        <item> Trước 216 ngày </item>
+        <item> Trước 217 ngày </item>
+        <item> Trước 218 ngày </item>
+        <item> Trước 219 ngày </item>
+        <item> Trước 220 ngày </item>
+        <item> Trước 221 ngày </item>
+        <item> Trước 222 ngày </item>
+        <item> Trước 223 ngày </item>
+        <item> Trước 224 ngày </item>
+        <item> Trước 225 ngày </item>
+        <item> Trước 226 ngày </item>
+        <item> Trước 227 ngày </item>
+        <item> Trước 228 ngày </item>
+        <item> Trước 229 ngày </item>
+        <item> Trước 230 ngày </item>
+        <item> Trước 231 ngày </item>
+        <item> Trước 232 ngày </item>
+        <item> Trước 233 ngày </item>
+        <item> Trước 234 ngày </item>
+        <item> Trước 235 ngày </item>
+        <item> Trước 236 ngày </item>
+        <item> Trước 237 ngày </item>
+        <item> Trước 238 ngày </item>
+        <item> Trước 239 ngày </item>
+        <item> Trước 240 ngày </item>
+        <item> Trước 241 ngày </item>
+        <item> Trước 242 ngày </item>
+        <item> Trước 243 ngày </item>
+        <item> Trước 244 ngày </item>
+        <item> Trước 245 ngày </item>
+        <item> Trước 246 ngày </item>
+        <item> Trước 247 ngày </item>
+        <item> Trước 248 ngày </item>
+        <item> Trước 249 ngày </item>
+        <item> Trước 250 ngày </item>
+        <item> Trước 251 ngày </item>
+        <item> Trước 252 ngày </item>
+        <item> Trước 253 ngày </item>
+        <item> Trước 254 ngày </item>
+        <item> Trước 255 ngày </item>
+        <item> Trước 256 ngày </item>
+        <item> Trước 257 ngày </item>
+        <item> Trước 258 ngày </item>
+        <item> Trước 259 ngày </item>
+        <item> Trước 260 ngày </item>
+        <item> Trước 261 ngày </item>
+        <item> Trước 262 ngày </item>
+        <item> Trước 263 ngày </item>
+        <item> Trước 264 ngày </item>
+        <item> Trước 265 ngày </item>
+        <item> Trước 266 ngày </item>
+        <item> Trước 267 ngày </item>
+        <item> Trước 268 ngày </item>
+        <item> Trước 269 ngày </item>
+        <item> Trước 270 ngày </item>
+        <item> Trước 271 ngày </item>
+        <item> Trước 272 ngày </item>
+        <item> Trước 273 ngày </item>
+        <item> Trước 274 ngày </item>
+        <item> Trước 275 ngày </item>
+        <item> Trước 276 ngày </item>
+        <item> Trước 277 ngày </item>
+        <item> Trước 278 ngày </item>
+        <item> Trước 279 ngày </item>
+        <item> Trước 280 ngày </item>
+        <item> Trước 281 ngày </item>
+        <item> Trước 282 ngày </item>
+        <item> Trước 283 ngày </item>
+        <item> Trước 284 ngày </item>
+        <item> Trước 285 ngày </item>
+        <item> Trước 286 ngày </item>
+        <item> Trước 287 ngày </item>
+        <item> Trước 288 ngày </item>
+        <item> Trước 289 ngày </item>
+        <item> Trước 290 ngày </item>
+        <item> Trước 291 ngày </item>
+        <item> Trước 292 ngày </item>
+        <item> Trước 293 ngày </item>
+        <item> Trước 294 ngày </item>
+        <item> Trước 295 ngày </item>
+        <item> Trước 296 ngày </item>
+        <item> Trước 297 ngày </item>
+        <item> Trước 298 ngày </item>
+        <item> Trước 299 ngày </item>
+        <item> Trước 300 ngày </item>
+        <item> Trước 301 ngày </item>
+        <item> Trước 302 ngày </item>
+        <item> Trước 303 ngày </item>
+        <item> Trước 304 ngày </item>
+        <item> Trước 305 ngày </item>
+        <item> Trước 306 ngày </item>
+        <item> Trước 307 ngày </item>
+        <item> Trước 308 ngày </item>
+        <item> Trước 309 ngày </item>
+        <item> Trước 310 ngày </item>
+        <item> Trước 311 ngày </item>
+        <item> Trước 312 ngày </item>
+        <item> Trước 313 ngày </item>
+        <item> Trước 314 ngày </item>
+        <item> Trước 315 ngày </item>
+        <item> Trước 316 ngày </item>
+        <item> Trước 317 ngày </item>
+        <item> Trước 318 ngày </item>
+        <item> Trước 319 ngày </item>
+        <item> Trước 320 ngày </item>
+        <item> Trước 321 ngày </item>
+        <item> Trước 322 ngày </item>
+        <item> Trước 323 ngày </item>
+        <item> Trước 324 ngày </item>
+        <item> Trước 325 ngày </item>
+        <item> Trước 326 ngày </item>
+        <item> Trước 327 ngày </item>
+        <item> Trước 328 ngày </item>
+        <item> Trước 329 ngày </item>
+        <item> Trước 330 ngày </item>
+        <item> Trước 331 ngày </item>
+        <item> Trước 332 ngày </item>
+        <item> Trước 333 ngày </item>
+        <item> Trước 334 ngày </item>
+        <item> Trước 335 ngày </item>
+        <item> Trước 336 ngày </item>
+        <item> Trước 337 ngày </item>
+        <item> Trước 338 ngày </item>
+        <item> Trước 339 ngày </item>
+        <item> Trước 340 ngày </item>
+        <item> Trước 341 ngày </item>
+        <item> Trước 342 ngày </item>
+        <item> Trước 343 ngày </item>
+        <item> Trước 344 ngày </item>
+        <item> Trước 345 ngày </item>
+        <item> Trước 346 ngày </item>
+        <item> Trước 347 ngày </item>
+        <item> Trước 348 ngày </item>
+        <item> Trước 349 ngày </item>
+        <item> Trước 350 ngày </item>
+        <item> Trước 351 ngày </item>
+        <item> Trước 352 ngày </item>
+        <item> Trước 353 ngày </item>
+        <item> Trước 354 ngày </item>
+        <item> Trước 355 ngày </item>
+        <item> Trước 356 ngày </item>
+        <item> Trước 357 ngày </item>
+        <item> Trước 358 ngày </item>
+        <item> Trước 359 ngày </item>
+        <item> Trước 360 ngày </item>
+        <item> Trước 361 ngày </item>
+        <item> Trước 362 ngày </item>
+        <item> Trước 363 ngày </item>
+        <item> Trước 364 ngày </item>
+        <item> Trước 365 ngày </item>
+    </string-array>
 </resources>

@@ -95,9 +95,11 @@ class RealmController(application: Context) {
 //        }, Realm.Transaction.OnSuccess {
 //            Log.e("setting", "success")
 //        } )
-        for(ii in 0 until user.listgroup!!.size){
-            for(i in 0 until user.listgroup!![ii]!!.listproduct!!.size){
-                user.listgroup!![ii]!!.listproduct!![i]?.barcode = user.listgroup!![ii]!!.listproduct!![i]?.producttype_id?.barcode
+        if(user.listgroup !=null) {
+            for (ii in 0 until user.listgroup!!.size) {
+                for (i in 0 until user.listgroup!![ii]!!.listproduct!!.size) {
+                    user.listgroup!![ii]!!.listproduct!![i]?.barcode = user.listgroup!![ii]!!.listproduct!![i]?.producttype_id?.barcode
+                }
             }
         }
 

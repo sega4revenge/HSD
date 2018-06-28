@@ -332,7 +332,7 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
                 val arrDataNotSync = myRealm?.getlistProductOffline()
                 Log.d("REALMCONTROLLER","myRealm?.getlistProductOffline()?.size//  "+arrDataNotSync.toString())
                 numLoading = arrDataNotSync?.size!!
-                showDialog("Đang đồng bộ dữ liệu...")
+                showDialog(resources.getString(R.string.sync))
                 for(i in 0 until arrDataNotSync.size){
                     Log.d("REALMCONTROLLE",arrDataNotSync.get(i).imagechanged+"//"+arrDataNotSync.get(i).namechanged+"//"+arrDataNotSync.get(i)!!.expiretime+"//"+arrDataNotSync.get(i)!!.description+"//"+arrDataNotSync.get(i)!!.barcode)
                     addProductOfflinetoServer(arrDataNotSync.get(i))

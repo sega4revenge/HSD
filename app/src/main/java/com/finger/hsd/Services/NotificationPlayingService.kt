@@ -7,19 +7,17 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
-import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.finger.hsd.AllInOneActivity
 import com.finger.hsd.R
 import com.finger.hsd.activity.HorizontalNtbActivity
+import com.finger.hsd.fragment.NotificationFragment
 import com.finger.hsd.manager.RealmAlarmController
 import com.finger.hsd.manager.SessionManager
 import com.finger.hsd.model.Notification
@@ -35,12 +33,11 @@ import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 import me.leolin.shortcutbadger.ShortcutBadger
 import org.json.JSONObject
-import java.io.InputStream
-import java.net.HttpURLConnection
 import java.util.*
 
 @Suppress("DEPRECATION")
 @SuppressLint("Registered")
+
 class NotificationPlayingService : Service() {
     var realms : RealmAlarmController?= null
     private  val CHANNEL_APP_STATUS = "CHANNEL_APP_STATUS"
@@ -48,18 +45,24 @@ class NotificationPlayingService : Service() {
     internal var notification_v : List<Notification> = ArrayList<Notification>()
     private val milDay = 86400000L
     lateinit var sessionManager : SessionManager
+    var mNotificationBadgeListener: NotificationFragment.NotificationBadgeListener? = null
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
 
+    fun onAttachToContext(context: Context) {
+        if (context is NotificationFragment.NotificationBadgeListener) {
+            mNotificationBadgeListener = context
 
+        }
+    }
     override fun onStartCommand(intent : Intent, flags : Int, startId : Int): Int {
         realms = RealmAlarmController(this)
         val now = Calendar.getInstance()
         product_v = realms!!.getDataProduct()!!
         notification_v = realms!!.getNotification()!!
         sessionManager = SessionManager(applicationContext)
-
+        onAttachToContext(this)
         var day : Int?
         val notificationId = Random().nextInt()
         var countWarnings = 0
@@ -212,10 +215,12 @@ class NotificationPlayingService : Service() {
 
 
         }
+
         var count = sessionManager.getCountNotification() + countExpiry + countWarnings
         //count notification
-        sessionManager.setCountNotification(10)
+        sessionManager.setCountNotification(count)
 
+//        mNotificationBadgeListener!!.onBadgeUpdate(sessionManager.getCountNotification())
 
 
         Log.d("ppppppppppppppppp" ," 333 " +"countExpiry == " + countExpiry + "countWarnings == " + countWarnings )

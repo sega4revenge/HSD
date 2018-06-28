@@ -39,17 +39,15 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
     var realms: RealmAlarmController? = null
     // alarm
     private val milDay = 86400000L
-    private var mMinute: Int = 0
-    private var mHour: Int = 0
-    private var mTime: String? = null
+
     internal lateinit var alarmManager: AlarmManager
     private var pending_intent: PendingIntent? = null
 
     internal var a = ""
-    internal var nameSound = ""
+
     internal var mMediaPlayer: MediaPlayer? = null
     var res: Resources? = null
-    lateinit var soundSession: String
+
     private var cheked : Int? = null
 
     lateinit var txtview: TextView
@@ -90,13 +88,15 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
         }else if(user!!.type_login == 2){
             v.tv_type.text = "Google"
         }else{
-            v.tv_type.text = "HSD Account"
+            v.tv_type.text = activity!!.resources.getString(R.string.hsd_account)
         }
         // get user
         var listUser =  realms!!.getUser()
         for (index in listUser.indices) {
             val model = listUser.get(index)
-            v.phone_user.text = model.phone
+            val countCharac = model.phone!!.length
+            val str = model.phone!!.substring(countCharac - 4)
+            v.phone_user.text = "* * * * * "+str
         }
         // dem so luong san pham
         var number = realms!!.numberproduct()
@@ -149,7 +149,7 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
 
         } else {
 
-            setAlarmText("Not in use")
+            setAlarmText(activity!!.resources.getString(R.string.not_in_use))
 
         }
 
@@ -176,7 +176,7 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
                 showDialogSound(cheked!!)
             }
             R.id.txt_share -> {
-                val message = ("\n" + "I want invite you to with me on HSD. Please click the link to download. "+" https://play.google.com/store/apps/details?id=com.finger.suri&hl=vi")
+                val message = ("\n" +activity!!.resources.getString(R.string.share_app_invite) +" "+" https://play.google.com/store/apps/details?id=com.finger.suri&hl=vi")
                 shareAction(message)
                 }
             R.id.send_feedback -> {
@@ -291,7 +291,7 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
 //    }
 
     private fun sendEmailFeedback() {
-        val subject = "Feedback for HanSuDung App"
+        val subject = activity!!.resources.getString(R.string.feedback)
         val mailto = "mailto:conghuancse@gmail.com" +
                 "?subject=" + Uri.encode(subject) +
                 "&body=" + Uri.encode("")
@@ -366,7 +366,7 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
                             SettingAlarm(model.listtime!!.toInt(), false)
                         }
                     }
-                    setAlarmText("Not in use")
+                    setAlarmText(activity!!.resources.getString(R.string.not_in_use))
                 }
                 realms!!.closeRealm()
             }
@@ -421,8 +421,8 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
 
     private fun DialogLogout() {
         val mBuilder = AlertDialog.Builder(activity)
-        mBuilder.setTitle("Do you want logout?")
-        mBuilder.setPositiveButton("OK") { dialog, which ->
+        mBuilder.setTitle(activity!!.resources.getString(R.string.you_want_logout))
+        mBuilder.setPositiveButton(activity!!.resources.getString(R.string.ok)) { dialog, which ->
             // Do something when click the neutral button
 
 
@@ -465,7 +465,7 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
         }
 
         // Set the neutral/cancel button click listener
-        mBuilder.setNeutralButton("Cancel") { dialog, which ->
+        mBuilder.setNeutralButton(activity!!.resources.getString(R.string.cancel)) { dialog, which ->
             // Do something when click the neutral button-
             dialog.cancel()
         }
@@ -480,7 +480,7 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
         var soundOff : Boolean? = false
 
         val mBuilder = AlertDialog.Builder(activity)
-        mBuilder.setTitle("Choose an item")
+        mBuilder.setTitle(activity!!.resources.getString(R.string.choose_an_item))
 
         mBuilder.setSingleChoiceItems(listItems, id ) { dialogInterface, i ->
             Log.d(" choose ... ", " Choose an item " + listItems[i])
@@ -500,7 +500,7 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
             }
 
         }
-        mBuilder.setPositiveButton("OK") { dialog, which ->
+        mBuilder.setPositiveButton(activity!!.resources.getString(R.string.ok)) { dialog, which ->
             // Do something when click the neutral button
             if (mMediaPlayer != null && soundOff!!) {
                 mMediaPlayer!!.release()
@@ -514,7 +514,7 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
             dialog.cancel()
         }
         // Set the neutral/cancel button click listener
-        mBuilder.setNeutralButton("Cancel") { dialog, which ->
+        mBuilder.setNeutralButton(activity!!.resources.getString(R.string.cancel)) { dialog, which ->
             // Do something when click the neutral button
             if (mMediaPlayer != null) {
                 mMediaPlayer!!.release()

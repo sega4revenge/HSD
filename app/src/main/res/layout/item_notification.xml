@@ -64,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_below="@+id/tv_hsd"
+            android:layout_below="@+id/tv_time"
             android:layout_marginTop="8dp"
             android:text="@string/wellcome_hsd"
             android:textColor="@color/red"
@@ -109,13 +109,13 @@
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/tv_name_status"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:gravity="right"
             android:text="10 giờ trước"
             android:textColor="@color/divider"
             android:textSize="12sp"
-            android:layout_alignRight="@+id/tv_name_status" />
+            android:layout_alignParentRight="true" />
     </RelativeLayout>
 
 

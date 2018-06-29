@@ -93,7 +93,7 @@
                 android:id="@+id/btn_login"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@drawable/shape_button_login"
+                android:background="@drawable/button_focused"
                 android:text="@string/btn_signin"
                 android:textColor="#FFFFFF" />
         </LinearLayout>

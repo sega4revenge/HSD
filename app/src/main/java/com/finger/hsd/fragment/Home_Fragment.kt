@@ -453,34 +453,36 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
             var miliexToday: Long = exToday.getTime()
 
             listProduct?.sortWith(Comparator(fun(a: Product_v, b: Product_v): Int {
-                if (a.expiretime < b.expiretime)
+                var disa = a.expiretime / 86400000 - miliexToday / 86400000
+                var disb = b.expiretime / 86400000 - miliexToday / 86400000
+                if ((disa-a.daybefore) < (disb-b.daybefore))
                     return -1
-                if (a.expiretime > b.expiretime)
+                if ((disa-a.daybefore) > (disb-b.daybefore))
                     return 1
                 return 0
             }))
              var listData = ArrayList<Product_v>()
              for (i in 0 until  listProduct!!.size) {
-                 Mylog.d(listProduct?.get(i).toString()+"dataaaaaaaaaa")
+
                  var dis = listProduct!!.get(i).expiretime / 86400000 - miliexToday / 86400000
+                 Mylog.d(listProduct?.get(i)?.daybefore!!.toString()+"dataaaaaaaaaa"+dis)
                  if(mPositionEX==-1 && dis<=0){
                      mPositionEX = i
                      listData.add(Product_v("1","","",0,"",""))
                      listheader?.add(i)
                  }
-                 if(mPositionWaring==-1 && dis<10 && dis>0){
+                 if(mPositionWaring==-1 && dis<=listProduct?.get(i)?.daybefore!! && dis>0){
                      mPositionWaring = i
                      listheader?.add(i)
                      listData.add(Product_v("1","","",0,"",""))
                  }
-                 if(mPositionProtect==-1 && dis>10){
+                 if(mPositionProtect==-1 && dis>listProduct?.get(i)?.daybefore!!){
                      mPositionProtect = i
                      listheader?.add(i)
                      listData.add(Product_v("1","","",0,"",""))
                  }
                  listData.add(listProduct!!.get(i))
              }
-
             mAdapter = MainListAdapterKotlin(mContext!!, listData, listheader!!, this)
             mRec?.adapter = mAdapter
             mDialogProgress?.dismiss()

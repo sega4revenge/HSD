@@ -91,10 +91,11 @@ class MainListAdapterKotlin:
             } else {
 
                 val dis = mProducts[position + 1].expiretime / 86400000 - miliexToday / 86400000
-                if (dis < 10 && dis > 0) {
+
+                if (dis <= mProducts[position + 1].daybefore && dis > 0) {
                     holder.mTypeProduct.text =  mContext.resources.getString(R.string.home_warning)
                     holder.mTypeProduct.setTextColor(mContext.resources.getColor(R.color.colorPrimary))
-                } else if (dis > 10) {
+                } else if (dis > mProducts[position + 1].daybefore) {
                     holder.mTypeProduct.text = mContext.resources.getString(R.string.home_protected)
                     holder.mTypeProduct.setTextColor(mContext.resources.getColor(R.color.viewfinder_border))
                 }
@@ -191,9 +192,9 @@ class MainListAdapterKotlin:
                     holder.txt_warring.setTextColor(mContext.resources.getColor(R.color.white))
                     holder.txt_warring.setBackgroundResource(R.drawable.text_warring_item_at)
                 }
-                if (dis > 10) {
+                if (dis > mObject.daybefore) {
                     holder.txt_warring.setBackgroundResource(R.drawable.text_warring_item_at)
-                } else  if (dis < 10 && dis > 0){
+                } else  if (dis <= mObject.daybefore && dis > 0){
                     holder.txt_warring.setBackgroundResource(R.drawable.text_warring_item_cb)
                 }
                 if(dis == 0L){

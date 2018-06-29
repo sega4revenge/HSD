@@ -123,6 +123,10 @@
     <string name="support">Support</string>
     <string name="other_setting">Other Setting</string>
     <string name="title_activity_settings">Settings</string>
+    //còn lại
+    <string name="rest">REST</string>
+
+
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="not_in_use">Not in use</string>
@@ -160,7 +164,7 @@
     <string name="notification_expiry"> expired notification</string>
     <string name="expiry_and">expired and </string>
     <string name="product_expiry">product :</string>
-    <string name="con">còn</string>
+    <string name="con">still</string>
     <string name="clear_sucess">Success</string>
     <string name="product_was_deleted">Product was deleted</string>
 
@@ -174,7 +178,7 @@
     <string name="home_warning">Warning Using It Now</string>
     <string name="home_protected">Safe</string>
     <string name="border_expired">EXPIRED</string>
-    <string name="border_protected">DAYS AGO</string>
+    <string name="border_protected">DAYS</string>
      <string name="accepte_delete">OK</string>
     <string name="cancel_delete">Cancel</string>
     <string name="deleting">deleting…</string>
@@ -569,6 +573,8 @@
     //Chào mừng bạn đến với HSD. Hãy tạo ngay một danh sách quản lý hạn sử dụng của tất cả sản phẩm bạn có !
     <string name="wellcome_create">Welcome to HSD. Create a shelf management list of all the products you have!</string>
     <string name="create_product">CREATE PRODUCT</string>
+    //What do you want to search
+    <string name="b_n_mu_n_t_m_g">What do you want to search?</string>
 
 
 </resources>

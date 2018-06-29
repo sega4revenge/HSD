@@ -28,7 +28,7 @@
             android:layout_centerVertical="true"
             android:background="@drawable/border_edit_search_"
             android:paddingLeft="40dp"
-            android:hint="Bạn muốn tìm gì?"
+            android:hint="@string/b_n_mu_n_t_m_g"
             android:maxLines="1"
             android:textSize="14dp"
             android:textColor="@color/text_color"

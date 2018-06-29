@@ -117,7 +117,7 @@
     <string name="deleting">đang xóa…</string>
     <string name="export_to_excel">Xuất sang Excel</string>
     <string name="home_expired">Đã hết hạn</string>
-    <string name="home_warning">Cảnh báo nên sử dụng ngay</string>
+    <string name="home_warning">Cảnh báo sử dụng ngay</string>
     <string name="wellcome_hsd">" Chào mừng bạn đến với ứng dụng HSD! "</string>
     <string name="noti_create">Hãy tạo sản phẩm để nhận thông báo về sản phẩm nhé!</string>
     <string name="notification_">" Thông báo Hạn Sử Dụng "</string>
@@ -141,13 +141,16 @@
     <string name="product_was_deleted">Sản phẩm đã xóa</string>
     <string name="home_protected">An toàn</string>
     <string name="border_expired">Hết hạn</string>
-    <string name="border_protected">Thời gian còn lại</string>
+    <string name="border_protected">ngày</string>
     <string name="rateApp">Đánh giá app trên PlayStore</string>
     <string name="notification_unvailable">Không có thông báo !</string>
     //Chào mừng bạn đến với HSD. Hãy tạo ngay một danh sách quản lý hạn sử dụng của tất cả sản phẩm bạn có !
     <string name="wellcome_create">Chào mừng bạn đến với HSD. Hãy tạo ngay một danh sách quản lý hạn sử dụng của tất cả sản phẩm bạn có !</string>
     <string name="create_product">Tạo sản phẩm</string>
     <string name="clear">Xóa tất cả</string>
+    <string name="b_n_mu_n_t_m_g">Bạn muốn tìm gì?</string>
+    //còn lại
+    <string name="rest">Còn lại</string>
 
     <string-array name="choose_days_before">
         <item> Trước 1 ngày </item>

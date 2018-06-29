@@ -1,5 +1,6 @@
 package com.finger.hsd.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -79,6 +80,7 @@ class MainListAdapterKotlin:
         return mProducts.size
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val mObject = mProducts[position]
         if (holder is HeaderViewHolder) run {
@@ -170,7 +172,7 @@ class MainListAdapterKotlin:
 
             holder.txt_barcode.text = mObject.barcode
             holder.txt_detail.text = mObject.description
-            holder.txt_exdate.setText(getDate(mObject.expiretime, "dd/MM/yyyy"))
+            holder.txt_exdate.text = getDate(mObject.expiretime, "dd/MM/yyyy")
             holder.txt_nameproduct.text = mObject.namechanged
 
             holder.lnItem.setOnClickListener { onproductClickListener.onClickItem(mObject, position) }
@@ -184,7 +186,8 @@ class MainListAdapterKotlin:
             } else {
                 val dis = mObject.expiretime / 86400000 - miliexToday / 86400000
                 if (holder.txt_warring.text !== dis.toString() + " DAYS LEFT") {
-                    holder.txt_warring.text = dis.toString() + " "+ mContext.resources.getString(R.string.border_protected)
+                    //rest
+                    holder.txt_warring.text =mContext.resources.getString(R.string.rest) + " " + dis.toString() + " "+ mContext.resources.getString(R.string.border_protected)
                     holder.txt_warring.setTextColor(mContext.resources.getColor(R.color.white))
                     holder.txt_warring.setBackgroundResource(R.drawable.text_warring_item_at)
                 }

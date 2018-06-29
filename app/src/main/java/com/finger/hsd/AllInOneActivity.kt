@@ -120,7 +120,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
         edit_search = findViewById<View>(R.id.edit_search) as EditText
         scan_barcode_img = findViewById(R.id.scan_barcode_img)
         sync= findViewById(R.id.sync)
-        scan_barcode_img?.setOnClickListener( {
+        scan_barcode_img?.setOnClickListener {
             try {
                 if (ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), perID)
@@ -137,7 +137,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
                 Log.e("CAMERA SOURCE", ie.message)
             }
 
-        })
+        }
 //        refresh()
 //        showProgress()
         edit_search?.addTextChangedListener(object : TextWatcher {

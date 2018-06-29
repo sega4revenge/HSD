@@ -1,6 +1,7 @@
 package com.finger.hsd.activity
 
 import android.accounts.Account
+import android.annotation.SuppressLint
 import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -173,6 +174,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
         }
     }
 
+@SuppressLint("PackageManagerGetSignatures")
 fun getKeyHash(){
     try {
         val info = packageManager.getPackageInfo(
@@ -181,7 +183,6 @@ fun getKeyHash(){
         for (signature in info.signatures) {
             val md = MessageDigest.getInstance("SHA")
             md.update(signature.toByteArray())
-            Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
         }
     } catch (e: PackageManager.NameNotFoundException) {
 
@@ -264,7 +265,6 @@ fun getKeyHash(){
     var temp = 0
     override fun getUserDetail(user: User) {
 
-        Mylog.d("aaaaaaaaaa "+" chay ngay di ngay di ngay di ngay di ngay di ngay di"+user)
 
         var list =  realm!!.getDataTimeAlarm()
 
@@ -277,7 +277,6 @@ fun getKeyHash(){
                 SettingAlarm(model.listtime!!.toInt(), false)
             }
         }
-        Log.d("isLoginSuccessful","isLoginSuccessful1    "   +"  list   " +list)
 
         realm!!.addUser(user)
          listProduct  = realm!!.getlistProduct()
@@ -285,7 +284,6 @@ fun getKeyHash(){
 
         temp =0
         if (listProduct != null && !listProduct!!.isEmpty()) {
-            Mylog.d("aaaaaaaaa temp at least:  "+temp)
             // get image
             onDownload(listProduct!!.get(temp))
 

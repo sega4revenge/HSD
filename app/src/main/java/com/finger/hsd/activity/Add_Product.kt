@@ -228,7 +228,7 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
 //                showDialog()
                 showProgress("Please wait...")
                 if(path.isNullOrEmpty() || edit_nameproduct?.text.isNullOrEmpty() || edit_ex?.text.isNullOrEmpty() || txtEX?.text.isNullOrEmpty() || barcodeIn?.isNullOrEmpty()!! || miliexDate == 0L){
-                    Toast.makeText(this,"Nhập đầy đủ thông tin",Toast.LENGTH_LONG).show()
+//                    Toast.makeText(this,"Nhập đầy đủ thông tin",Toast.LENGTH_LONG).show()
                     hideProgress()
                     bt_post?.visibility = View.VISIBLE
                 }else{
@@ -338,7 +338,7 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
                 val view = this.currentFocus
                 if (view != null) {
                     val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm!!.hideSoftInputFromWindow(view.windowToken, 0)
+                    imm.hideSoftInputFromWindow(view.windowToken, 0)
                 }
             }
         }
@@ -419,14 +419,14 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
                                 var myDirOld = File(nameOldImage.path)
 
                                 if (myDirOld.exists()) {
-                                    Mylog.d("aaaaaaaaaa deleted")
+//                                    Mylog.d("aaaaaaaaaa deleted")
                                     myDirOld.delete()
                                 }else{
-                                    Mylog.d("aaaaaaaaaa deleted"+nameOldImage)
+//                                    Mylog.d("aaaaaaaaaa deleted"+nameOldImage)
                                 }
                             }
 
-                            val namePassive = product!!._id + "passive"+System.currentTimeMillis() + ".jpg"
+                            val namePassive = product._id + "passive"+System.currentTimeMillis() + ".jpg"
                             val rootFolder = File(filesDir.toString() + "/files")
                             val myDir = File(rootFolder, namePassive)
 

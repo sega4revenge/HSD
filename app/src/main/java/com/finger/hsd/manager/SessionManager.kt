@@ -4,27 +4,18 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 
-class SessionManager {
-     var PRIVATR_MODE : Int = 0
-    private val PREFERENCES = "preferences"
-    private var mSharedPreferences: SharedPreferences? = null
-    private var mEditor: SharedPreferences.Editor? = null
-    private var mContext: Context? = null
-
-    @SuppressLint("CommitPrefEdits")
-//    constructor(mContext  :Context ){
+class SessionManager//    constructor(mContext  :Context ){
 //        this.mContext = mContext
 //        mSharedPreferences = mContext.getSharedPreferences(KEY_SETTING_NOTI_ALARM,PRIVATR_MODE)
 //        mSharedPreferences = mContext.getSharedPreferences(KEY_SOUND_SETTING,PRIVATR_MODE)
 //        mEditor = mSharedPreferences.edit()
 //    }
-
-    constructor(context: Context) {
-        this.mContext = context
-        this.mSharedPreferences = mContext!!.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
-        this.mEditor = mSharedPreferences!!.edit()
-
-    }
+@SuppressLint("CommitPrefEdits") constructor(context: Context) {
+     var PRIVATR_MODE : Int = 0
+    private val PREFERENCES = "preferences"
+    private var mSharedPreferences: SharedPreferences? = null
+    private var mEditor: SharedPreferences.Editor? = null
+    private var mContext: Context? = context
 
 
     private val KEY_COUNT_NOTIFICATION = "countNotification"
@@ -86,5 +77,10 @@ class SessionManager {
 
     fun isSync(): Boolean {
         return mSharedPreferences!!.getBoolean(KEY_CHECK_IS_SYNC, false)
+    }
+
+    init {
+        this.mSharedPreferences = mContext!!.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+        this.mEditor = mSharedPreferences!!.edit()
     }
 }

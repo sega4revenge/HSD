@@ -63,20 +63,20 @@ class NotificationAdapterKotlin(val mContext: Context, val listItem: ArrayList<N
             //đã xem
             if (items.watched!!) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    view.ln_item.setBackgroundColor(mContext.getResources().getColor(R.color.white, null))
+                    view.ln_item.setBackgroundColor(mContext.resources.getColor(R.color.white, null))
 
                 }else{
-                    view.ln_item.setBackgroundColor(mContext.getResources().getColor(R.color.white))
+                    view.ln_item.setBackgroundColor(mContext.resources.getColor(R.color.white))
                 }
             } else {
-                view.ln_item.setBackgroundColor(mContext.getResources().getColor(R.color.grey_dim))
+                view.ln_item.setBackgroundColor(mContext.resources.getColor(R.color.grey_dim))
             }
-            Mylog.d("aaaaaaa "+ " type: "+items.type)
+
             if (items.type == 0) {
                 val product = realm.getProduct(items.id_product!!)
                 if(product !=null){
-                    view.tv_hsd.setVisibility(View.VISIBLE)
-                    view.im_product_noti.setVisibility(View.VISIBLE)
+                    view.tv_hsd.visibility = View.VISIBLE
+                    view.im_product_noti.visibility = View.VISIBLE
 
 
                     Log.d("aaaaaaa ", "NotificationFragment: " + items.id_product!!)
@@ -89,7 +89,6 @@ class NotificationAdapterKotlin(val mContext: Context, val listItem: ArrayList<N
                     val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
                     val days = daysBetween(System.currentTimeMillis(), expiredTime)
-
 
                    // val txtDaystatus = " " + days + " " + mContext.resources.getString(R.string.days_left)
                     if (items.status_expiry.equals("expired")) {
@@ -146,26 +145,24 @@ class NotificationAdapterKotlin(val mContext: Context, val listItem: ArrayList<N
                             .load(product.imagechanged)
                             .apply(options)
                             .into(view.im_product_noti)
-                    view.ln_item.setOnClickListener({
+                    view.ln_item.setOnClickListener {
                         mNotificationListener.onBadgeUpdate(realm.countNotification() - 1)
 
                         view.ln_item.setBackgroundColor(mContext.resources.getColor(R.color.white))
 
                         itemClick.onItemClick(position, product)
-                    })
+                    }
                 }else{
-                    Mylog.d("aaaaaaaaaa type = 0")
-                    view.tv_hsd.setVisibility(View.GONE)
-                    view.im_product_noti.setVisibility(View.GONE)
+                    view.tv_hsd.visibility = View.GONE
+                    view.im_product_noti.visibility = View.GONE
                     view.tv_name_status.text = mContext.resources.getString(R.string.product_was_deleted)
 //                    view.progress_notification.visibility = View.GONE
 //                    view.img.visibility = View.GONE
                 }
 
             } else if (items.type == 3) {
-                Mylog.d("aaaaaaaaaa type = 3")
                 view.tv_hsd.text = mContext.resources.getString(R.string.wellcome)
-                view.im_product_noti.setVisibility(View.VISIBLE)
+                view.im_product_noti.visibility = View.VISIBLE
                 view.tv_name_status.text = mContext.resources.getString(R.string.wellcome_hsd)
 //                view.progress_notification.visibility = View.GONE
 //                view.img.visibility = View.VISIBLE
@@ -190,7 +187,7 @@ class NotificationAdapterKotlin(val mContext: Context, val listItem: ArrayList<N
             }
 
 
-            view.tv_time.setText(timeAgo.getTimeAgo(Date(Long.parseLong(items.create_at)), mContext))
+            view.tv_time.text = timeAgo.getTimeAgo(Date(Long.parseLong(items.create_at)), mContext)
 
         }
 

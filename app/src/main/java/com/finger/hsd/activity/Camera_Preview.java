@@ -31,7 +31,7 @@ public class Camera_Preview  extends SurfaceView implements SurfaceHolder.Callba
             mCamera.setDisplayOrientation(90);
             mCamera.startPreview();
         } catch (IOException e) {
-            Log.d("zzzzzzzz", "Error setting camera preview: " + e.getMessage());
+//            Log.d("zzzzzzzz", "Error setting camera preview: " + e.getMessage());
         }
     }
 

@@ -139,7 +139,7 @@ class ChooseDayNotification: BaseActivity(), IDetailProductPresenterView{
             product.isSyn = false
         })
 
-        Mylog.d("aaaaaaaaaa check: " + realm!!.getProduct(idProduct)!!.daybefore)
+//        Mylog.d("aaaaaaaaaa check: " + realm!!.getProduct(idProduct)!!.daybefore)
         hideProgress()
         val intent = Intent()
         intent.putExtra(Constants.DATA_DAY_BEFORE, days)
@@ -172,25 +172,25 @@ class ChooseDayNotification: BaseActivity(), IDetailProductPresenterView{
         val btnDialog_cancel = dialog.findViewById(R.id.bt_cancel) as Button
         val dialog_ok = dialog.findViewById(R.id.bt_ok) as Button
         // handle envent click button
-        btnDialog_cancel.setOnClickListener( {
+        btnDialog_cancel.setOnClickListener {
 
             dialog.dismiss()
 
-        })
+        }
 
-        dialog_ok.setOnClickListener({
+        dialog_ok.setOnClickListener {
             val textDay = resources.getString(R.string.custome_day)+" ("+data[dayIndex]+")"
             days = dayIndex+1
             rb_custom.text =  textDay
             dialog.dismiss()
 
-        })
+        }
         dialog.show()
     }
 
     override fun onSucess(response: JSONObject, type: Int) {
         hideProgress()
-        var product = realm!!.getProduct(idProduct)
+        val product = realm!!.getProduct(idProduct)
         realm!!.realm.executeTransaction(Realm.Transaction {
             product!!.daybefore = days
             product.isSyn = true

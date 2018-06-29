@@ -12,7 +12,9 @@
         <!--android:id="@+id/refresh">-->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
+
         <android.support.v7.widget.RecyclerView
             android:scrollbars="none"
             android:visibility="gone"
@@ -20,8 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/rec"
-            android:background="@color/colordefault"
-            ></android.support.v7.widget.RecyclerView>
+            android:background="@color/colordefault" />
         <LinearLayout
             android:id="@+id/lin_notfound"
             android:layout_width="wrap_content"
@@ -37,11 +38,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="25dp"
-                android:text="Chào mừng bạn đến với HSD. Hãy tạo ngay một danh sách quản lý hạn sử dụng của tất cả sản phẩm bạn có!!"
+                android:text="@string/wellcome_create"
                 android:gravity="center"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                android:textSize="16dp" />
+                android:textSize="16sp" />
             <LinearLayout
                 android:id="@+id/lin_create"
                 android:layout_width="match_parent"
@@ -54,8 +55,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="CREATE PRODUCT"
-                    android:textSize="20dp"
+                    android:text="@string/create_product"
+                    android:textSize="20sp"
                     android:textColor="@color/white"/>
             </LinearLayout>
         </LinearLayout>

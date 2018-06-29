@@ -1,5 +1,6 @@
 package com.finger.hsd.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -20,6 +21,7 @@ import java.util.Calendar;
 
 public class CustomeDatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener, View.OnClickListener {
 
+    @SuppressLint("SetTextI18n")
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){
 

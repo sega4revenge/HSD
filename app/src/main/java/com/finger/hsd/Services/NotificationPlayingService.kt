@@ -67,12 +67,8 @@ class NotificationPlayingService : Service() {
         val notificationId = Random().nextInt()
         var countWarnings = 0
         var countExpiry = 0
-
         var product_expiry : String? = ""
         var product_warring : String? = ""
-
-        Log.d("NotificationService " ," 000 " + "countExpiry == " + countExpiry + "  countWarnings == " + countWarnings)
-
 
         for (index in  product_v.indices){
             val now = Calendar.getInstance()
@@ -81,9 +77,6 @@ class NotificationPlayingService : Service() {
             now.set(Calendar.SECOND, 0)
             var countAddNotification  = 0
             day = ((product_v[index].expiretime - now.timeInMillis  )/milDay).toInt()
-            Log.d("NotificationService" ," day ======  " + day)
-            Log.d("NotificationService " ," product  == " +(product_v[index]._id ))
-
             var id_notification : String?
 
             if(day <= 0 && day > -3){
@@ -94,8 +87,6 @@ class NotificationPlayingService : Service() {
                 // lay name san pham
                 product_expiry += product_v[index].namechanged.toString()
                 // check san pham da từng thông báo
-
-                Log.d("NotificationService " ,"warring notification_v.size -===  == " +notification_v.size)
                 id_notification = product_v[index]._id
 //                for (dex in notification_v.indices){
 //
@@ -115,8 +106,6 @@ class NotificationPlayingService : Service() {
 //                    }
 //
 //                }
-
-                Log.d("NotificationService" ," Expiry id_notification " + id_notification)
                 // sản phẩm chưa được add
 //                if(countAddNotification > 0 ){
                     var notification_new = Notification()
@@ -142,7 +131,6 @@ class NotificationPlayingService : Service() {
                 if (ConnectivityChangeReceiver.isConnected()) {
                     updateNotficationOnServer(notification_new)
                 }else{
-                    Mylog.d("aaaaaaaaaaaaa "+notification_new)
                     notification_new.isSync = false
                     realms!!.addInTableNotification(notification_new)
                     }
@@ -220,10 +208,6 @@ class NotificationPlayingService : Service() {
         //count notification
         sessionManager.setCountNotification(count)
 
-//        mNotificationBadgeListener!!.onBadgeUpdate(sessionManager.getCountNotification())
-
-
-        Log.d("ppppppppppppppppp" ," 333 " +"countExpiry == " + countExpiry + "countWarnings == " + countWarnings )
         // chi co san pham het han
         if(countExpiry > 0 && countWarnings== 0){
             var strTitle : String = resources.getString(R.string.notification_expiry)

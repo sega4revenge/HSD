@@ -176,12 +176,12 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                         || (!name.equals(nameChange))
                         || (expiredTimeChange!=null && !expiredTime.equals(expiredTimeChange))) {
 
-                    Mylog.d("ttttttttt chay chua: "+expiredTimeChange)
+//                    Mylog.d("ttttttttt chay chua: "+expiredTimeChange)
                     showProgress()
                     presenter.processInfomationUpdate(idProduct, nameChange, expiredTimeChange, noteChange)
 
                 } else if (selectedUri != null) {
-                    Mylog.d("ttttttttt updateImage sau if(name!,name!..so on): "+selectedUri)
+//                    Mylog.d("ttttttttt updateImage sau if(name!,name!..so on): "+selectedUri)
                     val file = File(getRealFilePath(this, selectedUri!!))
 
                     showProgress()
@@ -195,7 +195,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                                 override fun onLoadFailed(errorDrawable: Drawable?) {
                                     super.onLoadFailed(errorDrawable)
 
-                                    Mylog.d("aaaaaaaaaa failed: " + errorDrawable)
+//                                    Mylog.d("aaaaaaaaaa failed: " + errorDrawable)
                                 }
 
                                 override fun onResourceReady(resource: Bitmap,
@@ -208,10 +208,10 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                                         var myDir = File(namePassive.path)
 
                                         if (myDir.exists()) {
-                                            Mylog.d("aaaaaaaaaa deleted")
+
                                             myDir.delete()
                                         }else{
-                                            Mylog.d("aaaaaaaaaa deleted"+namePassive)
+
                                         }
 
                                         val namePass = product!!._id + "passive"+System.currentTimeMillis() + ".jpg"
@@ -227,14 +227,12 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                                         realm!!.realm.executeTransaction(Realm.Transaction {
                                             product!!.imagechanged = Uri.fromFile(myD).toString()
                                             product!!.isNewImage = true
-                                            Mylog.d("aaaaaaaaaa image after: " + Uri.fromFile(myD).toString())
+
 
                                         })
 
                                         out3.flush()
                                         out3.close()
-
-                                        Mylog.d("ttttttt image : " + Uri.fromFile(myD).toString())
                                         UploadImage(idProduct, file)
 
                                     } catch (e: Exception) {
@@ -270,14 +268,9 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
     }
 
     fun updateToRealm(noteChange: String, nameChange: String) {
-        /*
-          * update to realm*/
-        // val changeProduct = product
-        Mylog.d("iiiiiiiii notechange: "+noteChange +" description: "+note )
         if ((!note.equals(noteChange)) || (!name.equals(nameChange))
                 || (expiredTimeChange != null && !expiredTime.equals(expiredTimeChange))) {
 
-            Mylog.d("iiiiiiiii trong if: " )
             if (expiredTimeChange != null && !expiredTime.equals(expiredTimeChange)) {
                 //  changeProduct!!.expiretime = expiredTimeChange!!.toLong()
                 realm!!.realm.executeTransaction(Realm.Transaction {
@@ -295,7 +288,6 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
             }
             if ( !name.equals(nameChange)) {
-                Mylog.d("iiiiiiiii nameChange: "+nameChange )
                 //changeProduct!!.namechanged = nameChange
                 realm!!.realm.executeTransaction(Realm.Transaction {
                     product!!.namechanged = nameChange
@@ -304,7 +296,6 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
             }
             if (!noteChange.equals(note)) {
-                Mylog.d("iiiiiiiii noteChange: "+noteChange )
                 //changeProduct!!.description = noteChange
                 realm!!.realm.executeTransaction(Realm.Transaction {
                     product!!.description = noteChange
@@ -313,7 +304,6 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
             }
 
             if (expiredTimeChange != null && !expiredTime.equals(expiredTimeChange)) {
-                Mylog.d("iiiiiiiii expiredTimeChange: "+expiredTimeChange )
                 realm!!.realm.executeTransaction(Realm.Transaction {
                     product!!.expiretime = expiredTimeChange!!.toLong()
                 })
@@ -337,10 +327,8 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                                     var myDir = File(namePassive.path)
 
                                     if (myDir.exists()) {
-                                        Mylog.d("aaaaaaaaaa deleted")
                                         myDir.delete()
                                     }else{
-                                        Mylog.d("aaaaaaaaaa deleted"+namePassive)
                                     }
 
                                     val namePass = product!!._id + "passive"+System.currentTimeMillis() + ".jpg"
@@ -356,7 +344,6 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                                     realm!!.realm.executeTransaction(Realm.Transaction {
                                         product!!.imagechanged = Uri.fromFile(myD).toString()
                                         product!!.isNewImage = true
-                                        Mylog.d("aaaaaaaaaa image after: " + Uri.fromFile(myD).toString())
 
                                     })
                                     out3.flush()
@@ -396,7 +383,6 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                                 var myDir = File(namePassive.path)
 
                                 if (myDir.exists()) {
-                                    Mylog.d("aaaaaaaaaa deleted")
                                     myDir.delete()
                                 }else{
                                     Mylog.d("aaaaaaaaaa deleted"+namePassive)
@@ -415,7 +401,6 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                                 realm!!.realm.executeTransaction(Realm.Transaction {
                                     product!!.imagechanged = Uri.fromFile(myD).toString()
                                     product!!.isNewImage = true
-                                    Mylog.d("aaaaaaaaaa image after: " + Uri.fromFile(myD).toString())
 
                                 })
 
@@ -469,10 +454,8 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         a.action = AppIntent.ACTION_UPDATE_ITEM
         if (!checkNotification) {
             a.putExtra("reloaditem", true)
-            Mylog.d("aaaaaaaaa home " + AppIntent.ACTION_UPDATE_ITEM)
         } else {
             a.putExtra("reloaditem", false)
-            Mylog.d("aaaaaaaaa notification " + AppIntent.ACTION_UPDATE_ITEM)
         }
         a.putExtra("position", position!!)
         a.putExtra("id_product", idProduct)
@@ -545,11 +528,10 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
         if (type == 333) {
 
-            var days = 0
+            val days : Int?
 
 
             expiredTime = response.expiretime.toString()
-            Mylog.d("tttttttttt update success:  "+expiredTime)
             var longExpiredTime = expiredTime!!.toLong()
             calendar.timeInMillis = longExpiredTime
             val date = Date(expiredTime!!.toLong())
@@ -561,7 +543,6 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
             if (selectedUri != null) {
 //********* UPDATE image NEEUS NHU co thay đổi  *************
-                Mylog.d("ttttttttt updateImage onSucess: "+selectedUri)
                 var file = File(getRealFilePath(this, selectedUri!!))
                 GlideApp.with(this)
                         .asBitmap()
@@ -576,14 +557,12 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
                                     var myDir = File(rootFolder, namePassive)
 
-                                    Mylog.d("aaaaaaaaaa my dir: " + myDir)
-
                                     if (myDir.exists())
                                         myDir.delete()
 
                                     val out3 = FileOutputStream(myDir)
 
-                                    resource?.compress(Bitmap.CompressFormat.JPEG, 90, out3)
+                                    resource.compress(Bitmap.CompressFormat.JPEG, 90, out3)
                                     //changeProduct!!.imagechanged = Uri.fromFile(myDir).toString()
                                     realm!!.realm.executeTransaction(Realm.Transaction {
                                         product!!.imagechanged = Uri.fromFile(myDir).toString()
@@ -785,7 +764,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         idProduct = product!!._id!!
         if (TextUtils.isEmpty(product!!.namechanged)) mTvName.setHint(resources.getString(R.string.no_name))
         else mTvName.setText(product!!.namechanged)
-        if (TextUtils.isEmpty(product!!.imagechanged))     Mylog.d("tttttttt image before khong có image")
+        if (TextUtils.isEmpty(product!!.imagechanged))
         else {
             strImProduct = product!!.imagechanged.toString()
 

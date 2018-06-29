@@ -117,7 +117,7 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
             }))
             var listData = ArrayList<Product_v>()
             for (i in 0 until  listProduct!!.size) {
-                Log.d("SEARCHHHHHHHHHH",listProduct?.get(i)?.description+"//vvv")
+//                Log.d("SEARCHHHHHHHHHH",listProduct?.get(i)?.description+"//vvv")
                 var dis = listProduct!!.get(i).expiretime / 86400000 - miliexToday / 86400000
                 if(mPositionEX==-1 && dis<=0){
                     mPositionEX = i
@@ -158,21 +158,18 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
 //                getData()
 //            }
 //        }
-        lin_create?.setOnClickListener(object: View.OnClickListener{
-            override fun onClick(v: View?) {
-                if (ActivityCompat.checkSelfPermission(activity!!.applicationContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.CAMERA), perID)
-                }else{
-                    if (ConnectivityChangeReceiver.isConnected()) {
-                        val i = Intent(activity,ContinuousCaptureActivity::class.java)
-                        startActivity(i)
-                    } else {
-                        showToast(R.string.not_connect_to_network)
-                    }
+        lin_create?.setOnClickListener {
+            if (ActivityCompat.checkSelfPermission(activity!!.applicationContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.CAMERA), perID)
+            }else{
+                if (ConnectivityChangeReceiver.isConnected()) {
+                    val i = Intent(activity,ContinuousCaptureActivity::class.java)
+                    startActivity(i)
+                } else {
+                    showToast(R.string.not_connect_to_network)
                 }
-
             }
-        })
+        }
     }
 
 
@@ -185,7 +182,7 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
     }
     fun showDialogDelete(listDelete: String?, arrID : List<Product_v>){
         var user = myRealm!!.getUser()!!
-        Mylog.d(" iduser: ${user._id}" +"Adapter: $listDelete"+ "////12321312")
+//        Mylog.d(" iduser: ${user._id}" +"Adapter: $listDelete"+ "////12321312")
         val dialogdelete = MaterialDialog.Builder(activity!!)
                 .title(activity!!.resources.getString(R.string.title_dialog_delete))
                 .content(activity!!.resources.getString(R.string.content_dialog_delete))
@@ -211,7 +208,7 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
                         override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
                             if(response?.isSuccessful!!){
                                 if(response.code()==200){
-                                    Log.d("zzzzzzzzzzzzz",response.code().toString()+"///")
+//                                    Log.d("zzzzzzzzzzzzz",response.code().toString()+"///")
                                     // xóa thành công từ server -> xóa lun trong realm
                                     myRealm?.deletelistproductfromserversucess(arrID,this@Home_Fragment)
                                     // trả về true -> xóa toàn bộ dữ liệu liên quan dến id_product trong bảng notification
@@ -330,16 +327,16 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
         if(ConnectivityChangeReceiver.isConnected()){
             if(myRealm?.getlistProductOffline()!= null && (myRealm?.getlistProductOffline()?.size!! > 0)){
                 val arrDataNotSync = myRealm?.getlistProductOffline()
-                Log.d("REALMCONTROLLER","myRealm?.getlistProductOffline()?.size//  "+arrDataNotSync.toString())
+//                Log.d("REALMCONTROLLER","myRealm?.getlistProductOffline()?.size//  "+arrDataNotSync.toString())
                 numLoading = arrDataNotSync?.size!!
                 showDialog(resources.getString(R.string.sync))
                 for(i in 0 until arrDataNotSync.size){
-                    Log.d("REALMCONTROLLE",arrDataNotSync.get(i).imagechanged+"//"+arrDataNotSync.get(i).namechanged+"//"+arrDataNotSync.get(i)!!.expiretime+"//"+arrDataNotSync.get(i)!!.description+"//"+arrDataNotSync.get(i)!!.barcode)
+//                    Log.d("REALMCONTROLLE",arrDataNotSync.get(i).imagechanged+"//"+arrDataNotSync.get(i).namechanged+"//"+arrDataNotSync.get(i)!!.expiretime+"//"+arrDataNotSync.get(i)!!.description+"//"+arrDataNotSync.get(i)!!.barcode)
                     addProductOfflinetoServer(arrDataNotSync.get(i))
                 }
                // loadData()
             }else{
-                Log.d("REALMCONTROLLER","ConnectivityChangeReceiver ")
+//                Log.d("REALMCONTROLLER","ConnectivityChangeReceiver ")
              //   getDataFromServer()
             }
         }else{
@@ -355,7 +352,7 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
     }
 
     fun getDataFromServer(){
-        Log.d("REALMCONTROLLER","getDataFromServer")
+
         mRetrofitService = ApiUtils.getAPI()
         mRetrofitService?.getAllProductInGroup("5b21d1f9fe313f03da828118")?.enqueue(object: Callback<Result_Product>{
             override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
@@ -372,7 +369,7 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
                 if(response?.isSuccessful!!){
                             if(response.code()==200){
                                 if(response.body().listProduct.size>0){
-                            Log.d("REALMCONTROLLER",response.body().listProduct.size.toString()+"//listProduct")
+//                            Log.d("REALMCONTROLLER",response.body().listProduct.size.toString()+"//listProduct")
                             showDialog(activity!!.resources.getString(R.string.sync))
                             myRealm?.updateorCreateListProduct(response.body().listProduct,this@Home_Fragment)
                         }else if(myRealm?.getlistProduct()!!.size==0){

@@ -13,20 +13,14 @@ import io.reactivex.schedulers.Schedulers
 import org.json.JSONException
 import org.json.JSONObject
 
-class DetailProductPresenter : getObservable{
+class DetailProductPresenter(IpresenterView: IDetailProductPresenterView) : getObservable() {
 
 
     val disposable = CompositeDisposable()
 
-      val  Ipresenter : IDetailProductPresenterView;
+      val  Ipresenter : IDetailProductPresenterView = IpresenterView;
 
-    constructor(IpresenterView : IDetailProductPresenterView){
-
-        this.Ipresenter = IpresenterView
-
-    }
-
-// xóa sản phẩm
+    // xóa sản phẩm
     fun processDeleteProduct(idProduct : String, iduser: String){
         try {
             jsonObject.put("id_product", idProduct)
@@ -88,7 +82,6 @@ class DetailProductPresenter : getObservable{
 
     // update sản phẩm
     fun processInfomationUpdate(idProduct : String, name: String?, expiredtime : String?, description: String?){
-        Mylog.d("iiiiiiiii "+description)
         try {
             jsonObject.put("id_product", idProduct)
             jsonObject.put("nameproduct", name)

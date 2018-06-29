@@ -8,15 +8,14 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 
-class LoadingProgressDialog : ProgressDialog{
+class LoadingProgressDialog(context: Context, theme: Int) : ProgressDialog(context, theme) {
 
     private var mContext: Context? = null
     private var mContentView: View? = null
     private var mLoadingImage: ImageView? = null
     private var mTxtMessage: TextView? = null
 
-    constructor(context: Context, theme: Int) : super(context, theme) {
-
+    init {
         init(context)
     }
 

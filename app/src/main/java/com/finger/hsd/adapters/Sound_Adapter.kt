@@ -56,7 +56,6 @@ class Sound_Adapter : BaseAdapter {
             view = inflater.inflate(R.layout.list_view_item, parent, false)
             vh = ViewHolder(view)
             view.tag = vh
-            Log.i("JSA", "set Tag for ViewHolder, position: " + position)
         } else {
             view = convertView
             vh = view.tag as ViewHolder

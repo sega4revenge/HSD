@@ -105,9 +105,9 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
         val strNotiCount = realm!!.countNotification().toString() + " " +activity!!.resources.getString(R.string.notification_not_see)
         mView!!.count_notification.text = strNotiCount
 
-        mView!!.im_clear.setOnClickListener({
-//            showProgress()
-             listNotWatch = realm!!.listNotWatch()
+        mView!!.im_clear.setOnClickListener {
+            //            showProgress()
+            listNotWatch = realm!!.listNotWatch()
             temp = 0
             if(listNotWatch.size >=0 && !listNotWatch.isEmpty() && temp < listNotWatch.size) {
                 processWatchedNotification(listNotWatch[temp])
@@ -118,7 +118,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
 
 //            hideProgress()
 
-        })
+        }
         return mView
     }
 
@@ -129,11 +129,11 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
             } else {
 
                 temp++
-                realm!!.realm.executeTransaction({
+                realm!!.realm.executeTransaction {
                     notification.isSync = false
                     notification.watched = true
 
-                })
+                }
                 if(listNotWatch.size >=0 && !listNotWatch.isEmpty() && temp < listNotWatch.size) {
                     processWatchedNotification(listNotWatch[temp])
                 }else{
@@ -221,7 +221,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
 
                 val position = data.getIntExtra("position", -1)
                 if (extras != null) {
-                    Mylog.d("aaaaaaaaa " + position)
+//                    Mylog.d("aaaaaaaaa " + position)
                     mNotifiAdapter.notifyItemChanged(position)
 
                 }
@@ -235,18 +235,18 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
         intent.putExtra("position", position)
         intent.putExtra("id_product", product._id)
 
-        Mylog.d("aaaaaaaaaa "+product._id)
+//        Mylog.d("aaaaaaaaaa "+product._id)
 
         // startActivityForResult(intent, AppIntent.REQUEST_NOTIFICATION)
         val notification = realm!!.getOneNotification(product._id!!)
         if (ConnectivityChangeReceiver.isConnected()) {
             updateNotficationOnServer(notification!!, 2)
         } else {
-            realm!!.realm.executeTransaction( {
+            realm!!.realm.executeTransaction {
                 notification!!.isSync = false
                 notification.watched = true
 
-            })
+            }
             val strCountNoti =  realm!!.countNotification().toString() +  activity!!.resources.getString(R.string.notification_not_see)
             mView!!.count_notification.text = strCountNoti
         }
@@ -257,7 +257,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
     var appendChatScreenMsgReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val bundle = intent.extras
-            Mylog.d("communition  BroadcastReceiver chay ngay di")
+//            Mylog.d("communition  BroadcastReceiver chay ngay di")
 
             if (bundle != null) {
                 if (bundle.getBoolean("updateItem")) {
@@ -267,7 +267,7 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                         val position = bundle.getInt("position")
 
                         mNotifiAdapter.notifyItemChanged(position)
-                        Mylog.d("communition  BroadcastReceiver  $position")
+//                        Mylog.d("communition  BroadcastReceiver  $position")
 
                     } else {
                         //======== hàm này để load lại toàn bộ item khi homeFragment chỉnh sửa item.
@@ -282,14 +282,14 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                             }
                         }
 
-                        Mylog.d("communition  BroadcastReceiver  chay chua chau")
+//                        Mylog.d("communition  BroadcastReceiver  chay chua chau")
 
                     }
                     val strCountNoti =  realm!!.countNotification().toString() +  activity!!.resources.getString(R.string.notification_not_see)
                     mView!!.count_notification.text = strCountNoti
                 } else if (bundle.getBoolean("deleteItem")) {
                     if (!bundle.getBoolean("reloadItem")) {
-                        Mylog.d("communition  BroadcastReceiver  chay chua chau")
+
                         val position = bundle.getInt("position")
                         val item = listitem.get(position)
                         listitem.remove(item)
@@ -305,8 +305,6 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                     mView!!.count_notification.text = strCountNoti
 //============hàm này để khi có  thông báo là nó sẽ add vào list notification = alarm thông báo
                 } else if (bundle.getBoolean("addnotification")) {
-
-                    Mylog.d("aaaaaaaaaa da chay broadcash")
                     listitem.clear()
                     setRealmAdapter()
                     val strCountNoti =  realm!!.countNotification().toString() +  activity!!.resources.getString(R.string.notification_not_see)
@@ -328,7 +326,6 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
     }
 
     fun updateNotficationOnServer(notification: Notification, type : Int) {
-        Mylog.d("ttttttttt idproduct: "+notification.id_product)
         val user = realm!!.getUser()
         val jsonObject = JSONObject()
         try {
@@ -363,21 +360,21 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                         if (type == 2){
 
                             temp++
-                            realm!!.realm.executeTransaction( {
+                            realm!!.realm.executeTransaction {
                                 notification.isSync = true
                                 notification.watched = true
 
-                            })
+                            }
                             if(listNotWatch.size >=0 && !listNotWatch.isEmpty() && temp < listNotWatch.size) {
                                 processWatchedNotification(listNotWatch[temp])
                             }else{
                                 // success
                             }
                         }else {
-                            realm!!.realm.executeTransaction( {
+                            realm!!.realm.executeTransaction {
                                 notification.isSync = true
                                 notification.watched = false
-                            })
+                            }
                         }
                     }
 
@@ -386,22 +383,22 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                         if (type==2){
 
                             temp++
-                            realm!!.realm.executeTransaction({
+                            realm!!.realm.executeTransaction {
                                 notification.isSync = false
                                 notification.watched = true
 
-                            })
+                            }
                             if(listNotWatch.size >=0 && !listNotWatch.isEmpty() && temp < listNotWatch.size) {
                                 processWatchedNotification(listNotWatch[temp])
                             }else{
                                 //sucess
                             }
                         }else {
-                            realm!!.realm.executeTransaction( {
+                            realm!!.realm.executeTransaction {
                                 notification.isSync = false
                                 notification.watched = true
 
-                            })
+                            }
                         }
 
 
@@ -415,14 +412,11 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
     override fun onDestroy() {
         super.onDestroy()
         activity!!.unregisterReceiver(this.appendChatScreenMsgReceiver)
-
-
     }
 
     override fun onResume() {
         super.onResume()
         activity!!.registerReceiver(this.appendChatScreenMsgReceiver, IntentFilter(AppIntent.ACTION_UPDATE_ITEM))
-
     }
 
 }

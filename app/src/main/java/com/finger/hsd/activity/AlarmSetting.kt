@@ -210,7 +210,7 @@ class AlarmSetting : AppCompatActivity(), CompoundButton.OnCheckedChangeListener
             realms!!.storeListToRealm(newAlarm)
 
             for (j in oldList.indices){
-                Log.d("for....  " , " j " + j)
+//                Log.d("for....  " , " j " + j)
                 val model_oldList = oldList[j]
                     realms!!.update_to_SetAlarm(model_oldList.toInt(), true)
             }

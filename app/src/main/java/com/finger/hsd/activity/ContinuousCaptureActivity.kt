@@ -1,6 +1,7 @@
 package com.finger.hsd.activity
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
@@ -165,7 +166,7 @@ class ContinuousCaptureActivity : Activity() {
                         startActivity(i)
                     }
                 }else{
-                    if(response?.code() == 405){
+                    if(response.code() == 405){
                         showDialogNotFound(barcode)
                     }
                 }
@@ -288,10 +289,10 @@ class ContinuousCaptureActivity : Activity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            Log.d("aaaaaaaaa",cameraImageUri.toString())
+//            Log.d("aaaaaaaaa",cameraImageUri.toString())
             when(requestCode){
                 111 ->{
-                    if(cameraImageUri != null&&!cameraImageUri.toString().isNullOrEmpty()){
+                    if(cameraImageUri != null&&!cameraImageUri.toString().isEmpty()){
                         val i = Intent(this@ContinuousCaptureActivity,Add_Product::class.java)
                         i.putExtra("type",0)
                         i.putExtra("path",cameraImageUri.toString())
@@ -299,7 +300,7 @@ class ContinuousCaptureActivity : Activity() {
                     }
                 }
                 222->{
-                    if(cameraImageUri != null && !cameraImageUri.toString().isNullOrEmpty()){
+                    if(cameraImageUri != null && !cameraImageUri.toString().isEmpty()){
                         val i = Intent(this@ContinuousCaptureActivity,Add_Product::class.java)
                         i.putExtra("type",1)
                         i.putExtra("path",cameraImageUri.toString())
@@ -357,15 +358,15 @@ class ContinuousCaptureActivity : Activity() {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), mType)
         }else{
             val cameraInent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            if (cameraInent.resolveActivity(this.getPackageManager()) == null) {
+            if (cameraInent.resolveActivity(this.packageManager) == null) {
                 //      errorMessage("This Application do not have Camera Application")
                 return
             }
 
             val imageFile = getImageFile()
-            val photoURI = FileProvider.getUriForFile(this, this.getApplicationContext().getPackageName() + ".provider", imageFile!!)
+            val photoURI = FileProvider.getUriForFile(this, this.applicationContext.packageName + ".provider", imageFile!!)
 
-            val resolvedIntentActivities = this.getPackageManager().queryIntentActivities(cameraInent, PackageManager.MATCH_DEFAULT_ONLY)
+            val resolvedIntentActivities = this.packageManager.queryIntentActivities(cameraInent, PackageManager.MATCH_DEFAULT_ONLY)
             for (resolvedIntentInfo in resolvedIntentActivities) {
 
                 val packageName = resolvedIntentInfo.activityInfo.packageName
@@ -409,6 +410,7 @@ class ContinuousCaptureActivity : Activity() {
     }
 
 
+    @SuppressLint("SimpleDateFormat")
     private fun getOutputMediaFile(): File {
         val mediaStorageDir = this.getExternalFilesDir(null)
         //   if (!mediaStorageDir.exists()) {

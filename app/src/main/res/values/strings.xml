@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">HSD</string>
 
-    <string name="btn_signin">SIGNIN</string>
-    <string name="btn_join">SINGUP</string>
+    <string name="btn_signin">SIGN IN</string>
+    <string name="btn_join">SING UP</string>
     <string name="btn_forgot">FORGOT PASSWORD</string>
     <string name="btn_signup">Don\'t have account ? CLICK HERE</string>
     <string name="btn_haveaccount">Already have account ?</string>
@@ -59,7 +59,7 @@
     <string name="detail_product_text_expiry_date">Remaining term of use </string>
     <string name="detail_product_text_day"> day(s)</string>
     <string name="no_name"> No Name</string>
-    <string name="note">Note...</string>
+    <string name="note">Note…</string>
     <string name="shelf_life">Shelf life is </string> <!-- thời hạn sử dụng còn lại là 5 ngày -->
     <string name="today">to day</string>
     <string name="detail_product">Detail product</string>
@@ -79,7 +79,7 @@
     <string name="custome_day">Custom days</string>
     <string name="day_advance_notice">  advance notice</string>
     <string name="recieve_one_notification">Receive one notification before expiry date</string>
-    <string name="change_avatar">Change image...</string>
+    <string name="change_avatar">Change image…</string>
     <string name="uploading">Uploading</string>
     <string name="remain_time_minute">Remain time minute</string>
     <string name="remain_time_second">Remain time second</string>
@@ -100,7 +100,7 @@
 
     <!--********TIME AGO-->
     <string name="just_now">just now</string>
-    <string name="a_min_ago">min ago</string>
+    <string name="a_min_ago">1 min ago</string>
     <string name="mins_ago">mins ago</string>
     <string name="a_hour_ago">a hour ago</string>
     <string name="hour_ago">hour ago</string>
@@ -134,6 +134,7 @@
     <string name="save">SAVE</string>
     <string name="time_setting">Time Setting</string>
     <string name="expiry_date_notification">Expiry Date Notification</string>
+
     <string name="_1_am">1 AM</string>
     <string name="product">Product</string>
     <string name="ok">OK</string>
@@ -173,11 +174,11 @@
     <string name="home_warning">Warning Using It Now</string>
     <string name="home_protected">Safe</string>
     <string name="border_expired">EXPIRED</string>
-    <string name="border_protected">DAYS LEFT</string>
+    <string name="border_protected">DAYS AGO</string>
      <string name="accepte_delete">OK</string>
     <string name="cancel_delete">Cancel</string>
-    <string name="deleting">deleting...</string>
-    <string name="clear">Clear</string> <!--// xóa-->
+    <string name="deleting">deleting…</string>
+    <string name="clear">Clear All</string> <!--// xóa-->
    <!--/home-->
 
 
@@ -563,7 +564,11 @@
     <string name="not_connect_to_network">not connect with network </string>
     <string name="title_dialog_delete">do you want to delete all products? </string>
     <string name="content_dialog_delete">Click \"Ok\" to delete all products </string>
-    <string name="sync">data sync...</string>
+    <string name="sync">data sync…</string>
+    <string name="notification_unvailable">Notification Unavailable !</string>
+    //Chào mừng bạn đến với HSD. Hãy tạo ngay một danh sách quản lý hạn sử dụng của tất cả sản phẩm bạn có !
+    <string name="wellcome_create">Welcome to HSD. Create a shelf management list of all the products you have!</string>
+    <string name="create_product">CREATE PRODUCT</string>
 
 
 </resources>

@@ -1,6 +1,7 @@
 package com.finger.hsd.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -111,7 +112,7 @@ public class Scanner_HSD_Activity extends AppCompatActivity {
 
         TextRecognizer textRecognizer = new TextRecognizer.Builder(Scanner_HSD_Activity.this).build();
         if (!textRecognizer.isOperational()) {
-            Log.d("ERROR", "Error!Permission");
+//            Log.d("ERROR", "Error!Permission");
             tx.setText("Error!Permission");
         } else {
             DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -315,27 +316,27 @@ public class Scanner_HSD_Activity extends AppCompatActivity {
         long milisecontime = 0;
         switch (type){
             case 0:
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                 milisecontime = converTypeDate(sdf,date);
                 break;
             case 1:
-                SimpleDateFormat sdf2 = new SimpleDateFormat("ddMMyyyy");
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("ddMMyyyy");
                 milisecontime = converTypeDate(sdf2,date);
                 break;
             case 2:
-                SimpleDateFormat sdf3 = new SimpleDateFormat("ddMMyy");
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf3 = new SimpleDateFormat("ddMMyy");
                 milisecontime = converTypeDate(sdf3,date);
                 break;
             case 3:
-                SimpleDateFormat sdf4 = new SimpleDateFormat("dd/MM/yy");
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf4 = new SimpleDateFormat("dd/MM/yy");
                 milisecontime = converTypeDate(sdf4,date);
                 break;
             case 4:
-                SimpleDateFormat sdf5 = new SimpleDateFormat("dd MM yyyy");
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf5 = new SimpleDateFormat("dd MM yyyy");
                 milisecontime = converTypeDate(sdf5,date);
                 break;
             case 5:
-                SimpleDateFormat sdf6 = new SimpleDateFormat("dd MM yy");
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf6 = new SimpleDateFormat("dd MM yy");
                 milisecontime = converTypeDate(sdf6,date);
                 break;
             default:

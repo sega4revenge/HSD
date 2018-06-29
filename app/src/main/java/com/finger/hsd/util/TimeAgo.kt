@@ -51,6 +51,7 @@ constructor() {
         return this
     }
 
+    @SuppressLint("SimpleDateFormat")
     fun with(simpleDateFormat: SimpleDateFormat): TimeAgo {
         this.simpleDateFormat = simpleDateFormat
         this.dateFormat = SimpleDateFormat(simpleDateFormat.toPattern().split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0])
@@ -64,11 +65,7 @@ constructor() {
         //  time difference in milli seconds
         val different = endDate!!.time - dayend.time
         //        if (context!=null) {
-        if (different < HOUR_MILLIS) {
-            result = true
-        } else {
-            result = false
-        }
+        result = different < HOUR_MILLIS
         //        }
         return result
     }
@@ -79,11 +76,7 @@ constructor() {
         //  time difference in milli seconds
         val different = endDate!!.time - dayend.time
         //        if (context!=null) {
-        if (different < DAY_MILLIS) {
-            result = true
-        } else {
-            result = false
-        }
+        result = different < DAY_MILLIS
         //        }
         return result
     }

@@ -389,12 +389,12 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
         calendars.set(Calendar.HOUR_OF_DAY, hour)
 
         if (boolean) {
-            Log.d("FragmentProfile", "boolean..true  ====>>>>    " + boolean + " =====  " + hour)
+//            Log.d("FragmentProfile", "boolean..true  ====>>>>    " + boolean + " =====  " + hour)
             pending_intent = PendingIntent.getBroadcast(activity, hour, myIntent, PendingIntent.FLAG_CANCEL_CURRENT)
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars.timeInMillis, milDay, pending_intent)
 
         } else {
-            Log.d("FragmentProfile", "boolean..false  ====>>>>>>    " + boolean + " =====  " + hour)
+//            Log.d("FragmentProfile", "boolean..false  ====>>>>>>    " + boolean + " =====  " + hour)
             pending_intent = PendingIntent.getBroadcast(activity, hour, myIntent, PendingIntent.FLAG_CANCEL_CURRENT)
             alarmManager.cancel(pending_intent)
 
@@ -434,10 +434,10 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
                     var myDir = File(namePassive.path)
 
                     if (myDir.exists()) {
-                        Mylog.d("aaaaaaaaaa deleted")
+
                         myDir.delete()
                     } else {
-                        Mylog.d("aaaaaaaaaa not deleted" + namePassive)
+
                     }
                 }
 
@@ -482,7 +482,7 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
         val mBuilder = AlertDialog.Builder(activity)
         mBuilder.setTitle(activity!!.resources.getString(R.string.choose_an_item))
 
-        mBuilder.setSingleChoiceItems(listItems, id ) { dialogInterface, i ->
+        mBuilder.setSingleChoiceItems(listItems, id ) { _, i ->
             Log.d(" choose ... ", " Choose an item " + listItems[i])
 
             if(listItems[i]  != "off"){

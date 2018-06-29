@@ -211,17 +211,17 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
         val itemView = v as BottomNavigationItemView
         itemView.addView(getTabItemView())
 
-        bottomNavigationView!!.setOnNavigationItemSelectedListener({ item ->
-                    when (item.itemId) {
-                        R.id.item_home -> viewPager!!.setCurrentItem(0)
-                        R.id.item_notification ->{
-                            viewPager!!.setCurrentItem(1)
-                        }
-                        R.id.item_profile -> viewPager!!.setCurrentItem(2)
-                    }
+        bottomNavigationView!!.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.item_home -> viewPager!!.setCurrentItem(0)
+                R.id.item_notification ->{
+                    viewPager!!.setCurrentItem(1)
+                }
+                R.id.item_profile -> viewPager!!.setCurrentItem(2)
+            }
 
-                    false
-                })
+            false
+        }
 
 
 
@@ -294,10 +294,10 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
         mBadgeView!!.setTextSize(8f)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mBadgeView!!.setBackground(getDrawable(R.drawable.button_radius_red))
+                mBadgeView!!.background = getDrawable(R.drawable.button_radius_red)
             }
         }
-        mBadgeView!!.setText(formatBadgeNumber(session!!.getCountNotification()))
+        mBadgeView!!.text = formatBadgeNumber(session!!.getCountNotification())
         return view
     }
     override fun onBadgeUpdate(value: Int) {
@@ -306,7 +306,6 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
 
     }
     fun formatBadgeNumber(value: Int): String? {
-        Mylog.d("aaaaaaaaaaa formatbadgeNumber: "+value)
 
         if (value <= 0) {
             return null
@@ -324,7 +323,6 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
         when (postion) {
 
             1 ->{
-                Mylog.d("aaaaaaaaaaa da chay menuvisible: ")
                 session!!.setCountNotification(0)
                 badgeIconScreen()
               onBadgeUpdate(session!!.getCountNotification())
@@ -340,7 +338,6 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
             try {
 //                badgeCount = session!!.getCountNotification()
             } catch (e: NumberFormatException) {
-                Mylog.d("badge Count screen: ", e.message!!)
             }
             ShortcutBadger.applyCount(applicationContext, badgeCount)
         } else {
@@ -378,7 +375,6 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
     override fun onNetworkConnectionChanged(isConnected: Boolean) {
 
         if (isConnected) {
-                Mylog.d("yyyyyyyy chạy đồng bộ chưa:?? rồi")
                 refresh()
 
                 listProduct = realm!!.getListProductNotSync()
@@ -389,7 +385,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
 
 
         } else {
-            Mylog.d("yyyyyyyyyy chạy đồng bộ chưa:?? chưa")
+
         }
     }
 
@@ -456,18 +452,18 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
 
             }else{
                 val product = realm!!.getProduct(idProduct)
-                realm!!.realm.executeTransaction( {
+                realm!!.realm.executeTransaction {
                     product!!.isSyn = true
-                })
+                }
                 temp++
                 syncProduct()
             }
         }else if (type == 333){
             val  notification = listNotification!![indexNotification]
-            realm!!.realm.executeTransaction({
+            realm!!.realm.executeTransaction {
                 notification.isSync = true
                 notification.watched = false
-            })
+            }
             indexNotification++
             syncNotification()
 
@@ -475,7 +471,6 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
     }
 
     override fun onError(typeError: Int) {
-        Mylog.d("tttttttt lỗi rồi" +typeError)
         completeRefresh()
         if(typeError == 111){
             // delete product fail
@@ -497,7 +492,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
                 .addMultipartParameter("id_product", idProduct)
                 .addMultipartFile("image", CompressImage.compressImage(this, file))
                 .build()
-                .setAnalyticsListener { timeTakenInMillis, bytesSent, bytesReceived, isFromCache -> }
+                .setAnalyticsListener { _, _, _, _ -> }
                 .getObjectObservable(Response::class.java)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -539,14 +534,13 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
 
     //sync animation
     fun completeRefresh() {
-        Mylog.d("yyyyy load xong")
+
         sync?.clearAnimation()
         sync?.setImageDrawable(resources.getDrawable(R.drawable.ic_sync_complete))
        // refreshItem.setActionView(null)
     }
     fun refresh() {
         /* Attach a rotating ImageView to the refresh item as an ActionView */
-        Mylog.d("yyyyyyyy load chưa")
         sync?.setImageDrawable(resources.getDrawable(R.drawable.ic_sync_ing))
         val rotation = AnimationUtils.loadAnimation(this, R.anim.sync_animation)
         rotation.repeatCount = Animation.INFINITE

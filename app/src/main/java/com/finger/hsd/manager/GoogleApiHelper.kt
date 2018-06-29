@@ -68,7 +68,6 @@ class GoogleApiHelper(private val context: Context) : GoogleApiClient.Connection
     }
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) {
-        Log.d(TAG, "onConnectionFailed: connectionResult = " + connectionResult)
         if (connectionListener != null) {
             connectionListener!!.onConnectionFailed(connectionResult)
         }

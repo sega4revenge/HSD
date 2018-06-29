@@ -45,16 +45,12 @@ class MyApplication : Application() {
                 val sslContext = SSLContext.getInstance("SSL")
                 sslContext.init(null, trustAllCerts, java.security.SecureRandom())
                 // Create an ssl socket factory with our all-trusting manager
-                val sslSocketFactory = sslContext.getSocketFactory()
+                val sslSocketFactory = sslContext.socketFactory
 
                 val builder = OkHttpClient.Builder()
                 builder.connectTimeout(5, TimeUnit.SECONDS)
                 builder.sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
-                builder.hostnameVerifier(object : HostnameVerifier {
-                    override fun verify(hostname: String, session: SSLSession): Boolean {
-                        return true
-                    }
-                })
+                builder.hostnameVerifier { _, _ -> true }
 
                 return builder.build()
             } catch (e: Exception) {

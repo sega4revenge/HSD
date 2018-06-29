@@ -55,7 +55,7 @@ class MainListAdapterKotlin:
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .placeholder(R.drawable.photo_unvailable)
-                .error(R.drawable.ic_back)
+                .error(R.drawable.photo_unvailable)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

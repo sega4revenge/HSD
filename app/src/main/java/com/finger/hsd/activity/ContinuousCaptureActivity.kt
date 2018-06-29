@@ -187,7 +187,8 @@ class ContinuousCaptureActivity : Activity() {
         }
         var txtout2 = mView2.txt_out_scanbarcode
         var txtok2 = mView2.txt_ok_scanbarcode
-
+        var txt_barcode = mView2.check_barcode
+        txt_barcode.setText(barcode)
         txtout2.setOnClickListener(object: View.OnClickListener{
             override fun onClick(v: View?) {
                 lastText = ""
@@ -220,7 +221,12 @@ class ContinuousCaptureActivity : Activity() {
 //                }
 
         mDialog_scan = datedialog.create()
-        mDialog_scan?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val sdk= android.os.Build.VERSION.SDK_INT
+        if(sdk > android.os.Build.VERSION_CODES.KITKAT) {
+            mDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }else{
+            mDialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        }
         mDialog_scan?.show()
     }
 
@@ -258,7 +264,12 @@ class ContinuousCaptureActivity : Activity() {
 
         })
         mDialog = datedialog.create()
-        mDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val sdk= android.os.Build.VERSION.SDK_INT
+        if(sdk > 19) {
+            mDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }else{
+            mDialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        }
         mDialog?.show()
 
     }

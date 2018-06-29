@@ -969,7 +969,12 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
         })
         mDialog = datedialog.create()
-        mDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val sdk= android.os.Build.VERSION.SDK_INT
+        if(sdk > android.os.Build.VERSION_CODES.KITKAT) {
+            mDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }else{
+            mDialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        }
         mDialog?.show()
     }
 

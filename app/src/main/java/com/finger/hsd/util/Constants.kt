@@ -7,8 +7,8 @@ internal object Constants {
     val BASE_URL = "https://hansudung.com/"
 //val BASE_URL = "http://192.168.0.104:7070/"
 //val BASE_URL = "http://192.168.1.56:7070/"
-//val BASE_URL = "http://45.77.36.108:7070/"
-val IMAGE_URL = BASE_URL + "getimage/?image="
+
+val IMAGE_URL = Constants.BASE_URL + "getimage/?image="
 
     val  DEBUG = true
 //    val BASE_URL = "https://hsdvn.ga:7070/"

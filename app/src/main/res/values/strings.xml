@@ -575,6 +575,8 @@
     <string name="create_product">CREATE PRODUCT</string>
     //What do you want to search
     <string name="b_n_mu_n_t_m_g">What do you want to search?</string>
+    <string name="add_no_barcode">Add No Barcode</string>
+    <string name="put_barcode">Put Barcode</string>
 
 
 </resources>

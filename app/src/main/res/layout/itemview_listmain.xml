@@ -45,11 +45,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <TextView
-                    android:text="Sách Trên Đường Băng  Đường Băng "
+                    android:text="Sách Trên Đường Băng  Đường Băng asdasdasdasdas"
                     android:id="@+id/txt_nameproduct"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="2"
+                    android:maxLines="1"
                     android:ellipsize="end"
                     android:textSize="17dp"
                     android:textColor="@color/text_color"

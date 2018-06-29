@@ -9,21 +9,21 @@
     tools:context=".activity.LoginActivity">
 
     <ImageView
+        android:id="@+id/img_logo"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="11dp"
-        android:src="@drawable/ic_launcher_hsd" />
+        android:src="@drawable/ic_app_login" />
 
 
     <android.support.v7.widget.CardView
+        android:layout_below="@id/img_logo"
         android:id="@+id/layout_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="106dp"
         android:background="@color/white"
         app:cardCornerRadius="30dp"
         app:cardElevation="4dp"
@@ -101,13 +101,11 @@
     </android.support.v7.widget.CardView>
 
     <LinearLayout
+        android:layout_marginTop="24dp"
+        android:layout_below="@+id/layout_input"
         android:id="@+id/layout_text_social"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="188dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:layout_alignParentLeft="true">
@@ -126,22 +124,18 @@
             android:text="@string/txt_or"
             android:textColor="@color/text_hint"
             android:textSize="15sp" />
-
         <View
             android:layout_width="100dp"
             android:layout_height="1dp"
             android:background="@color/divider" />
-
     </LinearLayout>
 
     <LinearLayout
+        android:layout_marginTop="24dp"
+        android:layout_below="@+id/layout_text_social"
         android:id="@+id/mxh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="125dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:weightSum="2">

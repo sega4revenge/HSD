@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape  xmlns:android="http://schemas.android.com/apk/res/android">
-    <gradient android:startColor="@color/start_color" android:endColor="@color/end_color"></gradient>
-    <!--<corners android:bottomLeftRadius="30dp" android:bottomRightRadius="30dp"></corners>-->
-</shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="false"
+      android:state_pressed="false">
+      <shape>
+          <gradient android:startColor="@color/start_color"
+              android:endColor="@color/end_color"></gradient>
+      </shape>
+    </item>
+
+    <item android:state_pressed="true"
+        android:state_focused="false">
+        <shape >
+            <gradient android:startColor="@color/gray"
+                android:endColor="@color/gray"></gradient>
+        </shape>
+    </item>
+
+</selector>

@@ -9,7 +9,7 @@
     <string name="txt_phone">PHONE NUMBER</string>
     <string name="txt_password">PASSWORD</string>
     <string name="txt_repassword">RE - PASSWORD</string>
-    <string name="txt_or">Or</string>
+    <string name="txt_or">Or Signin With</string>
     <string name="facebook_app_id">171986543489907</string>
     <string name="menu_home">Home</string>
     <string name="menu_notification">Notification</string>
@@ -57,10 +57,13 @@
     <!--===== Detail Product -->
 
     <string name="detail_product_text_expiry_date">Remaining term of use </string>
-    <string name="detail_product_text_day"> day(s)</string>
+    <string name="detail_product_text_day"> day(s).</string>
     <string name="no_name"> No Name</string>
     <string name="note">Note…</string>
     <string name="shelf_life">Shelf life is </string> <!-- thời hạn sử dụng còn lại là 5 ngày -->
+    <string name="overdue">overdue</string>
+    <string name="overdue_status">Products overdue</string>
+    <string name="notic_safe">for safety you should remove it</string>
     <string name="today">to day</string>
     <string name="detail_product">Detail product</string>
     <string name="choose_time">Notification setting</string>
@@ -563,6 +566,7 @@
     <string name="expiry_">expired day is close </string>
     <string name="please_check_product">please check your products !</string>
     <string name="expired">expired </string>
+    <string name="expired_time_detail">Expiry time </string>
     <string name="expiring">expired day</string>
     <string name="notification_not_see">unread notification</string>
     <string name="not_connect_to_network">not connect with network </string>

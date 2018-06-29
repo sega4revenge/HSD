@@ -199,9 +199,12 @@ class MainListAdapterKotlin:
                 }
                 if(dis == 0L){
                     if (holder.txt_warring.text !== "HẾT HẠN") {
-                        holder.txt_warring.text =  mContext.resources.getString(R.string.border_expired)
+                        holder.txt_warring.text =mContext.resources.getString(R.string.expired_time_detail) + " " +
+                                mContext.resources.getString(R.string.today)
+
+
                         holder.txt_warring.setTextColor(mContext.resources.getColor(R.color.white))
-                        holder.txt_warring.setBackgroundResource(R.drawable.text_warring_itemview)
+                        holder.txt_warring.setBackgroundResource(R.drawable.text_warring_item_cb)
                     }
                 }
             }

@@ -20,9 +20,13 @@ import android.text.Html
 import android.text.Spanned
 import android.text.TextUtils
 import android.util.Log
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import com.afollestad.materialdialogs.MaterialDialog
 import com.androidnetworking.error.ANError
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
@@ -88,7 +92,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
     private var name: String? = null
     private var expiredTime: String? = null
     private var note: String? = null
-    private var position: Int? = 0
+    private var position: Int? = -1
     private var expiredTimeChange: String? = null
 
     var selectedUri: Uri? = null
@@ -100,6 +104,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
     var product: Product_v? = null
     var checkNotification: Boolean = false
+    private var mDialogProgress: Dialog? = null
 
     val options = RequestOptions()
             .centerCrop()
@@ -151,6 +156,8 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         val strDataIntent: String = intent.getStringExtra("id_product")
         position = intent.getIntExtra("position", -1)
         checkNotification = intent.getBooleanExtra("checkNotification", false)
+
+
 
         if (!strDataIntent.isEmpty())
             idProduct = strDataIntent
@@ -205,7 +212,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
                                         val namePassive = Uri.parse(product!!.imagechanged)
 
-                                        var myDir = File(namePassive.path)
+                                        val myDir = File(namePassive.path)
 
                                         if (myDir.exists()) {
 
@@ -216,7 +223,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
                                         val namePass = product!!._id + "passive"+System.currentTimeMillis() + ".jpg"
 
-                                        var myD = File(rootFolder, namePass)
+                                        val myD = File(rootFolder, namePass)
                                         val out3 = FileOutputStream(myD)
 
                                         resource.compress(Bitmap.CompressFormat.JPEG, 90, out3)
@@ -224,7 +231,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
 
                                         //changeProduct!!.imagechanged = Uri.fromFile(myDir).toString()
-                                        realm!!.realm.executeTransaction(Realm.Transaction {
+                                        realm!!.realm.executeTransaction( {
                                             product!!.imagechanged = Uri.fromFile(myD).toString()
                                             product!!.isNewImage = true
 
@@ -260,6 +267,12 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
             val intent = Intent(this, ChooseDayNotification::class.java)
             intent.putExtra("id_product", idProduct)
             intent.putExtra("day_before", realm!!.getProduct(idProduct)!!.daybefore)
+
+
+//        val intent = Intent(activity, testImageActivity::class.java)
+            intent.putExtra("position", position!!)
+            intent.putExtra("checkNotification", false)
+
             startActivityForResult(intent, Constants.REQUEST_DAY_BEFORE)
         }
         ln_expiredtime.setOnClickListener {
@@ -273,23 +286,23 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
             if (expiredTimeChange != null && !expiredTime.equals(expiredTimeChange)) {
                 //  changeProduct!!.expiretime = expiredTimeChange!!.toLong()
-                realm!!.realm.executeTransaction(Realm.Transaction {
+                realm!!.realm.executeTransaction( {
                     product!!.expiretime = expiredTimeChange!!.toLong()
                 })
                 var days = 0
 
-                var longExpiredTime = expiredTimeChange!!.toLong()
+                val longExpiredTime = expiredTimeChange!!.toLong()
                 calendar.timeInMillis = longExpiredTime
                 expiredTime = expiredTimeChange
 
                 days = daysBetween(System.currentTimeMillis(), longExpiredTime)
 
-                getWarningStatus(days)
+                getWarningStatus(days, product!!.daybefore)
 
             }
             if ( !name.equals(nameChange)) {
                 //changeProduct!!.namechanged = nameChange
-                realm!!.realm.executeTransaction(Realm.Transaction {
+                realm!!.realm.executeTransaction( {
                     product!!.namechanged = nameChange
                 })
 
@@ -297,21 +310,21 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
             }
             if (!noteChange.equals(note)) {
                 //changeProduct!!.description = noteChange
-                realm!!.realm.executeTransaction(Realm.Transaction {
+                realm!!.realm.executeTransaction( {
                     product!!.description = noteChange
                 })
 
             }
 
             if (expiredTimeChange != null && !expiredTime.equals(expiredTimeChange)) {
-                realm!!.realm.executeTransaction(Realm.Transaction {
+                realm!!.realm.executeTransaction( {
                     product!!.expiretime = expiredTimeChange!!.toLong()
                 })
             }
 
             if (selectedUri != null) {
 //********* UPDATE image NEEUS NHU co thay đổi  *************
-                var file = File(getRealFilePath(this, selectedUri!!))
+                val file = File(getRealFilePath(this, selectedUri!!))
 
                 GlideApp.with(this)
                         .asBitmap()
@@ -324,7 +337,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                                     val namePassive = Uri.parse(product!!.imagechanged)
 //                                        val namePassive = product!!.imagechanged
 
-                                    var myDir = File(namePassive.path)
+                                    val myDir = File(namePassive.path)
 
                                     if (myDir.exists()) {
                                         myDir.delete()
@@ -333,7 +346,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
                                     val namePass = product!!._id + "passive"+System.currentTimeMillis() + ".jpg"
 
-                                    var myD = File(rootFolder, namePass)
+                                    val myD = File(rootFolder, namePass)
                                     val out3 = FileOutputStream(myD)
 
                                     resource.compress(Bitmap.CompressFormat.JPEG, 90, out3)
@@ -367,7 +380,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
         } else if (selectedUri != null) {
 
-            var file = File(getRealFilePath(this, selectedUri!!))
+            val file = File(getRealFilePath(this, selectedUri!!))
 
             GlideApp.with(this)
                     .asBitmap()
@@ -380,7 +393,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                                 val namePassive = Uri.parse(product!!.imagechanged)
 //                                        val namePassive = product!!.imagechanged
 
-                                var myDir = File(namePassive.path)
+                                val myDir = File(namePassive.path)
 
                                 if (myDir.exists()) {
                                     myDir.delete()
@@ -390,7 +403,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
                                 val namePass = product!!._id + "passive"+System.currentTimeMillis() + ".jpg"
 
-                                var myD = File(rootFolder, namePass)
+                                val myD = File(rootFolder, namePass)
                                 val out3 = FileOutputStream(myD)
 
                                 resource.compress(Bitmap.CompressFormat.JPEG, 90, out3)
@@ -539,7 +552,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
             mTvExpiredtime.text = dateFormat.format(date)
             days = daysBetween(System.currentTimeMillis(), longExpiredTime)
 
-            getWarningStatus(days)
+            getWarningStatus(days, response.daybefore)
 
             if (selectedUri != null) {
 //********* UPDATE image NEEUS NHU co thay đổi  *************
@@ -734,7 +747,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
                         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                         mTvExpiredtime.text = dateFormat.format(date)
                         days = daysBetween(System.currentTimeMillis(), longExpiredTime)
-                        getWarningStatus(days)
+                        getWarningStatus(days, product!!.daybefore)
                     }
                     updateToRealm(note!!, name!!)
                 }
@@ -793,13 +806,14 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
             days = daysBetween(System.currentTimeMillis(), expiredTime!!.toLong())
         }
 
-        getWarningStatus(days)
+        getWarningStatus(days , daysbefor!!)
 
     }
 
-    fun getWarningStatus(days: Int) {
+    fun getWarningStatus(days: Int, daysBefore : Int) {
+        Mylog.d("aaaaaaaaaaaaa "+days+" daybefore: "+daysBefore)
         var txt: String? = null
-        if (days > 0 && days < 10) {
+        if (days > 0 && days <= daysBefore) {
             // warning
             txt = "<font color ='#fc9a1b'> " + days + "</font>"
             setColorForLeverWarning(R.drawable.roundedtext_grey, R.drawable.roundedtext_orange, R.drawable.roundedtext_grey)
@@ -815,24 +829,24 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
             txt = "<font color ='#FF4081'> " + Math.abs(days )+ "</font>"
             setColorForLeverWarning(R.drawable.roundedtext_grey, R.drawable.roundedtext_grey, R.drawable.roundedtext_red)
             mImStatus.setBackgroundColor(resources.getColor(R.color.red))
-            val strDayCountDown = resources.getString(R.string.shelf_life) + " " + Math.abs(days ) + " " + resources.getString(R.string.detail_product_text_day)
+            val strDayCountDown = resources.getString(R.string.overdue) + " " + Math.abs(days ) + " " + resources.getString(R.string.detail_product_text_day)
             mTvDayCountDown.text = strDayCountDown
             mTvDayCountDown.setTextColor(resources.getColor(R.color.red))
-            mTvStatus.text = fromHtml(resources.getString(R.string.detail_product_text_expiry_date) + " " + txt + " " +
-                    resources.getString(R.string.detail_product_text_day)
+            mTvStatus.text = fromHtml(resources.getString(R.string.overdue_status) + " " + txt + " " +
+                    resources.getString(R.string.detail_product_text_day)+" " +resources.getString(R.string.notic_safe)
             )
         } else if(days ==0){
             txt = "<font color ='#fc9a1b'> " + days + "</font>"
             setColorForLeverWarning(R.drawable.roundedtext_grey, R.drawable.roundedtext_orange, R.drawable.roundedtext_grey)
             mImStatus.setBackgroundColor(resources.getColor(R.color.orange))
-            val strDayCountDown = resources.getString(R.string.shelf_life) + " " + resources.getString(R.string.today) + " " + resources.getString(R.string.detail_product_text_day)
+            val strDayCountDown = resources.getString(R.string.shelf_life) + " " + resources.getString(R.string.today)
             mTvDayCountDown.text = strDayCountDown
             mTvDayCountDown.setTextColor(resources.getColor(R.color.orange))
-            mTvStatus.text = fromHtml(resources.getString(R.string.detail_product_text_expiry_date) + " " + resources.getString(R.string.today) + " " +
-                    resources.getString(R.string.detail_product_text_day)
+            mTvStatus.text = fromHtml(resources.getString(R.string.detail_product_text_expiry_date) + " " + resources.getString(R.string.today)
+
             )
         }
-        else if (days >= 10) {
+        else if (days > daysBefore) {
             // safe: an toan
             txt = "<font color ='#ffafed44' size = '50'> " + days + "</font>"
             setColorForLeverWarning(R.drawable.roundedtext_blue, R.drawable.roundedtext_grey, R.drawable.roundedtext_grey)
@@ -840,7 +854,7 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
             val strDayCountDown = resources.getString(R.string.shelf_life) + " " + days + " " + resources.getString(R.string.detail_product_text_day)
             mTvDayCountDown.text = strDayCountDown
             mTvDayCountDown.setTextColor(resources.getColor(R.color.viewfinder_border))
-            mTvStatus.text = fromHtml(resources.getString(R.string.detail_product_text_expiry_date) + " " + resources.getString(R.string.today) + " " +
+            mTvStatus.text = fromHtml(resources.getString(R.string.detail_product_text_expiry_date) + " " + days + " " +
                     resources.getString(R.string.detail_product_text_day)
             )
 
@@ -981,51 +995,87 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
 
 
     //============ dialog delete product!! =================
-    private fun showDialogDelete(idProduct: String) {
-        // dialog declare
-        val dialog = Dialog(this)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.fragment_dialog_all)
 
-        val btnDialog_cancel = dialog.findViewById(R.id.bt_cancel) as Button
-        val dialog_ok = dialog.findViewById(R.id.bt_ok) as Button
-        // handle event click button
-        btnDialog_cancel.setOnClickListener({
+    fun showDialogDelete(idProduct: String){
 
-            dialog.dismiss()
+        val dialogdelete = MaterialDialog.Builder(this)
+                .title(resources.getString(R.string.title_delete))
+                .content(resources.getString(R.string.descrip_delete))
+                .cancelable(false)
+                .positiveText(resources.getString(R.string.accepte_delete))
+                .negativeText(resources.getString(R.string.cancel_delete))
+                .onPositive { dialog, which ->
+                    if (ConnectivityChangeReceiver.isConnected()) {
+                        val user = realm!!.getUser()!!
 
-        })
-        dialog_ok.setOnClickListener({
-            if (ConnectivityChangeReceiver.isConnected()) {
-                var user = realm!!.getUser()!!
+                        presenter.processDeleteProduct(idProduct, user._id!!)
 
-                presenter.processDeleteProduct(idProduct, user._id!!)
+                    } else {
 
-            } else {
+                        val product_v = realm!!.getProduct(idProduct)
 
-                var product_v = realm!!.getProduct(idProduct)
+                        realm!!.realm.executeTransaction({
+                            product_v!!.delete = true
+                            product_v.isSyn = false
+                        })
 
-                realm!!.realm.executeTransaction(Realm.Transaction {
-                    product_v!!.delete = true
-                    product_v.isSyn = false
-                })
-                realm!!.updateProduct(product_v!!)
-                deleteProduct(true)
-            }
+                        deleteProduct(false)
+                    }
 
-//            val intent = Intent()
-//            intent.putExtra(AppIntent.DATA_UPDATE_ITEM, position)
-//            intent.putExtra("product_v", product_v)
-//            intent.putExtra("position", position)
-//            setResult(AppIntent.RESULT_DELETE_ITEM, intent)
+                    dialog.dismiss()
+                    finish()
+                    mDialogProgress?.dismiss()
+                }
+        mDialogProgress = dialogdelete.build()
+        mDialogProgress?.show()
 
-            dialog.dismiss()
-            finish()
-
-        })
-        dialog.show()
     }
+
+//    private fun showDialogDelete(idProduct: String) {
+//        // dialog declare
+//        val dialog = Dialog(this)
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+//        dialog.setCancelable(false)
+//        dialog.setContentView(R.layout.fragment_dialog_all)
+//
+//        val btnDialog_cancel = dialog.findViewById(R.id.bt_cancel) as Button
+//        val dialog_ok = dialog.findViewById(R.id.bt_ok) as Button
+//        // handle event click button
+//        btnDialog_cancel.setOnClickListener({
+//
+//            dialog.dismiss()
+//
+//        })
+//        dialog_ok.setOnClickListener({
+//            if (ConnectivityChangeReceiver.isConnected()) {
+//                var user = realm!!.getUser()!!
+//
+//                presenter.processDeleteProduct(idProduct, user._id!!)
+//
+//            } else {
+//
+//                var product_v = realm!!.getProduct(idProduct)
+//
+//                realm!!.realm.executeTransaction(Realm.Transaction {
+//                    product_v!!.delete = true
+//                    product_v.isSyn = false
+//                })
+//                realm!!.updateProduct(product_v!!)
+//                deleteProduct(true)
+//            }
+//
+////            val intent = Intent()
+////            intent.putExtra(AppIntent.DATA_UPDATE_ITEM, position)
+////            intent.putExtra("product_v", product_v)
+////            intent.putExtra("position", position)
+////            setResult(AppIntent.RESULT_DELETE_ITEM, intent)
+//
+//            dialog.dismiss()
+//            finish()
+//
+//        })
+//        dialog.show()
+//    }
 
     fun deleteProduct(isSync: Boolean) {
 

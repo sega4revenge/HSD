@@ -18,9 +18,9 @@ import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.presenter.DetailProductPresenter
 import com.finger.hsd.presenter.DetailProductPresenter.IDetailProductPresenterView
+import com.finger.hsd.util.AppIntent
 import com.finger.hsd.util.ConnectivityChangeReceiver
 import com.finger.hsd.util.Constants
-import com.finger.hsd.util.Mylog
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_choose_day_notification.*
 import org.json.JSONObject
@@ -40,9 +40,10 @@ class ChooseDayNotification: BaseActivity(), IDetailProductPresenterView{
     var days : Int =0
     var dayIntent : Int =0
     lateinit var mToolbar : Toolbar
+    var position: Int = -1
 
     private lateinit var  presenter: DetailProductPresenter
-
+    var checkNotification: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +51,8 @@ class ChooseDayNotification: BaseActivity(), IDetailProductPresenterView{
 
         realm = RealmController(this)
         idProduct = intent.getStringExtra("id_product")
+        checkNotification = intent.getBooleanExtra("checkNotification", false)
+        position = intent.getIntExtra("position", -1)
 
         dayIntent = intent.getIntExtra("day_before", 0)
 
@@ -142,9 +145,23 @@ class ChooseDayNotification: BaseActivity(), IDetailProductPresenterView{
 //        Mylog.d("aaaaaaaaaa check: " + realm!!.getProduct(idProduct)!!.daybefore)
         hideProgress()
         val intent = Intent()
-        intent.putExtra(Constants.DATA_DAY_BEFORE, days)
+        intent.putExtra(Constants.DATA_DAY_BEFORE, product!!.daybefore)
         setResult(Constants.RESULT_DAY_BEFORE, intent)
+
+        val a = Intent()
+        a.putExtra("updateItem", true)
+
+        a.action = AppIntent.ACTION_UPDATE_ITEM
+        if (!checkNotification) {
+            a.putExtra("reloaditem", true)
+        } else {
+            a.putExtra("reloaditem", false)
+        }
+        a.putExtra("position", position!!)
+        a.putExtra("id_product", idProduct)
+        sendBroadcast(a)
         finish()
+
     }
 
     var dayIndex: Int = 0
@@ -197,8 +214,23 @@ class ChooseDayNotification: BaseActivity(), IDetailProductPresenterView{
         })
 
         val intent = Intent()
-        intent.putExtra(Constants.DATA_DAY_BEFORE, days)
+        intent.putExtra(Constants.DATA_DAY_BEFORE, product!!.daybefore)
         setResult(Constants.RESULT_DAY_BEFORE, intent)
+
+
+        val a = Intent()
+        a.putExtra("updateItem", true)
+
+        a.action = AppIntent.ACTION_UPDATE_ITEM
+        if (!checkNotification) {
+            a.putExtra("reloaditem", true)
+        } else {
+            a.putExtra("reloaditem", false)
+        }
+        a.putExtra("position", position!!)
+        a.putExtra("id_product", idProduct)
+        sendBroadcast(a)
+
         finish()
     }
 

@@ -9,8 +9,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -31,7 +29,10 @@ import com.finger.hsd.common.GlideApp
 import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Product_v
 import com.finger.hsd.model.Result_Product
-import com.finger.hsd.util.*
+import com.finger.hsd.util.ApiUtils
+import com.finger.hsd.util.CompressImage
+import com.finger.hsd.util.ConnectivityChangeReceiver
+import com.finger.hsd.util.RetrofitService
 import kotlinx.android.synthetic.main.dialog_timepicker.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -520,12 +521,13 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
 
         })
         mDialog = datedialog.create()
-        val sdk= android.os.Build.VERSION.SDK_INT
-        if(sdk < android.os.Build.VERSION_CODES.KITKAT) {
-            mDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        }else{
-            mDialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        }
+        val sdk = android.os.Build.VERSION.SDK_INT
+//        if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+//            mDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//        } else {
+            mDialog?.window?.setBackgroundDrawableResource(R.color.transparent_app);
+//        }
+
         mDialog?.show()
     }
     private fun showDialog() {

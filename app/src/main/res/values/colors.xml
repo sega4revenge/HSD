@@ -11,7 +11,7 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="grey">#c9c5c5</color>
-    <color name="grey_dim">#fcfafa</color>
+    <color name="grey_dim">#f2eaea</color>
     <color name="green">#369c12</color>
 
     <!--image-->
@@ -45,4 +45,6 @@
     <color name="tab_checked">@color/colorPrimary</color>
     <color name="tab_unchecked">#9c9c9c</color>
     <color name="bg_hint">#f2f2f2</color>
+
+    <color name="transparent_app">#00FFFFFF</color>
 </resources>

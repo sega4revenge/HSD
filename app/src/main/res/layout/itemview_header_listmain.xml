@@ -30,8 +30,9 @@
             android:textSize="17sp"
             android:layout_marginStart="16dp"
             tools:ignore="HardcodedText" />
+        <!--android:background="@drawable/text_press"-->
         <TextView
-            android:background="@drawable/text_press"
+
             android:textColor="@color/colorPrimary"
             android:text="@string/clear"
             android:layout_width="wrap_content"

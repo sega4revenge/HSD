@@ -33,7 +33,7 @@
                 android:layout_centerInParent="true"/>
 
             <ImageView
-                android:background="@drawable/ic_clear_press"
+                android:background="@drawable/ic_fab_button"
                 android:layout_margin="8dp"
                 android:id="@+id/im_clear"
                 android:layout_width="35dp"

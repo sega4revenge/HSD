@@ -455,23 +455,27 @@ class Home_Fragment : BaseFragment(), MainListAdapterKotlin.OnproductClickListen
             listProduct?.sortWith(Comparator(fun(a: Product_v, b: Product_v): Int {
                 var disa = a.expiretime / 86400000 - miliexToday / 86400000
                 var disb = b.expiretime / 86400000 - miliexToday / 86400000
-                if ((disa-a.daybefore) < (disb-b.daybefore))
+                if (disa < disb)
                     return -1
-                if ((disa-a.daybefore) > (disb-b.daybefore))
+                if (disa > disb)
                     return 1
+//                if ((disa-a.daybefore) < (disb-b.daybefore))
+//                    return -1
+//                if ((disa-a.daybefore) > (disb-b.daybefore))
+//                    return 1
                 return 0
             }))
              var listData = ArrayList<Product_v>()
              for (i in 0 until  listProduct!!.size) {
 
                  var dis = listProduct!!.get(i).expiretime / 86400000 - miliexToday / 86400000
-                 Mylog.d(listProduct?.get(i)?.daybefore!!.toString()+"dataaaaaaaaaa"+dis)
-                 if(mPositionEX==-1 && dis<=0){
+               //  Mylog.d(listProduct?.get(i)?.daybefore!!.toString()+"dataaaaaaaaaa"+dis+"//"+listProduct?.get(i)?.namechanged)
+                 if(mPositionEX==-1 && dis<0){
                      mPositionEX = i
                      listData.add(Product_v("1","","",0,"",""))
                      listheader?.add(i)
                  }
-                 if(mPositionWaring==-1 && dis<=listProduct?.get(i)?.daybefore!! && dis>0){
+                 if(mPositionWaring==-1 && dis<=listProduct?.get(i)?.daybefore!! && dis>=0){
                      mPositionWaring = i
                      listheader?.add(i)
                      listData.add(Product_v("1","","",0,"",""))

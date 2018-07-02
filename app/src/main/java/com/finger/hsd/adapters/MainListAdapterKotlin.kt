@@ -107,7 +107,7 @@ class MainListAdapterKotlin:
             if (!possitionChange.contains(position)) {
                 for (i in position + 1 until mProducts.size) {
                     mCountT!![i] = mCountT!![i] + 1
-                    if (i == mProducts.size - 1 + mCount) {
+                    if (i == mProducts.size - 1) {
                         possitionChange.add(position)
                     }
                 }
@@ -198,14 +198,12 @@ class MainListAdapterKotlin:
                     holder.txt_warring.setBackgroundResource(R.drawable.text_warring_item_cb)
                 }
                 if(dis == 0L){
-                    if (holder.txt_warring.text !== "HẾT HẠN") {
+                   // if (holder.txt_warring.text !== "HẾT HẠN") {
                         holder.txt_warring.text =mContext.resources.getString(R.string.expired_time_detail) + " " +
                                 mContext.resources.getString(R.string.today)
-
-
                         holder.txt_warring.setTextColor(mContext.resources.getColor(R.color.white))
                         holder.txt_warring.setBackgroundResource(R.drawable.text_warring_item_cb)
-                    }
+                   // }
                 }
             }
 

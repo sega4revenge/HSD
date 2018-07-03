@@ -56,7 +56,7 @@ class NotificationPlayingService : Service() {
 
         }
     }
-    override fun onStartCommand(intent : Intent, flags : Int, startId : Int): Int {
+    override fun onStartCommand(intent : Intent?, flags : Int, startId : Int): Int {
         realms = RealmAlarmController(this)
         val now = Calendar.getInstance()
         product_v = realms!!.getDataProduct()!!
@@ -245,7 +245,7 @@ class NotificationPlayingService : Service() {
             try {
                 badgeCount = sessionManager.getCountNotification()
             } catch (e: NumberFormatException) {
-                Mylog.d("badge Count screen: ", e.message!!)
+                Mylog.d("badge Count screen: ", e.message.toString())
             }
 
             ShortcutBadger.applyCount(applicationContext, badgeCount)
@@ -277,21 +277,17 @@ class NotificationPlayingService : Service() {
     }
     // group of notification
     fun Group_Notification( title:String,  content : String){
-
+        createNotificationChannel(applicationContext)
         realms!!.view_notification()
         Mylog.d("Group_Notification: ", "  content  "+title +"  content  " + content )
         val intent = Intent(this, AllInOneActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-
-        intent.putExtra("InNotificaitonFragment","InNotificationFragment")
-
+//        intent.putExtra("InNotificaitonFragment","InNotificationFragment")
 
         val pIntent = PendingIntent.getActivity(this, 99 , intent, PendingIntent.FLAG_UPDATE_CURRENT)
-
         val builder = NotificationCompat.Builder(this,CHANNEL_APP_STATUS)
 
          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-             createNotificationChannel(applicationContext)
             builder
                     .setAutoCancel(true)
                     .setContentTitle(title)
@@ -304,9 +300,7 @@ class NotificationPlayingService : Service() {
                     .setSmallIcon(R.drawable.ic_notificationclolor)
                     .setContentIntent(pIntent)
 //                    .setLights(5,5,5)
-
         } else {
-
             builder.setAutoCancel(true)
                     .setContentTitle(title)
                     .setContentText(content)
@@ -331,6 +325,8 @@ class NotificationPlayingService : Service() {
         ShortcutBadger.applyNotification(applicationContext, builder.notification, sessionManager.getCountNotification())
     }
 
+
+
     fun Notification_Expiry( title:String, content : String ,  int: Int , day : Int ){
         val intent = Intent(this, HorizontalNtbActivity::class.java)
         val pIntent = PendingIntent.getActivity(this, int, intent, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -349,11 +345,7 @@ class NotificationPlayingService : Service() {
                     .setSmallIcon(R.drawable.ic_notification)
                     .setContentIntent(pIntent)
                     .setLights(5,5,5)
-
-
-
         } else {
-
             builder.setAutoCancel(true)
                     .setContentTitle(strTitle)
                     .setContentText(content_noti)
@@ -414,7 +406,7 @@ class NotificationPlayingService : Service() {
         var jsonObject = JSONObject()
         try {
             jsonObject.put("id_product", notification.id_product)
-            jsonObject.put("idUser", user!!._id)
+            jsonObject.put("idUser", user?._id)
             jsonObject.put("type", notification.type)
             jsonObject.put("watched", notification.watched)
             jsonObject.put("time", notification.create_at)
@@ -445,7 +437,7 @@ class NotificationPlayingService : Service() {
                     }
 
                     override fun onError(e: Throwable?) {
-                        Mylog.d(e!!.printStackTrace().toString())
+                        Mylog.d(e?.printStackTrace().toString())
                         notification.isSync = false
                         realms!!.addInTableNotification(notification)
                         Mylog.d("aaaaaaaaaaaaa "+notification)
@@ -454,6 +446,12 @@ class NotificationPlayingService : Service() {
 
                 })
 
+    }
+
+    override fun onDestroy() {
+        stopForeground(true)
+        Mylog.d("aaaaaaaaaaaaa "+ "onDestroy")
+        super.onDestroy()
     }
 
 

@@ -176,7 +176,7 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
                 showDialogSound(cheked!!)
             }
             R.id.txt_share -> {
-                val message = ("\n" +activity!!.resources.getString(R.string.share_app_invite) +" "+" https://play.google.com/store/apps/details?id=com.finger.suri&hl=vi")
+                val message = ("\n" +activity!!.resources.getString(R.string.share_app_invite) +" "+" https://play.google.com/store/apps/details?id=com.finger.hsd&hl=vi")
                 shareAction(message)
                 }
             R.id.send_feedback -> {
@@ -208,7 +208,7 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
 //        try {
 //            Thread.sleep(10000)
 //        } finally {
-            val uri = Uri.parse("market://details?id=com.finger.suri")
+            val uri = Uri.parse("market://details?id=com.finger.hsd")
             Log.i("URI RATE APP", uri.toString())
             val goToMarket = Intent(Intent.ACTION_VIEW, uri)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -220,7 +220,7 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
                 startActivity(goToMarket)
             } catch (e: ActivityNotFoundException) {
                 startActivity(Intent(Intent.ACTION_VIEW,
-                        Uri.parse("https://play.google.com/store/apps/details?id=com.finger.suri&hl=vi")))
+                        Uri.parse("https://play.google.com/store/apps/details?id=com.finger.hsd&hl=vi")))
             }
 //            fixedRateTimer.cancel()
 //            println("finish!")

@@ -15,11 +15,11 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String state  = intent.getExtras().getString("extra");
-        Log.d("AlarmReceiver","Alarm in Receiver run "  + state );
+//        String state  = intent.getExtras().getString("extra");
+//        Log.d("AlarmReceiver","Alarm in Receiver run "  + state );
 
         Intent serviceIntent = new Intent(context,NotificationPlayingService.class);
-        serviceIntent.putExtra("extra", state);
+//        serviceIntent.putExtra("extra", state);
 //        serviceIntent.putExtra("request_code", request_code);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

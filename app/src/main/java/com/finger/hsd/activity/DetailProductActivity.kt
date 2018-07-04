@@ -141,13 +141,9 @@ class DetailProductActivity : BaseActivity(), DetailProductPresenter.IDetailProd
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         mToolbar.setTitleTextColor(Color.WHITE)
-        mToolbar.setTitle(resources.getString(R.string.detail_product))
+        mToolbar.title = resources.getString(R.string.detail_product)
         mToolbar.setNavigationIcon(R.drawable.ic_back_arrow)
-        mToolbar.setNavigationOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View) {
-                onBackPressed()
-            }
-        })
+        mToolbar.setNavigationOnClickListener { onBackPressed() }
 
         rootFolder = File(filesDir.toString() + "/files")
         if (!rootFolder!!.exists()) {

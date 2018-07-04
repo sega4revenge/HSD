@@ -21,6 +21,7 @@ import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Base64
 import android.util.Log
 import android.view.*
 import android.view.animation.Animation
@@ -58,6 +59,8 @@ import me.leolin.shortcutbadger.ShortcutBadger
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 
 class AllInOneActivity : BaseActivity(), NotificationBadgeListener, ConnectivityChangeReceiver.ConnectivityReceiverListener, SyncPresenter.ISyncPresenter{
 
@@ -140,6 +143,23 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
         }
 //        refresh()
 //        showProgress()
+
+        try {
+            val info = packageManager.getPackageInfo(
+                    "ycom.finger.hsd",
+                    PackageManager.GET_SIGNATURES)
+            for (signature in info.signatures) {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+
+        } catch (e: NoSuchAlgorithmException) {
+
+        }
+
+
         edit_search?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
 
@@ -247,7 +267,6 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
 
         onNetworkConnectionChanged(ConnectivityChangeReceiver.isConnected())
     }
-
 
 
     private fun setupViewPager(viewPager: ViewPager) {

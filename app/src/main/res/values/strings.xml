@@ -18,33 +18,28 @@
 
 
     <!--=====REGISTER-->
-    <string name="not_null_case">Không được để trống trường này!</string>
-    <string name="phone_unvailable">Số điện thoại không hợp lệ! Hãy thử nhập lại nhé!</string>
-    <string name="repass_not_like">Mật khẩu không trùng khớp! Vui lòng nhập lại mật khẩu!</string>
-    <string name="input_infomation_valid">Vui lòng nhập đầy đủ thông tin hợp lệ!</string>
-    <string name="phone_number_used">Số điện thoại đã được sử dụng!</string>
-    <string name="not_connect_check">Không có kết nối! vui lòng kiểm tra kết nối internet của bạn!</string>
-    <string name="data_input_empty">Dữ liệu nhập vào bị rỗng!</string>
-    <string name="not_connect_to_server">Không thể kết nối đến máy chủ, vui lòng kiểm tra lại!</string>
+    <string name="not_null_case">Dont be empty this box!</string>
+    <string name="phone_unvailable">Invalid phone number! Please try again!</string>
+    <string name="input_infomation_valid">Please enter valid information!</string>
+    <string name="not_connect_to_server">Don\'t connect to server, please check again!</string>
     <string name="complete">% complete</string>
-    <string name="processing">processing...</string>
-    <string name="phone_or_pass_not_avali">Số điện thoại hoặc mật khẩu không hợp lệ!</string>
-    <string name="user_not_register">Tài khoản chưa được đăng ký!</string>
-    <string name="pass_wrong">Sai mật khẩu!</string>
-    <string name="expired_time"> expired time</string>
+    <string name="processing">Waiting...</string>
+    <string name="phone_or_pass_not_avali">Invalid phone number or password!</string>
+    <string name="user_not_register">Account not register!</string>
+    <string name="pass_wrong">Wrong password!</string>
 
     <!--progress dialog-->
-    <string name="loading">Loading</string>
+    <string name="loading">Loading...</string>
 
     <!--=======NOTIFICATION=-========-->
-    <string name="expiredtime_notifi">Expiredtime: </string>
+    <string name="expiredtime_notifi">Wrong password!</string>
     <string name="days_left">DAYS LEFT</string>
     <string name="status_count_product_1">You have </string>
     <string name="status_count_product_2"> product(s) about to expire. Please check you inventory</string>
     <string name="wellcome_hsd">Welcome to app HSD</string>
     <string name="noti_create">Create products to receive notification!</string>
     <string name="wellcome">Welcome!</string>
-    <string name="will_epritedtime">sẽ hết hạn trong</string>
+    <string name="will_epritedtime">will expire in</string>
 
 <!--===========PROFILE-->
     <string name="hsd_account">HSD Account</string>
@@ -581,6 +576,13 @@
     <string name="b_n_mu_n_t_m_g">What do you want to search?</string>
     <string name="add_no_barcode">Add No Barcode</string>
     <string name="put_barcode">Put Barcode</string>
+    <string name="repass_not_like">Passwords do not match! Please enter your password again!</string>
+    <string name="phone_number_used">Phone numbers are already in use!</string>
+    <string name="not_connect_check">No connection! Please check your internet!</string>
+    <string name="data_input_empty">Phone numbers are already in use!</string>
+
+    <string name="expired_time">Expired</string>
+    <string name="delete">DELETE</string>
 
 
 </resources>

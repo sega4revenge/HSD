@@ -63,7 +63,7 @@
                 android:scaleType="fitXY"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/ic_fab_button"/>
+                android:src="@drawable/ic_logout"/>
         </LinearLayout>
     </LinearLayout>
 

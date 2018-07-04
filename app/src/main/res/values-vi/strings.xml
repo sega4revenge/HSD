@@ -97,7 +97,7 @@
     <string name="expiry_date_notification">Thời gian thông báo</string>
     <string name="_1_am">1 AM</string>
     <string name="product">Sản phẩm</string>
-    <string name="ok">Ok</string>
+    <string name="ok">Đồng ý</string>
     <string name="title_share">Hoàn thành thao tác</string>
     <string name="sound_notification">Âm báo</string>
     <string name="person_share">Người chia sẻ:</string>
@@ -116,7 +116,7 @@
     <string name="clear_sucess">Thành công</string>
     <string name="day">ngày</string>
     <string name="_5">5</string>
-    <string name="accepte_delete">OK</string>
+    <string name="accepte_delete">Chấp nhận</string>
     <string name="cancel_delete">Hủy</string>
     <string name="deleting">đang xóa…</string>
     <string name="export_to_excel">Xuất sang Excel</string>
@@ -155,6 +155,7 @@
     <string name="b_n_mu_n_t_m_g">Bạn muốn tìm gì?</string>
     //còn lại
     <string name="rest">Còn lại</string>
+    <string name="delete">Xóa</string>
 
     <string-array name="choose_days_before">
         <item> Trước 1 ngày </item>
@@ -523,4 +524,29 @@
         <item> Trước 364 ngày </item>
         <item> Trước 365 ngày </item>
     </string-array>
+    <string name="add_no_barcode">Không có mã vạch</string>
+    <string name="put_barcode">Nhập mã vạch</string>
+    <string name="not_allow_permission">Không cho phép</string>
+    <string name="wellcome">Chào mừng</string>
+    <string name="will_epritedtime">sẽ hết hạn trong</string>
+    <string name="hsd_account">Tài khoản Hạn Sử Dụng</string>
+    <string name="choose_an_item">"Chọn "</string>
+    <string name="you_want_logout">Bạn muốn đăng xuất?</string>
+    <string name="feedback">Phản hồi</string>
+    <string name="share_app_invite">Chia sẻ</string>
+    <string name="not_null_case">Không được để trống trường này!</string>
+    <string name="phone_unvailable">Số điện thoại không hợp lệ! Vui lòng thử lại!</string>
+    <string name="repass_not_like">Mật khẩu không trùng khớp! Vui lòng nhập lại mật khẩu!</string>
+    <string name="input_infomation_valid">Vui lòng nhập đầy đủ thông tin hợp lệ!</string>
+    <string name="phone_number_used">Số điện thoại đã được sử dụng!</string>
+    <string name="not_connect_check">Không có kết nối! vui lòng kiểm tra kết nối internet của bạn!</string>
+    <string name="data_input_empty">Dữ liệu nhập vào bị rỗng!</string>
+
+    <string name="not_connect_to_server">Không thể kết nối đến máy chủ, vui lòng kiểm tra lại!</string>
+    <string name="complete">Hoàn thành</string>
+    <string name="processing">Vui lòng đợi...</string>
+    <string name="phone_or_pass_not_avali">Số điện thoại hoặc mật khẩu không hợp lệ!</string>
+    <string name="user_not_register">Tài khoản chưa được đăng ký!</string>
+    <string name="pass_wrong">Sai mật khẩu!</string>
+    <string name="expired_time">Hết hạn</string>
 </resources>

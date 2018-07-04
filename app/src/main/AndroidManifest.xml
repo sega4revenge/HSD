@@ -61,6 +61,7 @@
         </provider>
 
         <!--<service-->
+        <!--<service-->
             <!--android:name=".account.AuthenticatorService">-->
             <!--<intent-filter>-->
                 <!--<action android:name="android.accounts.AccountAuthenticator"/>-->
@@ -109,16 +110,8 @@
 
         <activity android:name=".activity.Scanner_HSD_Activity" />
         <activity android:name=".activity.ContinuousCaptureActivity" />
-        <activity
-            android:name=".activity.Custom_Camera_Activity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activity.Scanner_Barcode_Activity" />
         <activity android:name=".activity.Add_Product" />
-        <activity android:name=".activity.show_PhotoProduct"></activity>
-        <activity android:name=".AllInOneActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
-
+        <activity android:name=".activity.show_PhotoProduct" />
         <activity android:name=".activity.AlarmSetting"
             android:label="Alarm Setting"/>
         <meta-data

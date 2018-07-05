@@ -15,7 +15,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.NotificationCompat
-import android.util.Base64
 import android.util.Log
 import android.view.View
 import com.bumptech.glide.Priority
@@ -63,13 +62,13 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
     var TAG = "Login Activity"
 
     var realm: RealmController? = null
-    lateinit var alarmManager : AlarmManager
+    lateinit var alarmManager: AlarmManager
     private val milDay = 86400000L
     private var pending_intent: PendingIntent? = null
-    lateinit var session : SessionManager
+    lateinit var session: SessionManager
 
     private var callbackManager: CallbackManager? = null
-    val options  = RequestOptions()
+    val options = RequestOptions()
             .centerCrop()
             .placeholder(R.drawable.ic_add_photo)
             .error(R.drawable.ic_back)
@@ -85,8 +84,8 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
         super.onCreate(savedInstanceState)
         FacebookSdk.sdkInitialize(applicationContext)
         registerReceiver(this.broadcastLogin, IntentFilter(AppIntent.ACTION_LOGIN))
-
         callbackManager = CallbackManager.Factory.create()
+
         setContentView(R.layout.activity_login)
 
         getKeyHash()
@@ -96,7 +95,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
             rootFolder!!.mkdirs()
         }
         session = SessionManager(this)
-        if(session.isLogin()){
+        if (session.isLogin()) {
             val intent = Intent(this, AllInOneActivity::class.java)
             startActivity(intent)
             finish()
@@ -143,7 +142,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
                         mLoginPresenter!!.register(user, 1)
 
 
-                    } catch (e:  JSONException) {
+                    } catch (e: JSONException) {
                         e.printStackTrace()
                     }
                 }
@@ -168,28 +167,30 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
 
 
         btn_google.setOnClickListener {
-//            showProgress()
+            //            showProgress()
             val signInIntent = Auth.GoogleSignInApi.getSignInIntent(MyApplication.getGoogleApiHelper()!!.googleApiClient)
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
     }
 
-@SuppressLint("PackageManagerGetSignatures")
-fun getKeyHash(){
-    try {
-        val info = packageManager.getPackageInfo(
-                packageName,
-                PackageManager.GET_SIGNATURES)
-        for (signature in info.signatures) {
-            val md = MessageDigest.getInstance("SHA")
-            md.update(signature.toByteArray())
+    @SuppressLint("PackageManagerGetSignatures")
+    fun getKeyHash() {
+        try {
+            val info = packageManager.getPackageInfo(
+                    packageName,
+                    PackageManager.GET_SIGNATURES)
+            for (signature in info.signatures) {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+
+        } catch (e: NoSuchAlgorithmException) {
+
         }
-    } catch (e: PackageManager.NameNotFoundException) {
-
-    } catch (e: NoSuchAlgorithmException) {
-
     }
-}
+
+
 
     private fun login() {
 
@@ -212,7 +213,7 @@ fun getKeyHash(){
             user.tokenfirebase = FirebaseInstanceId.getInstance().token
             mLoginPresenter!!.login(user)
         } else {
-          showSnack(R.string.phone_or_pass_not_avali, R.id.root_login)
+            showSnack(R.string.phone_or_pass_not_avali, R.id.root_login)
 
         }
     }
@@ -242,52 +243,52 @@ fun getKeyHash(){
         }
     }
 
-    override fun setErrorMessage( errorCode: Int, errorBody: Int) {
+    override fun setErrorMessage(errorCode: Int, errorBody: Int) {
         hideProgress()
         // errorCode: 500: 404: user chua dang ky
         // 401: sai mat khau
         // 500 loi server
         if (errorCode == 500) {
-            if(errorBody == 404)
-            showSnack(R.string.user_not_register, R.id.root_login)
-            else if(errorBody == 401){
+            if (errorBody == 404)
+                showSnack(R.string.user_not_register, R.id.root_login)
+            else if (errorBody == 401) {
                 showSnack(R.string.pass_wrong, R.id.root_login)
-            }else if (errorBody == 500){
+            } else if (errorBody == 500) {
                 showSnack(R.string.not_connect_check, R.id.root_login)
             }
-        }else{
+        } else {
             showSnack(R.string.not_connect_to_network, R.id.root_login)
         }
 
     }
 
-    var listProduct : ArrayList<Product_v>? = null
+    var listProduct: ArrayList<Product_v>? = null
     var temp = 0
     override fun getUserDetail(user: User) {
 
 
-        var list =  realm!!.getDataTimeAlarm()
+        var list = realm!!.getDataTimeAlarm()
 
         for (index in list!!.indices) {
 
             val model = list.get(index)
             if (model.isSelected!!) {
                 SettingAlarm(model.listtime!!.toInt(), true)
-            }else{
+            } else {
                 SettingAlarm(model.listtime!!.toInt(), false)
             }
         }
 
         realm!!.addUser(user)
-         listProduct  = realm!!.getlistProduct()
+        listProduct = realm!!.getlistProduct()
 
 
-        temp =0
+        temp = 0
         if (listProduct != null && !listProduct!!.isEmpty()) {
             // get image
             onDownload(listProduct!!.get(temp))
 
-        }else{
+        } else {
             // khong co du lieu
             showNotificationWelcome()
             hideProgress()
@@ -297,21 +298,21 @@ fun getKeyHash(){
         }
 
 
-
     }
-    private  val CHANNEL_APP_STATUS = "CHANNEL_APP_STATUS"
-    fun showNotificationWelcome(){
+
+    private val CHANNEL_APP_STATUS = "CHANNEL_APP_STATUS"
+    fun showNotificationWelcome() {
         session.setCountNotification(1)
 
         val intent = Intent(this, AllInOneActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
-        intent.putExtra("InNotificaitonFragment","InNotificationFragment")
+        intent.putExtra("InNotificaitonFragment", "InNotificationFragment")
 
 
-        val pIntent = PendingIntent.getActivity(this, 99 , intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pIntent = PendingIntent.getActivity(this, 99, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val builder = NotificationCompat.Builder(this,CHANNEL_APP_STATUS)
+        val builder = NotificationCompat.Builder(this, CHANNEL_APP_STATUS)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             createNotificationChannel(applicationContext)
@@ -342,7 +343,7 @@ fun getKeyHash(){
                     .setContentIntent(pIntent)
         }
 
-        if(!session.get_open_Alarm().equals("off")){
+        if (!session.get_open_Alarm().equals("off")) {
             val soundId = resources.getIdentifier(session.get_Sound(), "raw", packageName)
             builder.setSound(Uri.parse("android.resource://"
                     + this.packageName + "/" + soundId))
@@ -376,9 +377,9 @@ fun getKeyHash(){
 
     var percent = 0
 
-    fun onDownload( product: Product_v){
+    fun onDownload(product: Product_v) {
 
-        Mylog.d("aaaa link anh: "+ product.imagechanged)
+        Mylog.d("aaaa link anh: " + product.imagechanged)
         GlideApp.with(this)
                 .asBitmap()
                 .load(Constants.IMAGE_URL + product.imagechanged)
@@ -387,13 +388,13 @@ fun getKeyHash(){
                     override fun onLoadFailed(errorDrawable: Drawable?) {
                         temp++
 
-                        Mylog.d("aaaaaaaaaa error "+temp+" sizelistproduct: " + listProduct!!.size)
-                        if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
+                        Mylog.d("aaaaaaaaaa error " + temp + " sizelistproduct: " + listProduct!!.size)
+                        if (listProduct != null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
                             percent = (temp.toFloat() / listProduct!!.size.toFloat() * 100f).toInt()
 
 
                             onDownload(listProduct!!.get(temp))
-                        }else{
+                        } else {
                             hideProgress()
                             session.setLogin(true)
                             startActivity(Intent(this@LoginActivity, AllInOneActivity::class.java))
@@ -414,7 +415,7 @@ fun getKeyHash(){
                             val out3 = FileOutputStream(myDir)
 
                             resource.compress(Bitmap.CompressFormat.JPEG, 90, out3)
-                            Mylog.d("aaaaaaaaaa my dir: "+ myDir)
+                            Mylog.d("aaaaaaaaaa my dir: " + myDir)
                             product.imagechanged = Uri.fromFile(myDir).toString()
                             realm!!.updateProduct(product)
 
@@ -422,14 +423,15 @@ fun getKeyHash(){
                             out3.flush()
                             out3.close()
 
-                            if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
+                            if (listProduct != null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
                                 percent = (temp.toFloat() / (listProduct!!.size.toFloat()) * 100f).toInt()
 
-                                showProgress("Sync data.. "+percent+ "%")
+                                showProgress(resources.getString(R.string.sync) + percent + " %")
+
                                 onDownload(listProduct!!.get(temp))
-                            }else{
+                            } else {
                                 percent = (temp.toFloat() / (listProduct!!.size).toFloat() * 100f).toInt()
-                                showProgress(resources.getString(R.string.sync)+percent+ " "+resources.getString(R.string.complete))
+                                showProgress(resources.getString(R.string.sync) + percent + " " + resources.getString(R.string.complete))
                                 session.setLogin(true)
                                 hideProgress()
 
@@ -442,8 +444,8 @@ fun getKeyHash(){
 
                             println(e)
                             temp++
-                            Mylog.d("aaaaaaaaaa "+temp)
-                            if (listProduct!=null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
+                            Mylog.d("aaaaaaaaaa " + temp)
+                            if (listProduct != null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
                                 percent = (temp.toFloat() / listProduct!!.size.toFloat() * 100f).toInt()
 
 
@@ -466,8 +468,8 @@ fun getKeyHash(){
         calendars.set(Calendar.SECOND, 0)
         calendars.set(Calendar.HOUR_OF_DAY, hour)
 
-        if(calendars.timeInMillis < now.timeInMillis){
-            calendars.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH)+1)
+        if (calendars.timeInMillis < now.timeInMillis) {
+            calendars.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH) + 1)
         }
         if (boolean) {
             Log.d("LoginActivity", "boolean..true  ====>>>>    " + boolean + " =====  " + hour)
@@ -487,7 +489,6 @@ fun getKeyHash(){
     private fun gotoregister() {
         val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
         startActivity(intent)
-
 
 
     }
@@ -548,16 +549,17 @@ fun getKeyHash(){
             val bundle = intent.extras
             if (bundle != null) {
                 if (bundle.getBoolean("isfinishLogin")) {
-                   this@LoginActivity.finish()
+                    this@LoginActivity.finish()
 
                 }
             }
         }
     }
+
     override fun onDestroy() {
         super.onDestroy()
-        if(broadcastLogin!=null)
-        unregisterReceiver(this.broadcastLogin)
+        if (broadcastLogin != null)
+            unregisterReceiver(this.broadcastLogin)
         mLoginPresenter?.cancelRequest()
 
     }

@@ -42,6 +42,11 @@
             android:name="com.finger.hsd.common.MyGlideModule"
             android:value="GlideApp" />
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="d1d1b70c633bdc569a426196f89166e675829623"
+            />
+
         <activity android:name=".activity.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -50,6 +55,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -60,7 +67,6 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
 
-        <!--<service-->
         <!--<service-->
             <!--android:name=".account.AuthenticatorService">-->
             <!--<intent-filter>-->
@@ -75,7 +81,8 @@
 
         <activity android:name=".activity.DetailProductActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:label="@string/detail_product"/>
         <activity android:name=".activity.HorizontalNtbActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
@@ -83,6 +90,7 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.ChooseDayNotification"
             android:screenOrientation="portrait"
+            android:label="@string/choose_time"
             android:theme="@style/AppTheme.NoActionbar"/>
         <activity android:name=".AllInOneActivity"
             android:screenOrientation="portrait"
@@ -108,20 +116,37 @@
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />
 
-        <activity android:name=".activity.Scanner_HSD_Activity" />
-        <activity android:name=".activity.ContinuousCaptureActivity" />
-        <activity android:name=".activity.Add_Product" />
-        <activity android:name=".activity.show_PhotoProduct" />
+        <activity android:name=".activity.Scanner_HSD_Activity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+
+        <activity android:name=".activity.ContinuousCaptureActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+
+
+        <activity android:name=".activity.Add_Product"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+
+        <activity android:name=".activity.show_PhotoProduct"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+
+
         <activity android:name=".activity.AlarmSetting"
-            android:label="Alarm Setting"/>
+            android:label="@string/alarm_setting"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            />
         <service
             android:name=".manager.FirebaseMessagingService"
             android:permission="exported">

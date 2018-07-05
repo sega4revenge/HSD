@@ -31,6 +31,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import com.androidnetworking.error.ANError
+import com.crashlytics.android.Crashlytics
 import com.finger.hsd.activity.ContinuousCaptureActivity
 import com.finger.hsd.common.MyApplication
 import com.finger.hsd.fragment.FragmentProfile
@@ -50,6 +51,7 @@ import com.finger.hsd.util.Constants
 import com.finger.hsd.util.Mylog
 import com.finger.hsd.view.BadgeView
 import com.rx2androidnetworking.Rx2AndroidNetworking
+import io.fabric.sdk.android.Fabric
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -99,7 +101,7 @@ class AllInOneActivity : BaseActivity(), NotificationBadgeListener, Connectivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        Fabric.with(this, Crashlytics())
         setContentView(R.layout.activity_all_in_one)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

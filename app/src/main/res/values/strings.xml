@@ -14,6 +14,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_notification">Notification</string>
     <string name="menu_profile">Profile</string>
+    <string name="login_google">Log in with Google</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 
@@ -44,7 +45,7 @@
 <!--===========PROFILE-->
     <string name="hsd_account">HSD Account</string>
     <string name="choose_an_item">Choose an item</string>
-    <string name="you_want_logout">Do you want logout?</string>
+    <string name="you_want_logout">Do you want log out?</string>
     <string name="feedback">Feedback for HanSuDung App</string> <!-- phản hồi cho chúng tôi -->
     <string name="share_app_invite">I want invite you to with me on HSD. Please click the link to download. </string>
 
@@ -62,6 +63,7 @@
     <string name="today">to day</string>
     <string name="detail_product">Detail product</string>
     <string name="choose_time">Notification setting</string>
+    <string name="alarm_setting">Alarm setting</string>
 
     <string name="descrip_delete">Would you like to delete product?</string>
 
@@ -108,7 +110,7 @@
     <string name="weeks_ago">weeks ago</string>
     <!--close time ago-->
     <!--profile-->
-    <string name="_0_50">/50</string>
+    <string name="_0_50">/free</string>
     <string name="change_password">Change password</string>
     <string name="version">Version</string>
     <string name="_1_0_0">1.0.0</string>
@@ -173,7 +175,7 @@
 
     <!--HOME-->
     <string name="home_expired">Expired</string>
-    <string name="home_warning">Warning Using It Now</string>
+    <string name="home_warning">Near expiration</string>
     <string name="home_protected">Safe</string>
     <string name="border_expired">EXPIRED</string>
     <string name="border_protected">DAYS</string>
@@ -583,6 +585,10 @@
 
     <string name="expired_time">Expired</string>
     <string name="delete">DELETE</string>
+    <string name="please_wait">Please wait..</string>
+    <string name="create_success">Create success</string>
+    <string name="select_any_time">Please select any time!</string>
+    <string name="save_change">You can save change!</string>
 
 
 </resources>

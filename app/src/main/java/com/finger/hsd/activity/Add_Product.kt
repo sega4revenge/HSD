@@ -103,12 +103,13 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
 
     override fun onupdateProduct(type: Int, product: Product_v) {
         if(type!=0){
-            Toast.makeText(this@Add_Product,"Create Success!",Toast.LENGTH_SHORT).show()
+            showToast(R.string.create_success)
             var i = Intent(this@Add_Product,AllInOneActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(i)
         }else{
-            Toast.makeText(this@Add_Product,"Update Faile With Photo Product not Syn!",Toast.LENGTH_SHORT).show()
+            showToast(R.string.create_success)
+//            Toast.makeText(this@Add_Product,"Update Faile With Photo Product not Syn!",Toast.LENGTH_SHORT).show()
             var i = Intent(this@Add_Product,AllInOneActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(i)
@@ -227,7 +228,7 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
             bt_post?.id ->{
                 bt_post?.visibility = View.GONE
 //                showDialog()
-                showProgress("Please wait...")
+                showProgress(resources.getString(R.string.please_wait))
                 if(path.isNullOrEmpty() || edit_nameproduct?.text.isNullOrEmpty() || edit_ex?.text.isNullOrEmpty() || txtEX?.text.isNullOrEmpty() || barcodeIn?.isNullOrEmpty()!! || miliexDate == 0L){
 //                    Toast.makeText(this,"Nhập đầy đủ thông tin",Toast.LENGTH_LONG).show()
                     hideProgress()
@@ -238,8 +239,9 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
                     if(type==2 || type==3){//==========Truong Hop k update image
                         mRetrofitService?.addProduct_nonImage(edit_nameproduct?.text.toString(),barcodeIn.toString(),miliexDate.toString(),idUser!!,edit_chitiet?.text.toString())?.enqueue(object: Callback<Result_Product>{
                             override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
-                                Toast.makeText(this@Add_Product,"Error! \n message:"+t?.message,Toast.LENGTH_SHORT).show()
-                              hideProgress()
+//                                Toast.makeText(this@Add_Product,"Error! \n message:"+t?.message,Toast.LENGTH_SHORT).show()
+                                showToast(R.string.not_connect_to_network)
+                                hideProgress()
                                 bt_post?.visibility = View.VISIBLE
                             }
 
@@ -255,7 +257,8 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
                                 }else{
                                     hideProgress()
                                     bt_post?.visibility = View.VISIBLE
-                                    Toast.makeText(this@Add_Product,"Error! Code:"+response?.code()+"\n message:"+response?.message(),Toast.LENGTH_SHORT).show()
+                                    showToast(R.string.not_connect_to_network)
+//                                    Toast.makeText(this@Add_Product,"Error! Code:"+response?.code()+"\n message:"+response?.message(),Toast.LENGTH_SHORT).show()
                                 }
                             }
                         })
@@ -281,9 +284,10 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
 
                             mRetrofitService?.addProduct(nameproduct,barcodenum,hsd_ex,detail,iduser,photoproduct)?.enqueue(object: Callback<Result_Product>{
                                 override fun onFailure(call: Call<Result_Product>?, t: Throwable?) {
-                                    Toast.makeText(this@Add_Product,"Error! \n message:"+t?.message,Toast.LENGTH_SHORT).show()
+//                                    Toast.makeText(this@Add_Product,"Error! \n message:"+t?.message,Toast.LENGTH_SHORT).show()
                                  hideProgress()
                                     bt_post?.visibility = View.VISIBLE
+                                    showToast(R.string.not_connect_to_network)
                                 }
 
                                 override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
@@ -304,7 +308,8 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
                                     }else{
                                        hideProgress()
                                         bt_post?.visibility = View.VISIBLE
-                                        Toast.makeText(this@Add_Product,"Error! Code:"+response?.code()+"\n message:"+response?.message(),Toast.LENGTH_SHORT).show()
+                                        showToast(R.string.not_connect_to_network)
+//                                        Toast.makeText(this@Add_Product,"Error! Code:"+response?.code()+"\n message:"+response?.message(),Toast.LENGTH_SHORT).show()
                                     }
                                 }
 
@@ -312,7 +317,8 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
                         }
 
                     }else{
-                     Toast.makeText(this@Add_Product,"Không thể kết nối máy chủ!",Toast.LENGTH_SHORT).show()
+                     showToast(R.string.not_connect_to_network)
+//                     Toast.makeText(this@Add_Product,"Không thể kết nối máy chủ!",Toast.LENGTH_SHORT).show()
 
 //                        val stringToday = sdf.format(Date())
 //                        val exToday = sdf.parse(stringToday)
@@ -447,7 +453,8 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
                                 onupdateProduct(1,product)
                             }else{
                                 // saveimageinMyApp(product,uri)
-                                Toast.makeText(this@Add_Product,"Update Error",Toast.LENGTH_SHORT).show()
+                                showToast(R.string.not_connect_check)
+//                                Toast.makeText(this@Add_Product,"Update Error",Toast.LENGTH_SHORT).show()
                             }
 
                             out3.flush()
@@ -564,13 +571,13 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
     private fun updateEX(miliexToday:Long, miliexDate:Long) {
         if(miliexToday<miliexDate){
             val dis = (miliexDate/86400000 - miliexToday/86400000)
-            txtEX?.setText(dis.toString() +" Ngày")
+            txtEX?.setText(dis.toString() +" "+resources.getString(R.string.day))
             txtEX?.setTextColor(resources.getColor(R.color.text_shadow))
             edit_ex?.setTextColor(resources.getColor(R.color.text_shadow))
 
         }else{
             edit_ex?.setTextColor(resources.getColor(R.color.abc_btn_colored_borderless_text_material))
-            txtEX?.setText("Hết hạn")
+            txtEX?.setText(resources.getString(R.string.home_expired))
             txtEX?.setTextColor(resources.getColor(R.color.abc_btn_colored_borderless_text_material))
         }
     }

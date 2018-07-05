@@ -3,8 +3,9 @@
 
     <string name="menu_home">Trang chủ</string>
     <string name="menu_notification">Thông báo</string>
-    <string name="menu_profile">Tài Khoản</string>
+    <string name="menu_profile">Tài khoản</string>
     <string name="expired_time_detail">Sẽ hết hạn </string>
+    <string name="alarm_setting">Thời gian thông báo</string>
 
     <string name="title_activity_test_scanner">test_scanner</string>
     <string name="app_name">HSD</string>
@@ -16,6 +17,7 @@
     <string name="txt_phone">SỐ ĐIỆN THOẠI</string>
     <string name="txt_password">MẬT KHẨU</string>
     <string name="txt_repassword">NHẬP LẠI MẬT KHẨU</string>
+    <string name="login_google">Đăng nhập bằng Google</string>
     <string name="txt_or">Hoặc</string>
     <string name="facebook_app_id">171986543489907</string>
     <string name="loading">Đang tải</string>
@@ -72,7 +74,7 @@
     <string name="days_ago">ngày</string>
     <string name="week_ago">tuần trước</string>
     <string name="weeks_ago">tuần trước</string>
-    <string name="_0_50">/50</string>
+    <string name="_0_50">/miễn phí</string>
     <string name="change_password">Đổi mật khẩu</string>
     <string name="version">Phiên bản</string>
     <string name="_1_0_0">1.0.0</string>
@@ -121,7 +123,7 @@
     <string name="deleting">đang xóa…</string>
     <string name="export_to_excel">Xuất sang Excel</string>
     <string name="home_expired">Đã hết hạn</string>
-    <string name="home_warning">Cảnh báo sử dụng ngay</string>
+    <string name="home_warning">Gần hết hạn</string>
     <string name="wellcome_hsd"> Chào mừng bạn đến với ứng dụng HSD! </string>
     <string name="noti_create">Hãy tạo sản phẩm để nhận thông báo về sản phẩm nhé!</string>
     <string name="notification_"> Thông báo Hạn Sử Dụng </string>
@@ -530,7 +532,7 @@
     <string name="wellcome">Chào mừng</string>
     <string name="will_epritedtime">sẽ hết hạn trong</string>
     <string name="hsd_account">Tài khoản Hạn Sử Dụng</string>
-    <string name="choose_an_item">"Chọn "</string>
+    <string name="choose_an_item">Chọn </string>
     <string name="you_want_logout">Bạn muốn đăng xuất?</string>
     <string name="feedback">Phản hồi</string>
     <string name="share_app_invite">Chia sẻ</string>
@@ -544,9 +546,13 @@
 
     <string name="not_connect_to_server">Không thể kết nối đến máy chủ, vui lòng kiểm tra lại!</string>
     <string name="complete">Hoàn thành</string>
-    <string name="processing">Vui lòng đợi...</string>
+    <string name="processing">Vui lòng đợi…</string>
     <string name="phone_or_pass_not_avali">Số điện thoại hoặc mật khẩu không hợp lệ!</string>
     <string name="user_not_register">Tài khoản chưa được đăng ký!</string>
     <string name="pass_wrong">Sai mật khẩu!</string>
     <string name="expired_time">Hết hạn</string>
+    <string name="please_wait">Đang tạo..</string>
+    <string name="create_success">Đã tạo thành công</string>
+    <string name="select_any_time">Hãy chọn bất kỳ thời gian nào mà bạn muốn</string>
+    <string name="save_change">Bạn phải lưu lại thay đổi!</string>
 </resources>

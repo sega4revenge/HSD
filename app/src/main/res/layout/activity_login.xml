@@ -149,7 +149,7 @@
             android:background="@drawable/shape_facebook"
             android:drawableLeft="@drawable/ic_facebook"
             android:paddingLeft="10dp"
-            android:text="Signin with Facebook"
+            android:text="@string/com_facebook_loginview_log_in_button_long"
             android:textColor="@color/white"
             android:textSize="10dp" />
 
@@ -162,7 +162,7 @@
             android:background="@drawable/shape_google"
             android:drawableLeft="@drawable/ic_google"
             android:paddingLeft="10dp"
-            android:text="Signin with Google+"
+            android:text="@string/login_google"
             android:textColor="@color/white"
             android:textSize="10dp" />
     </LinearLayout>

@@ -1,35 +1,24 @@
 package com.finger.hsd.activity
 
 import android.app.Activity
-import android.app.AlarmManager
 import android.app.AlertDialog
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
-import android.widget.Toast
+import com.finger.hsd.BaseActivity
 import com.finger.hsd.R
-import com.finger.hsd.R.id.*
 import com.finger.hsd.adapters.CustomAdapter
 import com.finger.hsd.manager.RealmAlarmController
 import com.finger.hsd.manager.SessionManager
 import com.finger.hsd.model.TimeAlarm
-
-import io.realm.Realm
 import kotlinx.android.synthetic.main.alarm_setting.*
-import java.util.*
-
-import kotlin.collections.ArrayList
 
 
 @Suppress("UNREACHABLE_CODE", "TYPEALIAS_EXPANSION_DEPRECATION")
-class AlarmSetting : AppCompatActivity(), CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+class AlarmSetting : BaseActivity(), CompoundButton.OnCheckedChangeListener, View.OnClickListener {
 
     val Tag : String  = "AlarmSetting"
     private val milDay = 86400000L
@@ -135,7 +124,7 @@ class AlarmSetting : AppCompatActivity(), CompoundButton.OnCheckedChangeListener
             setResult(Activity.RESULT_OK, intent)
             finish()
         }else{
-            showToast("Please select any time!")
+            showToast(R.string.select_any_time)
         }
     }
 
@@ -171,8 +160,8 @@ class AlarmSetting : AppCompatActivity(), CompoundButton.OnCheckedChangeListener
 
     private fun DialogChange() {
         val mBuilder = AlertDialog.Builder(this)
-        mBuilder.setTitle("Bạn phải lưu lại thay đổi!")
-        mBuilder.setPositiveButton("OK") { dialog, which ->
+        mBuilder.setTitle(resources.getString(R.string.save_change))
+        mBuilder.setPositiveButton(resources.getString(R.string.ok)) { dialog, which ->
             // Do something when click the neutral button
             save()
             dialog.cancel()
@@ -180,7 +169,7 @@ class AlarmSetting : AppCompatActivity(), CompoundButton.OnCheckedChangeListener
 
         // Set the neutral/cancel button click listener
 
-        mBuilder.setNeutralButton("Cancel") { dialog, which ->
+        mBuilder.setNeutralButton(resources.getString(R.string.cancel)) { dialog, which ->
             val newAlarm : ArrayList<TimeAlarm> = ArrayList<TimeAlarm>()
             newAlarm.add(TimeAlarm(0,false))
             newAlarm.add(TimeAlarm(1,false))
@@ -254,9 +243,7 @@ class AlarmSetting : AppCompatActivity(), CompoundButton.OnCheckedChangeListener
         realms!!.closeRealm()
     }
 
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    }
+
 
 }
 

@@ -138,6 +138,8 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                     processWatchedNotification(listNotWatch[temp])
                 }else{
                     // sucess
+                    listitem.clear()
+                    setRealmAdapter()
                     showSnack(R.string.watched_all, R.id.notification_root)
                 }
             }

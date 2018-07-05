@@ -26,7 +26,6 @@ import com.finger.hsd.activity.LoginActivity
 import com.finger.hsd.manager.RealmAlarmController
 import com.finger.hsd.manager.SessionManager
 import com.finger.hsd.model.User
-import com.finger.hsd.util.Mylog
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 import java.io.File
 import java.util.*
@@ -85,13 +84,13 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
         var user: User? = realms!!.getSingleUser()
         if(user!!.type_login == 1) {
             v.tv_type.text = "Facebook"
-        }else if(user!!.type_login == 2){
+        }else if(user.type_login == 2){
             v.tv_type.text = "Google"
         }else{
             v.tv_type.text = activity!!.resources.getString(R.string.hsd_account)
         }
         // get user
-        var listUser =  realms!!.getUser()
+        val listUser =  realms!!.getUser()
         for (index in listUser.indices) {
             val model = listUser.get(index)
             val countCharac = model.phone!!.length

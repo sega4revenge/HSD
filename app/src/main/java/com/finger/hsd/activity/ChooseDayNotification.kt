@@ -63,7 +63,6 @@ class ChooseDayNotification: BaseActivity(), IDetailProductPresenterView{
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         mToolbar.setTitleTextColor(Color.WHITE)
-        mToolbar.setTitle(resources.getString(R.string.detail_product))
         mToolbar.setSubtitleTextColor(Color.GRAY)
         mToolbar.setNavigationIcon(R.drawable.ic_back_arrow)
         mToolbar.setNavigationOnClickListener(object : View.OnClickListener {

@@ -96,7 +96,7 @@ constructor() {
             } else if (different < 2 * MINUTE_MILLIS) {
                 return context.resources.getString(R.string.a_min_ago)
             } else if (different < 50 * MINUTE_MILLIS) {
-                return (different / MINUTE_MILLIS).toString() + context.resources.getString(R.string.mins_ago)
+                return (different / MINUTE_MILLIS).toString() +" "+ context.resources.getString(R.string.mins_ago)
             } else if (different < 90 * MINUTE_MILLIS) {
                 return context.resources.getString(R.string.a_hour_ago)
             } else if (different < 24 * HOUR_MILLIS) {
@@ -122,7 +122,7 @@ constructor() {
             } else if (different < 2 * MINUTE_MILLIS) {
                 return context!!.resources.getString(R.string.a_min_ago)
             } else if (different < 50 * MINUTE_MILLIS) {
-                return (different / MINUTE_MILLIS).toString() + context!!.getString(R.string.mins_ago)
+                return (different / MINUTE_MILLIS).toString() +" "+ context!!.getString(R.string.mins_ago)
             } else if (different < 90 * MINUTE_MILLIS) {
                 return context!!.getString(R.string.a_hour_ago)
             } else if (different < 24 * HOUR_MILLIS) {
@@ -131,9 +131,9 @@ constructor() {
             } else if (different < 48 * HOUR_MILLIS) {
                 return timeFormat!!.format(startDate) + " " + context!!.getString(R.string.yesterday)
             } else if (different < 7 * DAY_MILLIS) {
-                return (different / DAY_MILLIS).toString() + context!!.getString(R.string.days_ago)
+                return (different / DAY_MILLIS).toString() +" "+ context!!.getString(R.string.days_ago)
             } else if (different < 2 * WEEKS_MILLIS) {
-                return (different / WEEKS_MILLIS).toString() + context!!.getString(R.string.week_ago)
+                return (different / WEEKS_MILLIS).toString() +" "+ context!!.getString(R.string.week_ago)
                 //            } else if (different < 3.5 * WEEKS_MILLIS) {
                 //                return different / WEEKS_MILLIS + context.getString(R.string.weeks_ago);
             } else {

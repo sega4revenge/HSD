@@ -540,16 +540,7 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
 // trả về uri ảnh từ camera
     private void onActivityResultCamera(final Uri cameraImageUri) {
 
-        MediaScannerConnection.scanFile(getContext(), new String[]{cameraImageUri.getPath()}, new String[]{"image/jpeg"},
-                new MediaScannerConnection.MediaScannerConnectionClient() {
-            @Override
-            public void onMediaScannerConnected() {
-
-            }
-
-            @Override
-            public void onScanCompleted(String s, Uri uri) {
-                getActivity().runOnUiThread(new Runnable() {
+        getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         updateAdapter();
@@ -559,8 +550,29 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
                     }
                 });
 
-            }
-        });
+
+
+//        MediaScannerConnection.scanFile(getContext(), new String[]{cameraImageUri.getPath()}, new String[]{"image/jpeg"},
+//                new MediaScannerConnection.MediaScannerConnectionClient() {
+//            @Override
+//            public void onMediaScannerConnected() {
+//
+//            }
+//
+//            @Override
+//            public void onScanCompleted(String s, Uri uri) {
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        updateAdapter();
+//                        Log.d("selected: onthread: ", cameraImageUri.toString());
+//
+//                        complete(cameraImageUri);
+//                    }
+//                });
+//
+//            }
+//        });
     }
 
 // trả về uri save in intent

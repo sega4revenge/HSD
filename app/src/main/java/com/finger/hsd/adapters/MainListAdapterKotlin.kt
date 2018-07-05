@@ -92,7 +92,7 @@ class MainListAdapterKotlin:
 
                 val dis = mProducts[position + 1].expiretime / 86400000 - miliexToday / 86400000
 
-                if (dis <= mProducts[position + 1].daybefore && dis > 0) {
+                if (dis <= mProducts[position + 1].daybefore && dis >= 0) {
                     holder.mTypeProduct.text =  mContext.resources.getString(R.string.home_warning)
                     holder.mTypeProduct.setTextColor(mContext.resources.getColor(R.color.colorPrimary))
                 } else if (dis > mProducts[position + 1].daybefore) {

@@ -103,7 +103,7 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
 
     override fun onupdateProduct(type: Int, product: Product_v) {
         if(type!=0){
-            Toast.makeText(this@Add_Product,"Update Success!",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@Add_Product,"Create Success!",Toast.LENGTH_SHORT).show()
             var i = Intent(this@Add_Product,AllInOneActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(i)

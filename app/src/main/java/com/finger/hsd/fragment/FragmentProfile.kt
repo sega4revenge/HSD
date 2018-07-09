@@ -1,5 +1,6 @@
 package com.finger.hsd.fragment
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlarmManager
 import android.app.AlertDialog
@@ -26,6 +27,8 @@ import com.finger.hsd.activity.LoginActivity
 import com.finger.hsd.manager.RealmAlarmController
 import com.finger.hsd.manager.SessionManager
 import com.finger.hsd.model.User
+import com.finger.hsd.services.NotificationPlayingService
+import com.finger.hsd.util.Mylog
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 import java.io.File
 import java.util.*
@@ -95,7 +98,7 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
             val model = listUser.get(index)
             val countCharac = model.phone!!.length
             val str = model.phone!!.substring(countCharac - 4)
-            v.phone_user.text = "* * * * * "+str
+            v.phone_user.text = "* * * * * $str"
         }
         // dem so luong san pham
         var number = realms!!.numberproduct()
@@ -418,6 +421,14 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
 
     }
 
+//    fun newstartService( intent: Intent) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            activity?.startForegroundService(intent)
+//        } else {
+//            activity?.startService(intent)
+//        }
+//    }
+
     private fun DialogLogout() {
         val mBuilder = AlertDialog.Builder(activity)
         mBuilder.setTitle(activity!!.resources.getString(R.string.you_want_logout))
@@ -456,9 +467,6 @@ class FragmentProfile : BaseFragment(), View.OnClickListener  {
                 }
 
             }
-
-
-
 
             dialog.cancel()
         }

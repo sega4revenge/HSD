@@ -535,7 +535,7 @@
     <string name="choose_an_item">Chọn </string>
     <string name="you_want_logout">Bạn muốn đăng xuất?</string>
     <string name="feedback">Phản hồi</string>
-    <string name="share_app_invite">Chia sẻ</string>
+    <string name="share_app_invite">Tôi muốn mời bạn sử dụng HSD với tôi trên Google Play Store. Vui lòng nhấp vào liên kết để tải xuống.</string>
     <string name="not_null_case">Không được để trống trường này!</string>
     <string name="phone_unvailable">Số điện thoại không hợp lệ! Vui lòng thử lại!</string>
     <string name="repass_not_like">Mật khẩu không trùng khớp! Vui lòng nhập lại mật khẩu!</string>

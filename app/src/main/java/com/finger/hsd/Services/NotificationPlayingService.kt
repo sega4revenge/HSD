@@ -1,10 +1,7 @@
 package com.finger.hsd.services
 
 import android.annotation.SuppressLint
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.Service
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -38,7 +35,8 @@ import java.util.*
 @Suppress("DEPRECATION")
 @SuppressLint("Registered")
 
-class NotificationPlayingService : Service() {
+class NotificationPlayingService : Service(){
+
     var realms : RealmAlarmController?= null
     private  val CHANNEL_APP_STATUS = "CHANNEL_APP_STATUS"
     internal var product_v : List<Product_v> = ArrayList<Product_v>()
@@ -46,6 +44,8 @@ class NotificationPlayingService : Service() {
     private val milDay = 86400000L
     lateinit var sessionManager : SessionManager
     var mNotificationBadgeListener: NotificationFragment.NotificationBadgeListener? = null
+
+
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
@@ -133,7 +133,7 @@ class NotificationPlayingService : Service() {
                 }else{
                     notification_new.isSync = false
                     realms!!.addInTableNotification(notification_new)
-                    }
+                }
 //                }
 
 
@@ -159,8 +159,6 @@ class NotificationPlayingService : Service() {
 //                        countAddNotification++
 //                        Log.d("NotificationService ", " check id product != id notification khong ton tai warring == " + (product_v[index]._id) + "  <  --------- > " + notification_v[dex]._id)
 //                    }
-//
-//
 //                }
 
                 Log.d("NotificationService", " warring id_notification " + id_notification)
@@ -234,7 +232,7 @@ class NotificationPlayingService : Service() {
         }
 
 
-        return Service.START_STICKY
+        return Service.START_NOT_STICKY
     }
 
     // count notification on home screen
@@ -271,14 +269,17 @@ class NotificationPlayingService : Service() {
                 mChannel.enableVibration(true)
                 mChannel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
                 mNotificationManager.createNotificationChannel(mChannel)
+
             }
         }
 
     }
     // group of notification
     fun Group_Notification( title:String,  content : String){
-        createNotificationChannel(applicationContext)
-        realms!!.view_notification()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel(applicationContext)
+        }
+//        realms!!.view_notification()
         Mylog.d("Group_Notification: ", "  content  "+title +"  content  " + content )
         val intent = Intent(this, AllInOneActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
@@ -287,7 +288,7 @@ class NotificationPlayingService : Service() {
         val pIntent = PendingIntent.getActivity(this, 99 , intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val builder = NotificationCompat.Builder(this,CHANNEL_APP_STATUS)
 
-         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             builder
                     .setAutoCancel(true)
                     .setContentTitle(title)
@@ -324,8 +325,6 @@ class NotificationPlayingService : Service() {
 
         ShortcutBadger.applyNotification(applicationContext, builder.notification, sessionManager.getCountNotification())
     }
-
-
 
     fun Notification_Expiry( title:String, content : String ,  int: Int , day : Int ){
         val intent = Intent(this, HorizontalNtbActivity::class.java)
@@ -449,8 +448,13 @@ class NotificationPlayingService : Service() {
     }
 
     override fun onDestroy() {
-        stopForeground(true)
-        Mylog.d("aaaaaaaaaaaaa "+ "onDestroy")
+//        stopForeground(true)
+//        Mylog.d("aaaaaaaaaaaaa "+ "onDestroy")
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            stopForeground(true)
+            stopSelf()
+        }
         super.onDestroy()
     }
 

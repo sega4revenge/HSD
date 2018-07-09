@@ -385,7 +385,7 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
         val calendars = Calendar.getInstance()
         val now = Calendar.getInstance()
         val myIntent = Intent(this, AlarmReceiver::class.java)
-        myIntent.putExtra("extra", "yes")
+//        myIntent.putExtra("extra", "yes")
         calendars.set(Calendar.MINUTE, 0)
         calendars.set(Calendar.SECOND, 0)
         calendars.set(Calendar.HOUR_OF_DAY, hour)

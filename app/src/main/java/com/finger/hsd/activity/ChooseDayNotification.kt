@@ -156,7 +156,7 @@ class ChooseDayNotification: BaseActivity(), IDetailProductPresenterView{
         } else {
             a.putExtra("reloaditem", false)
         }
-        a.putExtra("position", position!!)
+        a.putExtra("position", position)
         a.putExtra("id_product", idProduct)
         sendBroadcast(a)
         finish()

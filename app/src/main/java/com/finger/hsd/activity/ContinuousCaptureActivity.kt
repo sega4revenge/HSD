@@ -1,5 +1,6 @@
 package com.finger.hsd.activity
 
+
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -10,11 +11,8 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.hardware.Camera
-import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
@@ -22,14 +20,11 @@ import android.support.v4.content.FileProvider
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
-import android.widget.DatePicker
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import com.afollestad.materialdialogs.MaterialDialog
-import com.finger.hsd.BuildConfig
-
+import com.finger.hsd.BaseActivity
 import com.finger.hsd.R
+import com.finger.hsd.library.DecoratedBarcodeView
 import com.finger.hsd.manager.RealmController
 import com.finger.hsd.model.Result_Product
 import com.finger.hsd.util.ApiUtils
@@ -40,15 +35,9 @@ import com.google.zxing.ResultPoint
 import com.google.zxing.client.android.BeepManager
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
-import com.finger.hsd.library.DecoratedBarcodeView
-import com.finger.hsd.util.Mylog
 import com.journeyapps.barcodescanner.DefaultDecoderFactory
-import com.journeyapps.barcodescanner.camera.CameraManager
 import kotlinx.android.synthetic.main.dialog_put_barcode.view.*
 import kotlinx.android.synthetic.main.dialog_scanner_barcode_.view.*
-import kotlinx.android.synthetic.main.dialog_timepicker.view.*
-
-
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -61,7 +50,7 @@ import java.util.*
  * This sample performs continuous scanning, displaying the barcode and source image whenever
  * a barcode is scanned.
  */
-class ContinuousCaptureActivity : Activity() {
+class ContinuousCaptureActivity : BaseActivity() {
     private var barcodeView: DecoratedBarcodeView? = null
     private var beepManager: BeepManager? = null
     private var lastText: String? = null
@@ -145,13 +134,14 @@ class ContinuousCaptureActivity : Activity() {
 //                  //  showDialogNotFound(barcode)
 //                }
                 lastText = ""
-                Toast.makeText(this@ContinuousCaptureActivity, "Không thể kết nối mạng", Toast.LENGTH_SHORT).show()
+                showToast(R.string.not_connect_to_network)
+               // Toast.makeText(this@ContinuousCaptureActivity, "Không thể kết nối mạng", Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<Result_Product>?, response: Response<Result_Product>?) {
                 if(response?.isSuccessful!!){
                     if(response?.code()==200){
-                        var dataOffline = mRealm?.getProductWithBarcode(barcode)
+                        val dataOffline = mRealm?.getProductWithBarcode(barcode)
                         val mProduct = response.body().productType
                         val i = Intent(this@ContinuousCaptureActivity,Add_Product::class.java)
                         i.putExtra("type",3)
@@ -175,19 +165,19 @@ class ContinuousCaptureActivity : Activity() {
         })
     }
     fun showDialogNotFound(barcode:String){
-        var datedialog = AlertDialog.Builder(this@ContinuousCaptureActivity)
-        var mView2:View = View.inflate(this@ContinuousCaptureActivity,R.layout.dialog_scanner_barcode_,null)
+        val datedialog = AlertDialog.Builder(this@ContinuousCaptureActivity)
+        val mView2:View = View.inflate(this@ContinuousCaptureActivity,R.layout.dialog_scanner_barcode_,null)
         datedialog.setView(mView2)
         datedialog.setCancelable(false)
-        var img_barcode = mView2.img_barcode
+        val img_barcode = mView2.img_barcode
         if(mBitmap!=null){
             img_barcode.setImageBitmap(mBitmap)
         }else{
             img_barcode.visibility = View.GONE
         }
-        var txtout2 = mView2.txt_out_scanbarcode
-        var txtok2 = mView2.txt_ok_scanbarcode
-        var txt_barcode = mView2.check_barcode
+        val txtout2 = mView2.txt_out_scanbarcode
+        val txtok2 = mView2.txt_ok_scanbarcode
+        val txt_barcode = mView2.check_barcode
         txt_barcode.setText(barcode)
         txtout2.setOnClickListener(object: View.OnClickListener{
             override fun onClick(v: View?) {
@@ -232,7 +222,7 @@ class ContinuousCaptureActivity : Activity() {
 
     fun showDialogInputBarcoe(){
         var mBarcode = ""
-        var datedialog = AlertDialog.Builder(this@ContinuousCaptureActivity)
+        val datedialog = AlertDialog.Builder(this@ContinuousCaptureActivity)
         val mView:View = View.inflate(this@ContinuousCaptureActivity,R.layout.dialog_put_barcode,null)
         datedialog.setView(mView)
         val mEdit = mView.edit_barcode
@@ -251,13 +241,14 @@ class ContinuousCaptureActivity : Activity() {
                 mBitmap = null
                 if(!mEdit.text.toString().isNullOrEmpty()){
                     if(mEdit.text.toString().length<6){
-                        Toast.makeText(applicationContext,"Barcode not true", Toast.LENGTH_LONG).show()
+                        showToast(R.string.barcode_not_right)
+
                     }else{
                         arrBarcode = mEdit.text.toString()
                         checkBarcode(mEdit.text.toString())
                     }
                 }else{
-                    Toast.makeText(applicationContext,"Barcode not true", Toast.LENGTH_LONG).show()
+                    showToast(R.string.barcode_not_right)
                 }
                 mDialog?.dismiss()
             }
@@ -363,7 +354,7 @@ class ContinuousCaptureActivity : Activity() {
     var mCurrentPhotoPath: String? = null
 
     private fun dispatchTakePictureIntent(mType:Int) {
-        var permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        val permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), mType)

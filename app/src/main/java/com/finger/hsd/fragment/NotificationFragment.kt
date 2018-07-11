@@ -370,7 +370,8 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                             if(listNotWatch.size >=0 && !listNotWatch.isEmpty() && temp < listNotWatch.size) {
                                 processWatchedNotification(listNotWatch[temp])
                             }else{
-                                // success
+                                val strCountNoti =  realm!!.countNotification().toString() +  activity!!.resources.getString(R.string.notification_not_see)
+                                mView!!.count_notification.text = strCountNoti
                             }
                         }else {
                             realm!!.realm.executeTransaction {
@@ -393,7 +394,8 @@ class NotificationFragment : BaseFragment(), NotificationAdapterKotlin.ItemClick
                             if(listNotWatch.size >=0 && !listNotWatch.isEmpty() && temp < listNotWatch.size) {
                                 processWatchedNotification(listNotWatch[temp])
                             }else{
-                                //sucess
+                                val strCountNoti =  realm!!.countNotification().toString() +  activity!!.resources.getString(R.string.notification_not_see)
+                                mView!!.count_notification.text = strCountNoti
                             }
                         }else {
                             realm!!.realm.executeTransaction {

@@ -76,7 +76,7 @@
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:gravity="center|left"
-                            android:text="SỮA CHUA ĐÁ FA  DÀNH CHO FA"
+                            android:text=""
                             android:textColor="@color/text_color"
                             android:textSize="17sp"
                             android:textStyle="bold" />
@@ -155,7 +155,7 @@
                         android:gravity="center"
                         android:paddingLeft="16dp"
                         android:paddingRight="16dp"
-                        android:text="An toàn"
+                        android:text="@string/home_protected"
                         android:textColor="@color/white" />
 
                     <ImageView
@@ -174,7 +174,7 @@
                         android:gravity="center"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
-                        android:text="Cảnh báo"
+                        android:text="@string/warning"
                         android:textColor="@color/white"
                        />
 
@@ -194,7 +194,7 @@
                         android:gravity="center"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
-                        android:text="Hết hạn"
+                        android:text="@string/expired_time"
                         android:textColor="@color/white"
                         />
 

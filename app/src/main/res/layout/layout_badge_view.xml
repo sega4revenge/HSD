@@ -19,14 +19,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible"
-            android:background="@drawable/ic_second"
+            android:background="@drawable/ic_notfication"
             android:layout_centerInParent="true"/>
 
     </RelativeLayout>
 
     <View
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="3dp"
         android:id="@+id/badgeview_target"
         android:layout_width="30dp"
         android:layout_height="30dp"

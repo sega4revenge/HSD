@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -48,7 +46,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.finger.hsd.R;
 import com.finger.hsd.library.image.adapter.ImageGalleryAdapter;
 import com.finger.hsd.library.image.util.RealPathUtil;
-import com.finger.hsd.util.Mylog;
 
 import java.io.File;
 import java.io.IOException;
@@ -342,7 +339,7 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
                     .centerCrop()
                     .dontAnimate()
                     .placeholder(R.drawable.ic_gallery)
-                    .error(R.drawable.img_error)
+                    .error(R.drawable.photo_unvailable)
                     .priority(Priority.HIGH);
             Glide.with(getActivity())
                     .load(uri)

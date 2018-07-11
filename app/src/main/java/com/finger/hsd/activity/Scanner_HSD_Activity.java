@@ -2,22 +2,14 @@ package com.finger.hsd.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.format.Time;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -27,7 +19,6 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-
 import com.finger.hsd.R;
 import com.finger.hsd.model.Date_Ex;
 import com.google.android.gms.vision.CameraSource;
@@ -36,7 +27,6 @@ import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -230,7 +220,9 @@ public class Scanner_HSD_Activity extends AppCompatActivity {
                                     }
                                 }
 
-                                tx.setText("NSX: "+dateCreate+"\n HSD: "+dateUse);
+                                String strDaytext = getResources().getString(R.string.nsx)+" "+dateCreate+
+                                        "\n"+getResources().getString(R.string.hsd)+ " "+dateUse;
+                                tx.setText(strDaytext);
 
                             }
                             // }
@@ -249,14 +241,14 @@ public class Scanner_HSD_Activity extends AppCompatActivity {
             arrDate.add(data.getDate());
         }
         if(type==0){
-            title = "Đâu là ngày sản xuất?";
+            title = getResources().getString(R.string.where_is_expire);
         }else{
-            title = "Đâu là hạn sử dụng?";
+            title = getResources().getString(R.string.where_is_expired_time);
         }
         MaterialDialog.Builder buidle =   new MaterialDialog.Builder(Scanner_HSD_Activity.this)
                 .limitIconToDefaultSize()
                 .title(title)
-                .positiveText("Chọn")
+                .positiveText(getResources().getString(R.string.ok))
                 .cancelable(false)
                 .items(arrDate)
                 .itemsCallbackSingleChoice(0, new MaterialDialog.ListCallbackSingleChoice() {
@@ -276,7 +268,9 @@ public class Scanner_HSD_Activity extends AppCompatActivity {
                             dateUse = arr.get(dialog2.getSelectedIndex()).getDate();
                             mdateUse = arr.get(dialog2.getSelectedIndex()).getDateMili();
                         }
-                        tx.setText("NSX: "+dateCreate+"\n HSD: "+dateUse);
+                        String strDaytext = getResources().getString(R.string.nsx)+" "+dateCreate+
+                                "\n"+getResources().getString(R.string.hsd)+ " "+dateUse;
+                        tx.setText(strDaytext);
                         checkDate = false;
                         dialog.dismiss();
                     }

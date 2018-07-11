@@ -28,7 +28,9 @@
     <string name="detail_product_text_expiry_date">Thời hạn sử dụng còn lại</string>
     <string name="detail_product_text_day">ngày.</string>
     <string name="no_name">Không tên</string>
-    <string name="note">Chú thích…</string>
+    <string name="post">ĐĂNG SẢN PHẨM</string>
+    <string name="note">Ghi chú…</string>
+    <string name="enter_product_name">Nhập tên sản phẩm…</string>
     <string name="shelf_life">Thời hạn sử dụng là</string>
     <string name="overdue">Quá hạn </string>
     <string name="overdue_status">Sản phẩm đã quá hạn</string>
@@ -131,6 +133,7 @@
     <string name="warring_expiry">Cảnh báo hạn sử dụng</string>
     <string name="You_have">Bạn có </string>
     <string name="Warring_You_have"> Cảnh báo bạn có </string>
+    <string name="warning">Cảnh báo</string>
     <string name="expiry">hết hạn sử dụng. </string>
     <string name="expiry_and">hết hạn và</string>
     <string name="expiry_"> sắp hết hạn sử dụng. </string>
@@ -140,6 +143,9 @@
     <string name="expiring"> ngày hết hạn sử dụng! "</string>
     <string name="notification_not_see">" thông báo chưa xem "</string>
     <string name="not_connect_to_network">Không thể kết nối mạng</string>
+    <string name="barcode_not_right">Mã vạch không đúng</string>
+    <string name="add_product">Thêm sản phẩm</string>
+    <string name="expiry_date">Ngày hết hạn…</string>
     <string name="title_dialog_delete">Bạn muốn xóa toàn bộ sản phẩm này?</string>
     <string name="content_dialog_delete">Nhấn OK để xóa toàn bộ sản phẩm này</string>
     <string name="sync">Đang đồng bộ dữ liệu…</string>
@@ -150,12 +156,12 @@
     <string name="border_protected">ngày</string>
     <string name="rateApp">Đánh giá app trên PlayStore</string>
     <string name="notification_unvailable">Không có thông báo !</string>
-    //Chào mừng bạn đến với HSD. Hãy tạo ngay một danh sách quản lý hạn sử dụng của tất cả sản phẩm bạn có !
+    <!--//Chào mừng bạn đến với HSD. Hãy tạo ngay một danh sách quản lý hạn sử dụng của tất cả sản phẩm bạn có !-->
     <string name="wellcome_create">Chào mừng bạn đến với HSD. Hãy tạo ngay một danh sách quản lý hạn sử dụng của tất cả sản phẩm bạn có !</string>
     <string name="create_product">Tạo sản phẩm</string>
     <string name="clear">Xóa tất cả</string>
     <string name="b_n_mu_n_t_m_g">Bạn muốn tìm gì?</string>
-    //còn lại
+    <!--//còn lại-->
     <string name="rest">Còn lại</string>
     <string name="delete">Xóa</string>
 
@@ -551,6 +557,11 @@
     <string name="user_not_register">Tài khoản chưa được đăng ký!</string>
     <string name="pass_wrong">Sai mật khẩu!</string>
     <string name="expired_time">Hết hạn</string>
+    <string name="where_is_expire">Đâu là ngày sản xuất?</string>
+    <string name="where_is_expired_time">Đâu là hạn sử dụng?</string>
+    <string name="nsx">NSX</string>
+    <string name="hsd">HSD</string>
+    <string name="scan_hsd">Quét mã vạch</string>
     <string name="please_wait">Đang tạo..</string>
     <string name="create_success">Đã tạo thành công</string>
     <string name="select_any_time">Hãy chọn bất kỳ thời gian nào mà bạn muốn</string>

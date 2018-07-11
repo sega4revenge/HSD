@@ -147,7 +147,7 @@ public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapte
                         .centerCrop()
                         .dontAnimate()
                         .placeholder(R.drawable.ic_gallery)
-                        .error(R.drawable.img_error)
+                        .error(R.drawable.photo_unvailable)
                         .priority(Priority.HIGH);
                 Glide.with(context)
                         .load(uri)

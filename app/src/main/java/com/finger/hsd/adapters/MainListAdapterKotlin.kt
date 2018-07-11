@@ -2,6 +2,7 @@ package com.finger.hsd.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,6 +16,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.finger.hsd.R
 import com.finger.hsd.model.Product_v
+import com.finger.hsd.util.AppIntent
+import com.finger.hsd.view.ViewImageProduct
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -170,6 +173,14 @@ class MainListAdapterKotlin:
                     .load(mObject.imagechanged)
                     .apply(optionsGlide)
                     .into(holder.photo_product)
+
+
+            holder.photo_product.setOnClickListener {
+                val inten = Intent(mContext, ViewImageProduct::class.java)
+                inten.putExtra(AppIntent.INTENT_IMAGE_VIEW, mObject.imagechanged)
+                inten.putExtra(AppIntent.INTENT_NAME_PRODUCT, mObject.namechanged)
+                mContext.startActivity(inten)
+            }
 
             holder.txt_barcode.text = mObject.barcode
             holder.txt_detail.text = mObject.description

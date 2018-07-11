@@ -60,6 +60,7 @@ buildscript {
 }
 allprojects {
     repositories {
+        google()
         mavenCentral()
         maven { url 'https://maven.google.com' }
         maven { url 'https://maven.fabric.io/public' }
@@ -99,7 +100,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:11.0.4'
     implementation 'com.squareup.retrofit2:retrofit:2.0.2'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.0.1'
-    implementation 'com.google.code.gson:gson:2.6.1'
+//    implementation 'com.google.code.gson:gson:2.6.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
     implementation 'com.facebook.android:facebook-login:[4,5)'
     implementation 'com.google.android.gms:play-services-auth:11.0.4'

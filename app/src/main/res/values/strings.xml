@@ -2,14 +2,14 @@
     <string name="app_name">HSD</string>
 
     <string name="btn_signin">SIGN IN</string>
-    <string name="btn_join">SING UP</string>
+    <string name="btn_join">SIGN UP</string>
     <string name="btn_forgot">FORGOT PASSWORD</string>
     <string name="btn_signup">Don\'t have account ? CLICK HERE</string>
     <string name="btn_haveaccount">Already have account ?</string>
     <string name="txt_phone">PHONE NUMBER</string>
     <string name="txt_password">PASSWORD</string>
     <string name="txt_repassword">RE - PASSWORD</string>
-    <string name="txt_or">Or Signin With</string>
+    <string name="txt_or">Or</string>
     <string name="facebook_app_id">171986543489907</string>
     <string name="menu_home">Home</string>
     <string name="menu_notification">Notification</string>
@@ -24,13 +24,13 @@
     <string name="input_infomation_valid">Please enter valid information!</string>
     <string name="not_connect_to_server">Don\'t connect to server, please check again!</string>
     <string name="complete">% complete</string>
-    <string name="processing">Waiting...</string>
+    <string name="processing">Waiting…</string>
     <string name="phone_or_pass_not_avali">Invalid phone number or password!</string>
     <string name="user_not_register">Account not register!</string>
     <string name="pass_wrong">Wrong password!</string>
 
     <!--progress dialog-->
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading…</string>
 
     <!--=======NOTIFICATION=-========-->
     <string name="expiredtime_notifi">Wrong password!</string>
@@ -61,11 +61,21 @@
     <string name="overdue_status">Products overdue</string>
     <string name="notic_safe">for safety you should remove it</string>
     <string name="today">to day</string>
+    <string name="where_is_expire">Where is date of manufacture?</string>
+    <string name="where_is_expired_time">Where is expired time?</string>
     <string name="detail_product">Detail product</string>
     <string name="choose_time">Notification setting</string>
     <string name="alarm_setting">Alarm setting</string>
-
+    <string name="warning">Warning</string>
     <string name="descrip_delete">Would you like to delete product?</string>
+    <string name="nsx">DOM</string>
+    <string name="hsd">ExT</string>
+    <string name="scan_hsd">Scan barcode</string>
+    <string name="barcode_not_right">Barcode not true</string>
+    <string name="add_product">Add Product</string>
+    <string name="expiry_date">Expiry Date…</string>
+    <string name="enter_product_name">Enter product name</string>
+    <string name="post">POST PRODUCT</string>
 
     <string name="title_delete"> Delete Product</string>
     <string name="title_choose_days_before">Choose days before</string>

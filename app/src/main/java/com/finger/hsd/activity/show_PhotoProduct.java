@@ -1,7 +1,6 @@
 package com.finger.hsd.activity;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -31,7 +30,7 @@ public class show_PhotoProduct extends AppCompatActivity  {
             RequestOptions options = new RequestOptions()
                     .centerCrop()
                     .dontAnimate()
-                    .placeholder(R.mipmap.ic_launcher)
+                    .placeholder(R.drawable.photo_unvailable)
                     .priority(Priority.HIGH);
             Glide.with(this)
                      .load(path)

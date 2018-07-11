@@ -80,7 +80,7 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
     val options = RequestOptions()
             .centerCrop()
             .dontAnimate()
-            .placeholder(R.mipmap.ic_launcher)
+            .placeholder(R.drawable.photo_unvailable)
             .priority(Priority.HIGH)
     var type:Int? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,13 +104,13 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
     override fun onupdateProduct(type: Int, product: Product_v) {
         if(type!=0){
             showToast(R.string.create_success)
-            var i = Intent(this@Add_Product,AllInOneActivity::class.java)
+            val i = Intent(this@Add_Product,AllInOneActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(i)
         }else{
             showToast(R.string.create_success)
 //            Toast.makeText(this@Add_Product,"Update Faile With Photo Product not Syn!",Toast.LENGTH_SHORT).show()
-            var i = Intent(this@Add_Product,AllInOneActivity::class.java)
+            val i = Intent(this@Add_Product,AllInOneActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(i)
            // Toast.makeText(this@Add_Product,"Error Update Image",Toast.LENGTH_SHORT).show()
@@ -408,7 +408,7 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
     override fun onupdate() {
     }
     fun saveimageinMyApp(product : Product_v,uri:Uri){
-        var file = File(getRealFilePath(this, uri))
+        val file = File(getRealFilePath(this, uri))
         GlideApp.with(this)
                 .asBitmap()
                 .load(file)
@@ -418,12 +418,12 @@ class Add_Product : BaseActivity() ,View.OnClickListener,RealmController.updateD
 
                         try {
 
-                            var dataOffline = myRealm?.getProductWithBarcode(product?.producttype_id?.barcode!!)
+                            val dataOffline = myRealm?.getProductWithBarcode(product?.producttype_id?.barcode!!)
                             if(dataOffline!= null)
                             {
                                 val nameOldImage = Uri.parse(dataOffline.imagechanged)
 
-                                var myDirOld = File(nameOldImage.path)
+                                val myDirOld = File(nameOldImage.path)
 
                                 if (myDirOld.exists()) {
 //                                    Mylog.d("aaaaaaaaaa deleted")

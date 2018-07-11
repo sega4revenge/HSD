@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1d1d1d"
+    >
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:gravity="center|left"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_back_arrow"
+            android:onClick="backscreen"/>
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_marginLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textStyle="bold"
+            android:textColor="#fffFFF"/>
+    </LinearLayout>
+
+    <com.finger.hsd.view.ExtendedViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+    </com.finger.hsd.view.ExtendedViewPager>
+
+</LinearLayout>

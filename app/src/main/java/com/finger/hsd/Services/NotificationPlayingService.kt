@@ -1,7 +1,10 @@
 package com.finger.hsd.services
 
 import android.annotation.SuppressLint
-import android.app.*
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -13,7 +16,6 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.finger.hsd.AllInOneActivity
 import com.finger.hsd.R
-import com.finger.hsd.activity.HorizontalNtbActivity
 import com.finger.hsd.fragment.NotificationFragment
 import com.finger.hsd.manager.RealmAlarmController
 import com.finger.hsd.manager.SessionManager
@@ -202,29 +204,29 @@ class NotificationPlayingService : Service(){
 
         }
 
-        var count = sessionManager.getCountNotification() + countExpiry + countWarnings
+        val count =  countExpiry + countWarnings
         //count notification
         sessionManager.setCountNotification(count)
 
         // chi co san pham het han
         if(countExpiry > 0 && countWarnings== 0){
-            var strTitle : String = resources.getString(R.string.notification_expiry)
-            var strcontent : String = resources.getString(R.string.You_have) + " ''" + countExpiry + "'' "+resources.getString(R.string.product_expiry)+ " " + product_expiry + " "+
+            val strTitle : String = resources.getString(R.string.notification_expiry)
+            val strcontent : String = resources.getString(R.string.You_have) + " ''" + countExpiry + "'' "+resources.getString(R.string.product_expiry)+ " " + product_expiry + " "+
                     resources.getString(R.string.expiry)+ " "+ resources.getString(R.string.please_check_product)
             Group_Notification(strTitle,strcontent)
 
          // chi co san pham canh bao
         }else if(countWarnings>0 && countExpiry == 0){
 
-            var strTitle : String = resources.getString(R.string.warring_expiry)
-            var strcontent : String = resources.getString(R.string.Warring_You_have) + " ''" + countWarnings + "'' "+resources.getString(R.string.product_expiry)+ " " + product_warring + " "+
+            val strTitle : String = resources.getString(R.string.warring_expiry)
+            val strcontent : String = resources.getString(R.string.Warring_You_have) + " ''" + countWarnings + "'' "+resources.getString(R.string.product_expiry)+ " " + product_warring + " "+
                     resources.getString(R.string.expiry_)+ " "+ resources.getString(R.string.please_check_product)
             Group_Notification(strTitle,strcontent)
 
          // san pham het han va canh bao
         }else if(countExpiry >0 && countWarnings > 0){
-            var strTitle : String = resources.getString(R.string.notification_)
-            var strcontent : String = resources.getString(R.string.You_have) + " ''" + countExpiry + "'' "+resources.getString(R.string.product_expiry)+ " " + product_expiry + " "+
+            val strTitle : String = resources.getString(R.string.notification_)
+            val strcontent : String = resources.getString(R.string.You_have) + " ''" + countExpiry + "'' "+resources.getString(R.string.product_expiry)+ " " + product_expiry + " "+
                     resources.getString(R.string.expiry_and)+" ''"+countWarnings +"'' "+resources.getString(R.string.product_expiry)+ " " + product_warring + " "+
                     resources.getString(R.string.expiry_)+" "+ resources.getString(R.string.please_check_product)
             Group_Notification(strTitle,strcontent)
@@ -327,10 +329,10 @@ class NotificationPlayingService : Service(){
     }
 
     fun Notification_Expiry( title:String, content : String ,  int: Int , day : Int ){
-        val intent = Intent(this, HorizontalNtbActivity::class.java)
+        val intent = Intent(this, AllInOneActivity::class.java)
         val pIntent = PendingIntent.getActivity(this, int, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        var strTitle : String = resources.getString(R.string.notification_expiry)+" ''"+title + "''."
-        var content_noti : String = resources.getString(R.string.product_expiry) + " ''" + content + "'' "+
+        val strTitle : String = resources.getString(R.string.notification_expiry)+" ''"+title + "''."
+        val content_noti : String = resources.getString(R.string.product_expiry) + " ''" + content + "'' "+
                 resources.getString(R.string.expired)+ " "+
                 -day +" "+ resources.getString(R.string.day)
 
@@ -362,12 +364,12 @@ class NotificationPlayingService : Service(){
 
     fun WaringNotification( title:String, content : String ,  int: Int , day :Int ){
 
-        val intent = Intent(this, HorizontalNtbActivity::class.java)
+        val intent = Intent(this, AllInOneActivity::class.java)
         val pIntent = PendingIntent.getActivity(this, int, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        var strTitle : String = resources.getString(R.string.warring_expiry)+" ''"+title + "''."
+        val strTitle : String = resources.getString(R.string.warring_expiry)+" ''"+title + "''."
 
-        var content_noti : String = resources.getString(R.string.warring_expiry) + " ''" + content + "'' "+
+        val content_noti : String = resources.getString(R.string.warring_expiry) + " ''" + content + "'' "+
                 resources.getString(R.string.con)+ " "
                 day.toString() +" "+ resources.getString(R.string.expiring)
 

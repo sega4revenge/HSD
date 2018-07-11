@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
@@ -64,7 +65,7 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
     var v: View? = null
     override fun isRegisterSuccessful(isRegisterSuccessful: Boolean) {
         if (isRegisterSuccessful) {
-            startActivity(Intent(this@RegisterActivity, HorizontalNtbActivity::class.java))
+            startActivity(Intent(this@RegisterActivity, AllInOneActivity::class.java))
             finish()
         }
 
@@ -96,6 +97,9 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
 
 
     private fun register() {
+
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(repass.getWindowToken(), 0)
 
         setError()
         var err = 0
@@ -328,7 +332,7 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
 
                             val out3 = FileOutputStream(myDir)
 
-                            resource?.compress(Bitmap.CompressFormat.JPEG, 90, out3)
+                            resource.compress(Bitmap.CompressFormat.JPEG, 90, out3)
                             Mylog.d("aaaaaaaaaa my dir: " + myDir)
                             product.imagechanged = Uri.fromFile(myDir).toString()
                             realm!!.updateProduct(product)
@@ -340,12 +344,12 @@ class RegisterActivity : BaseActivity(), LoginPresenter.LoginView {
                             if (listProduct != null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
                                 percent = (temp.toFloat() / (listProduct!!.size.toFloat()) * 100f).toInt()
 
-                                showProgress(resources.getString(R.string.sync)+ percent)
+                                showProgress( percent.toString() + " %")
 
                                 onDownload(listProduct!!.get(temp))
                             } else {
                                 percent = (temp.toFloat() / (listProduct!!.size).toFloat() * 100f).toInt()
-                                showProgress(resources.getString(R.string.sync) + percent + " "+ resources.getString(R.string.complete))
+                                showProgress( percent.toString()+ " "+ resources.getString(R.string.complete))
                                 session!!.setLogin(true)
 
                                 hideProgress()

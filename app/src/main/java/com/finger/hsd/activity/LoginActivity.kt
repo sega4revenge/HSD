@@ -17,6 +17,7 @@ import android.os.Bundle
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
@@ -193,22 +194,23 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
 
 
     private fun login() {
-
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(password.getWindowToken(), 0)
         setError()
 
         var err = 0
-        if (!validatePhone(phone_number!!.text.toString())) {
+        if (!validatePhone(phone_number_login!!.text.toString())) {
             err++
-            phone_number!!.error = resources.getString(R.string.not_null_case)
+            phone_number_login!!.error = resources.getString(R.string.not_null_case)
         } else {
-            if (!validatePhone2(phone_number.text.toString())!!) {
+            if (!validatePhone2(phone_number_login.text.toString())!!) {
                 err++
-                phone_number.error = resources.getString(R.string.phone_unvailable)
+                phone_number_login.error = resources.getString(R.string.phone_unvailable)
             }
         }
         if (err == 0) {
             showProgress(resources.getString(R.string.processing))
-            user.phone = phone_number.text.toString()
+            user.phone = phone_number_login.text.toString()
             user.password = password.text.toString()
             user.tokenfirebase = FirebaseInstanceId.getInstance().token
             mLoginPresenter!!.login(user)
@@ -219,7 +221,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
     }
 
     private fun setError() {
-        phone_number.error = null
+        phone_number_login.error = null
 
     }
 
@@ -426,12 +428,12 @@ class LoginActivity : BaseActivity(), LoginPresenter.LoginView, GoogleApiClient.
                             if (listProduct != null && !listProduct!!.isEmpty() && temp < listProduct!!.size) {
                                 percent = (temp.toFloat() / (listProduct!!.size.toFloat()) * 100f).toInt()
 
-                                showProgress(resources.getString(R.string.sync) + percent + " %")
+                                showProgress( percent.toString() + " %")
 
                                 onDownload(listProduct!!.get(temp))
                             } else {
                                 percent = (temp.toFloat() / (listProduct!!.size).toFloat() * 100f).toInt()
-                                showProgress(resources.getString(R.string.sync) + percent + " " + resources.getString(R.string.complete))
+                                showProgress( percent.toString() + " " + resources.getString(R.string.complete))
                                 session.setLogin(true)
                                 hideProgress()
 

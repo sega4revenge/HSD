@@ -30,7 +30,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Scanner Barcode"
+            android:text="@string/scan_hsd"
             android:layout_marginLeft="20dp"
             android:textSize="20dp"
             android:textColor="@color/white"

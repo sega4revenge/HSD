@@ -23,8 +23,20 @@
           }
         },
         {
-          "client_id": "923104700189-2ealsq6n64tsnehqeb224u8n0ekl1f6o.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "923104700189-1dlr7fggi9eeq3ou70bi8d0t2ib18ojn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.finger.hsd",
+            "certificate_hash": "51d2fdf774640199396f358bd348aade246d06dd"
+          }
+        },
+        {
+          "client_id": "923104700189-o7241i5u2v7pkrbqlibedt5orgrbbo5v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.finger.hsd",
+            "certificate_hash": "364cd37c910f4b1257a838a94cfcbecfffdf7744"
+          }
         },
         {
           "client_id": "923104700189-2ealsq6n64tsnehqeb224u8n0ekl1f6o.apps.googleusercontent.com",
@@ -44,7 +56,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "923104700189-2ealsq6n64tsnehqeb224u8n0ekl1f6o.apps.googleusercontent.com",
+              "client_id": "923104700189-8qhevho1uecg0b0tscsnu5trrb3g8ghn.apps.googleusercontent.com",
               "client_type": 3
             },
             {
